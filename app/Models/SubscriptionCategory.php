@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class SubscriptionCategory
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SubscriptionCategory extends Model
 {
+	use HasFactory;
+
 	protected $table = 'subscription_category';
 	public $timestamps = false;
 

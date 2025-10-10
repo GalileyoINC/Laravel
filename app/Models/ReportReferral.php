@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ReportReferral
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ReportReferral extends Model
 {
+	use HasFactory;
+
 	protected $table = 'report_referral';
 	public $timestamps = false;
 

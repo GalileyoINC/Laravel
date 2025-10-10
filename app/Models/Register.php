@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Register
@@ -24,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Register extends Model
 {
+	use HasFactory;
+
 	protected $table = 'register';
 
 	protected $casts = [

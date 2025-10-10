@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class PromocodeInfluencer
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PromocodeInfluencer extends Model
 {
+	use HasFactory;
+
 	protected $table = 'promocode_influencer';
 	protected $primaryKey = 'id_promocode';
 	public $incrementing = false;

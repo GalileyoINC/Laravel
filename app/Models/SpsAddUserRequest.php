@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class SpsAddUserRequest
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SpsAddUserRequest extends Model
 {
+	use HasFactory;
+
 	protected $table = 'sps_add_user_request';
 
 	protected $casts = [

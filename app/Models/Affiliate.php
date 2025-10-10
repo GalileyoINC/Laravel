@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Affiliate
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Affiliate extends Model
 {
+	use HasFactory;
+
 	protected $table = 'affiliate';
 
 	protected $casts = [

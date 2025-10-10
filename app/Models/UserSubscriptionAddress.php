@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class UserSubscriptionAddress
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserSubscriptionAddress extends Model
 {
+	use HasFactory;
+
 	protected $table = 'user_subscription_address';
 	public $timestamps = false;
 

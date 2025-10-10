@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class InviteAffiliate
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InviteAffiliate extends Model
 {
+	use HasFactory;
+
 	protected $table = 'invite_affiliate';
 	public $timestamps = false;
 

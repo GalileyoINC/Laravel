@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class UserSatelliteSubscription
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserSatelliteSubscription extends Model
 {
+	use HasFactory;
+
 	protected $table = 'user_satellite_subscription';
 	public $incrementing = false;
 	public $timestamps = false;

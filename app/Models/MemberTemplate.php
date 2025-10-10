@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class MemberTemplate
@@ -28,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MemberTemplate extends Model
 {
+	use HasFactory;
+
 	protected $table = 'member_template';
 	public $timestamps = false;
 

@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class EmailPoolAttachment
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EmailPoolAttachment extends Model
 {
+	use HasFactory;
+
 	protected $table = 'email_pool_attachment';
 	public $timestamps = false;
 

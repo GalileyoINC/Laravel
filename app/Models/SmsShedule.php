@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class SmsShedule
@@ -40,6 +41,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SmsShedule extends Model
 {
+	use HasFactory;
+
 	protected $table = 'sms_shedule';
 
 	protected $casts = [

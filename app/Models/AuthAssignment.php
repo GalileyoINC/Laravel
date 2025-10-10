@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class AuthAssignment
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthAssignment extends Model
 {
+	use HasFactory;
+
 	protected $table = 'auth_assignment';
 	public $incrementing = false;
 	public $timestamps = false;

@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ContractLine
@@ -41,6 +42,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ContractLine extends Model
 {
+	use HasFactory;
+
 	protected $table = 'contract_line';
 
 	protected $casts = [

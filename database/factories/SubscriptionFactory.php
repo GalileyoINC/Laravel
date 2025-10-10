@@ -25,7 +25,7 @@ class SubscriptionFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_subscription_category' => fake()->numberBetween(1, 10),
+            'id_subscription_category' => \App\Models\SubscriptionCategory::factory(),
             'name' => fake()->words(2, true),
             'title' => fake()->sentence(3),
             'position_no' => fake()->numberBetween(1, 100),
@@ -43,12 +43,15 @@ class SubscriptionFactory extends Factory
             ]),
             'is_custom' => fake()->boolean(30), // 30% chance
             'id_influencer' => fake()->boolean(40) ? fake()->numberBetween(1, 50) : null,
+            'price' => fake()->randomFloat(2, 0, 100),
+            'bonus_point' => fake()->numberBetween(0, 1000),
+            'token' => fake()->boolean(60) ? fake()->uuid() : null,
+            'ipfs_id' => fake()->boolean(20) ? fake()->uuid() : null,
             'is_public' => fake()->boolean(70), // 70% chance
-            'type' => fake()->randomElement(['regular', 'satellite', 'marketstack']),
-            'sub_type' => fake()->randomElement(['indx', 'ticker', 'news']),
-            'symbol' => fake()->boolean(20) ? fake()->lexify('????') : null,
-            'created_at' => fake()->dateTimeBetween('-2 years', 'now'),
-            'updated_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'is_fake' => fake()->boolean(10), // 10% chance
+            'type' => fake()->numberBetween(1, 3),
+            'show_reactions' => fake()->boolean(80), // 80% chance
+            'show_comments' => fake()->boolean(70), // 70% chance
         ];
     }
 
@@ -86,14 +89,14 @@ class SubscriptionFactory extends Factory
     }
 
     /**
-     * Indicate that the subscription is for marketstack.
+     * Indicate that the subscription is premium.
      */
-    public function marketstack(): static
+    public function premium(): static
     {
         return $this->state(fn (array $attributes) => [
-            'type' => 'marketstack',
-            'sub_type' => fake()->randomElement(['indx', 'ticker']),
-            'symbol' => fake()->lexify('????'),
+            'price' => fake()->randomFloat(2, 10, 50),
+            'bonus_point' => fake()->numberBetween(100, 500),
+            'is_public' => true,
         ]);
     }
 }

@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class UserPointSetting
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserPointSetting extends Model
 {
+	use HasFactory;
+
 	protected $table = 'user_point_settings';
 
 	protected $casts = [

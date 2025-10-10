@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class MarketstackIndx
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MarketstackIndx extends Model
 {
+	use HasFactory;
+
 	protected $table = 'marketstack_indx';
 	public $timestamps = false;
 

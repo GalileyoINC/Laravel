@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class RecentSearch
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class RecentSearch extends Model
 {
+	use HasFactory;
+
 	protected $table = 'recent_search';
 	public $timestamps = false;
 

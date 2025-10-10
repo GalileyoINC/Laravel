@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class BundleItem
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BundleItem extends Model
 {
+	use HasFactory;
+
 	protected $table = 'bundle_item';
 	public $timestamps = false;
 

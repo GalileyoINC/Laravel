@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class PhoneNumber
@@ -40,6 +41,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PhoneNumber extends Model
 {
+	use HasFactory;
+
 	protected $table = 'phone_number';
 
 	protected $casts = [

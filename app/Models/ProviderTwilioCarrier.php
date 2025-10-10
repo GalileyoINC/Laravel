@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ProviderTwilioCarrier
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProviderTwilioCarrier extends Model
 {
+	use HasFactory;
+
 	protected $table = 'provider_twilio_carrier';
 	public $incrementing = false;
 	public $timestamps = false;

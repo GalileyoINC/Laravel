@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class InvoiceService
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InvoiceService extends Model
 {
+	use HasFactory;
+
 	protected $table = 'invoice_service';
 	public $incrementing = false;
 	public $timestamps = false;

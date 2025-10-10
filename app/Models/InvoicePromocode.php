@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class InvoicePromocode
@@ -24,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InvoicePromocode extends Model
 {
+	use HasFactory;
+
 	protected $table = 'invoice_promocode';
 	public $timestamps = false;
 

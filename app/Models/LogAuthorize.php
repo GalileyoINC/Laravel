@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class LogAuthorize
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LogAuthorize extends Model
 {
+	use HasFactory;
+
 	protected $table = 'log_authorize';
 
 	protected $casts = [

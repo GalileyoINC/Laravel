@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class SettingsSafe
@@ -18,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SettingsSafe extends Model
 {
+	use HasFactory;
+
 	protected $table = 'settings_safe';
 	protected $primaryKey = 'name';
 	public $incrementing = false;

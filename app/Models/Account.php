@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Account
@@ -30,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Account extends Model
 {
+	use HasFactory;
+
 	protected $table = 'account';
 	public $timestamps = false;
 

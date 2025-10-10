@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ServiceCustom
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ServiceCustom extends Model
 {
+	use HasFactory;
+
 	protected $table = 'service_custom';
 	public $timestamps = false;
 

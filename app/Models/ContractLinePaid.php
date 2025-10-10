@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ContractLinePaid
@@ -31,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ContractLinePaid extends Model
 {
+	use HasFactory;
+
 	protected $table = 'contract_line_paid';
 
 	protected $casts = [

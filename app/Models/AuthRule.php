@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class AuthRule
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthRule extends Model
 {
+	use HasFactory;
+
 	protected $table = 'auth_rule';
 	protected $primaryKey = 'name';
 	public $incrementing = false;

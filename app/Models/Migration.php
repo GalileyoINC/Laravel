@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Migration
@@ -18,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Migration extends Model
 {
+	use HasFactory;
+
 	protected $table = 'migration';
 	protected $primaryKey = 'version';
 	public $incrementing = false;

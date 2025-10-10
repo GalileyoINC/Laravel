@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ZipU
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ZipU extends Model
 {
+	use HasFactory;
+
 	protected $table = 'zip_us';
 	public $timestamps = false;
 

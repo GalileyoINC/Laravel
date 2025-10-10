@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class AuthItem
@@ -28,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthItem extends Model
 {
+	use HasFactory;
+
 	protected $table = 'auth_item';
 	protected $primaryKey = 'name';
 	public $incrementing = false;

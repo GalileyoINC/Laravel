@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class TwilioCarrier
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TwilioCarrier extends Model
 {
+	use HasFactory;
+
 	protected $table = 'twilio_carrier';
 	public $timestamps = false;
 

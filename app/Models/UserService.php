@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class UserService
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserService extends Model
 {
+	use HasFactory;
+
 	protected $table = 'user_service';
 	public $incrementing = false;
 	public $timestamps = false;

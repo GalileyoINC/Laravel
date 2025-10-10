@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ActiveRecordLog
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ActiveRecordLog extends Model
 {
+	use HasFactory;
+
 	protected $table = 'active_record_log';
 	public $timestamps = false;
 

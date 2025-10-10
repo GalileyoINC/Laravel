@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class AppleAppTransaction
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AppleAppTransaction extends Model
 {
+	use HasFactory;
+
 	protected $table = 'apple_app_transactions';
 	public $timestamps = false;
 

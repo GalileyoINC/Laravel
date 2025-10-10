@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ApiLog
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ApiLog extends Model
 {
+	use HasFactory;
+
 	protected $table = 'api_log';
 	public $timestamps = false;
 

@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class InfoState
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InfoState extends Model
 {
+	use HasFactory;
+
 	protected $table = 'info_state';
 
 	protected $casts = [

@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Promocode
@@ -31,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Promocode extends Model
 {
+	use HasFactory;
+
 	protected $table = 'promocode';
 	public $timestamps = false;
 

@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class UserFriend
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserFriend extends Model
 {
+	use HasFactory;
+
 	protected $table = 'user_friend';
 	public $timestamps = false;
 

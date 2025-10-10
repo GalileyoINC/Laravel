@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class NewsContent
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class NewsContent extends Model
 {
+	use HasFactory;
+
 	protected $table = 'news_content';
 	public $timestamps = false;
 

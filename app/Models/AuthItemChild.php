@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class AuthItemChild
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthItemChild extends Model
 {
+	use HasFactory;
+
 	protected $table = 'auth_item_child';
 	public $incrementing = false;
 	public $timestamps = false;

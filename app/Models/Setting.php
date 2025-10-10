@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Setting
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Setting extends Model
 {
+	use HasFactory;
+
 	protected $table = 'settings';
 	protected $primaryKey = 'name';
 	public $incrementing = false;

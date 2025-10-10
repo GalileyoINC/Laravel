@@ -31,6 +31,11 @@ class DatabaseSeeder extends Seeder
         $users = User::factory(50)->create();
         $this->command->info("✅ Created {$users->count()} users");
 
+        // Create subscription categories first
+        $this->command->info('📂 Creating subscription categories...');
+        $categories = \App\Models\SubscriptionCategory::factory(10)->create();
+        $this->command->info("✅ Created {$categories->count()} subscription categories");
+
         // Create subscriptions
         $this->command->info('📰 Creating subscriptions...');
         $subscriptions = Subscription::factory(30)->create();

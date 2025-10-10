@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class InfluencerAssistant
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InfluencerAssistant extends Model
 {
+	use HasFactory;
+
 	protected $table = 'influencer_assistant';
 	public $incrementing = false;
 

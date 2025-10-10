@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class EmergencyTipsRequest
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EmergencyTipsRequest extends Model
 {
+	use HasFactory;
+
 	protected $table = 'emergency_tips_request';
 	public $timestamps = false;
 

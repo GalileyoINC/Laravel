@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class AdminMember
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AdminMember extends Model
 {
+	use HasFactory;
+
 	protected $table = 'admin_member';
 	public $timestamps = false;
 

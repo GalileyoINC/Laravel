@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ConversationUser
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ConversationUser extends Model
 {
+	use HasFactory;
+
 	protected $table = 'conversation_user';
 	public $incrementing = false;
 	public $timestamps = false;

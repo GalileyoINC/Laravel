@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class SmsPoolPhoneNumber
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SmsPoolPhoneNumber extends Model
 {
+	use HasFactory;
+
 	protected $table = 'sms_pool_phone_number';
 	public $timestamps = false;
 

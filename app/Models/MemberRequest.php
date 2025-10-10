@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class MemberRequest
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MemberRequest extends Model
 {
+	use HasFactory;
+
 	protected $table = 'member_request';
 	public $timestamps = false;
 
