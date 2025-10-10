@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Actions\Authentication\LoginAction;
+use App\Http\Resources\AuthenticationResource;
+use App\Http\Resources\ErrorResource;
+use App\Http\Resources\SuccessResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -25,8 +28,21 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        // Controller only handles HTTP - delegates to Action
-        return $this->loginAction->execute($request->all());
+        try {
+            // Controller only handles HTTP - delegates to Action
+            $result = $this->loginAction->execute($request->all());
+            
+            // Use AuthenticationResource for consistent response format
+            return response()->json(new AuthenticationResource($result));
+            
+        } catch (\Exception $e) {
+            // Use ErrorResource for consistent error format
+            return response()->json(new ErrorResource([
+                'message' => $e->getMessage(),
+                'code' => 500,
+                'trace_id' => uniqid()
+            ]), 500);
+        }
     }
 
     /**
@@ -36,10 +52,12 @@ class AuthController extends Controller
      */
     public function test(): JsonResponse
     {
-        return response()->json([
+        return response()->json(new SuccessResource([
             'message' => 'Authentication module is working!',
-            'time' => now()->format('Y-m-d H:i:s')
-        ]);
+            'time' => now()->format('Y-m-d H:i:s'),
+            'module' => 'Authentication',
+            'version' => '1.0'
+        ]));
     }
 
     /**
