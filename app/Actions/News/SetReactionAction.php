@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Actions\News;
+
+use App\DTOs\News\ReactionRequestDTO;
+use App\Services\News\NewsServiceInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+class SetReactionAction
+{
+    public function __construct(
+        private NewsServiceInterface $newsService
+    ) {}
+
+    public function execute(array $data): JsonResponse
+    {
+        try {
+            $dto = ReactionRequestDTO::fromArray($data);
+            if (!$dto->validate()) {
+                return response()->json([
+                    'errors' => ['Invalid reaction request'],
+                    'message' => 'Invalid request parameters'
+                ], 400);
+            }
+
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'error' => 'User not authenticated',
+                    'code' => 401
+                ], 401);
+            }
+
+            $reaction = $this->newsService->setReaction($dto, $user);
+
+            return response()->json($reaction->toArray());
+
+        } catch (\Exception $e) {
+            Log::error('SetReactionAction error: ' . $e->getMessage());
+            
+            return response()->json([
+                'error' => 'An internal server error occurred.',
+                'code' => 500
+            ], 500);
+        }
+    }
+}
