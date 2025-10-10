@@ -94,6 +94,12 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\AllSendForm\AllSendFormServiceInterface::class,
             \App\Services\AllSendForm\AllSendFormService::class
         );
+
+        // Register Customer services
+        $this->app->bind(
+            \App\Services\Customer\CustomerServiceInterface::class,
+            \App\Services\Customer\CustomerService::class
+        );
     }
 
     /**

@@ -23,6 +23,7 @@ require __DIR__.'/api-auth.php';
 require __DIR__.'/api-chat.php';
 require __DIR__.'/api-comment.php';
 require __DIR__.'/api-creditcard.php';
+require __DIR__.'/api-customer.php';
 require __DIR__.'/api-device.php';
 require __DIR__.'/api-influencer.php';
 require __DIR__.'/api-news.php';
