@@ -5,6 +5,7 @@
 ## 📋 Достапни Resources
 
 ### 🔐 **AuthenticationResource**
+
 За authentication responses (login, register, profile).
 
 ```php
@@ -36,6 +37,7 @@
 ```
 
 ### 💬 **ChatResource**
+
 За chat responses (conversations, messages).
 
 ```php
@@ -59,6 +61,7 @@
 ```
 
 ### 💬 **CommentResource**
+
 За comment responses.
 
 ```php
@@ -80,6 +83,7 @@
 ```
 
 ### 💳 **CreditCardResource**
+
 За credit card responses.
 
 ```php
@@ -103,6 +107,7 @@
 ```
 
 ### 📱 **DeviceResource**
+
 За device responses.
 
 ```php
@@ -125,6 +130,7 @@
 ```
 
 ### 🌟 **InfluencerResource**
+
 За influencer responses.
 
 ```php
@@ -147,6 +153,7 @@
 ```
 
 ### 📰 **NewsResource**
+
 За news responses.
 
 ```php
@@ -175,6 +182,7 @@
 ```
 
 ### 🛒 **OrderResource**
+
 За order responses.
 
 ```php
@@ -198,6 +206,7 @@
 ```
 
 ### 📞 **PhoneResource**
+
 За phone responses.
 
 ```php
@@ -220,6 +229,7 @@
 ```
 
 ### 🔒 **PrivateFeedResource**
+
 За private feed responses.
 
 ```php
@@ -242,6 +252,7 @@
 ```
 
 ### 🛍️ **ProductResource**
+
 За product responses.
 
 ```php
@@ -267,6 +278,7 @@
 ```
 
 ### 📢 **PublicFeedResource**
+
 За public feed responses.
 
 ```php
@@ -292,6 +304,7 @@
 ```
 
 ### 📰 **SubscriptionResource**
+
 За subscription responses.
 
 ```php
@@ -324,6 +337,7 @@
 ```
 
 ### 📨 **AllSendFormResource**
+
 За broadcast responses.
 
 ```php
@@ -352,6 +366,7 @@
 ```
 
 ### 👤 **CustomerResource**
+
 За customer profile responses.
 
 ```php
@@ -384,6 +399,7 @@
 ```
 
 ### ❌ **ErrorResource**
+
 За error responses.
 
 ```php
@@ -405,6 +421,7 @@
 ```
 
 ### ✅ **SuccessResource**
+
 За generic success responses.
 
 ```php
@@ -423,6 +440,7 @@
 ```
 
 ### 👥 **UserCollection**
+
 За user collections with pagination.
 
 ```php
@@ -527,6 +545,7 @@ class NewsController extends Controller
 ## 📋 Response Format Стандарди
 
 ### ✅ **Success Response:**
+
 ```json
 {
     "status": "success",
@@ -539,6 +558,7 @@ class NewsController extends Controller
 ```
 
 ### ❌ **Error Response:**
+
 ```json
 {
     "status": "error",
@@ -557,6 +577,7 @@ class NewsController extends Controller
 ```
 
 ### 📄 **Collection Response:**
+
 ```json
 {
     "status": "success",
@@ -618,12 +639,12 @@ public function with(Request $request): array
 
 ## 📝 Забелешки
 
-- Сите Resources го следат истиот формат како Yii2 responses
-- Error responses имаат HTTP status codes
-- Success responses имаат `status: "success"`
-- Error responses имаат `status: "error"`
-- Meta податоци се додаваат автоматски
-- Pagination е вградена во Collections
-- Timestamp се генерира автоматски
+-   Сите Resources го следат истиот формат како Yii2 responses
+-   Error responses имаат HTTP status codes
+-   Success responses имаат `status: "success"`
+-   Error responses имаат `status: "error"`
+-   Meta податоци се додаваат автоматски
+-   Pagination е вградена во Collections
+-   Timestamp се генерира автоматски
 
 Ова обезбедува целосна компатибилност со постоечките Yii2 API endpoints! 🎉

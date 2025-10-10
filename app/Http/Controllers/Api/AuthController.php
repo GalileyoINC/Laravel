@@ -7,6 +7,7 @@ use App\Actions\Authentication\LoginAction;
 use App\Http\Resources\AuthenticationResource;
 use App\Http\Resources\ErrorResource;
 use App\Http\Resources\SuccessResource;
+use App\Http\Requests\Authentication\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -26,11 +27,11 @@ class AuthController extends Controller
      * 
      * POST /api/v1/auth/login
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         try {
-            // Controller only handles HTTP - delegates to Action
-            $result = $this->loginAction->execute($request->all());
+            // Request validation is handled automatically by LoginRequest
+            $result = $this->loginAction->execute($request->validated());
             
             // Use AuthenticationResource for consistent response format
             return response()->json(new AuthenticationResource($result));
