@@ -5,6 +5,7 @@
 ## 📋 Достапни Request класи
 
 ### 🔐 **Authentication/LoginRequest**
+
 За валидација на login податоци.
 
 ```php
@@ -31,6 +32,7 @@ POST /api/v1/auth/login
 ```
 
 ### 💬 **Chat/ChatListRequest**
+
 За валидација на chat list параметри.
 
 ```php
@@ -53,6 +55,7 @@ POST /api/v1/chat/list
 ```
 
 ### 💬 **Chat/ChatMessagesRequest**
+
 За валидација на chat messages параметри.
 
 ```php
@@ -75,6 +78,7 @@ POST /api/v1/chat/chat-messages
 ```
 
 ### 💬 **Comment/CommentListRequest**
+
 За валидација на comment list параметри.
 
 ```php
@@ -97,6 +101,7 @@ POST /api/v1/comment/list
 ```
 
 ### 💬 **Comment/CommentCreateRequest**
+
 За валидација на comment creation.
 
 ```php
@@ -117,6 +122,7 @@ POST /api/v1/comment/create
 ```
 
 ### 💳 **CreditCard/CreditCardCreateRequest**
+
 За валидација на credit card creation.
 
 ```php
@@ -147,6 +153,7 @@ POST /api/v1/credit-card/create
 ```
 
 ### 📱 **Device/DeviceUpdateRequest**
+
 За валидација на device update податоци.
 
 ```php
@@ -183,6 +190,7 @@ POST /api/v1/device/update
 ```
 
 ### 📰 **News/NewsListRequest**
+
 За валидација на news list параметри.
 
 ```php
@@ -211,6 +219,7 @@ POST /api/v1/news/list
 ```
 
 ### 🛒 **Order/CreateOrderRequest**
+
 За валидација на order creation.
 
 ```php
@@ -273,6 +282,7 @@ POST /api/v1/order/create
 ```
 
 ### 📞 **Phone/PhoneVerifyRequest**
+
 За валидација на phone verification.
 
 ```php
@@ -293,6 +303,7 @@ POST /api/v1/phone/verify
 ```
 
 ### 📰 **Subscription/SubscriptionRequest**
+
 За валидација на subscription management.
 
 ```php
@@ -315,6 +326,7 @@ POST /api/v1/feed/set
 ```
 
 ### 👤 **Customer/CustomerProfileRequest**
+
 За валидација на customer profile updates.
 
 ```php
@@ -364,9 +376,9 @@ class AuthController extends Controller
         try {
             // Request validation is handled automatically by LoginRequest
             $result = $this->loginAction->execute($request->validated());
-            
+
             return response()->json(new AuthenticationResource($result));
-            
+
         } catch (\Exception $e) {
             return response()->json(new ErrorResource([
                 'message' => $e->getMessage(),
@@ -425,33 +437,37 @@ public function withValidator($validator)
 ## 📋 Валидациски правила
 
 ### **Основни правила:**
-- `required` - задолжително поле
-- `nullable` - опционално поле
-- `string` - текст
-- `integer` - број
-- `numeric` - број (вклучува decimal)
-- `boolean` - true/false
-- `array` - низа
-- `email` - валидна email адреса
-- `url` - валидна URL
-- `date` - валиден датум
-- `json` - валиден JSON
+
+-   `required` - задолжително поле
+-   `nullable` - опционално поле
+-   `string` - текст
+-   `integer` - број
+-   `numeric` - број (вклучува decimal)
+-   `boolean` - true/false
+-   `array` - низа
+-   `email` - валидна email адреса
+-   `url` - валидна URL
+-   `date` - валиден датум
+-   `json` - валиден JSON
 
 ### **Должина правила:**
-- `min:value` - минимална должина/вредност
-- `max:value` - максимална должина/вредност
-- `between:min,max` - помеѓу две вредности
+
+-   `min:value` - минимална должина/вредност
+-   `max:value` - максимална должина/вредност
+-   `between:min,max` - помеѓу две вредности
 
 ### **Формат правила:**
-- `regex:pattern` - regex pattern
-- `in:value1,value2` - една од дозволените вредности
-- `not_in:value1,value2` - не една од забранетите вредности
+
+-   `regex:pattern` - regex pattern
+-   `in:value1,value2` - една од дозволените вредности
+-   `not_in:value1,value2` - не една од забранетите вредности
 
 ### **Фајл правила:**
-- `file` - фајл
-- `image` - слика
-- `mimes:jpeg,png` - дозволени MIME типови
-- `max:size` - максимална големина
+
+-   `file` - фајл
+-   `image` - слика
+-   `mimes:jpeg,png` - дозволени MIME типови
+-   `max:size` - максимална големина
 
 ## 🎯 Предности
 
@@ -501,11 +517,11 @@ public function attributes(): array
 
 ## 📝 Забелешки
 
-- Сите Request класи го следат Laravel стандардот
-- Валидацијата се случува пред да се изврши controller методот
-- Ако валидацијата не успее, се враќа 422 статус код
-- `$request->validated()` е побезбедно од `$request->all()`
-- Custom правила можеш да додадеш со `withValidator()` метод
-- Error messages се прикажуваат на јазикот на апликацијата
+-   Сите Request класи го следат Laravel стандардот
+-   Валидацијата се случува пред да се изврши controller методот
+-   Ако валидацијата не успее, се враќа 422 статус код
+-   `$request->validated()` е побезбедно од `$request->all()`
+-   Custom правила можеш да додадеш со `withValidator()` метод
+-   Error messages се прикажуваат на јазикот на апликацијата
 
 Ова обезбедува целосна валидација на влезни податоци и подобрена безбедност! 🔒

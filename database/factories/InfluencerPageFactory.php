@@ -33,7 +33,7 @@ class InfluencerPageFactory extends Factory
             'title' => $title,
             'alias' => Str::slug($title),
             'description' => fake()->paragraph(3),
-            'image' => fake()->boolean(70) ? fake()->imageUrl(800, 600, 'people') : null,
+            'image' => fake()->boolean(70) ? fake()->word() . '.jpg' : null,
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-6 months', 'now'),
         ];
@@ -45,7 +45,7 @@ class InfluencerPageFactory extends Factory
     public function withImage(): static
     {
         return $this->state(fn (array $attributes) => [
-            'image' => fake()->imageUrl(800, 600, 'people'),
+            'image' => fake()->word() . '.jpg',
         ]);
     }
 

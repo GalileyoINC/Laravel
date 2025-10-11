@@ -14,11 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/news')->group(function () {
+Route::prefix('v1/news')->middleware('auth:sanctum')->group(function () {
     // News routes
     Route::post('last', [NewsController::class, 'last']);
     Route::post('by-influencers', [NewsController::class, 'byInfluencers']);
     Route::post('by-subscription', [NewsController::class, 'bySubscription']);
+    Route::post('by-follower-list', [NewsController::class, 'byFollowerList']);
     Route::post('set-reaction', [NewsController::class, 'setReaction']);
     Route::post('remove-reaction', [NewsController::class, 'removeReaction']);
+    Route::post('report', [NewsController::class, 'report']);
+    Route::post('mute', [NewsController::class, 'mute']);
+    Route::post('unmute', [NewsController::class, 'unmute']);
 });

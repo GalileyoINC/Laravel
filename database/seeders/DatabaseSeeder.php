@@ -96,7 +96,7 @@ class DatabaseSeeder extends Seeder
             foreach ($followers as $follower) {
                 Follower::factory()->create([
                     'id_follower_list' => $followerList->id,
-                    'id_user' => $follower->id,
+                    'id_user_follower' => $follower->id,
                 ]);
             }
         }
@@ -104,7 +104,11 @@ class DatabaseSeeder extends Seeder
 
         // Create reactions
         $this->command->info('👍 Creating reactions...');
-        $reactions = Reaction::factory(50)->create();
+        $emojis = ['👍', '👎', '❤️', '😀', '😢', '😮', '😡', '🔥', '💯', '🎉', '👏', '🤔', '😍', '😂', '😭'];
+        $reactions = collect();
+        foreach ($emojis as $emoji) {
+            $reactions->push(Reaction::firstOrCreate(['emoji' => $emoji]));
+        }
         $this->command->info("✅ Created {$reactions->count()} reactions");
 
         // Create SMS pool reactions

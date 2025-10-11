@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/customer')->group(function () {
+Route::prefix('v1/customer')->middleware('auth:sanctum')->group(function () {
     // Customer routes
-    Route::post('get-profile', [CustomerController::class, 'getProfile']);
+    Route::get('get-profile', [CustomerController::class, 'getProfile']);
     Route::post('update-profile', [CustomerController::class, 'updateProfile']);
     Route::post('change-password', [CustomerController::class, 'changePassword']);
+    Route::post('update-privacy', [CustomerController::class, 'updatePrivacy']);
+    Route::post('remove-avatar', [CustomerController::class, 'removeAvatar']);
+    Route::post('remove-header', [CustomerController::class, 'removeHeader']);
     Route::post('logout', [CustomerController::class, 'logout']);
     Route::post('delete', [CustomerController::class, 'delete']);
 });

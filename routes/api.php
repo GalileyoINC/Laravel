@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Include module-specific routes
 require __DIR__.'/api-auth.php';
+require __DIR__.'/api-default.php';
 require __DIR__.'/api-chat.php';
 require __DIR__.'/api-comment.php';
 require __DIR__.'/api-creditcard.php';

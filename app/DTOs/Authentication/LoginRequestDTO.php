@@ -52,10 +52,6 @@ class LoginRequestDTO
             return false;
         }
 
-        if (empty($this->device)) {
-            return false;
-        }
-
         return true;
     }
 }

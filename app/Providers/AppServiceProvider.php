@@ -2,6 +2,36 @@
 
 namespace App\Providers;
 
+use App\Services\AllSendForm\AllSendFormService;
+use App\Services\AllSendForm\AllSendFormServiceInterface;
+use App\Services\Authentication\AuthService;
+use App\Services\Authentication\AuthServiceInterface;
+use App\Services\Chat\ChatService;
+use App\Services\Chat\ChatServiceInterface;
+use App\Services\Comment\CommentService;
+use App\Services\Comment\CommentServiceInterface;
+use App\Services\CreditCard\CreditCardService;
+use App\Services\CreditCard\CreditCardServiceInterface;
+use App\Services\Customer\CustomerService;
+use App\Services\Customer\CustomerServiceInterface;
+use App\Services\Device\DeviceService;
+use App\Services\Device\DeviceServiceInterface;
+use App\Services\Influencer\InfluencerService;
+use App\Services\Influencer\InfluencerServiceInterface;
+use App\Services\News\NewsService;
+use App\Services\News\NewsServiceInterface;
+use App\Services\Order\OrderService;
+use App\Services\Order\OrderServiceInterface;
+use App\Services\Phone\PhoneService;
+use App\Services\Phone\PhoneServiceInterface;
+use App\Services\PrivateFeed\PrivateFeedService;
+use App\Services\PrivateFeed\PrivateFeedServiceInterface;
+use App\Services\Product\ProductService;
+use App\Services\Product\ProductServiceInterface;
+use App\Services\PublicFeed\PublicFeedService;
+use App\Services\PublicFeed\PublicFeedServiceInterface;
+use App\Services\Subscription\SubscriptionService;
+use App\Services\Subscription\SubscriptionServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,92 +43,92 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register Authentication services
         $this->app->bind(
-            \App\Services\Authentication\AuthServiceInterface::class,
-            \App\Services\Authentication\AuthService::class
+            AuthServiceInterface::class,
+            AuthService::class
         );
 
         // Register Chat services
         $this->app->bind(
-            \App\Services\Chat\ChatServiceInterface::class,
-            \App\Services\Chat\ChatService::class
+            ChatServiceInterface::class,
+            ChatService::class
         );
 
         // Register Comment services
         $this->app->bind(
-            \App\Services\Comment\CommentServiceInterface::class,
-            \App\Services\Comment\CommentService::class
+            CommentServiceInterface::class,
+            CommentService::class
         );
 
         // Register CreditCard services
         $this->app->bind(
-            \App\Services\CreditCard\CreditCardServiceInterface::class,
-            \App\Services\CreditCard\CreditCardService::class
+            CreditCardServiceInterface::class,
+            CreditCardService::class
         );
 
         // Register Device services
         $this->app->bind(
-            \App\Services\Device\DeviceServiceInterface::class,
-            \App\Services\Device\DeviceService::class
+            DeviceServiceInterface::class,
+            DeviceService::class
         );
 
         // Register Influencer services
         $this->app->bind(
-            \App\Services\Influencer\InfluencerServiceInterface::class,
-            \App\Services\Influencer\InfluencerService::class
+            InfluencerServiceInterface::class,
+            InfluencerService::class
         );
 
         // Register News services
         $this->app->bind(
-            \App\Services\News\NewsServiceInterface::class,
-            \App\Services\News\NewsService::class
+            NewsServiceInterface::class,
+            NewsService::class
         );
 
         // Register Order services
         $this->app->bind(
-            \App\Services\Order\OrderServiceInterface::class,
-            \App\Services\Order\OrderService::class
+            OrderServiceInterface::class,
+            OrderService::class
         );
 
         // Register Phone services
         $this->app->bind(
-            \App\Services\Phone\PhoneServiceInterface::class,
-            \App\Services\Phone\PhoneService::class
+            PhoneServiceInterface::class,
+            PhoneService::class
         );
 
         // Register PrivateFeed services
         $this->app->bind(
-            \App\Services\PrivateFeed\PrivateFeedServiceInterface::class,
-            \App\Services\PrivateFeed\PrivateFeedService::class
+            PrivateFeedServiceInterface::class,
+            PrivateFeedService::class
         );
 
         // Register Product services
         $this->app->bind(
-            \App\Services\Product\ProductServiceInterface::class,
-            \App\Services\Product\ProductService::class
+            ProductServiceInterface::class,
+            ProductService::class
         );
 
         // Register PublicFeed services
         $this->app->bind(
-            \App\Services\PublicFeed\PublicFeedServiceInterface::class,
-            \App\Services\PublicFeed\PublicFeedService::class
+            PublicFeedServiceInterface::class,
+            PublicFeedService::class
         );
 
         // Register Subscription services
         $this->app->bind(
-            \App\Services\Subscription\SubscriptionServiceInterface::class,
-            \App\Services\Subscription\SubscriptionService::class
+            SubscriptionServiceInterface::class,
+            SubscriptionService::class
         );
 
         // Register AllSendForm services
         $this->app->bind(
-            \App\Services\AllSendForm\AllSendFormServiceInterface::class,
-            \App\Services\AllSendForm\AllSendFormService::class
+            AllSendFormServiceInterface::class,
+            AllSendFormService::class
         );
 
         // Register Customer services
         $this->app->bind(
-            \App\Services\Customer\CustomerServiceInterface::class,
-            \App\Services\Customer\CustomerService::class
+            CustomerServiceInterface::class,
+            CustomerService::class
         );
     }
 

@@ -5,6 +5,9 @@ namespace App\Services\News;
 use App\DTOs\News\NewsListRequestDTO;
 use App\DTOs\News\NewsBySubscriptionDTO;
 use App\DTOs\News\ReactionRequestDTO;
+use App\DTOs\News\ReportNewsRequestDTO;
+use App\DTOs\News\MuteSubscriptionRequestDTO;
+use App\DTOs\News\GetNewsByFollowerListRequestDTO;
 use App\Models\User;
 
 /**
@@ -56,4 +59,40 @@ interface NewsServiceInterface
      * @return mixed
      */
     public function removeReaction(ReactionRequestDTO $dto, User $user);
+
+    /**
+     * Get news by follower list
+     *
+     * @param GetNewsByFollowerListRequestDTO $dto
+     * @param User $user
+     * @return mixed
+     */
+    public function getNewsByFollowerList(GetNewsByFollowerListRequestDTO $dto, User $user);
+
+    /**
+     * Report news
+     *
+     * @param ReportNewsRequestDTO $dto
+     * @param User $user
+     * @return mixed
+     */
+    public function reportNews(ReportNewsRequestDTO $dto, User $user);
+
+    /**
+     * Mute subscription
+     *
+     * @param MuteSubscriptionRequestDTO $dto
+     * @param User $user
+     * @return mixed
+     */
+    public function muteSubscription(MuteSubscriptionRequestDTO $dto, User $user);
+
+    /**
+     * Unmute subscription
+     *
+     * @param MuteSubscriptionRequestDTO $dto
+     * @param User $user
+     * @return mixed
+     */
+    public function unmuteSubscription(MuteSubscriptionRequestDTO $dto, User $user);
 }

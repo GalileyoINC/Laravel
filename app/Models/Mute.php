@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Mute extends Model
+{
+    use HasFactory;
+
+    protected $table = 'mute';
+
+    protected $fillable = [
+        'id_subscription',
+        'id_user',
+        'is_muted',
+        'created_at',
+        'updated_at'
+    ];
+
+    protected $casts = [
+        'is_muted' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
+
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class, 'id_subscription');
+    }
+}

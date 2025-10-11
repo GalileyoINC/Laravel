@@ -40,9 +40,6 @@ class SmsPoolFactory extends Factory
             'short_body' => fake()->sentence(2),
             'url' => fake()->boolean(30) ? fake()->url() : null,
             'is_ban' => false,
-            'is_schedule' => fake()->boolean(20), // 20% chance
-            'schedule' => fake()->boolean(20) ? fake()->dateTimeBetween('now', '+1 month') : null,
-            'timezone' => fake()->timezone(),
             'created_at' => fake()->dateTimeBetween('-6 months', 'now'),
             'updated_at' => fake()->dateTimeBetween('-3 months', 'now'),
         ];
@@ -84,8 +81,6 @@ class SmsPoolFactory extends Factory
     public function scheduled(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_schedule' => true,
-            'schedule' => fake()->dateTimeBetween('now', '+1 month'),
             'status' => 0, // pending
         ]);
     }

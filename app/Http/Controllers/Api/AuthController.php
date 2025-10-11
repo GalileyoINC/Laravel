@@ -33,8 +33,8 @@ class AuthController extends Controller
             // Request validation is handled automatically by LoginRequest
             $result = $this->loginAction->execute($request->validated());
             
-            // Use AuthenticationResource for consistent response format
-            return response()->json(new AuthenticationResource($result));
+            // Return the result directly since LoginAction already returns JsonResponse
+            return $result;
             
         } catch (\Exception $e) {
             // Use ErrorResource for consistent error format
@@ -55,6 +55,36 @@ class AuthController extends Controller
     {
         return response()->json(new SuccessResource([
             'message' => 'Authentication module is working!',
+            'time' => now()->format('Y-m-d H:i:s'),
+            'module' => 'Authentication',
+            'version' => '1.0'
+        ]));
+    }
+
+    /**
+     * Signup endpoint
+     * 
+     * POST /api/v1/default/signup
+     */
+    public function signup(Request $request): JsonResponse
+    {
+        return response()->json(new SuccessResource([
+            'message' => 'Signup endpoint - to be implemented',
+            'time' => now()->format('Y-m-d H:i:s'),
+            'module' => 'Authentication',
+            'version' => '1.0'
+        ]));
+    }
+
+    /**
+     * News by subscription endpoint
+     * 
+     * POST /api/v1/default/news-by-subscription
+     */
+    public function newsBySubscription(Request $request): JsonResponse
+    {
+        return response()->json(new SuccessResource([
+            'message' => 'News by subscription endpoint - to be implemented',
             'time' => now()->format('Y-m-d H:i:s'),
             'module' => 'Authentication',
             'version' => '1.0'

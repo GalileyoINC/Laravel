@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/influencer')->group(function () {
+Route::prefix('v1/influencer')->middleware('auth:sanctum')->group(function () {
     // Influencer routes
-    Route::post('index', [InfluencerController::class, 'index']);
+    Route::get('index', [InfluencerController::class, 'index']);
     Route::post('create', [InfluencerController::class, 'create']);
 });

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/comment')->group(function () {
+Route::prefix('v1/comment')->middleware('auth:sanctum')->group(function () {
     // Comment routes
     Route::post('get', [CommentController::class, 'get']);
     Route::post('get-replies', [CommentController::class, 'getReplies']);

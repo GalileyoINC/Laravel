@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class User
@@ -115,7 +116,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class User extends Model
 {
-	use HasFactory;
+	use HasFactory, HasApiTokens;
 
 	protected $table = 'user';
 

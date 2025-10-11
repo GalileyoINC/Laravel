@@ -5,9 +5,14 @@ namespace App\Services\News;
 use App\DTOs\News\NewsListRequestDTO;
 use App\DTOs\News\NewsBySubscriptionDTO;
 use App\DTOs\News\ReactionRequestDTO;
+use App\DTOs\News\ReportNewsRequestDTO;
+use App\DTOs\News\MuteSubscriptionRequestDTO;
+use App\DTOs\News\GetNewsByFollowerListRequestDTO;
 use App\Models\User;
-use App\Models\News;
+use App\Models\SmsPool;
 use App\Models\Reaction;
+use App\Models\Report;
+use App\Models\Mute;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -21,17 +26,17 @@ class NewsService implements NewsServiceInterface
     public function getLastNews(NewsListRequestDTO $dto, ?User $user)
     {
         try {
-            $query = News::with(['user', 'reactions']);
+            $query = SmsPool::with(['user', 'reactions']);
 
             // Apply filters
             if ($dto->type) {
-                $query->where('type', $dto->type);
+                $query->where('purpose', $dto->type);
             }
 
             if ($dto->search) {
                 $query->where(function ($q) use ($dto) {
-                    $q->where('title', 'like', '%' . $dto->search . '%')
-                      ->orWhere('content', 'like', '%' . $dto->search . '%');
+                    $q->where('body', 'like', '%' . $dto->search . '%')
+                      ->orWhere('short_body', 'like', '%' . $dto->search . '%');
                 });
             }
 
@@ -54,19 +59,19 @@ class NewsService implements NewsServiceInterface
     public function getNewsByInfluencers(NewsListRequestDTO $dto, ?User $user)
     {
         try {
-            $query = News::whereHas('user', function ($q) {
+            $query = SmsPool::whereHas('user', function ($q) {
                 $q->where('is_influencer', true);
             })->with(['user', 'reactions']);
 
             // Apply filters
             if ($dto->type) {
-                $query->where('type', $dto->type);
+                $query->where('purpose', $dto->type);
             }
 
             if ($dto->search) {
                 $query->where(function ($q) use ($dto) {
-                    $q->where('title', 'like', '%' . $dto->search . '%')
-                      ->orWhere('content', 'like', '%' . $dto->search . '%');
+                    $q->where('body', 'like', '%' . $dto->search . '%')
+                      ->orWhere('short_body', 'like', '%' . $dto->search . '%');
                 });
             }
 
@@ -89,7 +94,7 @@ class NewsService implements NewsServiceInterface
     public function getNewsBySubscription(NewsBySubscriptionDTO $dto, ?User $user)
     {
         try {
-            $query = News::where('id_subscription', $dto->idSubscription)
+            $query = SmsPool::where('id_subscription', $dto->idSubscription)
                 ->with(['user', 'reactions']);
 
             $news = $query->orderBy('created_at', 'desc')
@@ -163,6 +168,100 @@ class NewsService implements NewsServiceInterface
 
         } catch (\Exception $e) {
             Log::error('NewsService removeReaction error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Get news by follower list
+     */
+    public function getNewsByFollowerList(GetNewsByFollowerListRequestDTO $dto, User $user)
+    {
+        try {
+            $query = SmsPool::whereHas('user.followerLists', function ($q) use ($dto) {
+                $q->where('id_follower_list', $dto->id_follower_list);
+            })->with(['user', 'reactions']);
+
+            $news = $query->orderBy('created_at', 'desc')
+                ->limit($dto->page_size)
+                ->offset(($dto->page - 1) * $dto->page_size)
+                ->get();
+
+            return $news;
+
+        } catch (\Exception $e) {
+            Log::error('NewsService getNewsByFollowerList error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Report news
+     */
+    public function reportNews(ReportNewsRequestDTO $dto, User $user)
+    {
+        try {
+            $report = Report::create([
+                'id_news' => $dto->id_news,
+                'id_user' => $user->id,
+                'reason' => $dto->reason,
+                'additional_text' => $dto->additional_text,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            return ['success' => true, 'message' => 'News reported successfully', 'report_id' => $report->id];
+
+        } catch (\Exception $e) {
+            Log::error('NewsService reportNews error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Mute subscription
+     */
+    public function muteSubscription(MuteSubscriptionRequestDTO $dto, User $user)
+    {
+        try {
+            $mute = Mute::updateOrCreate(
+                [
+                    'id_subscription' => $dto->id_subscription,
+                    'id_user' => $user->id
+                ],
+                [
+                    'is_muted' => true,
+                    'updated_at' => now()
+                ]
+            );
+
+            return ['success' => true, 'message' => 'Subscription muted successfully'];
+
+        } catch (\Exception $e) {
+            Log::error('NewsService muteSubscription error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Unmute subscription
+     */
+    public function unmuteSubscription(MuteSubscriptionRequestDTO $dto, User $user)
+    {
+        try {
+            $mute = Mute::where('id_subscription', $dto->id_subscription)
+                ->where('id_user', $user->id)
+                ->first();
+
+            if ($mute) {
+                $mute->update(['is_muted' => false, 'updated_at' => now()]);
+                return ['success' => true, 'message' => 'Subscription unmuted successfully'];
+            }
+
+            return ['success' => false, 'message' => 'Subscription not found'];
+
+        } catch (\Exception $e) {
+            Log::error('NewsService unmuteSubscription error: ' . $e->getMessage());
             throw $e;
         }
     }

@@ -2,14 +2,14 @@
 
 namespace App\Actions\Customer;
 
-use App\DTOs\Customer\GetProfileRequestDTO;
+use App\DTOs\Customer\UpdateProfileRequestDTO;
 use App\Services\Customer\CustomerServiceInterface;
 use App\Http\Resources\CustomerResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class GetProfileAction
+class UpdateProfileAction
 {
     public function __construct(
         private CustomerServiceInterface $customerService
@@ -18,7 +18,7 @@ class GetProfileAction
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = GetProfileRequestDTO::fromArray($data);
+            $dto = UpdateProfileRequestDTO::fromArray($data);
             $user = Auth::user();
             
             if (!$user) {
@@ -28,12 +28,12 @@ class GetProfileAction
                 ], 401);
             }
 
-            $profile = $this->customerService->getProfile($dto, $user);
+            $result = $this->customerService->updateProfile($dto, $user);
 
-            return response()->json(new CustomerResource($profile));
+            return response()->json(new CustomerResource($result));
 
         } catch (\Exception $e) {
-            Log::error('GetProfileAction error: ' . $e->getMessage());
+            Log::error('UpdateProfileAction error: ' . $e->getMessage());
             
             return response()->json([
                 'error' => 'An internal server error occurred.',

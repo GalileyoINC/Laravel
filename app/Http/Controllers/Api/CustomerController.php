@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Actions\Customer\GetProfileAction;
+use App\Actions\Customer\UpdateProfileAction;
+use App\Actions\Customer\ChangePasswordAction;
+use App\Actions\Customer\UpdatePrivacyAction;
+use App\Actions\Customer\RemoveAvatarAction;
+use App\Actions\Customer\RemoveHeaderAction;
 use App\Services\Customer\CustomerServiceInterface;
 use App\DTOs\Customer\UpdateProfileRequestDTO;
 use App\DTOs\Customer\ChangePasswordRequestDTO;
@@ -20,6 +25,11 @@ class CustomerController extends Controller
 {
     public function __construct(
         private GetProfileAction $getProfileAction,
+        private UpdateProfileAction $updateProfileAction,
+        private ChangePasswordAction $changePasswordAction,
+        private UpdatePrivacyAction $updatePrivacyAction,
+        private RemoveAvatarAction $removeAvatarAction,
+        private RemoveHeaderAction $removeHeaderAction,
         private CustomerServiceInterface $customerService
     ) {}
 
@@ -36,35 +46,7 @@ class CustomerController extends Controller
      */
     public function updateProfile(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (!$user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401
-                ], 401);
-            }
-
-            $dto = UpdateProfileRequestDTO::fromRequest($request);
-            if (!$dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid profile update request'],
-                    'message' => 'Invalid request parameters'
-                ], 400);
-            }
-
-            $result = $this->customerService->updateProfile($dto, $user);
-
-            return response()->json($result);
-
-        } catch (\Exception $e) {
-            Log::error('CustomerController updateProfile error: ' . $e->getMessage());
-            
-            return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500
-            ], 500);
-        }
+        return $this->updateProfileAction->execute($request->all());
     }
 
     /**
@@ -72,35 +54,31 @@ class CustomerController extends Controller
      */
     public function changePassword(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (!$user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401
-                ], 401);
-            }
+        return $this->changePasswordAction->execute($request->all());
+    }
 
-            $dto = ChangePasswordRequestDTO::fromRequest($request);
-            if (!$dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid password change request'],
-                    'message' => 'Invalid request parameters'
-                ], 400);
-            }
+    /**
+     * Update privacy settings (POST /api/v1/customer/update-privacy)
+     */
+    public function updatePrivacy(Request $request): JsonResponse
+    {
+        return $this->updatePrivacyAction->execute($request->all());
+    }
 
-            $result = $this->customerService->changePassword($dto, $user);
+    /**
+     * Remove avatar (POST /api/v1/customer/remove-avatar)
+     */
+    public function removeAvatar(Request $request): JsonResponse
+    {
+        return $this->removeAvatarAction->execute($request->all());
+    }
 
-            return response()->json($result);
-
-        } catch (\Exception $e) {
-            Log::error('CustomerController changePassword error: ' . $e->getMessage());
-            
-            return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500
-            ], 500);
-        }
+    /**
+     * Remove header image (POST /api/v1/customer/remove-header)
+     */
+    public function removeHeader(Request $request): JsonResponse
+    {
+        return $this->removeHeaderAction->execute($request->all());
     }
 
     /**

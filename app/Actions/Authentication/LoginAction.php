@@ -31,13 +31,6 @@ class LoginAction
             // Create and validate DTO
             $loginDto = LoginRequestDTO::fromArray($data);
             
-            if (!$loginDto->validate()) {
-                return response()->json([
-                    'error' => 'Invalid login data', 
-                    'code' => 400
-                ], 400);
-            }
-
             // Authenticate user
             $authResponse = $this->authService->authenticate($loginDto);
 

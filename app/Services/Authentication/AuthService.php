@@ -42,7 +42,9 @@ class AuthService implements AuthServiceInterface
                 ['id_user' => $user->id],
                 [
                     'access_token' => $accessToken,
-                    'device_info' => json_encode($loginDto->device),
+                    'uuid' => $loginDto->device['device_uuid'] ?? 'unknown',
+                    'os' => $loginDto->device['device_os'] ?? 'unknown',
+                    'params' => json_encode($loginDto->device),
                     'updated_at' => now()
                 ]
             );

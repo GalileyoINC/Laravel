@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Actions\Customer;
+namespace App\Actions\News;
 
-use App\DTOs\Customer\GetProfileRequestDTO;
-use App\Services\Customer\CustomerServiceInterface;
-use App\Http\Resources\CustomerResource;
+use App\DTOs\News\SetReactionRequestDTO;
+use App\Services\News\NewsServiceInterface;
+use App\Http\Resources\NewsResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class GetProfileAction
+class RemoveReactionAction
 {
     public function __construct(
-        private CustomerServiceInterface $customerService
+        private NewsServiceInterface $newsService
     ) {}
 
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = GetProfileRequestDTO::fromArray($data);
+            $dto = SetReactionRequestDTO::fromArray($data);
             $user = Auth::user();
             
             if (!$user) {
@@ -28,12 +28,12 @@ class GetProfileAction
                 ], 401);
             }
 
-            $profile = $this->customerService->getProfile($dto, $user);
+            $result = $this->newsService->removeReaction($dto, $user);
 
-            return response()->json(new CustomerResource($profile));
+            return response()->json(new NewsResource($result));
 
         } catch (\Exception $e) {
-            Log::error('GetProfileAction error: ' . $e->getMessage());
+            Log::error('RemoveReactionAction error: ' . $e->getMessage());
             
             return response()->json([
                 'error' => 'An internal server error occurred.',

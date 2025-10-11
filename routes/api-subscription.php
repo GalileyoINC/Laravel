@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/feed')->group(function () {
+Route::prefix('v1/feed')->middleware('auth:sanctum')->group(function () {
     // Subscription routes
     Route::post('set', [SubscriptionController::class, 'set']);
     Route::post('satellite-set', [SubscriptionController::class, 'satelliteSet']);
     Route::get('category', [SubscriptionController::class, 'category']);
-    Route::get('index', [SubscriptionController::class, 'index']);
+    Route::post('index', [SubscriptionController::class, 'index']);
     Route::get('satellite-index', [SubscriptionController::class, 'satelliteIndex']);
     Route::post('add-own-marketstack-indx-subscription', [SubscriptionController::class, 'addOwnMarketstackIndxSubscription']);
     Route::post('add-own-marketstack-ticker-subscription', [SubscriptionController::class, 'addOwnMarketstackTickerSubscription']);

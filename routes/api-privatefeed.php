@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1/private-feed')->group(function () {
+Route::prefix('v1/private-feed')->middleware('auth:sanctum')->group(function () {
     // PrivateFeed routes
-    Route::post('index', [PrivateFeedController::class, 'index']);
+    Route::get('index', [PrivateFeedController::class, 'index']);
     Route::post('create', [PrivateFeedController::class, 'create']);
     Route::post('update', [PrivateFeedController::class, 'update']);
     Route::post('delete', [PrivateFeedController::class, 'delete']);
