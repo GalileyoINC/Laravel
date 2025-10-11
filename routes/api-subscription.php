@@ -25,4 +25,5 @@ Route::prefix('v1/feed')->middleware('auth:sanctum')->group(function () {
     Route::post('add-own-marketstack-ticker-subscription', [SubscriptionController::class, 'addOwnMarketstackTickerSubscription']);
     Route::get('options', [SubscriptionController::class, 'options']);
     Route::post('delete-private-feed', [SubscriptionController::class, 'deletePrivateFeed']);
+    Route::get('get-image', [SubscriptionController::class, 'getImage']);
 });
