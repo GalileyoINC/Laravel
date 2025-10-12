@@ -74,7 +74,7 @@ class SmsPool extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function staff()
@@ -105,7 +105,7 @@ class SmsPool extends Model
 
     public function reactions()
     {
-        return $this->belongsToMany(Reaction::class, 'sms_pool_reaction', 'id_sms_pool', 'id_reaction')
+        return $this->belongsToMany(\App\Models\Content\Reaction::class, 'sms_pool_reaction', 'id_sms_pool', 'id_reaction')
             ->withPivot('id_user');
     }
 

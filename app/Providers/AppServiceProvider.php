@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Services\AllSendForm\AllSendFormService;
+use Laravel\Sanctum\Sanctum;
 use App\Services\AllSendForm\AllSendFormServiceInterface;
 use App\Services\Authentication\AuthService;
 use App\Services\Authentication\AuthServiceInterface;

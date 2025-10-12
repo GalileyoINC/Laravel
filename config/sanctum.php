@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\User\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
 
 return [
@@ -94,6 +93,6 @@ return [
     |
     */
 
-    'personal_access_token_model' => PersonalAccessToken::class,
+    'personal_access_token_model' => Laravel\Sanctum\PersonalAccessToken::class,
 
 ];

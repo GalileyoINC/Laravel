@@ -13,8 +13,8 @@ use App\DTOs\News\ReportNewsRequestDTO;
 use App\Models\Communication\SmsPool;
 use App\Models\Content\Reaction;
 use App\Models\Content\Report;
-use App\Models\User\User\Mute;
-use App\Models\User\User\User;
+use App\Models\User\Mute;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

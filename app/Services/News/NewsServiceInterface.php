@@ -10,7 +10,7 @@ use App\DTOs\News\NewsBySubscriptionDTO;
 use App\DTOs\News\NewsListRequestDTO;
 use App\DTOs\News\ReactionRequestDTO;
 use App\DTOs\News\ReportNewsRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * News service interface
