@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AllSendFormController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BookmarkController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\CreditCardController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\PhoneController;
 use App\Http\Controllers\Api\PrivateFeedController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PublicFeedController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SubscriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -165,6 +167,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('comment/create', [CommentController::class, 'create']);
     Route::post('comment/update', [CommentController::class, 'update']);
     Route::post('comment/delete', [CommentController::class, 'delete']);
+
+    // Search routes
+    Route::post('search/index', [SearchController::class, 'index']);
+
+    // Bookmark routes
+    Route::post('bookmark/index', [BookmarkController::class, 'index']);
+    Route::post('bookmark/create', [BookmarkController::class, 'create']);
+    Route::delete('bookmark/delete', [BookmarkController::class, 'delete']);
 });
 
 // Routes from api-news.php

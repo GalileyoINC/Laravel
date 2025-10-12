@@ -37,3 +37,11 @@ api.interceptors.response.use(
 )
 
 export default api
+export { api }
+
+// Export all API modules
+export { feedApi } from './feed'
+export { profileApi } from './profile'
+export { bookmarkApi } from './bookmark'
+export { commentApi } from './comment'
+export { searchApi } from './search'
