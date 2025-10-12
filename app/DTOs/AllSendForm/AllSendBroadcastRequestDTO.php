@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AllSendBroadcastRequestDTO
 {
     public function __construct(
-        public readonly ?string $uuid = null,
+        public readonly ?string $uuid,
         public readonly string $text,
         public readonly ?string $textShort = null,
         public readonly ?array $subscriptions = null,

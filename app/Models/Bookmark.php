@@ -24,7 +24,7 @@ class Bookmark extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User\User::class, 'user_id');
+        return $this->belongsTo(User\User::class, 'user_id');
     }
 
     /**
@@ -32,6 +32,6 @@ class Bookmark extends Model
      */
     public function post(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'post_id');
+        return $this->belongsTo(Communication\SmsPool::class, 'post_id');
     }
 }
