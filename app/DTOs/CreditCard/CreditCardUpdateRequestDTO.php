@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\CreditCard;
 
 use Illuminate\Http\Request;
@@ -22,16 +24,16 @@ class CreditCardUpdateRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            id: (int)$data['id'],
+            id: (int) $data['id'],
             firstName: $data['first_name'] ?? null,
             lastName: $data['last_name'] ?? null,
             phone: $data['phone'] ?? null,
             zip: $data['zip'] ?? null,
             cvv: $data['cvv'] ?? null,
-            expirationYear: isset($data['expiration_year']) ? (int)$data['expiration_year'] : null,
-            expirationMonth: isset($data['expiration_month']) ? (int)$data['expiration_month'] : null,
-            isPreferred: isset($data['is_preferred']) ? (bool)$data['is_preferred'] : null,
-            isAgreeToReceive: isset($data['is_agree_to_receive']) ? (bool)$data['is_agree_to_receive'] : null
+            expirationYear: isset($data['expiration_year']) ? (int) $data['expiration_year'] : null,
+            expirationMonth: isset($data['expiration_month']) ? (int) $data['expiration_month'] : null,
+            isPreferred: isset($data['is_preferred']) ? (bool) $data['is_preferred'] : null,
+            isAgreeToReceive: isset($data['is_agree_to_receive']) ? (bool) $data['is_agree_to_receive'] : null
         );
     }
 
@@ -63,7 +65,7 @@ class CreditCardUpdateRequestDTO
             'expiration_year' => $this->expirationYear,
             'expiration_month' => $this->expirationMonth,
             'is_preferred' => $this->isPreferred,
-            'is_agree_to_receive' => $this->isAgreeToReceive
+            'is_agree_to_receive' => $this->isAgreeToReceive,
         ];
     }
 

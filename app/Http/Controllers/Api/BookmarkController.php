@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Bookmark\CreateBookmarkAction;
@@ -9,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Bookmark\BookmarkListRequest;
 use App\Http\Requests\Bookmark\BookmarkRequest;
 use App\Http\Resources\ErrorResource;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -17,9 +20,9 @@ use Illuminate\Http\JsonResponse;
 class BookmarkController extends Controller
 {
     public function __construct(
-        private GetBookmarksAction $getBookmarksAction,
-        private CreateBookmarkAction $createBookmarkAction,
-        private DeleteBookmarkAction $deleteBookmarkAction
+        private readonly GetBookmarksAction $getBookmarksAction,
+        private readonly CreateBookmarkAction $createBookmarkAction,
+        private readonly DeleteBookmarkAction $deleteBookmarkAction
     ) {}
 
     /**
@@ -36,7 +39,7 @@ class BookmarkController extends Controller
             // Return the result directly since GetBookmarksAction already returns JsonResponse
             return $result;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Use ErrorResource for consistent error format
             return response()->json(new ErrorResource([
                 'message' => $e->getMessage(),
@@ -60,7 +63,7 @@ class BookmarkController extends Controller
             // Return the result directly since CreateBookmarkAction already returns JsonResponse
             return $result;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Use ErrorResource for consistent error format
             return response()->json(new ErrorResource([
                 'message' => $e->getMessage(),
@@ -84,7 +87,7 @@ class BookmarkController extends Controller
             // Return the result directly since DeleteBookmarkAction already returns JsonResponse
             return $result;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Use ErrorResource for consistent error format
             return response()->json(new ErrorResource([
                 'message' => $e->getMessage(),
@@ -94,4 +97,3 @@ class BookmarkController extends Controller
         }
     }
 }
-

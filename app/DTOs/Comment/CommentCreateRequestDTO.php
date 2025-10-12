@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Comment;
 
 use Illuminate\Http\Request;
@@ -15,8 +17,8 @@ class CommentCreateRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            newsId: isset($data['id_news']) ? (int)$data['id_news'] : null,
-            parentId: isset($data['id_parent']) ? (int)$data['id_parent'] : null,
+            newsId: isset($data['id_news']) ? (int) $data['id_news'] : null,
+            parentId: isset($data['id_parent']) ? (int) $data['id_parent'] : null,
             message: $data['message']
         );
     }
@@ -35,7 +37,7 @@ class CommentCreateRequestDTO
         return [
             'id_news' => $this->newsId,
             'id_parent' => $this->parentId,
-            'message' => $this->message
+            'message' => $this->message,
         ];
     }
 
@@ -44,11 +46,11 @@ class CommentCreateRequestDTO
         if (empty($this->message)) {
             return false;
         }
-        
-        if (!isset($this->newsId) && !isset($this->parentId)) {
+
+        if (! isset($this->newsId) && ! isset($this->parentId)) {
             return false;
         }
-        
+
         return true;
     }
 }

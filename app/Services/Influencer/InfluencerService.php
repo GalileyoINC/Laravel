@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Influencer;
 
 use App\DTOs\Influencer\InfluencerFeedCreateRequestDTO;
 use App\DTOs\Influencer\InfluencerFeedListRequestDTO;
-use App\Models\InfluencerPage;
-use App\Models\User;
+use App\Models\Subscription\InfluencerPage;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -34,7 +37,7 @@ class InfluencerService implements InfluencerServiceInterface
 
             return $feeds;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('InfluencerService getInfluencerFeeds error: '.$e->getMessage());
             throw $e;
         }
@@ -67,7 +70,7 @@ class InfluencerService implements InfluencerServiceInterface
 
             return $feed;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('InfluencerService createInfluencerFeed error: '.$e->getMessage());
             throw $e;
         }

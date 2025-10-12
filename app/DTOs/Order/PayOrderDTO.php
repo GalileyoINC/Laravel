@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Order;
 
 use Illuminate\Http\Request;
@@ -19,8 +21,8 @@ class PayOrderDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            idOrder: (int)$data['id_order'],
-            idCreditCard: (int)$data['id_credit_card'],
+            idOrder: (int) $data['id_order'],
+            idCreditCard: (int) $data['id_credit_card'],
             paymentReference: $data['payment_reference'] ?? null,
             paymentDetails: $data['payment_details'] ?? []
         );
@@ -42,7 +44,7 @@ class PayOrderDTO
             'id_order' => $this->idOrder,
             'id_credit_card' => $this->idCreditCard,
             'payment_reference' => $this->paymentReference,
-            'payment_details' => $this->paymentDetails
+            'payment_details' => $this->paymentDetails,
         ];
     }
 

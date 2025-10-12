@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Order;
 
 use App\DTOs\Order\CreateOrderDTO;
 use App\DTOs\Order\PayOrderDTO;
-use App\Models\User;
+use App\Models\Finance\CreditCard;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\CreditCard;
-use Illuminate\Support\Facades\Log;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Order service implementation
@@ -26,8 +29,8 @@ class OrderService implements OrderServiceInterface
 
             // Get product details
             $product = Product::find($dto->productId);
-            if (!$product) {
-                throw new \Exception('Product not found');
+            if (! $product) {
+                throw new Exception('Product not found');
             }
 
             // Calculate total amount if not provided
@@ -45,16 +48,16 @@ class OrderService implements OrderServiceInterface
                 'notes' => $dto->notes,
                 'product_details' => json_encode($dto->productDetails),
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             DB::commit();
 
             return $order;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error('OrderService createOrder error: ' . $e->getMessage());
+            Log::error('OrderService createOrder error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -72,12 +75,12 @@ class OrderService implements OrderServiceInterface
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$order) {
-                throw new \Exception('Order not found or unauthorized');
+            if (! $order) {
+                throw new Exception('Order not found or unauthorized');
             }
 
             if ($order->is_paid) {
-                throw new \Exception('Order is already paid');
+                throw new Exception('Order is already paid');
             }
 
             // Get credit card
@@ -85,8 +88,8 @@ class OrderService implements OrderServiceInterface
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$creditCard) {
-                throw new \Exception('Credit card not found or unauthorized');
+            if (! $creditCard) {
+                throw new Exception('Credit card not found or unauthorized');
             }
 
             // Process payment (simplified - in real app would integrate with payment gateway)
@@ -94,18 +97,18 @@ class OrderService implements OrderServiceInterface
                 'id_credit_card' => $dto->idCreditCard,
                 'status' => 'paid',
                 'is_paid' => true,
-                'payment_reference' => $dto->paymentReference ?? 'PAY_' . time(),
+                'payment_reference' => $dto->paymentReference ?? 'PAY_'.time(),
                 'payment_details' => json_encode($dto->paymentDetails),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             DB::commit();
 
             return $order;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error('OrderService payOrder error: ' . $e->getMessage());
+            Log::error('OrderService payOrder error: '.$e->getMessage());
             throw $e;
         }
     }

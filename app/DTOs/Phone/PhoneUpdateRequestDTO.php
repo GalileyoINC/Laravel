@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Phone;
 
 use Illuminate\Http\Request;
@@ -15,9 +17,9 @@ class PhoneUpdateRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            id: (int)$data['id'],
-            isSend: (bool)$data['is_send'],
-            isEmergencyOnly: (bool)$data['is_emergency_only']
+            id: (int) $data['id'],
+            isSend: (bool) $data['is_send'],
+            isEmergencyOnly: (bool) $data['is_emergency_only']
         );
     }
 
@@ -35,7 +37,7 @@ class PhoneUpdateRequestDTO
         return [
             'id' => $this->id,
             'is_send' => $this->isSend,
-            'is_emergency_only' => $this->isEmergencyOnly
+            'is_emergency_only' => $this->isEmergencyOnly,
         ];
     }
 

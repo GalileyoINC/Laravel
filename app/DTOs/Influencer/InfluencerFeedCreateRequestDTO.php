@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Influencer;
 
 use Illuminate\Http\Request;
@@ -48,16 +50,16 @@ class InfluencerFeedCreateRequestDTO
             'alias' => $this->alias,
             'page_title' => $this->pageTitle,
             'page_description' => $this->pageDescription,
-            'image_file' => $this->imageFile
+            'image_file' => $this->imageFile,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->title) && 
-               !empty($this->description) && 
-               !empty($this->alias) && 
-               !empty($this->pageTitle) && 
-               !empty($this->pageDescription);
+        return ! empty($this->title) &&
+               ! empty($this->description) &&
+               ! empty($this->alias) &&
+               ! empty($this->pageTitle) &&
+               ! empty($this->pageDescription);
     }
 }

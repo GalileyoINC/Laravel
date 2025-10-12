@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Device;
 
 use Illuminate\Http\Request;
@@ -15,9 +17,9 @@ class PushSettingsRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            pushTurnOn: (bool)$data['push_turn_on'],
-            isSend: (bool)$data['is_send'],
-            isEmergencyOnly: (bool)$data['is_emergency_only']
+            pushTurnOn: (bool) $data['push_turn_on'],
+            isSend: (bool) $data['is_send'],
+            isEmergencyOnly: (bool) $data['is_emergency_only']
         );
     }
 
@@ -35,7 +37,7 @@ class PushSettingsRequestDTO
         return [
             'push_turn_on' => $this->pushTurnOn,
             'is_send' => $this->isSend,
-            'is_emergency_only' => $this->isEmergencyOnly
+            'is_emergency_only' => $this->isEmergencyOnly,
         ];
     }
 

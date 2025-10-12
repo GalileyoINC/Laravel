@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\News;
 
 use App\DTOs\News\GetNewsByFollowerListRequestDTO;
@@ -8,11 +10,12 @@ use App\DTOs\News\NewsBySubscriptionDTO;
 use App\DTOs\News\NewsListRequestDTO;
 use App\DTOs\News\ReactionRequestDTO;
 use App\DTOs\News\ReportNewsRequestDTO;
-use App\Models\Mute;
-use App\Models\Reaction;
-use App\Models\Report;
-use App\Models\SmsPool;
-use App\Models\User;
+use App\Models\Communication\SmsPool;
+use App\Models\Content\Reaction;
+use App\Models\Content\Report;
+use App\Models\User\User\Mute;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -49,7 +52,7 @@ class NewsService implements NewsServiceInterface
             $news->each(function ($item) {
                 // Add images field
                 $item->images = $item->photos->map(function ($photo) {
-                    $sizes = $photo->sizes ? json_decode($photo->sizes, true) : [];
+                    $sizes = $photo->sizes ? json_decode((string) $photo->sizes, true) : [];
 
                     // Transform sizes to match frontend expectations
                     $transformedSizes = [];
@@ -73,7 +76,7 @@ class NewsService implements NewsServiceInterface
                 $item->type = $this->getFeedItemType($item->purpose);
                 $item->title = $item->short_body ?? '';
                 $item->subtitle = '';
-                $item->body = $item->body ?? '';
+                $item->body ??= '';
                 $item->image = null; // Will be populated from images if available
                 $item->emergency_level = null;
                 $item->location = null;
@@ -86,12 +89,12 @@ class NewsService implements NewsServiceInterface
                 // Add financial-specific fields for financial items (only if subscription is financial)
                 if ($item->type === 'financial' && $item->id_subscription) {
                     // Parse financial data from SMS body like YII does
-                    preg_match('/\: (.*) \(.*, (.*)\)$/', $item->body, $matches);
-                    
-                    if (!empty($matches[1])) {
+                    preg_match('/\: (.*) \(.*, (.*)\)$/', (string) $item->body, $matches);
+
+                    if (! empty($matches[1])) {
                         $number = str_replace(',', '', $matches[1]);
-                        $afterDot = strlen(explode('.', $number)[1] ?? '');
-                        
+                        $afterDot = mb_strlen(explode('.', $number)[1] ?? '');
+
                         $item->percent = $matches[2];
                         $item->price = number_format($number, $afterDot);
                     } else {
@@ -119,24 +122,10 @@ class NewsService implements NewsServiceInterface
 
             return $news;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService getLastNews error: '.$e->getMessage());
             throw $e;
         }
-    }
-
-    /**
-     * Get feed item type based on purpose
-     */
-    private function getFeedItemType(int $purpose): string
-    {
-        return match ($purpose) {
-            1 => 'general',  // Changed from 'financial' to 'general'
-            2 => 'influencer',
-            3 => 'subscription',
-            4 => 'general',
-            default => 'general'
-        };
     }
 
     /**
@@ -165,7 +154,7 @@ class NewsService implements NewsServiceInterface
             $news->each(function ($item) {
                 // Add images field
                 $item->images = $item->photos->map(function ($photo) {
-                    $sizes = $photo->sizes ? json_decode($photo->sizes, true) : [];
+                    $sizes = $photo->sizes ? json_decode((string) $photo->sizes, true) : [];
 
                     // Transform sizes to match frontend expectations
                     $transformedSizes = [];
@@ -189,7 +178,7 @@ class NewsService implements NewsServiceInterface
                 $item->type = $this->getFeedItemType($item->purpose);
                 $item->title = $item->short_body ?? '';
                 $item->subtitle = '';
-                $item->body = $item->body ?? '';
+                $item->body ??= '';
                 $item->image = null; // Will be populated from images if available
                 $item->emergency_level = null;
                 $item->location = null;
@@ -202,12 +191,12 @@ class NewsService implements NewsServiceInterface
                 // Add financial-specific fields for financial items (only if subscription is financial)
                 if ($item->type === 'financial' && $item->id_subscription) {
                     // Parse financial data from SMS body like YII does
-                    preg_match('/\: (.*) \(.*, (.*)\)$/', $item->body, $matches);
-                    
-                    if (!empty($matches[1])) {
+                    preg_match('/\: (.*) \(.*, (.*)\)$/', (string) $item->body, $matches);
+
+                    if (! empty($matches[1])) {
                         $number = str_replace(',', '', $matches[1]);
-                        $afterDot = strlen(explode('.', $number)[1] ?? '');
-                        
+                        $afterDot = mb_strlen(explode('.', $number)[1] ?? '');
+
                         $item->percent = $matches[2];
                         $item->price = number_format($number, $afterDot);
                     } else {
@@ -235,7 +224,7 @@ class NewsService implements NewsServiceInterface
 
             return $news;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService getNewsByInfluencers error: '.$e->getMessage());
             throw $e;
         }
@@ -270,7 +259,7 @@ class NewsService implements NewsServiceInterface
 
             return $news;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService getNewsByInfluencers error: '.$e->getMessage());
             throw $e;
         }
@@ -310,7 +299,7 @@ class NewsService implements NewsServiceInterface
 
             return $reaction;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService setReaction error: '.$e->getMessage());
             throw $e;
         }
@@ -334,7 +323,7 @@ class NewsService implements NewsServiceInterface
 
             return ['success' => false, 'message' => 'Reaction not found'];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService removeReaction error: '.$e->getMessage());
             throw $e;
         }
@@ -357,7 +346,7 @@ class NewsService implements NewsServiceInterface
 
             return $news;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService getNewsByFollowerList error: '.$e->getMessage());
             throw $e;
         }
@@ -380,7 +369,7 @@ class NewsService implements NewsServiceInterface
 
             return ['success' => true, 'message' => 'News reported successfully', 'report_id' => $report->id];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService reportNews error: '.$e->getMessage());
             throw $e;
         }
@@ -405,7 +394,7 @@ class NewsService implements NewsServiceInterface
 
             return ['success' => true, 'message' => 'Subscription muted successfully'];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService muteSubscription error: '.$e->getMessage());
             throw $e;
         }
@@ -429,9 +418,23 @@ class NewsService implements NewsServiceInterface
 
             return ['success' => false, 'message' => 'Subscription not found'];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('NewsService unmuteSubscription error: '.$e->getMessage());
             throw $e;
         }
+    }
+
+    /**
+     * Get feed item type based on purpose
+     */
+    private function getFeedItemType(int $purpose): string
+    {
+        return match ($purpose) {
+            1 => 'general',  // Changed from 'financial' to 'general'
+            2 => 'influencer',
+            3 => 'subscription',
+            4 => 'general',
+            default => 'general'
+        };
     }
 }

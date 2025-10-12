@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\PrivateFeed;
 
-use App\DTOs\PrivateFeed\PrivateFeedListRequestDTO;
 use App\DTOs\PrivateFeed\PrivateFeedCreateRequestDTO;
-use App\Models\User;
-use App\Models\FollowerList;
+use App\DTOs\PrivateFeed\PrivateFeedListRequestDTO;
+use App\Models\Subscription\FollowerList;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,9 +27,9 @@ class PrivateFeedService implements PrivateFeedServiceInterface
                 ->with(['user', 'followers']);
 
             // Apply filters
-            if (!empty($dto->filter)) {
+            if (! empty($dto->filter)) {
                 if (isset($dto->filter['title'])) {
-                    $query->where('title', 'like', '%' . $dto->filter['title'] . '%');
+                    $query->where('title', 'like', '%'.$dto->filter['title'].'%');
                 }
             }
 
@@ -37,8 +40,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
 
             return $privateFeeds->toArray();
 
-        } catch (\Exception $e) {
-            Log::error('PrivateFeedService getPrivateFeedList error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('PrivateFeedService getPrivateFeedList error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -49,7 +52,7 @@ class PrivateFeedService implements PrivateFeedServiceInterface
     public function createPrivateFeed(PrivateFeedCreateRequestDTO $dto, User $user)
     {
         try {
-            $followerList = new FollowerList();
+            $followerList = new FollowerList;
             $followerList->id_user = $user->id;
             $followerList->title = $dto->title;
             $followerList->description = $dto->description;
@@ -66,8 +69,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
 
             return $followerList;
 
-        } catch (\Exception $e) {
-            Log::error('PrivateFeedService createPrivateFeed error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('PrivateFeedService createPrivateFeed error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -82,8 +85,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$followerList) {
-                throw new \Exception('Private feed not found or unauthorized');
+            if (! $followerList) {
+                throw new Exception('Private feed not found or unauthorized');
             }
 
             $followerList->title = $dto->title;
@@ -96,7 +99,7 @@ class PrivateFeedService implements PrivateFeedServiceInterface
                 if ($followerList->image_path) {
                     Storage::disk('public')->delete($followerList->image_path);
                 }
-                
+
                 $imagePath = $dto->imageFile->store('private-feeds', 'public');
                 $followerList->image_path = $imagePath;
             }
@@ -105,8 +108,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
 
             return $followerList;
 
-        } catch (\Exception $e) {
-            Log::error('PrivateFeedService updatePrivateFeed error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('PrivateFeedService updatePrivateFeed error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -121,8 +124,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$followerList) {
-                throw new \Exception('Private feed not found or unauthorized');
+            if (! $followerList) {
+                throw new Exception('Private feed not found or unauthorized');
             }
 
             // Delete image if exists
@@ -132,8 +135,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
 
             return $followerList->delete();
 
-        } catch (\Exception $e) {
-            Log::error('PrivateFeedService deletePrivateFeed error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('PrivateFeedService deletePrivateFeed error: '.$e->getMessage());
             throw $e;
         }
     }

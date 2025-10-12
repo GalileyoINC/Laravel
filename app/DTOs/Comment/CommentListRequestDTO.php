@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Comment;
 
 use Illuminate\Http\Request;
@@ -16,9 +18,9 @@ class CommentListRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            newsId: (int)$data['id_news'],
-            limit: isset($data['limit']) ? (int)$data['limit'] : 20,
-            offset: isset($data['offset']) ? (int)$data['offset'] : 0,
+            newsId: (int) $data['id_news'],
+            limit: isset($data['limit']) ? (int) $data['limit'] : 20,
+            offset: isset($data['offset']) ? (int) $data['offset'] : 0,
             filter: $data['filter'] ?? []
         );
     }
@@ -39,7 +41,7 @@ class CommentListRequestDTO
             'id_news' => $this->newsId,
             'limit' => $this->limit,
             'offset' => $this->offset,
-            'filter' => $this->filter
+            'filter' => $this->filter,
         ];
     }
 

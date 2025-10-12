@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\News;
 
 use Illuminate\Http\Request;
@@ -18,9 +20,9 @@ class NewsBySubscriptionDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            idSubscription: (int)$data['id_subscription'],
-            limit: isset($data['limit']) ? (int)$data['limit'] : 20,
-            offset: isset($data['offset']) ? (int)$data['offset'] : 0
+            idSubscription: (int) $data['id_subscription'],
+            limit: isset($data['limit']) ? (int) $data['limit'] : 20,
+            offset: isset($data['offset']) ? (int) $data['offset'] : 0
         );
     }
 
@@ -38,7 +40,7 @@ class NewsBySubscriptionDTO
         return [
             'id_subscription' => $this->idSubscription,
             'limit' => $this->limit,
-            'offset' => $this->offset
+            'offset' => $this->offset,
         ];
     }
 

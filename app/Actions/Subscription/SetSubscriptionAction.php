@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Subscription;
 
 use App\DTOs\Subscription\SubscriptionRequestDTO;
 use App\Services\Subscription\SubscriptionServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,25 +14,25 @@ use Illuminate\Support\Facades\Log;
 class SetSubscriptionAction
 {
     public function __construct(
-        private SubscriptionServiceInterface $subscriptionService
+        private readonly SubscriptionServiceInterface $subscriptionService
     ) {}
 
     public function execute(array $data): JsonResponse
     {
         try {
             $dto = SubscriptionRequestDTO::fromArray($data);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
                     'errors' => ['Invalid subscription request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
@@ -37,12 +40,12 @@ class SetSubscriptionAction
 
             return response()->json($result);
 
-        } catch (\Exception $e) {
-            Log::error('SetSubscriptionAction error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('SetSubscriptionAction error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

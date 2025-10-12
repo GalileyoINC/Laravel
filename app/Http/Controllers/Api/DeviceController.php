@@ -1,55 +1,72 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Device\DeleteDeviceAction;
+use App\Actions\Device\GetDeviceAction;
+use App\Actions\Device\GetDeviceListAction;
+use App\Actions\Device\SendPushNotificationAction;
 use App\Http\Controllers\Controller;
-use App\Actions\Device\UpdateDeviceAction;
-use App\Actions\Device\VerifyDeviceAction;
-use Illuminate\Http\Request;
+use App\Http\Requests\Device\DeviceListRequest;
+use App\Http\Requests\Device\DevicePushRequest;
+use App\Http\Resources\DeviceResource;
+use App\Http\Resources\ErrorResource;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
-/**
- * Refactored Device Controller using DDD Actions
- * Handles device management: updates, verification, push settings
- */
 class DeviceController extends Controller
 {
-    public function __construct(
-        private UpdateDeviceAction $updateDeviceAction,
-        private VerifyDeviceAction $verifyDeviceAction
-    ) {}
-
-    /**
-     * Update device information (POST /api/v1/device/update)
-     */
-    public function update(Request $request): JsonResponse
+    public function index(DeviceListRequest $request, GetDeviceListAction $action): JsonResponse
     {
-        return $this->updateDeviceAction->execute($request->all());
+        try {
+            $result = $action->execute($request->validated());
+
+            return DeviceResource::collection($result)->response();
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
     }
 
-    /**
-     * Verify device UUID (POST /api/v1/device/verify)
-     */
-    public function verify(Request $request): JsonResponse
+    public function view(int $id, GetDeviceAction $action): JsonResponse
     {
-        return $this->verifyDeviceAction->execute($request->all());
+        try {
+            $result = $action->execute(['id' => $id]);
+
+            return DeviceResource::make($result)->response();
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
     }
 
-    /**
-     * Get push settings (GET /api/v1/device/push-settings-get)
-     */
-    public function pushSettingsGet(Request $request): JsonResponse
+    public function delete(int $id, DeleteDeviceAction $action): JsonResponse
     {
-        // Implementation for getting push settings
-        return response()->json(['message' => 'Get push settings endpoint not implemented yet']);
+        try {
+            $result = $action->execute(['id' => $id]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Device deleted successfully',
+            ]);
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
     }
 
-    /**
-     * Set push settings (POST /api/v1/device/push-settings-set)
-     */
-    public function pushSettingsSet(Request $request): JsonResponse
+    public function push(int $id, DevicePushRequest $request, SendPushNotificationAction $action): JsonResponse
     {
-        // Implementation for setting push settings
-        return response()->json(['message' => 'Set push settings endpoint not implemented yet']);
+        try {
+            $data = array_merge($request->validated(), ['id' => $id]);
+            $result = $action->execute($data);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Push notification sent successfully',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
     }
 }

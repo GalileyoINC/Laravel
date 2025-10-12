@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Users;
 
 use App\DTOs\Users\UsersListRequestDTO;
-use App\Models\User;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -45,7 +48,7 @@ class UsersService implements UsersServiceInterface
 
             return $users;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('UsersService getUsersList error: '.$e->getMessage());
             throw $e;
         }

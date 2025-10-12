@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Order;
 
 use App\DTOs\Order\CreateOrderDTO;
 use App\DTOs\Order\OrderResponseDTO;
 use App\Services\Order\OrderServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -12,25 +15,25 @@ use Illuminate\Support\Facades\Log;
 class CreateOrderAction
 {
     public function __construct(
-        private OrderServiceInterface $orderService
+        private readonly OrderServiceInterface $orderService
     ) {}
 
     public function execute(array $data): JsonResponse
     {
         try {
             $dto = CreateOrderDTO::fromArray($data);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
                     'errors' => ['Invalid order creation request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
@@ -39,12 +42,12 @@ class CreateOrderAction
 
             return response()->json($responseDto->toArray());
 
-        } catch (\Exception $e) {
-            Log::error('CreateOrderAction error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('CreateOrderAction error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

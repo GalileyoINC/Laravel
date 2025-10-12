@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Actions\News\CreateNewsAction;
@@ -21,15 +23,15 @@ use Illuminate\Http\Request;
 class NewsController extends Controller
 {
     public function __construct(
-        private GetLastNewsAction $getLastNewsAction,
-        private GetNewsByInfluencersAction $getNewsByInfluencersAction,
-        private SetReactionAction $setReactionAction,
-        private RemoveReactionAction $removeReactionAction,
-        private ReportNewsAction $reportNewsAction,
-        private MuteSubscriptionAction $muteSubscriptionAction,
-        private UnmuteSubscriptionAction $unmuteSubscriptionAction,
-        private GetNewsByFollowerListAction $getNewsByFollowerListAction,
-        private CreateNewsAction $createNewsAction
+        private readonly GetLastNewsAction $getLastNewsAction,
+        private readonly GetNewsByInfluencersAction $getNewsByInfluencersAction,
+        private readonly SetReactionAction $setReactionAction,
+        private readonly RemoveReactionAction $removeReactionAction,
+        private readonly ReportNewsAction $reportNewsAction,
+        private readonly MuteSubscriptionAction $muteSubscriptionAction,
+        private readonly UnmuteSubscriptionAction $unmuteSubscriptionAction,
+        private readonly GetNewsByFollowerListAction $getNewsByFollowerListAction,
+        private readonly CreateNewsAction $createNewsAction
     ) {}
 
     /**

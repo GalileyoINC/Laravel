@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Authentication;
 
 /**
@@ -34,7 +36,7 @@ class AuthResponseDTO
             'access_token' => $this->access_token,
             'refresh_token' => $this->refresh_token,
             'expires_in' => $this->expires_in,
-            'user_profile' => $this->user_profile
+            'user_profile' => $this->user_profile,
         ];
     }
 }

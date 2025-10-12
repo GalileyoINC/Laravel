@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Comment;
 
 use Illuminate\Http\Request;
@@ -14,7 +16,7 @@ class CommentUpdateRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            id: (int)$data['id'],
+            id: (int) $data['id'],
             message: $data['message']
         );
     }
@@ -31,7 +33,7 @@ class CommentUpdateRequestDTO
     {
         return [
             'id' => $this->id,
-            'message' => $this->message
+            'message' => $this->message,
         ];
     }
 
@@ -40,11 +42,11 @@ class CommentUpdateRequestDTO
         if ($this->id <= 0) {
             return false;
         }
-        
+
         if (empty($this->message)) {
             return false;
         }
-        
+
         return true;
     }
 }

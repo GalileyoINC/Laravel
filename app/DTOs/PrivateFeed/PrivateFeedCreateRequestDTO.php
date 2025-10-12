@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\PrivateFeed;
 
 use Illuminate\Http\Request;
@@ -36,12 +38,12 @@ class PrivateFeedCreateRequestDTO
         return [
             'title' => $this->title,
             'description' => $this->description,
-            'image_file' => $this->imageFile
+            'image_file' => $this->imageFile,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->title);
+        return ! empty($this->title);
     }
 }

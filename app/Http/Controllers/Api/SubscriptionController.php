@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Actions\Subscription\SetSubscriptionAction;
-use App\Services\Subscription\SubscriptionServiceInterface;
-use App\DTOs\Subscription\MarketstackSubscriptionDTO;
 use App\DTOs\Subscription\FeedOptionsDTO;
-use App\Models\SmsPoolPhoto;
-use Illuminate\Http\Request;
+use App\DTOs\Subscription\MarketstackSubscriptionDTO;
+use App\Http\Controllers\Controller;
+use App\Models\Communication\SmsPoolPhoto;
+use App\Services\Subscription\SubscriptionServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Refactored Subscription Controller using DDD Actions
@@ -22,8 +24,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class SubscriptionController extends Controller
 {
     public function __construct(
-        private SetSubscriptionAction $setSubscriptionAction,
-        private SubscriptionServiceInterface $subscriptionService
+        private readonly SetSubscriptionAction $setSubscriptionAction,
+        private readonly SubscriptionServiceInterface $subscriptionService
     ) {}
 
     /**
@@ -41,6 +43,7 @@ class SubscriptionController extends Controller
     {
         $data = $request->all();
         $data['sub_type'] = 'satellite';
+
         return $this->setSubscriptionAction->execute($data);
     }
 
@@ -51,9 +54,11 @@ class SubscriptionController extends Controller
     {
         try {
             $categories = $this->subscriptionService->getFeedCategories();
+
             return response()->json($categories);
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController category error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController category error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }
@@ -67,9 +72,11 @@ class SubscriptionController extends Controller
             $dto = FeedOptionsDTO::fromRequest($request);
             $user = Auth::user();
             $feeds = $this->subscriptionService->getFeedList($dto, $user);
+
             return response()->json($feeds);
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController index error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController index error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }
@@ -83,9 +90,11 @@ class SubscriptionController extends Controller
             $dto = FeedOptionsDTO::fromRequest($request);
             $user = Auth::user();
             $feeds = $this->subscriptionService->getSatelliteFeedList($dto, $user);
+
             return response()->json($feeds);
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController satelliteIndex error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController satelliteIndex error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }
@@ -97,22 +106,24 @@ class SubscriptionController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
             $data = $request->all();
             $data['type'] = 'indx';
             $dto = MarketstackSubscriptionDTO::fromArray($data);
-            
-            if (!$dto->validate()) {
+
+            if (! $dto->validate()) {
                 return response()->json(['errors' => ['Invalid marketstack subscription request']], 400);
             }
 
             $result = $this->subscriptionService->addMarketstackSubscription($dto, $user);
+
             return response()->json($result);
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController addOwnMarketstackIndxSubscription error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController addOwnMarketstackIndxSubscription error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }
@@ -124,22 +135,24 @@ class SubscriptionController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
             $data = $request->all();
             $data['type'] = 'ticker';
             $dto = MarketstackSubscriptionDTO::fromArray($data);
-            
-            if (!$dto->validate()) {
+
+            if (! $dto->validate()) {
                 return response()->json(['errors' => ['Invalid marketstack subscription request']], 400);
             }
 
             $result = $this->subscriptionService->addMarketstackSubscription($dto, $user);
+
             return response()->json($result);
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController addOwnMarketstackTickerSubscription error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController addOwnMarketstackTickerSubscription error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }
@@ -151,9 +164,11 @@ class SubscriptionController extends Controller
     {
         try {
             $options = $this->subscriptionService->getFeedOptions();
+
             return response()->json($options);
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController options error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController options error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }
@@ -165,19 +180,21 @@ class SubscriptionController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
             $id = $request->input('id');
-            if (!$id) {
+            if (! $id) {
                 return response()->json(['errors' => ['ID is required']], 400);
             }
 
             $result = $this->subscriptionService->deletePrivateFeed($id, $user);
+
             return response()->json($result);
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController deletePrivateFeed error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController deletePrivateFeed error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }
@@ -191,27 +208,27 @@ class SubscriptionController extends Controller
             $id = $request->query('id');
             $type = $request->query('type', 'normal');
 
-            if (!$id) {
+            if (! $id) {
                 return response()->json(['error' => 'Image ID is required'], 400);
             }
 
             $smsPoolPhoto = SmsPoolPhoto::find($id);
 
-            if (!$smsPoolPhoto) {
+            if (! $smsPoolPhoto) {
                 return response()->json(['error' => 'Image not found'], 404);
             }
 
             // Get sizes from JSON column
             $sizes = $smsPoolPhoto->sizes;
-            
+
             if (empty($sizes) || empty($sizes[$type]['name'])) {
                 return response()->json(['error' => 'Image type not found'], 404);
             }
 
-            $filePath = $smsPoolPhoto->folder_name . '/' . $sizes[$type]['name'];
-            
+            $filePath = $smsPoolPhoto->folder_name.'/'.$sizes[$type]['name'];
+
             // Check if file exists in storage
-            if (!Storage::disk('public')->exists($filePath)) {
+            if (! Storage::disk('public')->exists($filePath)) {
                 return response()->json(['error' => 'Image file not found on disk'], 404);
             }
 
@@ -220,12 +237,13 @@ class SubscriptionController extends Controller
                 Storage::disk('public')->path($filePath),
                 [
                     'Content-Type' => 'image/jpeg',
-                    'Content-Disposition' => 'inline; filename="' . $sizes[$type]['name'] . '"'
+                    'Content-Disposition' => 'inline; filename="'.$sizes[$type]['name'].'"',
                 ]
             );
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionController getImage error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionController getImage error: '.$e->getMessage());
+
             return response()->json(['error' => 'An internal server error occurred.'], 500);
         }
     }

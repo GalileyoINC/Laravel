@@ -1,26 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Comment;
 
 use App\DTOs\Comment\CommentListRequestDTO;
 use App\Services\Comment\CommentServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class GetCommentsAction
 {
     public function __construct(
-        private CommentServiceInterface $commentService
+        private readonly CommentServiceInterface $commentService
     ) {}
 
     public function execute(array $data): JsonResponse
     {
         try {
             $dto = CommentListRequestDTO::fromArray($data);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
                     'errors' => ['Invalid comment list request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
@@ -28,12 +31,12 @@ class GetCommentsAction
 
             return response()->json($commentList->toArray());
 
-        } catch (\Exception $e) {
-            Log::error('GetCommentsAction error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('GetCommentsAction error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

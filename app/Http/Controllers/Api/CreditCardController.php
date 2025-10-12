@@ -1,64 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Actions\CreditCard\GetCreditCardAction;
 use App\Actions\CreditCard\GetCreditCardListAction;
-use App\Actions\CreditCard\CreateCreditCardAction;
-use Illuminate\Http\Request;
+use App\Actions\CreditCard\GetGatewayProfileAction;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CreditCard\CreditCardListRequest;
+use App\Http\Resources\CreditCardResource;
+use App\Http\Resources\ErrorResource;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
-/**
- * Refactored CreditCard Controller using DDD Actions
- * Handles credit card operations: list, create, update, set preferred, delete
- */
 class CreditCardController extends Controller
 {
-    public function __construct(
-        private GetCreditCardListAction $getCreditCardListAction,
-        private CreateCreditCardAction $createCreditCardAction
-    ) {}
-
-    /**
-     * Get credit card list (POST /api/v1/credit-card/list)
-     */
-    public function list(Request $request): JsonResponse
+    public function index(CreditCardListRequest $request, GetCreditCardListAction $action): JsonResponse
     {
-        return $this->getCreditCardListAction->execute($request->all());
+        try {
+            $result = $action->execute($request->validated());
+
+            return CreditCardResource::collection($result)->response();
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
     }
 
-    /**
-     * Create credit card (POST /api/v1/credit-card/create)
-     */
-    public function create(Request $request): JsonResponse
+    public function view(int $id, GetCreditCardAction $action): JsonResponse
     {
-        return $this->createCreditCardAction->execute($request->all());
+        try {
+            $result = $action->execute(['id' => $id]);
+
+            return CreditCardResource::make($result)->response();
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
     }
 
-    /**
-     * Update credit card (POST /api/v1/credit-card/update)
-     */
-    public function update(Request $request): JsonResponse
+    public function getGatewayProfile(int $id, GetGatewayProfileAction $action): JsonResponse
     {
-        // Implementation for updating credit card
-        return response()->json(['message' => 'Update credit card endpoint not implemented yet']);
-    }
+        try {
+            $result = $action->execute(['id' => $id]);
 
-    /**
-     * Set preferred credit card (POST /api/v1/credit-card/set-preferred)
-     */
-    public function setPreferred(Request $request): JsonResponse
-    {
-        // Implementation for setting preferred credit card
-        return response()->json(['message' => 'Set preferred credit card endpoint not implemented yet']);
-    }
-
-    /**
-     * Delete credit card (POST /api/v1/credit-card/delete)
-     */
-    public function delete(Request $request): JsonResponse
-    {
-        // Implementation for deleting credit card
-        return response()->json(['message' => 'Delete credit card endpoint not implemented yet']);
+            return response()->json([
+                'status' => 'success',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
     }
 }

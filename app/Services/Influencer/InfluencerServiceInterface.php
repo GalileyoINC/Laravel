@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Influencer;
 
-use App\DTOs\Influencer\InfluencerFeedListRequestDTO;
 use App\DTOs\Influencer\InfluencerFeedCreateRequestDTO;
-use App\Models\User;
+use App\DTOs\Influencer\InfluencerFeedListRequestDTO;
+use App\Models\User\User\User;
 
 /**
  * Influencer service interface
@@ -14,8 +16,6 @@ interface InfluencerServiceInterface
     /**
      * Get influencer feeds
      *
-     * @param InfluencerFeedListRequestDTO $dto
-     * @param User $user
      * @return mixed
      */
     public function getInfluencerFeeds(InfluencerFeedListRequestDTO $dto, User $user);
@@ -23,8 +23,6 @@ interface InfluencerServiceInterface
     /**
      * Create influencer feed
      *
-     * @param InfluencerFeedCreateRequestDTO $dto
-     * @param User $user
      * @return mixed
      */
     public function createInfluencerFeed(InfluencerFeedCreateRequestDTO $dto, User $user);

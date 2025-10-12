@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Search;
 
 use App\DTOs\Search\SearchRequestDTO;
-use App\Models\User;
+use App\Models\User\User\User;
 
 interface SearchServiceInterface
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\News;
 
 class MuteSubscriptionRequestDTO
@@ -17,6 +19,6 @@ class MuteSubscriptionRequestDTO
 
     public function validate(): bool
     {
-        return !empty($this->id_subscription);
+        return ! empty($this->id_subscription);
     }
 }

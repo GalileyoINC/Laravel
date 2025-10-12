@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Authentication;
 
-use App\DTOs\Authentication\LoginRequestDTO;
 use App\DTOs\Authentication\AuthResponseDTO;
-use App\Models\Device;
-use App\Models\User;
+use App\DTOs\Authentication\LoginRequestDTO;
+use App\Models\Device\Device\Device;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
  * Authentication service implementation
- * 
+ *
  * Bridge between DDD structure and existing authentication logic
  */
 class AuthService implements AuthServiceInterface
@@ -24,19 +27,19 @@ class AuthService implements AuthServiceInterface
         try {
             // Find user by email
             $user = User::where('email', $loginDto->email)->first();
-            
-            if (!$user) {
+
+            if (! $user) {
                 return null;
             }
 
             // Verify password (assuming password_hash is stored)
-            if (!password_verify($loginDto->password, $user->password_hash)) {
+            if (! password_verify($loginDto->password, (string) $user->password_hash)) {
                 return null;
             }
 
             // Generate access token
             $accessToken = Str::random(64);
-            
+
             // Create or update device record
             $device = Device::updateOrCreate(
                 ['id_user' => $user->id],
@@ -45,7 +48,7 @@ class AuthService implements AuthServiceInterface
                     'uuid' => $loginDto->device['device_uuid'] ?? 'unknown',
                     'os' => $loginDto->device['device_os'] ?? 'unknown',
                     'params' => json_encode($loginDto->device),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]
             );
 
@@ -60,12 +63,13 @@ class AuthService implements AuthServiceInterface
                     'email' => $user->email,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
-                    'role' => $user->role
+                    'role' => $user->role,
                 ]
             );
 
-        } catch (\Exception $e) {
-            Log::error('Authentication error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Authentication error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -87,15 +91,17 @@ class AuthService implements AuthServiceInterface
         try {
             // Find device by token and delete it
             $device = Device::where('access_token', $accessToken)->first();
-            
+
             if ($device) {
                 $device->delete();
+
                 return true;
             }
 
             return false;
-        } catch (\Exception $e) {
-            Log::error('Logout error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Logout error: '.$e->getMessage());
+
             return false;
         }
     }

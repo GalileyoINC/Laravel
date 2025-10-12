@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -34,7 +36,7 @@ class ProductResource extends JsonResource
                 'trial_period' => $this->resource['trial_period'] ?? null,
                 'created_at' => $this->resource['created_at'] ?? null,
                 'updated_at' => $this->resource['updated_at'] ?? null,
-            ]
+            ],
         ];
     }
 

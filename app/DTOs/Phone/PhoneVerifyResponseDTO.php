@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Phone;
 
 class PhoneVerifyResponseDTO
@@ -21,7 +23,7 @@ class PhoneVerifyResponseDTO
     {
         return [
             'message' => $this->message,
-            'status' => $this->status
+            'status' => $this->status,
         ];
     }
 }

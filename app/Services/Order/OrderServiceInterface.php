@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Order;
 
 use App\DTOs\Order\CreateOrderDTO;
 use App\DTOs\Order\PayOrderDTO;
-use App\Models\User;
+use App\Models\User\User\User;
 
 /**
  * Order service interface
@@ -14,8 +16,6 @@ interface OrderServiceInterface
     /**
      * Create new order
      *
-     * @param CreateOrderDTO $dto
-     * @param User $user
      * @return mixed
      */
     public function createOrder(CreateOrderDTO $dto, User $user);
@@ -23,16 +23,12 @@ interface OrderServiceInterface
     /**
      * Pay for order
      *
-     * @param PayOrderDTO $dto
-     * @param User $user
      * @return mixed
      */
     public function payOrder(PayOrderDTO $dto, User $user);
 
     /**
      * Get test order data
-     *
-     * @return array
      */
     public function getTestOrder(): array;
 }

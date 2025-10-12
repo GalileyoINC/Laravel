@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Chat;
 
 use App\DTOs\Chat\ChatListRequestDTO;
 use App\DTOs\Chat\ChatMessagesRequestDTO;
-use App\Models\User;
-use App\Models\Conversation;
-use App\Models\ConversationMessage;
+use App\Models\Communication\Conversation;
+use App\Models\Communication\ConversationMessage;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -25,22 +28,22 @@ class ChatService implements ChatServiceInterface
             });
 
             // Apply filters if any
-            if (!empty($dto->filter)) {
+            if (! empty($dto->filter)) {
                 // Add filter logic here
             }
 
             $conversations = $query->with(['conversationUsers', 'conversationMessages' => function ($q) {
                 $q->latest()->limit(1);
             }])
-            ->orderBy('updated_at', 'desc')
-            ->limit($dto->limit)
-            ->offset($dto->offset)
-            ->get();
+                ->orderBy('updated_at', 'desc')
+                ->limit($dto->limit)
+                ->offset($dto->offset)
+                ->get();
 
             return $conversations;
 
-        } catch (\Exception $e) {
-            Log::error('ChatService getConversationList error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('ChatService getConversationList error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -55,8 +58,8 @@ class ChatService implements ChatServiceInterface
                 $q->where('id_user', $user->id);
             })->find($dto->conversationId);
 
-            if (!$conversation) {
-                throw new \Exception('Conversation not found');
+            if (! $conversation) {
+                throw new Exception('Conversation not found');
             }
 
             $messages = ConversationMessage::where('id_conversation', $dto->conversationId)
@@ -68,8 +71,8 @@ class ChatService implements ChatServiceInterface
 
             return $messages;
 
-        } catch (\Exception $e) {
-            Log::error('ChatService getConversationMessages error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('ChatService getConversationMessages error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -83,16 +86,16 @@ class ChatService implements ChatServiceInterface
             $conversation = Conversation::whereHas('conversationUsers', function ($q) use ($user) {
                 $q->where('id_user', $user->id);
             })->with(['conversationUsers.user', 'conversationMessages.user'])
-            ->find($conversationId);
+                ->find($conversationId);
 
-            if (!$conversation) {
-                throw new \Exception('Conversation not found');
+            if (! $conversation) {
+                throw new Exception('Conversation not found');
             }
 
             return $conversation;
 
-        } catch (\Exception $e) {
-            Log::error('ChatService getConversationView error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('ChatService getConversationView error: '.$e->getMessage());
             throw $e;
         }
     }

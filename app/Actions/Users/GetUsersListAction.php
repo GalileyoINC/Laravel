@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Users;
 
 use App\DTOs\Users\UsersListRequestDTO;
 use App\Services\Users\UsersServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class GetUsersListAction
 {
     public function __construct(
-        private UsersServiceInterface $usersService
+        private readonly UsersServiceInterface $usersService
     ) {}
 
     public function execute(array $data): JsonResponse
@@ -34,7 +37,7 @@ class GetUsersListAction
                 'data' => $users->toArray(),
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('GetUsersListAction error: '.$e->getMessage());
 
             return response()->json([

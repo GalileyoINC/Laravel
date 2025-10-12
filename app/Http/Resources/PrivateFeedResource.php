@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -29,7 +31,7 @@ class PrivateFeedResource extends JsonResource
                 'settings' => $this->resource['settings'] ?? [],
                 'created_at' => $this->resource['created_at'] ?? null,
                 'updated_at' => $this->resource['updated_at'] ?? null,
-            ]
+            ],
         ];
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Authentication;
 
 use Illuminate\Http\Request;
@@ -38,17 +40,17 @@ class LoginRequestDTO
         return [
             'email' => $this->email,
             'password' => $this->password,
-            'device' => $this->device
+            'device' => $this->device,
         ];
     }
 
     public function validate(): bool
     {
-        if (empty($this->email) || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+        if (empty($this->email) || ! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
 
-        if (empty($this->password) || strlen($this->password) < 3) {
+        if (empty($this->password) || mb_strlen($this->password) < 3) {
             return false;
         }
 

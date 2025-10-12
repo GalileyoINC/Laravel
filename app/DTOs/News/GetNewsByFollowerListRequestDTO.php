@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\News;
 
 class GetNewsByFollowerListRequestDTO
@@ -21,6 +23,6 @@ class GetNewsByFollowerListRequestDTO
 
     public function validate(): bool
     {
-        return !empty($this->id_follower_list);
+        return ! empty($this->id_follower_list);
     }
 }

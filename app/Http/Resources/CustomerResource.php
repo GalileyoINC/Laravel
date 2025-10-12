@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -39,7 +41,7 @@ class CustomerResource extends JsonResource
                 'credit_cards' => $this->resource['credit_cards'] ?? [],
                 'created_at' => $this->resource['created_at'] ?? null,
                 'updated_at' => $this->resource['updated_at'] ?? null,
-            ]
+            ],
         ];
     }
 

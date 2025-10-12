@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Customer;
 
 use Illuminate\Http\Request;
@@ -74,13 +76,13 @@ class UpdateProfileRequestDTO
             'address' => $this->address,
             'bio' => $this->bio,
             'website' => $this->website,
-            'timezone' => $this->timezone
+            'timezone' => $this->timezone,
         ];
     }
 
     public function validate(): bool
     {
         // Basic validation - at least one field should be provided
-        return !empty(array_filter($this->toArray()));
+        return ! empty(array_filter($this->toArray()));
     }
 }

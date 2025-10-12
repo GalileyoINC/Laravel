@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Actions\Customer\GetProfileAction;
-use App\Actions\Customer\UpdateProfileAction;
 use App\Actions\Customer\ChangePasswordAction;
-use App\Actions\Customer\UpdatePrivacyAction;
+use App\Actions\Customer\GetProfileAction;
 use App\Actions\Customer\RemoveAvatarAction;
 use App\Actions\Customer\RemoveHeaderAction;
+use App\Actions\Customer\UpdatePrivacyAction;
+use App\Actions\Customer\UpdateProfileAction;
+use App\Http\Controllers\Controller;
 use App\Services\Customer\CustomerServiceInterface;
-use App\DTOs\Customer\UpdateProfileRequestDTO;
-use App\DTOs\Customer\ChangePasswordRequestDTO;
-use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -24,13 +25,13 @@ use Illuminate\Support\Facades\Log;
 class CustomerController extends Controller
 {
     public function __construct(
-        private GetProfileAction $getProfileAction,
-        private UpdateProfileAction $updateProfileAction,
-        private ChangePasswordAction $changePasswordAction,
-        private UpdatePrivacyAction $updatePrivacyAction,
-        private RemoveAvatarAction $removeAvatarAction,
-        private RemoveHeaderAction $removeHeaderAction,
-        private CustomerServiceInterface $customerService
+        private readonly GetProfileAction $getProfileAction,
+        private readonly UpdateProfileAction $updateProfileAction,
+        private readonly ChangePasswordAction $changePasswordAction,
+        private readonly UpdatePrivacyAction $updatePrivacyAction,
+        private readonly RemoveAvatarAction $removeAvatarAction,
+        private readonly RemoveHeaderAction $removeHeaderAction,
+        private readonly CustomerServiceInterface $customerService
     ) {}
 
     /**
@@ -88,10 +89,10 @@ class CustomerController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
@@ -99,12 +100,12 @@ class CustomerController extends Controller
 
             return response()->json($result);
 
-        } catch (\Exception $e) {
-            Log::error('CustomerController logout error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('CustomerController logout error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }
@@ -116,10 +117,10 @@ class CustomerController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
@@ -127,12 +128,12 @@ class CustomerController extends Controller
 
             return response()->json($result);
 
-        } catch (\Exception $e) {
-            Log::error('CustomerController delete error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('CustomerController delete error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

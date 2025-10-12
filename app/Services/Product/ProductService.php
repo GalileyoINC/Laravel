@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Product;
 
-use App\DTOs\Product\ProductListRequestDTO;
-use App\DTOs\Product\ProductAlertsRequestDTO;
 use App\DTOs\Product\ApplePurchaseRequestDTO;
-use App\Models\User;
+use App\DTOs\Product\ProductAlertsRequestDTO;
+use App\DTOs\Product\ProductListRequestDTO;
 use App\Models\Product;
 use App\Models\ProductDigitalAlerts;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -24,7 +27,7 @@ class ProductService implements ProductServiceInterface
             $query = Product::query();
 
             // Apply filters
-            if (!empty($dto->filter)) {
+            if (! empty($dto->filter)) {
                 if (isset($dto->filter['type'])) {
                     $query->where('type', $dto->filter['type']);
                 }
@@ -46,8 +49,8 @@ class ProductService implements ProductServiceInterface
 
             return $products->toArray();
 
-        } catch (\Exception $e) {
-            Log::error('ProductService getProductList error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('ProductService getProductList error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -61,7 +64,7 @@ class ProductService implements ProductServiceInterface
             $query = ProductDigitalAlerts::query();
 
             // Apply filters
-            if (!empty($dto->filter)) {
+            if (! empty($dto->filter)) {
                 if (isset($dto->filter['type'])) {
                     $query->where('type', $dto->filter['type']);
                 }
@@ -77,8 +80,8 @@ class ProductService implements ProductServiceInterface
 
             return $alerts->toArray();
 
-        } catch (\Exception $e) {
-            Log::error('ProductService getProductAlerts error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('ProductService getProductAlerts error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -91,9 +94,9 @@ class ProductService implements ProductServiceInterface
         try {
             // Validate receipt with Apple (simplified implementation)
             $receiptValidation = $this->validateAppleReceipt($dto->receiptData);
-            
-            if (!$receiptValidation['valid']) {
-                throw new \Exception('Invalid Apple receipt');
+
+            if (! $receiptValidation['valid']) {
+                throw new Exception('Invalid Apple receipt');
             }
 
             // Process the purchase
@@ -104,7 +107,7 @@ class ProductService implements ProductServiceInterface
                 'receipt_data' => $dto->receiptData,
                 'status' => 'completed',
                 'purchase_date' => now(),
-                'additional_data' => json_encode($dto->additionalData)
+                'additional_data' => json_encode($dto->additionalData),
             ];
 
             // In real application, save to database
@@ -113,20 +116,17 @@ class ProductService implements ProductServiceInterface
             return [
                 'success' => true,
                 'purchase' => $purchase,
-                'message' => 'Purchase processed successfully'
+                'message' => 'Purchase processed successfully',
             ];
 
-        } catch (\Exception $e) {
-            Log::error('ProductService processApplePurchase error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('ProductService processApplePurchase error: '.$e->getMessage());
             throw $e;
         }
     }
 
     /**
      * Validate Apple receipt (simplified implementation)
-     *
-     * @param string $receiptData
-     * @return array
      */
     private function validateAppleReceipt(string $receiptData): array
     {
@@ -134,9 +134,9 @@ class ProductService implements ProductServiceInterface
         // For now, return a mock validation
         return [
             'valid' => true,
-            'transaction_id' => 'mock_transaction_' . time(),
+            'transaction_id' => 'mock_transaction_'.time(),
             'product_id' => 'mock_product_id',
-            'purchase_date' => now()->format('Y-m-d H:i:s')
+            'purchase_date' => now()->format('Y-m-d H:i:s'),
         ];
     }
 }

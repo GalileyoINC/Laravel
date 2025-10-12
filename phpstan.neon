@@ -1,0 +1,12 @@
+parameters:
+    paths:
+        - app
+        - routes
+        - database
+    level: 5
+    ignoreErrors:
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::#'
+    excludePaths:
+        - vendor
+        - storage
+        - bootstrap/cache

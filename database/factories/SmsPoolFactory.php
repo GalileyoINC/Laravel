@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\SmsPool;
-use App\Models\User;
-use App\Models\Subscription;
-use App\Models\FollowerList;
+use App\Models\Communication\SmsPool;
+use App\Models\Subscription\Subscription;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SmsPool>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\SmsPool>
  */
 class SmsPoolFactory extends Factory
 {

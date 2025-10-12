@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Customer;
 
 use App\DTOs\Customer\GetProfileRequestDTO;
-use App\Services\Customer\CustomerServiceInterface;
 use App\Http\Resources\CustomerResource;
+use App\Services\Customer\CustomerServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class GetProfileAction
 {
     public function __construct(
-        private CustomerServiceInterface $customerService
+        private readonly CustomerServiceInterface $customerService
     ) {}
 
     public function execute(array $data): JsonResponse
@@ -20,11 +23,11 @@ class GetProfileAction
         try {
             $dto = GetProfileRequestDTO::fromArray($data);
             $user = Auth::user();
-            
-            if (!$user) {
+
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
@@ -32,12 +35,12 @@ class GetProfileAction
 
             return response()->json(new CustomerResource($profile));
 
-        } catch (\Exception $e) {
-            Log::error('GetProfileAction error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('GetProfileAction error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

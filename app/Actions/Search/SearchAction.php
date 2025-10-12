@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Search;
 
 use App\DTOs\Search\SearchRequestDTO;
 use App\Services\Search\SearchServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class SearchAction
 {
     public function __construct(
-        private SearchServiceInterface $searchService
+        private readonly SearchServiceInterface $searchService
     ) {}
 
     public function execute(array $data): JsonResponse
@@ -34,7 +37,7 @@ class SearchAction
                 'data' => $results,
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('SearchAction error: '.$e->getMessage());
 
             return response()->json([

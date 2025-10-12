@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Comment;
 
-use App\DTOs\Comment\CommentListRequestDTO;
 use App\DTOs\Comment\CommentCreateRequestDTO;
-use App\DTOs\Comment\CommentUpdateRequestDTO;
 use App\DTOs\Comment\CommentDeleteRequestDTO;
-use App\Models\User;
+use App\DTOs\Comment\CommentListRequestDTO;
+use App\DTOs\Comment\CommentUpdateRequestDTO;
+use App\Models\User\User\User;
 
 /**
  * Comment service interface
@@ -16,7 +18,6 @@ interface CommentServiceInterface
     /**
      * Get comments for news
      *
-     * @param CommentListRequestDTO $dto
      * @return mixed
      */
     public function getCommentsForNews(CommentListRequestDTO $dto);
@@ -24,7 +25,6 @@ interface CommentServiceInterface
     /**
      * Get comment replies
      *
-     * @param int $parentId
      * @return mixed
      */
     public function getCommentReplies(int $parentId);
@@ -32,8 +32,6 @@ interface CommentServiceInterface
     /**
      * Create comment
      *
-     * @param CommentCreateRequestDTO $dto
-     * @param User $user
      * @return mixed
      */
     public function createComment(CommentCreateRequestDTO $dto, User $user);
@@ -41,8 +39,6 @@ interface CommentServiceInterface
     /**
      * Update comment
      *
-     * @param CommentUpdateRequestDTO $dto
-     * @param User $user
      * @return mixed
      */
     public function updateComment(CommentUpdateRequestDTO $dto, User $user);
@@ -50,8 +46,6 @@ interface CommentServiceInterface
     /**
      * Delete comment
      *
-     * @param CommentDeleteRequestDTO $dto
-     * @param User $user
      * @return mixed
      */
     public function deleteComment(CommentDeleteRequestDTO $dto, User $user);

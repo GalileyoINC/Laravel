@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\News;
 
 use Illuminate\Http\Request;
@@ -21,8 +23,8 @@ class NewsListRequestDTO
     {
         return new self(
             type: $data['type'] ?? null,
-            limit: isset($data['limit']) ? (int)$data['limit'] : 20,
-            offset: isset($data['offset']) ? (int)$data['offset'] : 0,
+            limit: isset($data['limit']) ? (int) $data['limit'] : 20,
+            offset: isset($data['offset']) ? (int) $data['offset'] : 0,
             search: $data['search'] ?? null,
             filter: $data['filter'] ?? []
         );
@@ -46,7 +48,7 @@ class NewsListRequestDTO
             'limit' => $this->limit,
             'offset' => $this->offset,
             'search' => $this->search,
-            'filter' => $this->filter
+            'filter' => $this->filter,
         ];
     }
 

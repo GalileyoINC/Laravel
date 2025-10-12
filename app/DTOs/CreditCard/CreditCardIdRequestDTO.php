@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\CreditCard;
 
 use Illuminate\Http\Request;
@@ -13,7 +15,7 @@ class CreditCardIdRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            id: (int)$data['id']
+            id: (int) $data['id']
         );
     }
 
@@ -27,7 +29,7 @@ class CreditCardIdRequestDTO
     public function toArray(): array
     {
         return [
-            'id' => $this->id
+            'id' => $this->id,
         ];
     }
 

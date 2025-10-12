@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\PublicFeed;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 
 class PublicFeedPublishRequestDTO
 {
@@ -52,12 +53,12 @@ class PublicFeedPublishRequestDTO
             'text_short' => $this->textShort,
             'url' => $this->url,
             'is_link' => $this->isLink,
-            'files' => $this->files
+            'files' => $this->files,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->uuid) && !empty($this->text) && !empty($this->subscriptions);
+        return ! empty($this->uuid) && ! empty($this->text) && ! empty($this->subscriptions);
     }
 }

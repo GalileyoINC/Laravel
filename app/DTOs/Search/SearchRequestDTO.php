@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Search;
 
 use Illuminate\Http\Request;
@@ -21,8 +23,8 @@ class SearchRequestDTO
     {
         return new self(
             phrase: $data['phrase'] ?? '',
-            page: isset($data['page']) ? (int)$data['page'] : 1,
-            pageSize: isset($data['page_size']) ? (int)$data['page_size'] : 10,
+            page: isset($data['page']) ? (int) $data['page'] : 1,
+            pageSize: isset($data['page_size']) ? (int) $data['page_size'] : 10,
             type: $data['type'] ?? null,
             filters: $data['filters'] ?? []
         );
@@ -46,16 +48,16 @@ class SearchRequestDTO
             'page' => $this->page,
             'page_size' => $this->pageSize,
             'type' => $this->type,
-            'filters' => $this->filters
+            'filters' => $this->filters,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->phrase) && 
-               strlen($this->phrase) >= 3 && 
-               $this->page > 0 && 
-               $this->pageSize > 0 && 
+        return ! empty($this->phrase) &&
+               mb_strlen($this->phrase) >= 3 &&
+               $this->page > 0 &&
+               $this->pageSize > 0 &&
                $this->pageSize <= 100;
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Actions\Influencer\GetInfluencerFeedListAction;
 use App\Actions\Influencer\CreateInfluencerFeedAction;
-use Illuminate\Http\Request;
+use App\Actions\Influencer\GetInfluencerFeedListAction;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Refactored Influencer Controller using DDD Actions
@@ -15,8 +17,8 @@ use Illuminate\Http\JsonResponse;
 class InfluencerController extends Controller
 {
     public function __construct(
-        private GetInfluencerFeedListAction $getInfluencerFeedListAction,
-        private CreateInfluencerFeedAction $createInfluencerFeedAction
+        private readonly GetInfluencerFeedListAction $getInfluencerFeedListAction,
+        private readonly CreateInfluencerFeedAction $createInfluencerFeedAction
     ) {}
 
     /**

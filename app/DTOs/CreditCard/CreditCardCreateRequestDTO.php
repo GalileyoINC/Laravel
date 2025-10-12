@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\CreditCard;
 
 use Illuminate\Http\Request;
@@ -27,9 +29,9 @@ class CreditCardCreateRequestDTO
             phone: $data['phone'],
             zip: $data['zip'],
             cvv: $data['cvv'],
-            expirationYear: (int)$data['expiration_year'],
-            expirationMonth: (int)$data['expiration_month'],
-            isAgreeToReceive: (bool)($data['is_agree_to_receive'] ?? false)
+            expirationYear: (int) $data['expiration_year'],
+            expirationMonth: (int) $data['expiration_month'],
+            isAgreeToReceive: (bool) ($data['is_agree_to_receive'] ?? false)
         );
     }
 
@@ -59,18 +61,18 @@ class CreditCardCreateRequestDTO
             'cvv' => $this->cvv,
             'expiration_year' => $this->expirationYear,
             'expiration_month' => $this->expirationMonth,
-            'is_agree_to_receive' => $this->isAgreeToReceive
+            'is_agree_to_receive' => $this->isAgreeToReceive,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->firstName) && 
-               !empty($this->lastName) && 
-               !empty($this->num) && 
-               !empty($this->phone) && 
-               !empty($this->zip) && 
-               !empty($this->cvv) &&
+        return ! empty($this->firstName) &&
+               ! empty($this->lastName) &&
+               ! empty($this->num) &&
+               ! empty($this->phone) &&
+               ! empty($this->zip) &&
+               ! empty($this->cvv) &&
                $this->expirationYear > 0 &&
                $this->expirationMonth > 0 &&
                $this->expirationMonth <= 12;

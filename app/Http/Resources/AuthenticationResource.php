@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -32,7 +34,7 @@ class AuthenticationResource extends JsonResource
                 'access_token' => $this->resource['access_token'] ?? null,
                 'refresh_token' => $this->resource['refresh_token'] ?? null,
                 'expires_at' => $this->resource['expires_at'] ?? null,
-            ]
+            ],
         ];
     }
 

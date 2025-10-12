@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\User>
  */
 class UserFactory extends Factory
 {
@@ -109,7 +111,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_test' => true,
-            'email' => 'test+' . fake()->userName() . '@example.com',
+            'email' => 'test+'.fake()->userName().'@example.com',
         ]);
     }
 }

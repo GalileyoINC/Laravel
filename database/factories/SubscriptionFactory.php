@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\Subscription;
+use App\Models\Subscription\Subscription;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subscription>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subscription\Subscription>
  */
 class SubscriptionFactory extends Factory
 {
@@ -25,7 +27,7 @@ class SubscriptionFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_subscription_category' => \App\Models\SubscriptionCategory::factory(),
+            'id_subscription_category' => \App\Models\Subscription\SubscriptionCategory::factory(),
             'name' => fake()->words(2, true),
             'title' => fake()->sentence(3),
             'position_no' => fake()->numberBetween(1, 100),
@@ -39,7 +41,7 @@ class SubscriptionFactory extends Factory
             'params' => json_encode([
                 'frequency' => fake()->randomElement(['daily', 'weekly', 'monthly']),
                 'priority' => fake()->numberBetween(1, 5),
-                'tags' => fake()->words(3)
+                'tags' => fake()->words(3),
             ]),
             'is_custom' => fake()->boolean(30), // 30% chance
             'id_influencer' => fake()->boolean(40) ? fake()->numberBetween(1, 50) : null,

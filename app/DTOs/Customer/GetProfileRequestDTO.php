@@ -1,22 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Customer;
 
 use Illuminate\Http\Request;
 
 class GetProfileRequestDTO
 {
-    public function __construct()
-    {}
+    public function __construct() {}
 
     public static function fromArray(array $data): static
     {
-        return new self();
+        return new self;
     }
 
     public static function fromRequest(Request $request): static
     {
-        return new self();
+        return new self;
     }
 
     public function toArray(): array

@@ -1,23 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Api\AllSendFormController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookmarkController;
+use App\Http\Controllers\Api\BundleController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\ContractLineController;
 use App\Http\Controllers\Api\CreditCardController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\EmailPoolController;
+use App\Http\Controllers\Api\EmailTemplateController;
 use App\Http\Controllers\Api\InfluencerController;
+use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PhoneController;
 use App\Http\Controllers\Api\PrivateFeedController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PublicFeedController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SearchController;
-use App\Http\Controllers\Api\UsersController;
+use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\StaffController;
 use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Controllers\Api\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,9 +43,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:sanctum')->get('/user', fn (Request $request) => $request->user());
 
 // Routes from api-allsendform.php
 Route::prefix('v1/all-send-form')->middleware('auth:sanctum')->group(function () {
@@ -124,7 +133,7 @@ Route::prefix('v1/influencer')->middleware('auth:sanctum')->group(function () {
 });
 
 // Routes from api-legacy.php
-Route::post('auth/login', [App\Http\Controllers\Api\AuthController::class, 'webLogin'])->name('api.login');
+Route::post('auth/login', [AuthController::class, 'webLogin'])->name('api.login');
 
 Route::middleware('auth:sanctum')->group(function () {
     // News routes
@@ -172,8 +181,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Search routes
     Route::post('search/index', [SearchController::class, 'index']);
 
-        // Users routes (admin only)
-        Route::get('users', [UsersController::class, 'index']);
+    // Users routes (admin only)
+    Route::get('users', [UsersController::class, 'index']);
 });
 
 // Routes from api-news.php
@@ -244,4 +253,90 @@ Route::prefix('v1/feed')->middleware('auth:sanctum')->group(function () {
     Route::get('options', [SubscriptionController::class, 'options']);
     Route::post('delete-private-feed', [SubscriptionController::class, 'deletePrivateFeed']);
     Route::get('get-image', [SubscriptionController::class, 'getImage']);
+});
+
+// ===== NEWLY MIGRATED CONTROLLERS =====
+
+// Bundle Controller - Service management
+Route::prefix('v1/bundle')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [BundleController::class, 'index']);
+    Route::post('create', [BundleController::class, 'create']);
+    Route::put('update/{id}', [BundleController::class, 'update']);
+    Route::post('device-data', [BundleController::class, 'deviceData']);
+});
+
+// Contact Controller - Customer support
+Route::prefix('v1/contact')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [ContactController::class, 'index']);
+    Route::get('view/{id}', [ContactController::class, 'show']);
+    Route::delete('delete/{id}', [ContactController::class, 'delete']);
+});
+
+// ContractLine Controller - Financial contracts
+Route::prefix('v1/contract-line')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [ContractLineController::class, 'index']);
+    Route::get('view/{id}', [ContractLineController::class, 'show']);
+    Route::post('create', [ContractLineController::class, 'create']);
+    Route::put('update/{id}', [ContractLineController::class, 'update']);
+    Route::delete('delete/{id}', [ContractLineController::class, 'delete']);
+    Route::get('unpaid', [ContractLineController::class, 'unpaid']);
+});
+
+// EmailPool Controller - Email queue
+Route::prefix('v1/email-pool')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [EmailPoolController::class, 'index']);
+    Route::get('view/{id}', [EmailPoolController::class, 'show']);
+    Route::post('create', [EmailPoolController::class, 'create']);
+    Route::put('update/{id}', [EmailPoolController::class, 'update']);
+    Route::delete('delete/{id}', [EmailPoolController::class, 'delete']);
+});
+
+// EmailTemplate Controller - Email templates
+Route::prefix('v1/email-template')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [EmailTemplateController::class, 'index']);
+    Route::get('view/{id}', [EmailTemplateController::class, 'show']);
+    Route::put('update/{id}', [EmailTemplateController::class, 'update']);
+    Route::get('body/{id}', [EmailTemplateController::class, 'getBody']);
+    Route::post('send/{id}', [EmailTemplateController::class, 'sendAdminEmail']);
+});
+
+// Report Controller - Business intelligence
+Route::prefix('v1/report')->middleware('auth:sanctum')->group(function () {
+    Route::get('login-statistic', [ReportController::class, 'loginStatistic']);
+    Route::get('sold-devices', [ReportController::class, 'soldDevices']);
+    Route::get('influencer-total', [ReportController::class, 'influencerTotal']);
+    Route::get('referral', [ReportController::class, 'referral']);
+    Route::get('statistic', [ReportController::class, 'statistic']);
+    Route::get('sms', [ReportController::class, 'sms']);
+});
+
+// Settings Controller - System configuration
+Route::prefix('v1/settings')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [SettingsController::class, 'index']);
+    Route::put('update', [SettingsController::class, 'update']);
+    Route::post('flush', [SettingsController::class, 'flush']);
+    Route::get('public', [SettingsController::class, 'public']);
+    Route::post('bitpay-generation', [SettingsController::class, 'bitpayGeneration']);
+});
+
+// Staff Controller - Admin management
+Route::prefix('v1/staff')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [StaffController::class, 'index']);
+    Route::get('view/{id}', [StaffController::class, 'view']);
+    Route::post('create', [StaffController::class, 'create']);
+    Route::put('update/{id}', [StaffController::class, 'update']);
+    Route::delete('delete/{id}', [StaffController::class, 'delete']);
+});
+
+// Invoice Controller - Financial invoices
+Route::prefix('v1/invoice')->middleware('auth:sanctum')->group(function () {
+    Route::get('index', [InvoiceController::class, 'index']);
+    Route::get('view/{id}', [InvoiceController::class, 'view']);
+});
+
+// Bookmark Controller - Bookmark management
+Route::prefix('v1/bookmark')->middleware('auth:sanctum')->group(function () {
+    Route::get('list', [BookmarkController::class, 'list']);
+    Route::post('create', [BookmarkController::class, 'create']);
+    Route::delete('delete/{id}', [BookmarkController::class, 'delete']);
 });

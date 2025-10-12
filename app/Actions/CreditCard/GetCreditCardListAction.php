@@ -1,48 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\CreditCard;
 
 use App\DTOs\CreditCard\CreditCardListRequestDTO;
 use App\Services\CreditCard\CreditCardServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class GetCreditCardListAction
 {
     public function __construct(
-        private CreditCardServiceInterface $creditCardService
+        private readonly CreditCardServiceInterface $creditCardService
     ) {}
 
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = CreditCardListRequestDTO::fromArray($data);
-            if (!$dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid credit card list request'],
-                    'message' => 'Invalid request parameters'
-                ], 400);
-            }
+            $dto = new CreditCardListRequestDTO(
+                page: $data['page'] ?? 1,
+                limit: $data['limit'] ?? 20,
+                search: $data['search'] ?? null,
+                user_id: $data['user_id'] ?? null,
+                is_active: $data['is_active'] ?? null
+            );
 
-            $user = Auth::user();
-            if (!$user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401
-                ], 401);
-            }
+            $creditCards = $this->creditCardService->getList($dto);
 
-            $creditCards = $this->creditCardService->getCreditCardsForUser($dto, $user);
-
-            return response()->json($creditCards->toArray());
-
-        } catch (\Exception $e) {
-            Log::error('GetCreditCardListAction error: ' . $e->getMessage());
-            
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500
+                'status' => 'success',
+                'data' => $creditCards,
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to get credit card list: '.$e->getMessage(),
             ], 500);
         }
     }

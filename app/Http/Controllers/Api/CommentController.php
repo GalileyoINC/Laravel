@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Actions\Comment\GetCommentsAction;
 use App\Actions\Comment\CreateCommentAction;
-use Illuminate\Http\Request;
+use App\Actions\Comment\GetCommentsAction;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Refactored Comment Controller using DDD Actions
@@ -15,8 +17,8 @@ use Illuminate\Http\JsonResponse;
 class CommentController extends Controller
 {
     public function __construct(
-        private GetCommentsAction $getCommentsAction,
-        private CreateCommentAction $createCommentAction
+        private readonly GetCommentsAction $getCommentsAction,
+        private readonly CreateCommentAction $createCommentAction
     ) {}
 
     /**

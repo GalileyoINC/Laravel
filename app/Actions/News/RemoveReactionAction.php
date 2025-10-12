@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\News;
 
 use App\DTOs\News\SetReactionRequestDTO;
-use App\Services\News\NewsServiceInterface;
 use App\Http\Resources\NewsResource;
+use App\Services\News\NewsServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class RemoveReactionAction
 {
     public function __construct(
-        private NewsServiceInterface $newsService
+        private readonly NewsServiceInterface $newsService
     ) {}
 
     public function execute(array $data): JsonResponse
@@ -20,11 +23,11 @@ class RemoveReactionAction
         try {
             $dto = SetReactionRequestDTO::fromArray($data);
             $user = Auth::user();
-            
-            if (!$user) {
+
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
@@ -32,12 +35,12 @@ class RemoveReactionAction
 
             return response()->json(new NewsResource($result));
 
-        } catch (\Exception $e) {
-            Log::error('RemoveReactionAction error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('RemoveReactionAction error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

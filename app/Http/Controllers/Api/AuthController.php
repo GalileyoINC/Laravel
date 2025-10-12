@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Authentication\LoginAction;
@@ -7,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\LoginRequest;
 use App\Http\Resources\ErrorResource;
 use App\Http\Resources\SuccessResource;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -18,7 +21,7 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     public function __construct(
-        private LoginAction $loginAction
+        private readonly LoginAction $loginAction
     ) {}
 
     /**
@@ -35,7 +38,7 @@ class AuthController extends Controller
             // Return the result directly since LoginAction already returns JsonResponse
             return $result;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Use ErrorResource for consistent error format
             return response()->json(new ErrorResource([
                 'message' => $e->getMessage(),
@@ -59,7 +62,7 @@ class AuthController extends Controller
 
         $user = \App\Models\User::where('email', $request->email)->first();
 
-        if (! $user || ! password_verify($request->password, $user->password_hash)) {
+        if (! $user || ! password_verify($request->password, (string) $user->password_hash)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 

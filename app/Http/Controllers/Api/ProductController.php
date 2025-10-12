@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Actions\Product\GetProductListAction;
 use App\Actions\Product\GetProductAlertsAction;
+use App\Actions\Product\GetProductListAction;
 use App\Actions\Product\ProcessApplePurchaseAction;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Refactored Product Controller using DDD Actions
@@ -16,9 +18,9 @@ use Illuminate\Http\JsonResponse;
 class ProductController extends Controller
 {
     public function __construct(
-        private GetProductListAction $getProductListAction,
-        private GetProductAlertsAction $getProductAlertsAction,
-        private ProcessApplePurchaseAction $processApplePurchaseAction
+        private readonly GetProductListAction $getProductListAction,
+        private readonly GetProductAlertsAction $getProductAlertsAction,
+        private readonly ProcessApplePurchaseAction $processApplePurchaseAction
     ) {}
 
     /**

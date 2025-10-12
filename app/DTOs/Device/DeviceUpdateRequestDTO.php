@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Device;
 
 use Illuminate\Http\Request;
@@ -35,7 +37,7 @@ class DeviceUpdateRequestDTO
         return [
             'os' => $this->os,
             'push_token' => $this->pushToken,
-            'info' => $this->info
+            'info' => $this->info,
         ];
     }
 

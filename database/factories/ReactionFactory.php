@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\Reaction;
+use App\Models\Content\Reaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Reaction>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Content\Reaction>
  */
 class ReactionFactory extends Factory
 {
@@ -25,7 +27,7 @@ class ReactionFactory extends Factory
     public function definition(): array
     {
         $emojis = ['👍', '👎', '❤️', '😀', '😢', '😮', '😡', '🔥', '💯', '🎉', '👏', '🤔', '😍', '😂', '😭'];
-        
+
         return [
             'emoji' => fake()->randomElement($emojis),
         ];

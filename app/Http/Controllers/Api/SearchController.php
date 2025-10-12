@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Search\SearchAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Search\SearchRequest;
 use App\Http\Resources\ErrorResource;
-use App\Http\Resources\SearchResource;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -15,7 +17,7 @@ use Illuminate\Http\JsonResponse;
 class SearchController extends Controller
 {
     public function __construct(
-        private SearchAction $searchAction
+        private readonly SearchAction $searchAction
     ) {}
 
     /**
@@ -32,7 +34,7 @@ class SearchController extends Controller
             // Return the result directly since SearchAction already returns JsonResponse
             return $result;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Use ErrorResource for consistent error format
             return response()->json(new ErrorResource([
                 'message' => $e->getMessage(),
@@ -42,4 +44,3 @@ class SearchController extends Controller
         }
     }
 }
-

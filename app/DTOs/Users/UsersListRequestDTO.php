@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Users;
 
 use Illuminate\Http\Request;
@@ -20,11 +22,11 @@ class UsersListRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            page: isset($data['page']) ? (int)$data['page'] : 1,
-            pageSize: isset($data['page_size']) ? (int)$data['page_size'] : 50,
+            page: isset($data['page']) ? (int) $data['page'] : 1,
+            pageSize: isset($data['page_size']) ? (int) $data['page_size'] : 50,
             search: $data['search'] ?? null,
-            role: isset($data['role']) ? (int)$data['role'] : null,
-            validEmailOnly: isset($data['valid_email_only']) ? (bool)$data['valid_email_only'] : true
+            role: isset($data['role']) ? (int) $data['role'] : null,
+            validEmailOnly: isset($data['valid_email_only']) ? (bool) $data['valid_email_only'] : true
         );
     }
 
@@ -46,14 +48,14 @@ class UsersListRequestDTO
             'page_size' => $this->pageSize,
             'search' => $this->search,
             'role' => $this->role,
-            'valid_email_only' => $this->validEmailOnly
+            'valid_email_only' => $this->validEmailOnly,
         ];
     }
 
     public function validate(): bool
     {
-        return $this->page > 0 && 
-               $this->pageSize > 0 && 
+        return $this->page > 0 &&
+               $this->pageSize > 0 &&
                $this->pageSize <= 100;
     }
 }

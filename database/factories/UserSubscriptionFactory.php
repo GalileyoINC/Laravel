@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\UserSubscription;
-use App\Models\User;
-use App\Models\Subscription;
+use App\Models\Subscription\Subscription;
+use App\Models\User\User;
+use App\Models\User\UserSubscription;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UserSubscription>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\UserSubscription>
  */
 class UserSubscriptionFactory extends Factory
 {

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Actions\Phone\VerifyPhoneAction;
 use App\Actions\Phone\UpdatePhoneSettingsAction;
-use Illuminate\Http\Request;
+use App\Actions\Phone\VerifyPhoneAction;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Refactored Phone Controller using DDD Actions
@@ -15,8 +17,8 @@ use Illuminate\Http\JsonResponse;
 class PhoneController extends Controller
 {
     public function __construct(
-        private VerifyPhoneAction $verifyPhoneAction,
-        private UpdatePhoneSettingsAction $updatePhoneSettingsAction
+        private readonly VerifyPhoneAction $verifyPhoneAction,
+        private readonly UpdatePhoneSettingsAction $updatePhoneSettingsAction
     ) {}
 
     /**

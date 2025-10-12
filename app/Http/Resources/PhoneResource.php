@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ class PhoneResource extends JsonResource
                 'timezone' => $this->resource['timezone'] ?? null,
                 'created_at' => $this->resource['created_at'] ?? null,
                 'updated_at' => $this->resource['updated_at'] ?? null,
-            ]
+            ],
         ];
     }
 

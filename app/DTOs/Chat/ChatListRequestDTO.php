@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Chat;
 
 use Illuminate\Http\Request;
@@ -15,8 +17,8 @@ class ChatListRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            limit: isset($data['limit']) ? (int)$data['limit'] : 20,
-            offset: isset($data['offset']) ? (int)$data['offset'] : 0,
+            limit: isset($data['limit']) ? (int) $data['limit'] : 20,
+            offset: isset($data['offset']) ? (int) $data['offset'] : 0,
             filter: $data['filter'] ?? []
         );
     }
@@ -35,7 +37,7 @@ class ChatListRequestDTO
         return [
             'limit' => $this->limit,
             'offset' => $this->offset,
-            'filter' => $this->filter
+            'filter' => $this->filter,
         ];
     }
 

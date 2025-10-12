@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\News;
 
 class ReportNewsRequestDTO
@@ -21,6 +23,6 @@ class ReportNewsRequestDTO
 
     public function validate(): bool
     {
-        return !empty($this->id_news) && !empty($this->reason);
+        return ! empty($this->id_news) && ! empty($this->reason);
     }
 }

@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\News;
+use App\Models\Content\News;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\News>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Content\News>
  */
 class NewsFactory extends Factory
 {
@@ -26,7 +28,7 @@ class NewsFactory extends Factory
     public function definition(): array
     {
         $title = fake()->sentence(4);
-        
+
         return [
             'name' => $title,
             'slug' => Str::slug($title),
@@ -38,7 +40,7 @@ class NewsFactory extends Factory
                 'tags' => fake()->words(3),
                 'author' => fake()->name(),
                 'source' => fake()->company(),
-                'read_time' => fake()->numberBetween(2, 15) . ' min read'
+                'read_time' => fake()->numberBetween(2, 15).' min read',
             ]),
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-6 months', 'now'),

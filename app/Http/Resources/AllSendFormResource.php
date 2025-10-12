@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -35,7 +37,7 @@ class AllSendFormResource extends JsonResource
                 'author' => $this->resource['author'] ?? null,
                 'created_at' => $this->resource['created_at'] ?? null,
                 'updated_at' => $this->resource['updated_at'] ?? null,
-            ]
+            ],
         ];
     }
 

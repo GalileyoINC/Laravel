@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\News;
 
-use App\Models\SmsPool;
+use App\Models\Communication\SmsPool;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,20 +17,20 @@ class CreateNewsAction
         try {
             DB::beginTransaction();
 
-                // Get authenticated user
-                $user = Auth::user();
-                if (!$user) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'User not authenticated',
-                    ], 401);
-                }
+            // Get authenticated user
+            $user = Auth::user();
+            if (! $user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
 
-                // Use provided user_id if admin, otherwise use authenticated user
-                $userId = $user->id;
-                if (isset($data['user_id']) && $user->role === 1) {
-                    $userId = $data['user_id'];
-                }
+            // Use provided user_id if admin, otherwise use authenticated user
+            $userId = $user->id;
+            if (isset($data['user_id']) && $user->role === 1) {
+                $userId = $data['user_id'];
+            }
 
             // Create news item
             $news = SmsPool::create([
@@ -40,16 +43,16 @@ class CreateNewsAction
 
             // Handle media files if provided
             $mediaFiles = [];
-            
+
             // Check for FormData media files (media[0], media[1], etc.)
             foreach ($data as $key => $value) {
-                if (str_starts_with($key, 'media[') && str_ends_with($key, ']')) {
+                if (str_starts_with((string) $key, 'media[') && str_ends_with((string) $key, ']')) {
                     if ($value instanceof \Illuminate\Http\UploadedFile) {
                         $mediaFiles[] = $value;
                     }
                 }
             }
-            
+
             // Also check for direct media array
             if (isset($data['media']) && is_array($data['media'])) {
                 foreach ($data['media'] as $mediaFile) {
@@ -58,12 +61,12 @@ class CreateNewsAction
                     }
                 }
             }
-            
+
             // Process all media files
             foreach ($mediaFiles as $mediaFile) {
                 $path = $mediaFile->store('news-media', 'public');
                 $filename = $mediaFile->getClientOriginalName();
-                
+
                 // Create media record using correct table structure
                 DB::table('sms_pool_photo')->insert([
                     'id_sms_pool' => $news->id,
@@ -74,8 +77,8 @@ class CreateNewsAction
                             'url' => $path,
                             'width' => null,
                             'height' => null,
-                            'size' => 'original'
-                        ]
+                            'size' => 'original',
+                        ],
                     ]),
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -96,7 +99,7 @@ class CreateNewsAction
                 ],
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json([

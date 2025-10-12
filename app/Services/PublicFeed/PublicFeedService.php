@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\PublicFeed;
 
+use App\DTOs\PublicFeed\PublicFeedImageUploadRequestDTO;
 use App\DTOs\PublicFeed\PublicFeedOptionsRequestDTO;
 use App\DTOs\PublicFeed\PublicFeedPublishRequestDTO;
-use App\DTOs\PublicFeed\PublicFeedImageUploadRequestDTO;
-use App\Models\User;
-use App\Models\Subscription;
+use App\Models\Subscription\Subscription;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * PublicFeed service implementation
@@ -33,12 +35,12 @@ class PublicFeedService implements PublicFeedServiceInterface
                     'max_text_length' => 1000,
                     'max_files' => 5,
                     'allowed_file_types' => ['jpg', 'jpeg', 'png', 'gif'],
-                    'max_file_size' => 5242880 // 5MB
-                ]
+                    'max_file_size' => 5242880, // 5MB
+                ],
             ];
 
-        } catch (\Exception $e) {
-            Log::error('PublicFeedService getPublicFeedOptions error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('PublicFeedService getPublicFeedOptions error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -50,7 +52,7 @@ class PublicFeedService implements PublicFeedServiceInterface
     {
         try {
             $results = [];
-            
+
             // Send to each subscription
             foreach ($dto->subscriptions as $subscriptionId) {
                 $subscription = Subscription::where('id', $subscriptionId)
@@ -58,8 +60,8 @@ class PublicFeedService implements PublicFeedServiceInterface
                     ->where('is_public', true)
                     ->first();
 
-                if (!$subscription) {
-                    throw new \Exception("Invalid subscription: {$subscriptionId}");
+                if (! $subscription) {
+                    throw new Exception("Invalid subscription: {$subscriptionId}");
                 }
 
                 // Create SMS/Message record (simplified)
@@ -71,28 +73,28 @@ class PublicFeedService implements PublicFeedServiceInterface
                     'id_subscription' => $subscriptionId,
                     'id_user' => $user->id,
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ];
 
                 // In real application, save to database
                 // $sms = Sms::create($messageData);
-                
+
                 $results[] = [
                     'subscription_id' => $subscriptionId,
                     'subscription_name' => $subscription->name,
                     'status' => 'sent',
-                    'message_id' => 'mock_message_' . time()
+                    'message_id' => 'mock_message_'.time(),
                 ];
             }
 
             return [
                 'success' => true,
                 'message' => 'Published to public feeds successfully',
-                'results' => $results
+                'results' => $results,
             ];
 
-        } catch (\Exception $e) {
-            Log::error('PublicFeedService publishToPublicFeeds error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('PublicFeedService publishToPublicFeeds error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -104,19 +106,19 @@ class PublicFeedService implements PublicFeedServiceInterface
     {
         try {
             // Validate file
-            if (!$dto->file->isValid()) {
-                throw new \Exception('Invalid file upload');
+            if (! $dto->file->isValid()) {
+                throw new Exception('Invalid file upload');
             }
 
             // Generate unique filename
-            $filename = $dto->uuid . '_' . time() . '.' . $dto->file->getClientOriginalExtension();
-            
+            $filename = $dto->uuid.'_'.time().'.'.$dto->file->getClientOriginalExtension();
+
             // Store file
             $path = $dto->file->storeAs('public-feeds', $filename, 'public');
 
             // Create file record (simplified)
             $fileData = [
-                'id' => 'mock_file_' . time(),
+                'id' => 'mock_file_'.time(),
                 'uuid' => $dto->uuid,
                 'filename' => $filename,
                 'path' => $path,
@@ -124,17 +126,17 @@ class PublicFeedService implements PublicFeedServiceInterface
                 'mime_type' => $dto->file->getMimeType(),
                 'id_user' => $user->id,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ];
 
             return [
                 'id_image' => $fileData['id'],
                 'success' => true,
-                'file' => $fileData
+                'file' => $fileData,
             ];
 
-        } catch (\Exception $e) {
-            Log::error('PublicFeedService uploadImage error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('PublicFeedService uploadImage error: '.$e->getMessage());
             throw $e;
         }
     }

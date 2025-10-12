@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Product;
 
 use Illuminate\Http\Request;
@@ -39,12 +41,12 @@ class ApplePurchaseRequestDTO
             'receipt_data' => $this->receiptData,
             'product_id' => $this->productId,
             'transaction_id' => $this->transactionId,
-            'additional_data' => $this->additionalData
+            'additional_data' => $this->additionalData,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->receiptData) && !empty($this->productId);
+        return ! empty($this->receiptData) && ! empty($this->productId);
     }
 }

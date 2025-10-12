@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\PublicFeed;
 
 use App\DTOs\PublicFeed\PublicFeedOptionsRequestDTO;
 use App\Services\PublicFeed\PublicFeedServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class GetPublicFeedOptionsAction
 {
     public function __construct(
-        private PublicFeedServiceInterface $publicFeedService
+        private readonly PublicFeedServiceInterface $publicFeedService
     ) {}
 
     public function execute(array $data): JsonResponse
@@ -19,17 +22,17 @@ class GetPublicFeedOptionsAction
         try {
             $dto = PublicFeedOptionsRequestDTO::fromArray($data);
             $user = Auth::user();
-            
+
             $options = $this->publicFeedService->getPublicFeedOptions($dto, $user);
 
             return response()->json($options);
 
-        } catch (\Exception $e) {
-            Log::error('GetPublicFeedOptionsAction error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('GetPublicFeedOptionsAction error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

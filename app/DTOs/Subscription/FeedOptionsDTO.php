@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Subscription;
 
 use Illuminate\Http\Request;
@@ -20,8 +22,8 @@ class FeedOptionsDTO
     {
         return new self(
             category: $data['category'] ?? null,
-            limit: isset($data['limit']) ? (int)$data['limit'] : 20,
-            offset: isset($data['offset']) ? (int)$data['offset'] : 0,
+            limit: isset($data['limit']) ? (int) $data['limit'] : 20,
+            offset: isset($data['offset']) ? (int) $data['offset'] : 0,
             filters: $data['filters'] ?? []
         );
     }
@@ -42,7 +44,7 @@ class FeedOptionsDTO
             'category' => $this->category,
             'limit' => $this->limit,
             'offset' => $this->offset,
-            'filters' => $this->filters
+            'filters' => $this->filters,
         ];
     }
 

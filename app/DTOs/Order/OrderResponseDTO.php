@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTOs\Order;
+declare(strict_types=1);
 
-use Illuminate\Http\Request;
+namespace App\DTOs\Order;
 
 /**
  * DTO for Order responses
@@ -23,10 +23,10 @@ class OrderResponseDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            id: (int)$data['id'],
+            id: (int) $data['id'],
             status: $data['status'] ?? 'pending',
-            totalAmount: (float)$data['total_amount'],
-            isPaid: (bool)$data['is_paid'],
+            totalAmount: (float) $data['total_amount'],
+            isPaid: (bool) $data['is_paid'],
             paymentMethod: $data['payment_method'] ?? null,
             createdAt: $data['created_at'] ?? null,
             products: $data['products'] ?? [],
@@ -39,8 +39,8 @@ class OrderResponseDTO
         return new self(
             id: $order->id,
             status: $order->status ?? 'pending',
-            totalAmount: (float)$order->total_amount,
-            isPaid: (bool)$order->is_paid,
+            totalAmount: (float) $order->total_amount,
+            isPaid: (bool) $order->is_paid,
             paymentMethod: $order->payment_method,
             createdAt: $order->created_at?->format('Y-m-d H:i:s'),
             products: $order->products ?? [],
@@ -58,7 +58,7 @@ class OrderResponseDTO
             'payment_method' => $this->paymentMethod,
             'created_at' => $this->createdAt,
             'products' => $this->products,
-            'payment_details' => $this->paymentDetails
+            'payment_details' => $this->paymentDetails,
         ];
     }
 }

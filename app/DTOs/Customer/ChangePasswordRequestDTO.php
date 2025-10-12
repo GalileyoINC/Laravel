@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Customer;
 
 use Illuminate\Http\Request;
@@ -35,16 +37,16 @@ class ChangePasswordRequestDTO
         return [
             'current_password' => $this->currentPassword,
             'new_password' => $this->newPassword,
-            'confirm_password' => $this->confirmPassword
+            'confirm_password' => $this->confirmPassword,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->currentPassword) && 
-               !empty($this->newPassword) && 
-               !empty($this->confirmPassword) &&
+        return ! empty($this->currentPassword) &&
+               ! empty($this->newPassword) &&
+               ! empty($this->confirmPassword) &&
                $this->newPassword === $this->confirmPassword &&
-               strlen($this->newPassword) >= 8;
+               mb_strlen($this->newPassword) >= 8;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Subscription;
 
 use Illuminate\Http\Request;
@@ -42,12 +44,12 @@ class MarketstackSubscriptionDTO
             'type' => $this->type,
             'symbol' => $this->symbol,
             'name' => $this->name,
-            'description' => $this->description
+            'description' => $this->description,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->symbol) && in_array($this->type, ['indx', 'ticker']);
+        return ! empty($this->symbol) && in_array($this->type, ['indx', 'ticker']);
     }
 }

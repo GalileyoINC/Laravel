@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Bookmark;
 
-use App\DTOs\Bookmark\BookmarkRequestDTO;
 use App\DTOs\Bookmark\BookmarkListRequestDTO;
-use App\Models\User;
+use App\DTOs\Bookmark\BookmarkRequestDTO;
+use App\Models\User\User\User;
 
 interface BookmarkServiceInterface
 {

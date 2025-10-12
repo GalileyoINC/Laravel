@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\PublicFeed;
 
 use Illuminate\Http\Request;
@@ -32,12 +34,12 @@ class PublicFeedImageUploadRequestDTO
     {
         return [
             'uuid' => $this->uuid,
-            'file' => $this->file
+            'file' => $this->file,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->uuid) && $this->file !== null;
+        return ! empty($this->uuid) && $this->file !== null;
     }
 }

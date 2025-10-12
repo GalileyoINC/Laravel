@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -16,23 +18,21 @@ class UserCollection extends ResourceCollection
     {
         return [
             'status' => 'success',
-            'data' => $this->collection->map(function ($user) {
-                return [
-                    'id' => $user['id'] ?? null,
-                    'email' => $user['email'] ?? null,
-                    'first_name' => $user['first_name'] ?? null,
-                    'last_name' => $user['last_name'] ?? null,
-                    'role' => $user['role'] ?? null,
-                    'status' => $user['status'] ?? null,
-                    'is_influencer' => $user['is_influencer'] ?? false,
-                    'is_valid_email' => $user['is_valid_email'] ?? false,
-                    'bonus_point' => $user['bonus_point'] ?? 0,
-                    'image' => $user['image'] ?? null,
-                    'timezone' => $user['timezone'] ?? null,
-                    'created_at' => $user['created_at'] ?? null,
-                    'updated_at' => $user['updated_at'] ?? null,
-                ];
-            }),
+            'data' => $this->collection->map(fn ($user) => [
+                'id' => $user['id'] ?? null,
+                'email' => $user['email'] ?? null,
+                'first_name' => $user['first_name'] ?? null,
+                'last_name' => $user['last_name'] ?? null,
+                'role' => $user['role'] ?? null,
+                'status' => $user['status'] ?? null,
+                'is_influencer' => $user['is_influencer'] ?? false,
+                'is_valid_email' => $user['is_valid_email'] ?? false,
+                'bonus_point' => $user['bonus_point'] ?? 0,
+                'image' => $user['image'] ?? null,
+                'timezone' => $user['timezone'] ?? null,
+                'created_at' => $user['created_at'] ?? null,
+                'updated_at' => $user['updated_at'] ?? null,
+            ]),
             'pagination' => [
                 'total' => $this->total(),
                 'count' => $this->count(),

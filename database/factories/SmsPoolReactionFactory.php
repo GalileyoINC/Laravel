@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\SmsPoolReaction;
-use App\Models\SmsPool;
-use App\Models\User;
-use App\Models\Reaction;
+use App\Models\Communication\SmsPool;
+use App\Models\Communication\SmsPoolReaction;
+use App\Models\Content\Reaction;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SmsPoolReaction>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\SmsPoolReaction>
  */
 class SmsPoolReactionFactory extends Factory
 {

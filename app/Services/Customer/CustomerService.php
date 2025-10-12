@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Customer;
 
-use App\DTOs\Customer\GetProfileRequestDTO;
-use App\DTOs\Customer\UpdateProfileRequestDTO;
 use App\DTOs\Customer\ChangePasswordRequestDTO;
+use App\DTOs\Customer\GetProfileRequestDTO;
 use App\DTOs\Customer\UpdatePrivacyRequestDTO;
-use App\Models\User;
+use App\DTOs\Customer\UpdateProfileRequestDTO;
+use App\Models\User\User\User;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Customer service implementation
@@ -35,7 +38,7 @@ class CustomerService implements CustomerServiceInterface
                 'zip' => $user->zip ?? null,
                 'about' => $user->about ?? null,
                 'timezone' => $user->timezone ?? null,
-                    'image' => $user->image ? asset('storage/' . $user->image) : null,
+                'image' => $user->image ? asset('storage/'.$user->image) : null,
                 'header_image' => $user->header_image ?? null,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
@@ -50,11 +53,11 @@ class CustomerService implements CustomerServiceInterface
                 'general_visibility' => $user->general_visibility ?? 0,
                 'phone_visibility' => $user->phone_visibility ?? 1,
                 'address_visibility' => $user->address_visibility ?? 0,
-                'credit' => $user->credit ?? 0
+                'credit' => $user->credit ?? 0,
             ];
 
-        } catch (\Exception $e) {
-            Log::error('CustomerService getProfile error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CustomerService getProfile error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -81,24 +84,24 @@ class CustomerService implements CustomerServiceInterface
                 }
             }
 
-            if (!empty($updateData)) {
+            if (! empty($updateData)) {
                 $user->update($updateData);
                 $user->refresh();
             }
 
             DB::commit();
 
-                $profileData = $this->getProfile(new GetProfileRequestDTO(), $user);
-                
-                return [
-                    'success' => true,
-                    'message' => 'Profile updated successfully',
-                    'data' => $profileData
-                ];
+            $profileData = $this->getProfile(new GetProfileRequestDTO, $user);
 
-        } catch (\Exception $e) {
+            return [
+                'success' => true,
+                'message' => 'Profile updated successfully',
+                'data' => $profileData,
+            ];
+
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error('CustomerService updateProfile error: ' . $e->getMessage());
+            Log::error('CustomerService updateProfile error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -110,26 +113,26 @@ class CustomerService implements CustomerServiceInterface
     {
         try {
             // Verify current password
-            if (!Hash::check($dto->currentPassword, $user->password)) {
+            if (! Hash::check($dto->currentPassword, $user->password)) {
                 return [
                     'success' => false,
                     'message' => 'Current password is incorrect',
-                    'errors' => ['current_password' => ['Current password is incorrect']]
+                    'errors' => ['current_password' => ['Current password is incorrect']],
                 ];
             }
 
             // Update password
             $user->update([
-                'password' => Hash::make($dto->newPassword)
+                'password' => Hash::make($dto->newPassword),
             ]);
 
             return [
                 'success' => true,
-                'message' => 'Password changed successfully'
+                'message' => 'Password changed successfully',
             ];
 
-        } catch (\Exception $e) {
-            Log::error('CustomerService changePassword error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CustomerService changePassword error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -142,17 +145,17 @@ class CustomerService implements CustomerServiceInterface
         try {
             // In Laravel, logout is typically handled by the auth system
             // This method can be used for additional cleanup if needed
-            
+
             // Revoke all tokens for the user (if using Sanctum)
             $user->tokens()->delete();
 
             return [
                 'success' => true,
-                'message' => 'Logged out successfully'
+                'message' => 'Logged out successfully',
             ];
 
-        } catch (\Exception $e) {
-            Log::error('CustomerService logout error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CustomerService logout error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -172,12 +175,12 @@ class CustomerService implements CustomerServiceInterface
 
             return [
                 'success' => true,
-                'message' => 'Account deleted successfully'
+                'message' => 'Account deleted successfully',
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error('CustomerService deleteAccount error: ' . $e->getMessage());
+            Log::error('CustomerService deleteAccount error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -194,7 +197,7 @@ class CustomerService implements CustomerServiceInterface
                 'general_visibility' => $dto->generalVisibility,
                 'phone_visibility' => $dto->phoneVisibility,
                 'address_visibility' => $dto->addressVisibility,
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             DB::commit();
@@ -204,12 +207,12 @@ class CustomerService implements CustomerServiceInterface
                 'message' => 'Privacy settings updated successfully',
                 'general_visibility' => $dto->generalVisibility,
                 'phone_visibility' => $dto->phoneVisibility,
-                'address_visibility' => $dto->addressVisibility
+                'address_visibility' => $dto->addressVisibility,
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error('CustomerService updatePrivacy error: ' . $e->getMessage());
+            Log::error('CustomerService updatePrivacy error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -224,7 +227,7 @@ class CustomerService implements CustomerServiceInterface
 
             $user->update([
                 'image' => null,
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             DB::commit();
@@ -232,12 +235,12 @@ class CustomerService implements CustomerServiceInterface
             return [
                 'success' => true,
                 'message' => 'Avatar removed successfully',
-                'image' => null
+                'image' => null,
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error('CustomerService removeAvatar error: ' . $e->getMessage());
+            Log::error('CustomerService removeAvatar error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -252,7 +255,7 @@ class CustomerService implements CustomerServiceInterface
 
             $user->update([
                 'header_image' => null,
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             DB::commit();
@@ -260,12 +263,12 @@ class CustomerService implements CustomerServiceInterface
             return [
                 'success' => true,
                 'message' => 'Header image removed successfully',
-                'header_image' => null
+                'header_image' => null,
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            Log::error('CustomerService removeHeader error: ' . $e->getMessage());
+            Log::error('CustomerService removeHeader error: '.$e->getMessage());
             throw $e;
         }
     }

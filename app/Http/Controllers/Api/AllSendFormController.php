@@ -1,26 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Actions\AllSendForm\GetAllSendOptionsAction;
-use App\Services\AllSendForm\AllSendFormServiceInterface;
 use App\DTOs\AllSendForm\AllSendBroadcastRequestDTO;
 use App\DTOs\AllSendForm\AllSendImageUploadRequestDTO;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\AllSendForm\AllSendFormServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Refactored AllSendForm Controller using DDD Actions  
+ * Refactored AllSendForm Controller using DDD Actions
  * Handles content broadcasting: bulk messages, scheduling, file uploads
  */
 class AllSendFormController extends Controller
 {
     public function __construct(
-        private GetAllSendOptionsAction $getAllSendOptionsAction,
-        private AllSendFormServiceInterface $allSendFormService
+        private readonly GetAllSendOptionsAction $getAllSendOptionsAction,
+        private readonly AllSendFormServiceInterface $allSendFormService
     ) {}
 
     /**
@@ -38,18 +41,18 @@ class AllSendFormController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
             $dto = AllSendBroadcastRequestDTO::fromRequest($request);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
                     'errors' => ['Invalid broadcast request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
@@ -57,12 +60,12 @@ class AllSendFormController extends Controller
 
             return response()->json($result);
 
-        } catch (\Exception $e) {
-            Log::error('AllSendFormController send error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('AllSendFormController send error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }
@@ -74,18 +77,18 @@ class AllSendFormController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
             $dto = AllSendImageUploadRequestDTO::fromRequest($request);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
                     'errors' => ['Invalid image upload request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
@@ -93,12 +96,12 @@ class AllSendFormController extends Controller
 
             return response()->json($result);
 
-        } catch (\Exception $e) {
-            Log::error('AllSendFormController imageUpload error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('AllSendFormController imageUpload error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }
@@ -110,18 +113,18 @@ class AllSendFormController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
             $imageId = $request->input('id_image');
-            if (!$imageId) {
+            if (! $imageId) {
                 return response()->json([
                     'errors' => ['Image ID is required'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
@@ -129,12 +132,12 @@ class AllSendFormController extends Controller
 
             return response()->json($result);
 
-        } catch (\Exception $e) {
-            Log::error('AllSendFormController imageDelete error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('AllSendFormController imageDelete error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

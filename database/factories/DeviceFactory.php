@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Device;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -28,7 +30,7 @@ class DeviceFactory extends Factory
     {
         $osTypes = ['iOS', 'Android', 'Windows', 'macOS', 'Linux'];
         $os = fake()->randomElement($osTypes);
-        
+
         return [
             'id_user' => User::factory(),
             'uuid' => Str::uuid(),

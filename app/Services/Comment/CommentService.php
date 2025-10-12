@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Comment;
 
-use App\DTOs\Comment\CommentListRequestDTO;
 use App\DTOs\Comment\CommentCreateRequestDTO;
-use App\DTOs\Comment\CommentUpdateRequestDTO;
 use App\DTOs\Comment\CommentDeleteRequestDTO;
-use App\Models\User;
-use App\Models\Comment;
+use App\DTOs\Comment\CommentListRequestDTO;
+use App\DTOs\Comment\CommentUpdateRequestDTO;
+use App\Models\Content\Comment;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -26,7 +29,7 @@ class CommentService implements CommentServiceInterface
                 ->with(['user', 'replies.user']);
 
             // Apply filters if any
-            if (!empty($dto->filter)) {
+            if (! empty($dto->filter)) {
                 // Add filter logic here
             }
 
@@ -37,8 +40,8 @@ class CommentService implements CommentServiceInterface
 
             return $comments;
 
-        } catch (\Exception $e) {
-            Log::error('CommentService getCommentsForNews error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CommentService getCommentsForNews error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -56,8 +59,8 @@ class CommentService implements CommentServiceInterface
 
             return $replies;
 
-        } catch (\Exception $e) {
-            Log::error('CommentService getCommentReplies error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CommentService getCommentReplies error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -74,13 +77,13 @@ class CommentService implements CommentServiceInterface
                 'id_user' => $user->id,
                 'message' => $dto->message,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             return $comment->load('user');
 
-        } catch (\Exception $e) {
-            Log::error('CommentService createComment error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CommentService createComment error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -95,19 +98,19 @@ class CommentService implements CommentServiceInterface
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$comment) {
-                throw new \Exception('Comment not found or access denied');
+            if (! $comment) {
+                throw new Exception('Comment not found or access denied');
             }
 
             $comment->update([
                 'message' => $dto->message,
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             return $comment->load('user');
 
-        } catch (\Exception $e) {
-            Log::error('CommentService updateComment error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CommentService updateComment error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -122,20 +125,20 @@ class CommentService implements CommentServiceInterface
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$comment) {
-                throw new \Exception('Comment not found or access denied');
+            if (! $comment) {
+                throw new Exception('Comment not found or access denied');
             }
 
             // Delete replies first
             Comment::where('id_parent', $comment->id)->delete();
-            
+
             // Delete the comment
             $comment->delete();
 
             return ['success' => true, 'message' => 'Comment deleted successfully'];
 
-        } catch (\Exception $e) {
-            Log::error('CommentService deleteComment error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('CommentService deleteComment error: '.$e->getMessage());
             throw $e;
         }
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Bookmark;
 
 use Illuminate\Http\Request;
@@ -19,8 +21,8 @@ class BookmarkRequestDTO
     {
         return new self(
             postId: $data['post_id'] ?? '',
-            page: isset($data['page']) ? (int)$data['page'] : 1,
-            pageSize: isset($data['page_size']) ? (int)$data['page_size'] : 10
+            page: isset($data['page']) ? (int) $data['page'] : 1,
+            pageSize: isset($data['page_size']) ? (int) $data['page_size'] : 10
         );
     }
 
@@ -38,15 +40,15 @@ class BookmarkRequestDTO
         return [
             'post_id' => $this->postId,
             'page' => $this->page,
-            'page_size' => $this->pageSize
+            'page_size' => $this->pageSize,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->postId) && 
-               $this->page > 0 && 
-               $this->pageSize > 0 && 
+        return ! empty($this->postId) &&
+               $this->page > 0 &&
+               $this->pageSize > 0 &&
                $this->pageSize <= 100;
     }
 }
@@ -65,8 +67,8 @@ class BookmarkListRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            page: isset($data['page']) ? (int)$data['page'] : 1,
-            pageSize: isset($data['page_size']) ? (int)$data['page_size'] : 10,
+            page: isset($data['page']) ? (int) $data['page'] : 1,
+            pageSize: isset($data['page_size']) ? (int) $data['page_size'] : 10,
             type: $data['type'] ?? null
         );
     }
@@ -85,14 +87,14 @@ class BookmarkListRequestDTO
         return [
             'page' => $this->page,
             'page_size' => $this->pageSize,
-            'type' => $this->type
+            'type' => $this->type,
         ];
     }
 
     public function validate(): bool
     {
-        return $this->page > 0 && 
-               $this->pageSize > 0 && 
+        return $this->page > 0 &&
+               $this->pageSize > 0 &&
                $this->pageSize <= 100;
     }
 }

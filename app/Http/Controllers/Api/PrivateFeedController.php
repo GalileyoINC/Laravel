@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Actions\PrivateFeed\GetPrivateFeedListAction;
-use App\Services\PrivateFeed\PrivateFeedServiceInterface;
 use App\DTOs\PrivateFeed\PrivateFeedCreateRequestDTO;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\PrivateFeed\PrivateFeedServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -18,8 +21,8 @@ use Illuminate\Support\Facades\Log;
 class PrivateFeedController extends Controller
 {
     public function __construct(
-        private GetPrivateFeedListAction $getPrivateFeedListAction,
-        private PrivateFeedServiceInterface $privateFeedService
+        private readonly GetPrivateFeedListAction $getPrivateFeedListAction,
+        private readonly PrivateFeedServiceInterface $privateFeedService
     ) {}
 
     /**
@@ -37,18 +40,18 @@ class PrivateFeedController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
             $dto = PrivateFeedCreateRequestDTO::fromRequest($request);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
                     'errors' => ['Invalid private feed creation request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
@@ -56,12 +59,12 @@ class PrivateFeedController extends Controller
 
             return response()->json($privateFeed->toArray());
 
-        } catch (\Exception $e) {
-            Log::error('PrivateFeedController create error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('PrivateFeedController create error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }
@@ -73,26 +76,26 @@ class PrivateFeedController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
             $id = $request->input('id');
-            if (!$id) {
+            if (! $id) {
                 return response()->json([
                     'errors' => ['ID is required'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
             $dto = PrivateFeedCreateRequestDTO::fromRequest($request);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
                     'errors' => ['Invalid private feed update request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
@@ -100,12 +103,12 @@ class PrivateFeedController extends Controller
 
             return response()->json($privateFeed->toArray());
 
-        } catch (\Exception $e) {
-            Log::error('PrivateFeedController update error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('PrivateFeedController update error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }
@@ -117,18 +120,18 @@ class PrivateFeedController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
             $id = $request->input('id');
-            if (!$id) {
+            if (! $id) {
                 return response()->json([
                     'errors' => ['ID is required'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
@@ -140,15 +143,15 @@ class PrivateFeedController extends Controller
 
             return response()->json([
                 'error' => 'Failed to delete private feed',
-                'code' => 400
+                'code' => 400,
             ], 400);
 
-        } catch (\Exception $e) {
-            Log::error('PrivateFeedController delete error: ' . $e->getMessage());
-            
+        } catch (Exception $e) {
+            Log::error('PrivateFeedController delete error: '.$e->getMessage());
+
             return response()->json([
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

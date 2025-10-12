@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\CreditCard;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,7 +29,7 @@ class CreditCardCreateRequest extends FormRequest
             'num' => ['required', 'string', 'regex:/^[0-9]{13,19}$/'],
             'cvv' => ['required', 'string', 'regex:/^[0-9]{3,4}$/'],
             'type' => ['required', 'string', 'in:Visa,MasterCard,American Express,Discover'],
-            'expiration_year' => ['required', 'integer', 'min:' . date('Y'), 'max:' . (date('Y') + 10)],
+            'expiration_year' => ['required', 'integer', 'min:'.date('Y'), 'max:'.(date('Y') + 10)],
             'expiration_month' => ['required', 'integer', 'min:1', 'max:12'],
             'is_preferred' => ['nullable', 'boolean'],
         ];

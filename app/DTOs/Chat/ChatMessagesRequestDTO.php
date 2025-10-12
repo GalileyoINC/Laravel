@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Chat;
 
 use Illuminate\Http\Request;
@@ -19,13 +21,13 @@ class ChatMessagesRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            conversationId: (int)$data['id'],
-            limit: isset($data['limit']) ? (int)$data['limit'] : 20,
-            offset: isset($data['offset']) ? (int)$data['offset'] : 0,
-            page: isset($data['page']) ? (int)$data['page'] : null,
-            pageSize: isset($data['page_size']) ? (int)$data['page_size'] : null,
+            conversationId: (int) $data['id'],
+            limit: isset($data['limit']) ? (int) $data['limit'] : 20,
+            offset: isset($data['offset']) ? (int) $data['offset'] : 0,
+            page: isset($data['page']) ? (int) $data['page'] : null,
+            pageSize: isset($data['page_size']) ? (int) $data['page_size'] : null,
             list: $data['list'] ?? null,
-            count: isset($data['count']) ? (int)$data['count'] : null
+            count: isset($data['count']) ? (int) $data['count'] : null
         );
     }
 
@@ -51,7 +53,7 @@ class ChatMessagesRequestDTO
             'page' => $this->page,
             'page_size' => $this->pageSize,
             'list' => $this->list,
-            'count' => $this->count
+            'count' => $this->count,
         ];
     }
 

@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\News;
 
 use App\DTOs\News\NewsListRequestDTO;
 use App\Services\News\NewsServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class GetNewsByInfluencersAction
 {
     public function __construct(
-        private NewsServiceInterface $newsService
+        private readonly NewsServiceInterface $newsService
     ) {}
 
     public function execute(array $data): JsonResponse
@@ -42,7 +45,7 @@ class GetNewsByInfluencersAction
                 ],
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('GetNewsByInfluencersAction error: '.$e->getMessage());
 
             return response()->json([

@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\Follower;
-use App\Models\FollowerList;
-use App\Models\User;
+use App\Models\Subscription\Follower;
+use App\Models\Subscription\FollowerList;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Follower>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subscription\Follower>
  */
 class FollowerFactory extends Factory
 {

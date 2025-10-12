@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Search;
 
 use App\DTOs\Search\SearchRequestDTO;
-use App\Models\SmsPool;
-use App\Models\User;
+use App\Models\Communication\SmsPool;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -35,7 +38,7 @@ class SearchService implements SearchServiceInterface
             }
 
             // Apply additional filters
-            if (!empty($dto->filters)) {
+            if (! empty($dto->filters)) {
                 foreach ($dto->filters as $key => $value) {
                     if ($value !== null && $value !== '') {
                         $query->where($key, $value);
@@ -44,7 +47,7 @@ class SearchService implements SearchServiceInterface
             }
 
             $offset = ($dto->page - 1) * $dto->pageSize;
-            
+
             $results = $query->orderBy('created_at', 'desc')
                 ->limit($dto->pageSize)
                 ->offset($offset)
@@ -55,23 +58,19 @@ class SearchService implements SearchServiceInterface
             // Transform each result to match frontend expectations
             $results->each(function ($item) use ($user) {
                 // Add images field
-                $item->images = $item->photos->map(function ($photo) {
-                    return [
-                        'id' => $photo->id,
-                        'url' => $photo->url,
-                        'thumbnail' => $photo->thumbnail_url ?? $photo->url,
-                    ];
-                })->toArray();
+                $item->images = $item->photos->map(fn ($photo) => [
+                    'id' => $photo->id,
+                    'url' => $photo->url,
+                    'thumbnail' => $photo->thumbnail_url ?? $photo->url,
+                ])->toArray();
 
                 // Add reactions
-                $item->reactions = $item->reactions->map(function ($reaction) {
-                    return [
-                        'id' => $reaction->id,
-                        'type' => $reaction->type,
-                        'count' => $reaction->count,
-                        'is_user_reacted' => $reaction->is_user_reacted ?? false,
-                    ];
-                })->toArray();
+                $item->reactions = $item->reactions->map(fn ($reaction) => [
+                    'id' => $reaction->id,
+                    'type' => $reaction->type,
+                    'count' => $reaction->count,
+                    'is_user_reacted' => $reaction->is_user_reacted ?? false,
+                ])->toArray();
 
                 // Add user info
                 $item->user_info = [
@@ -104,7 +103,7 @@ class SearchService implements SearchServiceInterface
                 'total_pages' => ceil($totalCount / $dto->pageSize),
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('SearchService error: '.$e->getMessage());
             throw $e;
         }

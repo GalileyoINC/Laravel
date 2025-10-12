@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\InfluencerPage;
-use App\Models\Subscription;
+use App\Models\Subscription\InfluencerPage;
+use App\Models\Subscription\Subscription;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\InfluencerPage>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subscription\InfluencerPage>
  */
 class InfluencerPageFactory extends Factory
 {
@@ -27,13 +29,13 @@ class InfluencerPageFactory extends Factory
     public function definition(): array
     {
         $title = fake()->sentence(3);
-        
+
         return [
             'id_subscription' => Subscription::factory(),
             'title' => $title,
             'alias' => Str::slug($title),
             'description' => fake()->paragraph(3),
-            'image' => fake()->boolean(70) ? fake()->word() . '.jpg' : null,
+            'image' => fake()->boolean(70) ? fake()->word().'.jpg' : null,
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-6 months', 'now'),
         ];
@@ -45,7 +47,7 @@ class InfluencerPageFactory extends Factory
     public function withImage(): static
     {
         return $this->state(fn (array $attributes) => [
-            'image' => fake()->word() . '.jpg',
+            'image' => fake()->word().'.jpg',
         ]);
     }
 

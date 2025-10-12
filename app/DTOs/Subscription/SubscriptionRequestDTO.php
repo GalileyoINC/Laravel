@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Subscription;
 
 use Illuminate\Http\Request;
@@ -19,8 +21,8 @@ class SubscriptionRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            idSubscription: (int)$data['id'],
-            checked: (bool)$data['checked'],
+            idSubscription: (int) $data['id'],
+            checked: (bool) $data['checked'],
             zip: $data['zip'] ?? null,
             subType: $data['sub_type'] ?? 'regular'
         );
@@ -42,7 +44,7 @@ class SubscriptionRequestDTO
             'id_subscription' => $this->idSubscription,
             'checked' => $this->checked,
             'zip' => $this->zip,
-            'sub_type' => $this->subType
+            'sub_type' => $this->subType,
         ];
     }
 

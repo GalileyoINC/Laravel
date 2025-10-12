@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\AllSendForm;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 
 class AllSendBroadcastRequestDTO
 {
@@ -68,12 +69,12 @@ class AllSendBroadcastRequestDTO
             'timezone' => $this->timezone,
             'url' => $this->url,
             'is_link' => $this->isLink,
-            'files' => $this->files
+            'files' => $this->files,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->uuid) && !empty($this->text);
+        return ! empty($this->uuid) && ! empty($this->text);
     }
 }

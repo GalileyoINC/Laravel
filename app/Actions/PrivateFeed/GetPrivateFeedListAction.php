@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\PrivateFeed;
 
 use App\DTOs\PrivateFeed\PrivateFeedListRequestDTO;
 use App\Services\PrivateFeed\PrivateFeedServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class GetPrivateFeedListAction
 {
     public function __construct(
-        private PrivateFeedServiceInterface $privateFeedService
+        private readonly PrivateFeedServiceInterface $privateFeedService
     ) {}
 
     public function execute(array $data): JsonResponse
@@ -47,7 +50,7 @@ class GetPrivateFeedListAction
                 ],
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('GetPrivateFeedListAction error: '.$e->getMessage());
 
             return response()->json([

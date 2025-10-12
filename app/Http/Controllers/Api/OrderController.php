@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Actions\Order\CreateOrderAction;
 use App\Actions\Order\PayOrderAction;
+use App\Http\Controllers\Controller;
 use App\Services\Order\OrderServiceInterface;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Refactored Order Controller using DDD Actions
@@ -16,9 +18,9 @@ use Illuminate\Http\JsonResponse;
 class OrderController extends Controller
 {
     public function __construct(
-        private CreateOrderAction $createOrderAction,
-        private PayOrderAction $payOrderAction,
-        private OrderServiceInterface $orderService
+        private readonly CreateOrderAction $createOrderAction,
+        private readonly PayOrderAction $payOrderAction,
+        private readonly OrderServiceInterface $orderService
     ) {}
 
     /**
@@ -43,6 +45,7 @@ class OrderController extends Controller
     public function test(): JsonResponse
     {
         $testData = $this->orderService->getTestOrder();
+
         return response()->json($testData);
     }
 }

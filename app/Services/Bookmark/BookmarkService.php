@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Bookmark;
 
-use App\DTOs\Bookmark\BookmarkRequestDTO;
 use App\DTOs\Bookmark\BookmarkListRequestDTO;
-use App\Models\SmsPool;
-use App\Models\User;
+use App\DTOs\Bookmark\BookmarkRequestDTO;
+use App\Models\Communication\SmsPool;
+use App\Models\User\User\User;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -19,7 +22,7 @@ class BookmarkService implements BookmarkServiceInterface
     public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user)
     {
         try {
-            if (!$user) {
+            if (! $user) {
                 return [
                     'list' => [],
                     'count' => 0,
@@ -40,7 +43,7 @@ class BookmarkService implements BookmarkServiceInterface
             }
 
             $offset = ($dto->page - 1) * $dto->pageSize;
-            
+
             $results = $query->orderBy('created_at', 'desc')
                 ->limit($dto->pageSize)
                 ->offset($offset)
@@ -51,23 +54,19 @@ class BookmarkService implements BookmarkServiceInterface
             // Transform each result to match frontend expectations
             $results->each(function ($item) use ($user) {
                 // Add images field
-                $item->images = $item->photos->map(function ($photo) {
-                    return [
-                        'id' => $photo->id,
-                        'url' => $photo->url,
-                        'thumbnail' => $photo->thumbnail_url ?? $photo->url,
-                    ];
-                })->toArray();
+                $item->images = $item->photos->map(fn ($photo) => [
+                    'id' => $photo->id,
+                    'url' => $photo->url,
+                    'thumbnail' => $photo->thumbnail_url ?? $photo->url,
+                ])->toArray();
 
                 // Add reactions
-                $item->reactions = $item->reactions->map(function ($reaction) {
-                    return [
-                        'id' => $reaction->id,
-                        'type' => $reaction->type,
-                        'count' => $reaction->count,
-                        'is_user_reacted' => $reaction->is_user_reacted ?? false,
-                    ];
-                })->toArray();
+                $item->reactions = $item->reactions->map(fn ($reaction) => [
+                    'id' => $reaction->id,
+                    'type' => $reaction->type,
+                    'count' => $reaction->count,
+                    'is_user_reacted' => $reaction->is_user_reacted ?? false,
+                ])->toArray();
 
                 // Add user info
                 $item->user_info = [
@@ -96,7 +95,7 @@ class BookmarkService implements BookmarkServiceInterface
                 'total_pages' => ceil($totalCount / $dto->pageSize),
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('BookmarkService getBookmarks error: '.$e->getMessage());
             throw $e;
         }
@@ -108,20 +107,20 @@ class BookmarkService implements BookmarkServiceInterface
     public function createBookmark(BookmarkRequestDTO $dto, ?User $user)
     {
         try {
-            if (!$user) {
-                throw new \Exception('User not authenticated');
+            if (! $user) {
+                throw new Exception('User not authenticated');
             }
 
             // Check if post exists
             $post = SmsPool::find($dto->postId);
-            if (!$post) {
-                throw new \Exception('Post not found');
+            if (! $post) {
+                throw new Exception('Post not found');
             }
 
             // Check if already bookmarked
             $existingBookmark = $user->bookmarks()->where('post_id', $dto->postId)->first();
             if ($existingBookmark) {
-                throw new \Exception('Post already bookmarked');
+                throw new Exception('Post already bookmarked');
             }
 
             // Create bookmark
@@ -137,7 +136,7 @@ class BookmarkService implements BookmarkServiceInterface
                 'created_at' => $bookmark->created_at->toIso8601String(),
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('BookmarkService createBookmark error: '.$e->getMessage());
             throw $e;
         }
@@ -149,14 +148,14 @@ class BookmarkService implements BookmarkServiceInterface
     public function deleteBookmark(BookmarkRequestDTO $dto, ?User $user)
     {
         try {
-            if (!$user) {
-                throw new \Exception('User not authenticated');
+            if (! $user) {
+                throw new Exception('User not authenticated');
             }
 
             // Find and delete bookmark
             $bookmark = $user->bookmarks()->where('post_id', $dto->postId)->first();
-            if (!$bookmark) {
-                throw new \Exception('Bookmark not found');
+            if (! $bookmark) {
+                throw new Exception('Bookmark not found');
             }
 
             $bookmark->delete();
@@ -166,7 +165,7 @@ class BookmarkService implements BookmarkServiceInterface
                 'deleted' => true,
             ];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('BookmarkService deleteBookmark error: '.$e->getMessage());
             throw $e;
         }

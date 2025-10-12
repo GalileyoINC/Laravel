@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Device;
 
 use Illuminate\Http\Request;
@@ -27,12 +29,12 @@ class DeviceVerifyRequestDTO
     public function toArray(): array
     {
         return [
-            'uuid' => $this->uuid
+            'uuid' => $this->uuid,
         ];
     }
 
     public function validate(): bool
     {
-        return !empty($this->uuid);
+        return ! empty($this->uuid);
     }
 }

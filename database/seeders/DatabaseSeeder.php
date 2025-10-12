@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Subscription;
-use App\Models\News;
 use App\Models\Comment;
 use App\Models\CreditCard;
 use App\Models\Device;
-use App\Models\SmsPool;
+use App\Models\Follower;
 use App\Models\FollowerList;
 use App\Models\InfluencerPage;
-use App\Models\UserSubscription;
-use App\Models\Follower;
+use App\Models\News;
 use App\Models\Reaction;
+use App\Models\SmsPool;
 use App\Models\SmsPoolReaction;
+use App\Models\Subscription;
+use App\Models\User;
+use App\Models\UserSubscription;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -79,7 +81,7 @@ class DatabaseSeeder extends Seeder
         // Create user subscriptions
         $this->command->info('🔗 Creating user subscriptions...');
         foreach ($users->take(30) as $user) {
-            $userSubscriptions = $subscriptions->random(rand(1, 5));
+            $userSubscriptions = $subscriptions->random(random_int(1, 5));
             foreach ($userSubscriptions as $subscription) {
                 UserSubscription::factory()->create([
                     'id_user' => $user->id,
@@ -87,12 +89,12 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-        $this->command->info("✅ Created user subscriptions");
+        $this->command->info('✅ Created user subscriptions');
 
         // Create followers
         $this->command->info('👥 Creating followers...');
         foreach ($followerLists->take(20) as $followerList) {
-            $followers = $users->random(rand(5, 15));
+            $followers = $users->random(random_int(5, 15));
             foreach ($followers as $follower) {
                 Follower::factory()->create([
                     'id_follower_list' => $followerList->id,
@@ -100,7 +102,7 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-        $this->command->info("✅ Created followers");
+        $this->command->info('✅ Created followers');
 
         // Create reactions
         $this->command->info('👍 Creating reactions...');
@@ -114,7 +116,7 @@ class DatabaseSeeder extends Seeder
         // Create SMS pool reactions
         $this->command->info('👍 Creating SMS pool reactions...');
         foreach ($smsPools->take(50) as $smsPool) {
-            $userReactions = $users->random(rand(1, 10));
+            $userReactions = $users->random(random_int(1, 10));
             foreach ($userReactions as $user) {
                 SmsPoolReaction::factory()->create([
                     'id_sms_pool' => $smsPool->id,
@@ -123,11 +125,11 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-        $this->command->info("✅ Created SMS pool reactions");
+        $this->command->info('✅ Created SMS pool reactions');
 
         // Create some specific demo users
         $this->command->info('👤 Creating demo users...');
-        
+
         // Admin user
         User::factory()->create([
             'email' => 'admin@galileyo.com',
@@ -155,7 +157,7 @@ class DatabaseSeeder extends Seeder
             'is_valid_email' => true,
         ]);
 
-        $this->command->info("✅ Created demo users");
+        $this->command->info('✅ Created demo users');
 
         $this->command->info('🎉 Database seeding completed successfully!');
         $this->command->info('');

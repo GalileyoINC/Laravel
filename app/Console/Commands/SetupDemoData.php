@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -56,12 +59,12 @@ class SetupDemoData extends Command
         $this->newLine();
         $this->info('🎉 Demo data setup completed successfully!');
         $this->newLine();
-        
+
         $this->info('📋 Next steps:');
         $this->line('1. Start the Laravel server: php artisan serve');
         $this->line('2. Test the API endpoints using the demo users');
         $this->line('3. Check the database for generated data');
-        
+
         $this->newLine();
         $this->info('🔗 API Base URL: http://localhost:8000/api');
         $this->info('📊 Database: Check your MySQL database for demo data');
@@ -107,8 +110,8 @@ class SetupDemoData extends Command
             $this->line('• Test: test@galileyo.com (password: password)');
             $this->line('• Influencer: influencer@galileyo.com (password: password)');
 
-        } catch (\Exception $e) {
-            $this->warn('Could not retrieve data counts: ' . $e->getMessage());
+        } catch (Exception $e) {
+            $this->warn('Could not retrieve data counts: '.$e->getMessage());
         }
     }
 }

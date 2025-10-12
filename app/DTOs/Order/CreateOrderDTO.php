@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Order;
 
 use Illuminate\Http\Request;
@@ -21,10 +23,10 @@ class CreateOrderDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            productId: (int)$data['product_id'],
-            quantity: (int)$data['quantity'],
+            productId: (int) $data['product_id'],
+            quantity: (int) $data['quantity'],
             paymentMethod: $data['payment_method'] ?? 'credit_card',
-            totalAmount: isset($data['total_amount']) ? (float)$data['total_amount'] : null,
+            totalAmount: isset($data['total_amount']) ? (float) $data['total_amount'] : null,
             notes: $data['notes'] ?? null,
             productDetails: $data['product_details'] ?? []
         );
@@ -50,12 +52,12 @@ class CreateOrderDTO
             'payment_method' => $this->paymentMethod,
             'total_amount' => $this->totalAmount,
             'notes' => $this->notes,
-            'product_details' => $this->productDetails
+            'product_details' => $this->productDetails,
         ];
     }
 
     public function validate(): bool
     {
-        return $this->productId > 0 && $this->quantity > 0 && !empty($this->paymentMethod);
+        return $this->productId > 0 && $this->quantity > 0 && ! empty($this->paymentMethod);
     }
 }

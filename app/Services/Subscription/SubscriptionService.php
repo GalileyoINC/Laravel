@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Subscription;
 
-use App\DTOs\Subscription\SubscriptionRequestDTO;
-use App\DTOs\Subscription\MarketstackSubscriptionDTO;
 use App\DTOs\Subscription\FeedOptionsDTO;
-use App\Models\User;
-use App\Models\Subscription;
-use App\Models\UserSubscription;
-use App\Models\FollowerList;
+use App\DTOs\Subscription\MarketstackSubscriptionDTO;
+use App\DTOs\Subscription\SubscriptionRequestDTO;
+use App\Models\Subscription\FollowerList;
+use App\Models\Subscription\Subscription;
+use App\Models\User\User\User;
+use App\Models\User\UserSubscription;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -23,8 +26,8 @@ class SubscriptionService implements SubscriptionServiceInterface
     {
         try {
             $subscription = Subscription::find($dto->idSubscription);
-            if (!$subscription) {
-                throw new \Exception('Subscription not found');
+            if (! $subscription) {
+                throw new Exception('Subscription not found');
             }
 
             if ($dto->checked) {
@@ -33,12 +36,12 @@ class SubscriptionService implements SubscriptionServiceInterface
                     [
                         'id_user' => $user->id,
                         'id_subscription' => $dto->idSubscription,
-                        'sub_type' => $dto->subType
+                        'sub_type' => $dto->subType,
                     ],
                     [
                         'zip' => $dto->zip,
                         'created_at' => now(),
-                        'updated_at' => now()
+                        'updated_at' => now(),
                     ]
                 );
             } else {
@@ -53,11 +56,11 @@ class SubscriptionService implements SubscriptionServiceInterface
                 'success' => true,
                 'message' => $dto->checked ? 'Subscribed successfully' : 'Unsubscribed successfully',
                 'subscription_id' => $dto->idSubscription,
-                'checked' => $dto->checked
+                'checked' => $dto->checked,
             ];
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionService setSubscription error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionService setSubscription error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -93,8 +96,8 @@ class SubscriptionService implements SubscriptionServiceInterface
 
             return $subscriptions->toArray();
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionService getFeedList error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionService getFeedList error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -115,11 +118,11 @@ class SubscriptionService implements SubscriptionServiceInterface
 
             return [
                 'categories' => $categories,
-                'total' => count($categories)
+                'total' => count($categories),
             ];
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionService getFeedCategories error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionService getFeedCategories error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -157,8 +160,8 @@ class SubscriptionService implements SubscriptionServiceInterface
 
             return $subscriptions->toArray();
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionService getSatelliteFeedList error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionService getSatelliteFeedList error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -180,17 +183,17 @@ class SubscriptionService implements SubscriptionServiceInterface
                 'is_public' => false, // Custom subscriptions are private
                 'created_by' => $user->id,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             return [
                 'success' => true,
                 'message' => 'Marketstack subscription created successfully',
-                'subscription' => $subscription->toArray()
+                'subscription' => $subscription->toArray(),
             ];
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionService addMarketstackSubscription error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionService addMarketstackSubscription error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -208,12 +211,12 @@ class SubscriptionService implements SubscriptionServiceInterface
                 'features' => [
                     'zip_code_targeting' => true,
                     'satellite_feeds' => true,
-                    'custom_marketstack' => true
-                ]
+                    'custom_marketstack' => true,
+                ],
             ];
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionService getFeedOptions error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionService getFeedOptions error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -228,19 +231,19 @@ class SubscriptionService implements SubscriptionServiceInterface
                 ->where('id_user', $user->id)
                 ->first();
 
-            if (!$followerList) {
-                throw new \Exception('Private feed not found or unauthorized');
+            if (! $followerList) {
+                throw new Exception('Private feed not found or unauthorized');
             }
 
             $followerList->delete();
 
             return [
                 'success' => true,
-                'message' => 'Private feed deleted successfully'
+                'message' => 'Private feed deleted successfully',
             ];
 
-        } catch (\Exception $e) {
-            Log::error('SubscriptionService deletePrivateFeed error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('SubscriptionService deletePrivateFeed error: '.$e->getMessage());
             throw $e;
         }
     }

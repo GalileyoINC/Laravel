@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\News;
 
 use Illuminate\Http\Request;
@@ -18,7 +20,7 @@ class ReactionRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            idNews: (int)$data['id_news'],
+            idNews: (int) $data['id_news'],
             reactionType: $data['reaction_type'] ?? 'like',
             message: $data['message'] ?? null
         );
@@ -38,12 +40,12 @@ class ReactionRequestDTO
         return [
             'id_news' => $this->idNews,
             'reaction_type' => $this->reactionType,
-            'message' => $this->message
+            'message' => $this->message,
         ];
     }
 
     public function validate(): bool
     {
-        return $this->idNews > 0 && !empty($this->reactionType);
+        return $this->idNews > 0 && ! empty($this->reactionType);
     }
 }

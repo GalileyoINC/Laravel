@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\CreditCard;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,7 +29,7 @@ class CreditCardFactory extends Factory
     {
         $cardTypes = ['Visa', 'MasterCard', 'American Express', 'Discover'];
         $cardType = fake()->randomElement($cardTypes);
-        
+
         return [
             'id_user' => User::factory(),
             'first_name' => fake()->firstName(),
@@ -44,20 +46,6 @@ class CreditCardFactory extends Factory
             'created_at' => fake()->dateTimeBetween('-2 years', 'now'),
             'updated_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
-    }
-
-    /**
-     * Generate a realistic card number based on type.
-     */
-    private function generateCardNumber(string $type): string
-    {
-        return match ($type) {
-            'Visa' => '4' . fake()->numerify('###############'),
-            'MasterCard' => fake()->randomElement(['5', '2']) . fake()->numerify('###############'),
-            'American Express' => fake()->randomElement(['34', '37']) . fake()->numerify('#############'),
-            'Discover' => '6' . fake()->numerify('###############'),
-            default => fake()->numerify('################'),
-        };
     }
 
     /**
@@ -100,7 +88,7 @@ class CreditCardFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'type' => 'Visa',
-            'num' => '4' . fake()->numerify('###############'),
+            'num' => '4'.fake()->numerify('###############'),
         ]);
     }
 
@@ -111,7 +99,21 @@ class CreditCardFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'type' => 'MasterCard',
-            'num' => fake()->randomElement(['5', '2']) . fake()->numerify('###############'),
+            'num' => fake()->randomElement(['5', '2']).fake()->numerify('###############'),
         ]);
+    }
+
+    /**
+     * Generate a realistic card number based on type.
+     */
+    private function generateCardNumber(string $type): string
+    {
+        return match ($type) {
+            'Visa' => '4'.fake()->numerify('###############'),
+            'MasterCard' => fake()->randomElement(['5', '2']).fake()->numerify('###############'),
+            'American Express' => fake()->randomElement(['34', '37']).fake()->numerify('#############'),
+            'Discover' => '6'.fake()->numerify('###############'),
+            default => fake()->numerify('################'),
+        };
     }
 }
