@@ -1,98 +1,109 @@
 <template>
-  <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-    <div class="container flex h-16 items-center justify-between">
-      <!-- Logo -->
-      <div class="flex items-center space-x-2">
-        <router-link to="/" class="flex items-center space-x-2">
-          <img src="/galileyo-icon.svg" alt="Galileyo" class="h-8 w-8" />
-          <span class="text-xl font-bold text-slate-900 dark:text-white">Galileyo</span>
-        </router-link>
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 px-4 backdrop-blur-sm transition-colors dark:border-slate-800 dark:bg-slate-950/95 md:px-6">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 py-8 sm:px-6 lg:px-8">
+      <!-- Left side -->
+      <div class="flex flex-1 items-center gap-2">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <router-link
+            to="/dashboard"
+            class="w-20 text-cyan-500 hover:text-cyan-600"
+          >
+            <img src="/galileyo-icon.svg" alt="Galileyo" class="h-8 w-8" />
+          </router-link>
+        </div>
       </div>
-
-      <!-- Navigation -->
-      <nav class="hidden md:flex items-center space-x-6">
-        <router-link 
-          v-for="item in navigationItems" 
-          :key="item.name"
-          :to="item.href" 
-          class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+      
+      <!-- Middle area -->
+      <div class="grow">
+        <div class="relative mx-auto w-full max-w-xs">
+          <CommandMenu />
+        </div>
+      </div>
+      
+      <!-- Right side -->
+      <div class="flex flex-1 items-center justify-end gap-2">
+        <!-- Map Button -->
+        <router-link
+          v-if="showMap"
+          to="/alerts-map"
+          class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
         >
-          {{ item.name }}
+          <MapIcon class="h-5 w-5" />
         </router-link>
-      </nav>
-
-      <!-- User Menu -->
-      <div class="flex items-center space-x-4">
+        
         <!-- Theme Toggle -->
+        <ThemeToggle />
+        
+        <!-- Create Post Button -->
         <button
-          @click="toggleTheme"
-          class="p-2 rounded-md text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+          @click="openCreatePost"
+          class="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600"
         >
-          <Sun v-if="theme === 'dark'" class="h-5 w-5" />
-          <Moon v-else class="h-5 w-5" />
+          <PlusIcon class="h-4 w-4" />
+          <span class="hidden sm:inline">Post</span>
         </button>
-
-        <template v-if="isAuthenticated">
-          <UserMenu :user="user" />
-        </template>
-        <template v-else>
-          <router-link 
-            to="/login" 
-            class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
-          >
-            Login
-          </router-link>
-          <router-link 
-            to="/sign-up" 
-            class="bg-cyan-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-cyan-600 transition-colors"
-          >
-            Sign Up
-          </router-link>
-        </template>
+        
+        <!-- User Menu -->
+        <UserMenu :user="clientUser" />
       </div>
     </div>
+
+    <!-- Create Post Modal -->
+    <CreatePostModal
+      :is-open="isCreatePostOpen"
+      @close="closeCreatePost"
+      @created="handlePostCreated"
+    />
   </header>
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
-import { useAuthStore } from '../../stores/auth'
+import { ref, onMounted } from 'vue'
+import { MapIcon, PlusIcon } from 'lucide-vue-next'
+import CommandMenu from './CommandMenu.vue'
+import ThemeToggle from './ThemeToggle.vue'
 import UserMenu from './UserMenu.vue'
-import { Sun, Moon } from 'lucide-vue-next'
+import CreatePostModal from '../feed/CreatePostModal.vue'
 
-const authStore = useAuthStore()
+const props = defineProps({
+  showMap: {
+    type: Boolean,
+    default: false
+  }
+})
 
-const isAuthenticated = computed(() => !!authStore.user)
-const user = computed(() => authStore.user)
-
-const theme = ref('light')
-
-const toggleTheme = () => {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-  document.documentElement.classList.toggle('dark')
-  localStorage.setItem('theme', theme.value)
-}
+const clientUser = ref(null)
+const isCreatePostOpen = ref(false)
 
 onMounted(() => {
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    theme.value = savedTheme
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-    }
-  } else {
-    // Check system preference
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      theme.value = 'dark'
-      document.documentElement.classList.add('dark')
+  if (typeof window !== 'undefined') {
+    const userProfile = localStorage.getItem('user_profile')
+    if (userProfile) {
+      try {
+        const parsed = JSON.parse(userProfile)
+        clientUser.value = {
+          name: parsed.first_name || parsed.name || 'User',
+          email: parsed.email || ''
+        }
+      } catch (error) {
+        console.error('Error parsing user profile:', error)
+      }
     }
   }
 })
 
-const navigationItems = [
-  { name: 'Home', href: '/' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '/contact' },
-  { name: 'FAQ', href: '/faq' },
-]
+const openCreatePost = () => {
+  isCreatePostOpen.value = true
+}
+
+const closeCreatePost = () => {
+  isCreatePostOpen.value = false
+}
+
+const handlePostCreated = () => {
+  isCreatePostOpen.value = false
+  // Refresh the page to show new post
+  window.location.reload()
+}
 </script>
