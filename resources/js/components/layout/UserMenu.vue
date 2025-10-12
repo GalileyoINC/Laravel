@@ -102,7 +102,7 @@ import { useAuthStore } from '../../stores/auth'
 const props = defineProps({
   user: {
     type: Object,
-    required: true
+    default: null
   }
 })
 

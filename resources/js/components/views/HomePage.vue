@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-background dark:bg-slate-900">
+  <div class="min-h-screen">
     <!-- Background Effects -->
     <HomeBackground />
     

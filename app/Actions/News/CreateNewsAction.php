@@ -14,18 +14,24 @@ class CreateNewsAction
         try {
             DB::beginTransaction();
 
-            // Get authenticated user
-            $user = Auth::user();
-            if (!$user) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'User not authenticated',
-                ], 401);
-            }
+                // Get authenticated user
+                $user = Auth::user();
+                if (!$user) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'User not authenticated',
+                    ], 401);
+                }
+
+                // Use provided user_id if admin, otherwise use authenticated user
+                $userId = $user->id;
+                if (isset($data['user_id']) && $user->role === 1) {
+                    $userId = $data['user_id'];
+                }
 
             // Create news item
             $news = SmsPool::create([
-                'id_user' => $user->id,
+                'id_user' => $userId,
                 'purpose' => 1, // Default purpose (1 = general/news)
                 'body' => $data['content'] ?? '',
                 'created_at' => now(),

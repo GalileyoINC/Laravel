@@ -32,7 +32,7 @@
         <FeedCardSkeleton />
       </div>
 
-      <div v-else-if="error" class="text-center text-red-500">
+      <div v-else-if="error" class="text-center text-red-500 dark:text-red-400">
         Error: {{ error }}
         <button 
           @click="fetchNews"
@@ -42,9 +42,9 @@
         </button>
       </div>
 
-      <div v-else-if="newsData?.data?.list" class="space-y-4">
+      <div v-else-if="allNews.length > 0" class="space-y-4">
         <FeedCard
-          v-for="item in newsData.data.list"
+          v-for="item in allNews"
           :key="getUniqueId(item)"
           :item="item"
           :get-query-keys="getQueryKeys"
@@ -52,19 +52,23 @@
           @open-comments-modal="handleOpenCommentsModal"
         />
         
-        <div class="grid w-full grid-cols-1 gap-4">
+        <div v-if="hasMore" class="grid w-full grid-cols-1 gap-4">
           <button
             ref="loadMoreRef"
-            @click="fetchNews"
+            @click="fetchNews(true)"
             :disabled="loading"
-            class="p-4 text-center text-gray-500"
+            class="p-4 text-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
           >
             {{ loading ? "Loading..." : "Load More" }}
           </button>
         </div>
+        
+        <div v-else class="text-center text-gray-500 dark:text-gray-400">
+          No more posts to load
+        </div>
       </div>
 
-      <div v-else class="text-center text-gray-500">
+      <div v-else class="text-center text-gray-500 dark:text-gray-400">
         No news items found
       </div>
     </div>
@@ -102,6 +106,9 @@ const newsData = ref(null)
 const loading = ref(false)
 const error = ref(null)
 const loadMoreRef = ref(null)
+const currentPage = ref(1)
+const hasMore = ref(true)
+const allNews = ref([])
 
 // Check if user is authenticated
 onMounted(() => {
@@ -117,7 +124,7 @@ onMounted(() => {
 })
 
 // Fetch news data
-const fetchNews = async () => {
+const fetchNews = async (loadMore = false) => {
   if (!isAuthenticated.value) return
   
   loading.value = true
@@ -130,6 +137,8 @@ const fetchNews = async () => {
       url = `${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/news/by-influencers`
     }
 
+    const page = loadMore ? currentPage.value + 1 : 1
+    
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -137,7 +146,7 @@ const fetchNews = async () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        page: 1,
+        page: page,
         page_size: 10,
       }),
     })
@@ -147,6 +156,23 @@ const fetchNews = async () => {
     }
 
     const data = await response.json()
+    
+    if (loadMore) {
+      // Append new items to existing list
+      if (data.data?.list) {
+        allNews.value = [...allNews.value, ...data.data.list]
+        currentPage.value = page
+        hasMore.value = data.data.list.length === 10 // If we got less than 10, no more pages
+      } else {
+        hasMore.value = false
+      }
+    } else {
+      // Reset for new tab or initial load
+      allNews.value = data.data?.list || []
+      currentPage.value = 1
+      hasMore.value = (data.data?.list?.length || 0) === 10
+    }
+    
     newsData.value = data
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to fetch news'

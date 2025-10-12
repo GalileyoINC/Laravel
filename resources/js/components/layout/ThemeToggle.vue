@@ -54,23 +54,19 @@ const theme = ref('system')
 const isDropdownOpen = ref(false)
 
 const setTheme = (newTheme) => {
-  console.log('Setting theme to:', newTheme)
   theme.value = newTheme
   localStorage.setItem('theme', newTheme)
   
   if (newTheme === 'system') {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    console.log('System prefers dark:', prefersDark)
     if (prefersDark) {
       document.documentElement.classList.add('dark')
     } else {
       document.documentElement.classList.remove('dark')
     }
   } else if (newTheme === 'dark') {
-    console.log('Adding dark class')
     document.documentElement.classList.add('dark')
   } else {
-    console.log('Removing dark class')
     document.documentElement.classList.remove('dark')
   }
   
@@ -96,13 +92,9 @@ const handleSystemThemeChange = (e) => {
 }
 
 onMounted(() => {
-  console.log('ThemeToggle mounted')
   // Check for saved theme preference or default to 'system'
   const savedTheme = localStorage.getItem('theme')
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  
-  console.log('Saved theme:', savedTheme)
-  console.log('System prefers dark:', prefersDark)
   
   if (savedTheme) {
     theme.value = savedTheme
@@ -112,17 +104,13 @@ onMounted(() => {
   if (theme.value === 'system') {
     if (prefersDark) {
       document.documentElement.classList.add('dark')
-      console.log('Applied dark theme (system)')
     } else {
       document.documentElement.classList.remove('dark')
-      console.log('Applied light theme (system)')
     }
   } else if (theme.value === 'dark') {
     document.documentElement.classList.add('dark')
-    console.log('Applied dark theme')
   } else {
     document.documentElement.classList.remove('dark')
-    console.log('Applied light theme')
   }
   
   // Listen for system theme changes

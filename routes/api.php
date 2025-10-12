@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\PrivateFeedController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PublicFeedController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\SubscriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -171,10 +172,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Search routes
     Route::post('search/index', [SearchController::class, 'index']);
 
-    // Bookmark routes
-    Route::post('bookmark/index', [BookmarkController::class, 'index']);
-    Route::post('bookmark/create', [BookmarkController::class, 'create']);
-    Route::delete('bookmark/delete', [BookmarkController::class, 'delete']);
+        // Users routes (admin only)
+        Route::get('users', [UsersController::class, 'index']);
 });
 
 // Routes from api-news.php

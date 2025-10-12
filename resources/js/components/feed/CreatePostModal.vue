@@ -19,13 +19,40 @@
           <label class="text-sm font-medium text-slate-600 dark:text-slate-400">
             Posting as:
           </label>
-          <div class="flex items-center gap-3 rounded-lg border bg-slate-50 p-3 dark:bg-slate-800">
-            <div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-              <span class="text-sm font-medium">{{ userProfile?.first_name?.charAt(0) || 'U' }}</span>
-            </div>
-            <div>
-              <div class="text-sm font-medium">{{ userProfile?.first_name }} {{ userProfile?.last_name }}</div>
-              <div class="text-xs text-slate-500">{{ userProfile?.email }}</div>
+          <div class="relative">
+            <button
+              @click="toggleUserDropdown"
+              class="flex w-full items-center gap-3 rounded-lg border bg-slate-50 p-3 text-left hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
+            >
+              <div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+                <span class="text-sm font-medium">{{ selectedUser?.first_name?.charAt(0) || 'U' }}</span>
+              </div>
+              <div class="flex-1">
+                <div class="text-sm font-medium">{{ selectedUser?.first_name }} {{ selectedUser?.last_name }}</div>
+                <div class="text-xs text-slate-500">{{ selectedUser?.email }}</div>
+              </div>
+              <ChevronDown class="h-4 w-4 text-slate-500" />
+            </button>
+            
+            <!-- User Dropdown -->
+            <div v-if="isUserDropdownOpen" class="absolute top-full left-0 right-0 z-10 mt-1 max-h-60 overflow-y-auto rounded-lg border bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
+              <div
+                v-for="user in allUsers"
+                :key="user.id"
+                @click="selectUser(user)"
+                class="flex items-center gap-3 p-3 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+              >
+                <div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+                  <span class="text-sm font-medium">{{ user.first_name?.charAt(0) || 'U' }}</span>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">{{ user.first_name }} {{ user.last_name }}</div>
+                  <div class="text-xs text-slate-500">{{ user.email }}</div>
+                </div>
+                <div v-if="selectedUser?.id === user.id" class="text-cyan-500">
+                  <Check class="h-4 w-4" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -345,6 +372,8 @@
 import { ref, computed, onMounted } from 'vue'
 import {
   CalendarDays,
+  ChevronDown,
+  Check,
   Smile,
   Satellite,
   Trash2,
@@ -374,6 +403,9 @@ const scheduledHour = ref('09')
 const scheduledMinute = ref('00')
 const isSubmitting = ref(false)
 const userProfile = ref(null)
+const selectedUser = ref(null)
+const allUsers = ref([])
+const isUserDropdownOpen = ref(false)
 const fileInput = ref(null)
 
 const recentEmojis = ['😀', '😂', '❤️', '👍', '🎉', '🚀', '🔥', '💡', '⚠️', '🌍']
@@ -406,6 +438,37 @@ const addEmoji = (emoji) => {
 
 const addSatelliteEmoji = (emoji) => {
   satelliteContent.value += emoji
+}
+
+const toggleUserDropdown = () => {
+  isUserDropdownOpen.value = !isUserDropdownOpen.value
+}
+
+const selectUser = (user) => {
+  selectedUser.value = user
+  isUserDropdownOpen.value = false
+}
+
+const fetchAllUsers = async () => {
+  try {
+    const token = localStorage.getItem('auth_token')
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/users`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    
+    if (response.ok) {
+      const data = await response.json()
+      allUsers.value = data.data || []
+    } else {
+      console.error('Users API error:', response.status, response.statusText)
+    }
+  } catch (error) {
+    console.error('Error fetching users:', error)
+  }
 }
 
 const triggerFileInput = () => {
@@ -484,6 +547,11 @@ const createPost = async () => {
     media.value.forEach((mediaFile, index) => {
       formData.append(`media[${index}]`, mediaFile.file)
     })
+    
+    // Add selected user ID if admin
+    if (isAdmin.value && selectedUser.value) {
+      formData.append('user_id', selectedUser.value.id)
+    }
 
     const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/news/create`, {
       method: 'POST',
@@ -546,15 +614,21 @@ const handleClose = () => {
   emit('close')
 }
 
-onMounted(() => {
-  // Load user profile
-  const userProfileData = localStorage.getItem('user_profile')
-  if (userProfileData) {
-    try {
-      userProfile.value = JSON.parse(userProfileData)
-    } catch (error) {
-      console.error('Error parsing user profile:', error)
-    }
-  }
-})
+    onMounted(() => {
+      // Load user profile
+      const userProfileData = localStorage.getItem('user_profile')
+      if (userProfileData) {
+        try {
+          userProfile.value = JSON.parse(userProfileData)
+          selectedUser.value = userProfile.value // Set default selected user
+          
+          // If admin, fetch all users
+          if (isAdmin.value) {
+            fetchAllUsers()
+          }
+        } catch (error) {
+          console.error('Error parsing user profile:', error)
+        }
+      }
+    })
 </script>

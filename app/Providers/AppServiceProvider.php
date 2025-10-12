@@ -32,6 +32,8 @@ use App\Services\PublicFeed\PublicFeedService;
 use App\Services\PublicFeed\PublicFeedServiceInterface;
 use App\Services\Subscription\SubscriptionService;
 use App\Services\Subscription\SubscriptionServiceInterface;
+use App\Services\Users\UsersService;
+use App\Services\Users\UsersServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -129,6 +131,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             CustomerServiceInterface::class,
             CustomerService::class
+        );
+
+        // Register Users services
+        $this->app->bind(
+            UsersServiceInterface::class,
+            UsersService::class
         );
     }
 
