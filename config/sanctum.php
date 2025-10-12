@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Models\User\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
 
 return [
@@ -80,5 +83,17 @@ return [
         'encrypt_cookies' => Illuminate\Cookie\Middleware\EncryptCookies::class,
         'validate_csrf_token' => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Personal Access Token Model
+    |--------------------------------------------------------------------------
+    |
+    | This is the model that will be used to store personal access tokens.
+    | You may customize this model as needed.
+    |
+    */
+
+    'personal_access_token_model' => PersonalAccessToken::class,
 
 ];
