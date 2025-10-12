@@ -1,54 +1,52 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * Class Session
- * 
- * @property int $id
- * @property Carbon $expiresAt
- * @property string $token
- * @property Carbon $createdAt
- * @property Carbon $updatedAt
- * @property string|null $ipAddress
- * @property string|null $userAgent
- * @property int $userId
- *
- * @package App\Models
- */
 class Session extends Model
 {
-	use HasFactory;
+    use HasFactory;
 
-	protected $table = 'session';
-	public $timestamps = false;
+    protected $table = 'session';
 
-	protected $casts = [
-		'expiresAt' => 'datetime',
-		'createdAt' => 'datetime',
-		'updatedAt' => 'datetime',
-		'userId' => 'int'
-	];
+    protected $fillable = [
+        'id',
+        'expiresAt',
+        'token',
+        'createdAt',
+        'updatedAt',
+        'ipAddress',
+        'userAgent',
+        'userId',
+    ];
 
-	protected $hidden = [
-		'token'
-	];
+    protected $casts = [
+        'expiresAt' => 'datetime',
+        'createdAt' => 'datetime',
+        'updatedAt' => 'datetime',
+    ];
 
-	protected $fillable = [
-		'expiresAt',
-		'token',
-		'createdAt',
-		'updatedAt',
-		'ipAddress',
-		'userAgent',
-		'userId'
-	];
+    /**
+     * Get the user that owns the session
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'userId');
+    }
+
+    /**
+     * Serialize to JSON (like YII)
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'access_token' => $this->token,
+            'user' => $this->user ? $this->user->toArray() : null,
+            'expiresAt' => $this->expiresAt,
+        ];
+    }
 }

@@ -18,31 +18,42 @@ class GetPrivateFeedListAction
     {
         try {
             $dto = PrivateFeedListRequestDTO::fromArray($data);
-            if (!$dto->validate()) {
+            if (! $dto->validate()) {
                 return response()->json([
+                    'status' => 'error',
                     'errors' => ['Invalid private feed list request'],
-                    'message' => 'Invalid request parameters'
+                    'message' => 'Invalid request parameters',
                 ], 400);
             }
 
             $user = Auth::user();
-            if (!$user) {
+            if (! $user) {
                 return response()->json([
+                    'status' => 'error',
                     'error' => 'User not authenticated',
-                    'code' => 401
+                    'code' => 401,
                 ], 401);
             }
 
             $privateFeeds = $this->privateFeedService->getPrivateFeedList($dto, $user);
 
-            return response()->json($privateFeeds);
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'list' => $privateFeeds,
+                    'count' => count($privateFeeds),
+                    'page' => 1,
+                    'page_size' => count($privateFeeds),
+                ],
+            ]);
 
         } catch (\Exception $e) {
-            Log::error('GetPrivateFeedListAction error: ' . $e->getMessage());
-            
+            Log::error('GetPrivateFeedListAction error: '.$e->getMessage());
+
             return response()->json([
+                'status' => 'error',
                 'error' => 'An internal server error occurred.',
-                'code' => 500
+                'code' => 500,
             ], 500);
         }
     }

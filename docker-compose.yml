@@ -1,0 +1,103 @@
+services:
+  app:
+    build:
+      context: .docker
+      dockerfile: Dockerfile
+    container_name: galileyo_app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./.docker/php/conf.d/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./.docker/php/conf.d/performance.ini:/usr/local/etc/php/conf.d/performance.ini
+      - ./.docker/php/conf.d/memory.ini:/usr/local/etc/php/conf.d/memory.ini
+
+    networks:
+      - galileyo_network
+    healthcheck:
+      test: ["CMD", "php", "artisan", "--version"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    environment:
+      - PHP_OPCACHE_ENABLE=1
+      - PHP_OPCACHE_MEMORY_CONSUMPTION=128
+      - PHP_OPCACHE_MAX_ACCELERATED_FILES=4000
+      - PHP_OPCACHE_REVALIDATE_FREQ=2
+      - APP_URL=http://localhost:20000
+      - VITE_APP_URL=http://localhost:20000
+
+  db:
+    image: mariadb:latest
+    container_name: galileyo_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: galileyo
+      MYSQL_USER: galileyo
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_INNODB_BUFFER_POOL_SIZE: 256M
+      MYSQL_INNODB_LOG_FILE_SIZE: 64M
+      MYSQL_INNODB_FLUSH_LOG_AT_TRX_COMMIT: 2
+      MYSQL_QUERY_CACHE_SIZE: 32M
+      MYSQL_QUERY_CACHE_TYPE: 1
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./.docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - galileyo_network
+    ports:
+      - "3307:3306"
+
+  redis:
+    image: redis:7-alpine
+    container_name: galileyo_redis
+    restart: unless-stopped
+    networks:
+      - galileyo_network
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      retries: 3
+      start_period: 5s
+      timeout: 10s
+
+  nginx:
+    image: nginx:alpine
+    container_name: galileyo_nginx
+    restart: unless-stopped
+    ports:
+      - "20000:80"
+    volumes:
+      - ./:/var/www
+      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - galileyo_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      retries: 3
+      start_period: 5s
+      timeout: 10s
+    depends_on:
+      app:
+        condition: service_healthy
+
+networks:
+  galileyo_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

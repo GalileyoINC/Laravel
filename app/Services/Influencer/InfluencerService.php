@@ -2,12 +2,11 @@
 
 namespace App\Services\Influencer;
 
-use App\DTOs\Influencer\InfluencerFeedListRequestDTO;
 use App\DTOs\Influencer\InfluencerFeedCreateRequestDTO;
-use App\Models\User;
+use App\DTOs\Influencer\InfluencerFeedListRequestDTO;
 use App\Models\InfluencerPage;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Influencer service implementation
@@ -20,10 +19,11 @@ class InfluencerService implements InfluencerServiceInterface
     public function getInfluencerFeeds(InfluencerFeedListRequestDTO $dto, User $user)
     {
         try {
-            $query = InfluencerPage::where('id_user', $user->id);
+            // Get all influencer pages (public influencers that users can follow)
+            $query = InfluencerPage::query();
 
             // Apply filters if any
-            if (!empty($dto->filter)) {
+            if (! empty($dto->filter)) {
                 // Add filter logic here
             }
 
@@ -35,7 +35,7 @@ class InfluencerService implements InfluencerServiceInterface
             return $feeds;
 
         } catch (\Exception $e) {
-            Log::error('InfluencerService getInfluencerFeeds error: ' . $e->getMessage());
+            Log::error('InfluencerService getInfluencerFeeds error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -47,7 +47,7 @@ class InfluencerService implements InfluencerServiceInterface
     {
         try {
             $imagePath = null;
-            
+
             // Handle image upload if provided
             if ($dto->imageFile) {
                 $imagePath = $dto->imageFile->store('influencer-feeds', 'public');
@@ -62,13 +62,13 @@ class InfluencerService implements InfluencerServiceInterface
                 'page_description' => $dto->pageDescription,
                 'image_path' => $imagePath,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
 
             return $feed;
 
         } catch (\Exception $e) {
-            Log::error('InfluencerService createInfluencerFeed error: ' . $e->getMessage());
+            Log::error('InfluencerService createInfluencerFeed error: '.$e->getMessage());
             throw $e;
         }
     }

@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Actions\News\CreateNewsAction;
 use App\Actions\News\GetLastNewsAction;
-use App\Actions\News\SetReactionAction;
+use App\Actions\News\GetNewsByFollowerListAction;
+use App\Actions\News\GetNewsByInfluencersAction;
+use App\Actions\News\MuteSubscriptionAction;
 use App\Actions\News\RemoveReactionAction;
 use App\Actions\News\ReportNewsAction;
-use App\Actions\News\MuteSubscriptionAction;
+use App\Actions\News\SetReactionAction;
 use App\Actions\News\UnmuteSubscriptionAction;
-use App\Actions\News\GetNewsByFollowerListAction;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Refactored News Controller using DDD Actions
@@ -20,12 +22,14 @@ class NewsController extends Controller
 {
     public function __construct(
         private GetLastNewsAction $getLastNewsAction,
+        private GetNewsByInfluencersAction $getNewsByInfluencersAction,
         private SetReactionAction $setReactionAction,
         private RemoveReactionAction $removeReactionAction,
         private ReportNewsAction $reportNewsAction,
         private MuteSubscriptionAction $muteSubscriptionAction,
         private UnmuteSubscriptionAction $unmuteSubscriptionAction,
-        private GetNewsByFollowerListAction $getNewsByFollowerListAction
+        private GetNewsByFollowerListAction $getNewsByFollowerListAction,
+        private CreateNewsAction $createNewsAction
     ) {}
 
     /**
@@ -37,12 +41,19 @@ class NewsController extends Controller
     }
 
     /**
+     * Get latest news (POST /api/v1/news/get-latest-news)
+     */
+    public function getLatestNews(Request $request): JsonResponse
+    {
+        return $this->getLastNewsAction->execute($request->all());
+    }
+
+    /**
      * Get news by influencers (POST /api/v1/news/by-influencers)
      */
     public function byInfluencers(Request $request): JsonResponse
     {
-        // Implementation for getting news by influencers
-        return response()->json(['message' => 'Get news by influencers endpoint not implemented yet']);
+        return $this->getNewsByInfluencersAction->execute($request->all());
     }
 
     /**
@@ -95,10 +106,10 @@ class NewsController extends Controller
     }
 
     /**
-     * Unmute subscription (POST /api/v1/news/unmute)
+     * Create news (POST /api/v1/news/create)
      */
-    public function unmute(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        return $this->unmuteSubscriptionAction->execute($request->all());
+        return $this->createNewsAction->execute($request->all());
     }
 }
