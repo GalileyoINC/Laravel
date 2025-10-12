@@ -8,7 +8,7 @@ use App\DTOs\Customer\ChangePasswordRequestDTO;
 use App\DTOs\Customer\GetProfileRequestDTO;
 use App\DTOs\Customer\UpdatePrivacyRequestDTO;
 use App\DTOs\Customer\UpdateProfileRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;

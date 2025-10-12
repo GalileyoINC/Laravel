@@ -1,0 +1,76 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Communication\Infrastructure\Http\Controllers;
+
+use Exception;
+use Illuminate\Http\JsonResponse;
+
+class EmailPoolController extends Controller
+{
+    public function index(EmailPoolListRequest $request, GetEmailPoolListAction $action): JsonResponse
+    {
+        try {
+            $result = $action->execute($request->validated());
+
+            return EmailPoolResource::collection($result)->response();
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
+    }
+
+    public function view(int $id, GetEmailPoolAction $action): JsonResponse
+    {
+        try {
+            $result = $action->execute(['id' => $id]);
+
+            return EmailPoolResource::make($result)->response();
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
+    }
+
+    public function delete(int $id, DeleteEmailPoolAction $action): JsonResponse
+    {
+        try {
+            $result = $action->execute(['id' => $id]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email deleted successfully',
+            ]);
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
+    }
+
+    public function resend(int $id, ResendEmailAction $action): JsonResponse
+    {
+        try {
+            $result = $action->execute(['id' => $id]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email resent successfully',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
+    }
+
+    public function attachment(int $id, GetEmailAttachmentAction $action): JsonResponse
+    {
+        try {
+            $result = $action->execute(['id' => $id]);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
+        }
+    }
+}
