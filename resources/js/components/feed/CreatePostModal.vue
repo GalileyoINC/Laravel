@@ -15,7 +15,7 @@
 
       <div class="p-6 space-y-6">
         <!-- Profile Display -->
-        <div class="space-y-3">
+        <div v-if="isAdmin" class="space-y-3">
           <label class="text-sm font-medium text-slate-600 dark:text-slate-400">
             Posting as:
           </label>
@@ -394,6 +394,10 @@ const emojiCategories = {
 
 const canSubmit = computed(() => {
   return (content.value.trim().length > 0 || media.value.length > 0) && !isSubmitting.value
+})
+
+const isAdmin = computed(() => {
+  return userProfile.value?.role === 1 || userProfile.value?.role === 'admin'
 })
 
 const addEmoji = (emoji) => {
