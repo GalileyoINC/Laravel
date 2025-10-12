@@ -30,21 +30,48 @@ class CreateNewsAction
             ]);
 
             // Handle media files if provided
-            if (isset($data['media']) && is_array($data['media'])) {
-                foreach ($data['media'] as $index => $mediaFile) {
-                    if ($mediaFile instanceof \Illuminate\Http\UploadedFile) {
-                        $path = $mediaFile->store('news-media', 'public');
-
-                        // Create media record (assuming you have a media table)
-                        // You might need to create a Media model and table
-                        DB::table('sms_pool_photo')->insert([
-                            'id_sms_pool' => $news->id,
-                            'path' => $path,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
+            $mediaFiles = [];
+            
+            // Check for FormData media files (media[0], media[1], etc.)
+            foreach ($data as $key => $value) {
+                if (str_starts_with($key, 'media[') && str_ends_with($key, ']')) {
+                    if ($value instanceof \Illuminate\Http\UploadedFile) {
+                        $mediaFiles[] = $value;
                     }
                 }
+            }
+            
+            // Also check for direct media array
+            if (isset($data['media']) && is_array($data['media'])) {
+                foreach ($data['media'] as $mediaFile) {
+                    if ($mediaFile instanceof \Illuminate\Http\UploadedFile) {
+                        $mediaFiles[] = $mediaFile;
+                    }
+                }
+            }
+            
+            // Process all media files
+            foreach ($mediaFiles as $mediaFile) {
+                $path = $mediaFile->store('news-media', 'public');
+                $filename = $mediaFile->getClientOriginalName();
+                
+                // Create media record using correct table structure
+                DB::table('sms_pool_photo')->insert([
+                    'id_sms_pool' => $news->id,
+                    'folder_name' => 'news-media',
+                    'web_name' => $filename,
+                    'sizes' => json_encode([
+                        [
+                            'url' => $path,
+                            'width' => null,
+                            'height' => null,
+                            'size' => 'original'
+                        ]
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'uuid' => \Illuminate\Support\Str::uuid(),
+                ]);
             }
 
             DB::commit();
