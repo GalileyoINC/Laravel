@@ -9,7 +9,7 @@ import ContactPage from '../components/views/ContactPage.vue';
 import FAQPage from '../components/views/FAQPage.vue';
 import PrivacyPolicyPage from '../components/views/PrivacyPolicyPage.vue';
 import TermsOfServicePage from '../components/views/TermsOfServicePage.vue';
-import AlertsMapPage from '../components/views/AlertsMapPage.vue';
+import ProfileSettingsPage from '../components/views/ProfileSettingsPage.vue';
 
 const routes = [
   {
@@ -26,6 +26,11 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: DashboardPage
+  },
+  {
+    path: '/profile/settings',
+    name: 'ProfileSettings',
+    component: ProfileSettingsPage
   },
   {
     path: '/profile',

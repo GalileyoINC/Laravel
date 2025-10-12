@@ -35,7 +35,7 @@ class CustomerService implements CustomerServiceInterface
                 'zip' => $user->zip ?? null,
                 'about' => $user->about ?? null,
                 'timezone' => $user->timezone ?? null,
-                'image' => $user->image ?? null,
+                    'image' => $user->image ? asset('storage/' . $user->image) : null,
                 'header_image' => $user->header_image ?? null,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
@@ -67,6 +67,12 @@ class CustomerService implements CustomerServiceInterface
         try {
             DB::beginTransaction();
 
+            // Handle image file upload
+            if ($dto->imageFile) {
+                $imagePath = $dto->imageFile->store('profile-images', 'public');
+                $user->update(['image' => $imagePath]);
+            }
+
             // Update only provided fields
             $updateData = [];
             foreach ($dto->toArray() as $key => $value) {
@@ -82,11 +88,13 @@ class CustomerService implements CustomerServiceInterface
 
             DB::commit();
 
-            return [
-                'success' => true,
-                'message' => 'Profile updated successfully',
-                'user' => $this->getProfile(new GetProfileRequestDTO(), $user)
-            ];
+                $profileData = $this->getProfile(new GetProfileRequestDTO(), $user);
+                
+                return [
+                    'success' => true,
+                    'message' => 'Profile updated successfully',
+                    'data' => $profileData
+                ];
 
         } catch (\Exception $e) {
             DB::rollBack();

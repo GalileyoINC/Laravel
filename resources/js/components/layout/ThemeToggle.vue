@@ -1,44 +1,135 @@
 <template>
-  <button
-    @click="toggleTheme"
-    class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
-  >
-    <Sun v-if="theme === 'light'" class="h-5 w-5" />
-    <Moon v-else class="h-5 w-5" />
-  </button>
+  <div class="relative">
+    <button
+      @click="toggleDropdown"
+      class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
+    >
+      <Sun v-if="theme === 'light'" class="h-5 w-5 rotate-0 scale-100 transition-all" />
+      <Moon v-else-if="theme === 'dark'" class="h-5 w-5 rotate-0 scale-100 transition-all" />
+      <Monitor v-else class="h-5 w-5 rotate-0 scale-100 transition-all" />
+      <span class="sr-only">Toggle theme</span>
+    </button>
+    
+    <!-- Dropdown Menu -->
+    <div
+      v-if="isDropdownOpen"
+      @click="closeDropdown"
+      class="fixed inset-0 z-10"
+    ></div>
+    
+    <div
+      v-if="isDropdownOpen"
+      class="absolute right-0 top-full mt-2 w-32 rounded-lg border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800 z-20"
+    >
+      <button
+        @click="setTheme('light')"
+        class="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
+      >
+        <Sun class="h-4 w-4" />
+        Light
+      </button>
+      <button
+        @click="setTheme('dark')"
+        class="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
+      >
+        <Moon class="h-4 w-4" />
+        Dark
+      </button>
+      <button
+        @click="setTheme('system')"
+        class="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
+      >
+        <Monitor class="h-4 w-4" />
+        System
+      </button>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { Sun, Moon } from 'lucide-vue-next'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Sun, Moon, Monitor } from 'lucide-vue-next'
 
-const theme = ref('light')
+const theme = ref('system')
+const isDropdownOpen = ref(false)
 
-const toggleTheme = () => {
-  if (theme.value === 'light') {
-    theme.value = 'dark'
+const setTheme = (newTheme) => {
+  console.log('Setting theme to:', newTheme)
+  theme.value = newTheme
+  localStorage.setItem('theme', newTheme)
+  
+  if (newTheme === 'system') {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    console.log('System prefers dark:', prefersDark)
+    if (prefersDark) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  } else if (newTheme === 'dark') {
+    console.log('Adding dark class')
     document.documentElement.classList.add('dark')
-    localStorage.setItem('theme', 'dark')
   } else {
-    theme.value = 'light'
+    console.log('Removing dark class')
     document.documentElement.classList.remove('dark')
-    localStorage.setItem('theme', 'light')
+  }
+  
+  isDropdownOpen.value = false
+}
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value
+}
+
+const closeDropdown = () => {
+  isDropdownOpen.value = false
+}
+
+const handleSystemThemeChange = (e) => {
+  if (theme.value === 'system') {
+    if (e.matches) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
   }
 }
 
 onMounted(() => {
-  // Check for saved theme preference or default to 'light'
+  console.log('ThemeToggle mounted')
+  // Check for saved theme preference or default to 'system'
   const savedTheme = localStorage.getItem('theme')
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
   
+  console.log('Saved theme:', savedTheme)
+  console.log('System prefers dark:', prefersDark)
+  
   if (savedTheme) {
     theme.value = savedTheme
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-    }
-  } else if (prefersDark) {
-    theme.value = 'dark'
-    document.documentElement.classList.add('dark')
   }
+  
+  // Apply theme
+  if (theme.value === 'system') {
+    if (prefersDark) {
+      document.documentElement.classList.add('dark')
+      console.log('Applied dark theme (system)')
+    } else {
+      document.documentElement.classList.remove('dark')
+      console.log('Applied light theme (system)')
+    }
+  } else if (theme.value === 'dark') {
+    document.documentElement.classList.add('dark')
+    console.log('Applied dark theme')
+  } else {
+    document.documentElement.classList.remove('dark')
+    console.log('Applied light theme')
+  }
+  
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange)
+})
+
+onUnmounted(() => {
+  window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', handleSystemThemeChange)
 })
 </script>

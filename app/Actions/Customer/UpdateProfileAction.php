@@ -18,6 +18,11 @@ class UpdateProfileAction
     public function execute(array $data): JsonResponse
     {
         try {
+            // Handle file upload separately
+            if (isset($data['image_file']) && $data['image_file'] instanceof \Illuminate\Http\UploadedFile) {
+                $data['image_file'] = $data['image_file'];
+            }
+            
             $dto = UpdateProfileRequestDTO::fromArray($data);
             $user = Auth::user();
             

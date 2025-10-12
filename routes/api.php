@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Routes from api-allsendform.php
-Route::prefix('v1/all-send-form')->group(function () {
+Route::prefix('v1/all-send-form')->middleware('auth:sanctum')->group(function () {
     // AllSendForm routes
     Route::post('get-options', [AllSendFormController::class, 'getOptions']);
     Route::post('send', [AllSendFormController::class, 'send']);
@@ -53,7 +53,7 @@ Route::prefix('v1/auth')->group(function () {
 });
 
 // Routes from api-chat.php
-Route::prefix('v1/chat')->group(function () {
+Route::prefix('v1/chat')->middleware('auth:sanctum')->group(function () {
     // Chat routes
     Route::post('list', [ChatController::class, 'list']);
     Route::post('chat-messages', [ChatController::class, 'chatMessages']);
@@ -75,7 +75,7 @@ Route::prefix('v1/comment')->middleware('auth:sanctum')->group(function () {
 });
 
 // Routes from api-creditcard.php
-Route::prefix('v1/credit-card')->group(function () {
+Route::prefix('v1/credit-card')->middleware('auth:sanctum')->group(function () {
     // CreditCard routes
     Route::post('list', [CreditCardController::class, 'list']);
     Route::post('create', [CreditCardController::class, 'create']);
@@ -107,7 +107,7 @@ Route::prefix('v1/default')->group(function () {
 });
 
 // Routes from api-device.php
-Route::prefix('v1/device')->group(function () {
+Route::prefix('v1/device')->middleware('auth:sanctum')->group(function () {
     // Device routes
     Route::post('update', [DeviceController::class, 'update']);
     Route::post('verify', [DeviceController::class, 'verify']);
@@ -123,7 +123,7 @@ Route::prefix('v1/influencer')->middleware('auth:sanctum')->group(function () {
 });
 
 // Routes from api-legacy.php
-Route::post('auth/login', [App\Http\Controllers\Api\AuthController::class, 'webLogin']);
+Route::post('auth/login', [App\Http\Controllers\Api\AuthController::class, 'webLogin'])->name('api.login');
 
 Route::middleware('auth:sanctum')->group(function () {
     // News routes
@@ -193,7 +193,7 @@ Route::prefix('v1/news')->middleware('auth:sanctum')->group(function () {
 });
 
 // Routes from api-order.php
-Route::prefix('v1/order')->group(function () {
+Route::prefix('v1/order')->middleware('auth:sanctum')->group(function () {
     // Order routes
     Route::post('create', [OrderController::class, 'create']);
     Route::post('pay', [OrderController::class, 'pay']);
@@ -201,7 +201,7 @@ Route::prefix('v1/order')->group(function () {
 });
 
 // Routes from api-phone.php
-Route::prefix('v1/phone')->group(function () {
+Route::prefix('v1/phone')->middleware('auth:sanctum')->group(function () {
     // Phone routes
     Route::post('verify', [PhoneController::class, 'verify']);
     Route::post('set', [PhoneController::class, 'set']);
@@ -217,7 +217,7 @@ Route::prefix('v1/private-feed')->middleware('auth:sanctum')->group(function () 
 });
 
 // Routes from api-product.php
-Route::prefix('v1/product')->group(function () {
+Route::prefix('v1/product')->middleware('auth:sanctum')->group(function () {
     // Product routes
     Route::post('list', [ProductController::class, 'list']);
     Route::post('alerts', [ProductController::class, 'alerts']);
@@ -225,7 +225,7 @@ Route::prefix('v1/product')->group(function () {
 });
 
 // Routes from api-publicfeed.php
-Route::prefix('v1/public-feed')->group(function () {
+Route::prefix('v1/public-feed')->middleware('auth:sanctum')->group(function () {
     // PublicFeed routes
     Route::post('get-options', [PublicFeedController::class, 'getOptions']);
     Route::post('send', [PublicFeedController::class, 'send']);

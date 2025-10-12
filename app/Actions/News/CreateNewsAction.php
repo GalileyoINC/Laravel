@@ -4,6 +4,7 @@ namespace App\Actions\News;
 
 use App\Models\SmsPool;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CreateNewsAction
@@ -13,14 +14,19 @@ class CreateNewsAction
         try {
             DB::beginTransaction();
 
-            // Get user ID from data or use default for testing
-            $userId = $data['user_id'] ?? 1; // Default to user ID 1 for testing
+            // Get authenticated user
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not authenticated',
+                ], 401);
+            }
 
             // Create news item
             $news = SmsPool::create([
-                'id_user' => $userId,
-                'purpose' => 'general', // Default purpose
-                'title' => $data['content'] ?? '',
+                'id_user' => $user->id,
+                'purpose' => 1, // Default purpose (1 = general/news)
                 'body' => $data['content'] ?? '',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -78,8 +84,8 @@ class CreateNewsAction
                 'message' => 'News created successfully',
                 'data' => [
                     'id' => $news->id,
-                    'title' => $news->title,
                     'body' => $news->body,
+                    'purpose' => $news->purpose,
                     'created_at' => $news->created_at,
                 ],
             ]);

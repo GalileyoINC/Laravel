@@ -45,7 +45,7 @@
         </button>
         
         <!-- User Menu -->
-        <UserMenu :user="clientUser" />
+        <UserMenu :user="clientUser" @create-post="openCreatePost" />
       </div>
     </div>
 

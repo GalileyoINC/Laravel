@@ -34,13 +34,13 @@
       <!-- Menu Items -->
       <div class="p-2">
         <!-- Create Post -->
-        <router-link
-          to="/create-post"
-          class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700"
+        <button
+          @click="$emit('create-post')"
+          class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 w-full text-left"
         >
           <Plus class="h-4 w-4" />
           Create Post
-        </router-link>
+        </button>
 
         <!-- View Profile -->
         <router-link

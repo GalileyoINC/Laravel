@@ -3,6 +3,7 @@
 namespace App\DTOs\Customer;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class UpdateProfileRequestDTO
 {
@@ -18,7 +19,8 @@ class UpdateProfileRequestDTO
         public readonly ?string $address = null,
         public readonly ?string $bio = null,
         public readonly ?string $website = null,
-        public readonly ?string $timezone = null
+        public readonly ?string $timezone = null,
+        public readonly ?UploadedFile $imageFile = null
     ) {}
 
     public static function fromArray(array $data): static
@@ -35,7 +37,8 @@ class UpdateProfileRequestDTO
             address: $data['address'] ?? null,
             bio: $data['bio'] ?? null,
             website: $data['website'] ?? null,
-            timezone: $data['timezone'] ?? null
+            timezone: $data['timezone'] ?? null,
+            imageFile: ($data['image_file'] ?? null) instanceof UploadedFile ? $data['image_file'] : null
         );
     }
 

@@ -83,10 +83,22 @@ class NewsService implements NewsServiceInterface
                 $item->is_owner = false;
                 $item->comment_quantity = 0;
 
-                // Add financial-specific fields for financial items
-                if ($item->type === 'financial') {
-                    $item->percent = (rand(-100, 100) / 10).'%'; // Mock percentage
-                    $item->price = (rand(100, 10000) / 100); // Mock price
+                // Add financial-specific fields for financial items (only if subscription is financial)
+                if ($item->type === 'financial' && $item->id_subscription) {
+                    // Parse financial data from SMS body like YII does
+                    preg_match('/\: (.*) \(.*, (.*)\)$/', $item->body, $matches);
+                    
+                    if (!empty($matches[1])) {
+                        $number = str_replace(',', '', $matches[1]);
+                        $afterDot = strlen(explode('.', $number)[1] ?? '');
+                        
+                        $item->percent = $matches[2];
+                        $item->price = number_format($number, $afterDot);
+                    } else {
+                        // No financial data found, don't add fake data
+                        $item->percent = null;
+                        $item->price = null;
+                    }
                 }
 
                 // Transform reactions to match frontend expectations (like YII)
@@ -119,7 +131,7 @@ class NewsService implements NewsServiceInterface
     private function getFeedItemType(int $purpose): string
     {
         return match ($purpose) {
-            1 => 'financial',
+            1 => 'general',  // Changed from 'financial' to 'general'
             2 => 'influencer',
             3 => 'subscription',
             4 => 'general',
@@ -187,10 +199,22 @@ class NewsService implements NewsServiceInterface
                 $item->is_owner = false;
                 $item->comment_quantity = 0;
 
-                // Add financial-specific fields for financial items
-                if ($item->type === 'financial') {
-                    $item->percent = (rand(-100, 100) / 10).'%'; // Mock percentage
-                    $item->price = (rand(100, 10000) / 100); // Mock price
+                // Add financial-specific fields for financial items (only if subscription is financial)
+                if ($item->type === 'financial' && $item->id_subscription) {
+                    // Parse financial data from SMS body like YII does
+                    preg_match('/\: (.*) \(.*, (.*)\)$/', $item->body, $matches);
+                    
+                    if (!empty($matches[1])) {
+                        $number = str_replace(',', '', $matches[1]);
+                        $afterDot = strlen(explode('.', $number)[1] ?? '');
+                        
+                        $item->percent = $matches[2];
+                        $item->price = number_format($number, $afterDot);
+                    } else {
+                        // No financial data found, don't add fake data
+                        $item->percent = null;
+                        $item->price = null;
+                    }
                 }
 
                 // Transform reactions to match frontend expectations (like YII)
