@@ -67,6 +67,7 @@ class AuthController extends Controller
         $token = $user->createToken('web-token')->plainTextToken;
 
         return response()->json([
+            'status' => 'success',
             'user_id' => $user->id,
             'access_token' => $token,
             'user_profile' => [

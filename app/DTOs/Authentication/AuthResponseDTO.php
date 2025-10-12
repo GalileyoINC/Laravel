@@ -29,6 +29,7 @@ class AuthResponseDTO
     public function toArray(): array
     {
         return [
+            'status' => 'success',
             'user_id' => $this->user_id,
             'access_token' => $this->access_token,
             'refresh_token' => $this->refresh_token,
