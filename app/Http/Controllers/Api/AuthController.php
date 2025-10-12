@@ -60,7 +60,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = \App\Models\User::where('email', $request->email)->first();
+        $user = \App\Models\User\User::where('email', $request->email)->first();
 
         if (! $user || ! password_verify($request->password, (string) $user->password_hash)) {
             return response()->json(['error' => 'Invalid credentials'], 401);

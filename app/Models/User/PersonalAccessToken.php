@@ -13,6 +13,6 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
      */
     public function tokenable()
     {
-        return $this->morphTo('tokenable', 'tokenable_type', 'tokenable_id');
+        return $this->morphTo('tokenable', 'tokenable_type', 'tokenable_id')->using(User::class);
     }
 }

@@ -14,7 +14,7 @@ class UsersController extends Controller
     public function index(UsersListRequest $request): JsonResponse
     {
         try {
-            $usersQuery = \App\Models\User::query();
+            $usersQuery = \App\Models\User\User::query();
 
             if ($request->has('search')) {
                 $usersQuery->where(function ($q) use ($request) {
