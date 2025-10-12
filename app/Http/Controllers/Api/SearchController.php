@@ -2,48 +2,43 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Search\SearchAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Search\SearchRequest;
+use App\Http\Resources\ErrorResource;
+use App\Http\Resources\SearchResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
+/**
+ * Search controller with DDD structure
+ */
 class SearchController extends Controller
 {
+    public function __construct(
+        private SearchAction $searchAction
+    ) {}
+
     /**
      * Search for content
+     *
+     * POST /api/search/index
      */
-    public function index(Request $request): JsonResponse
+    public function index(SearchRequest $request): JsonResponse
     {
-        $request->validate([
-            'phrase' => 'required|string|min:3',
-            'page' => 'integer|min:1',
-            'page_size' => 'integer|min:1|max:100',
-        ]);
-
         try {
-            $phrase = $request->input('phrase');
-            $page = $request->input('page', 1);
-            $pageSize = $request->input('page_size', 10);
+            // Request validation is handled automatically by SearchRequest
+            $result = $this->searchAction->execute($request->validated());
 
-            // TODO: Implement actual search logic
-            // This is a placeholder that should be replaced with real search functionality
+            // Return the result directly since SearchAction already returns JsonResponse
+            return $result;
 
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'results' => [],
-                    'count' => 0,
-                    'page' => $page,
-                    'page_size' => $pageSize,
-                ],
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'error' => [
-                    'message' => 'Search failed',
-                    'code' => $e->getCode(),
-                ],
-            ], 500);
+            // Use ErrorResource for consistent error format
+            return response()->json(new ErrorResource([
+                'message' => $e->getMessage(),
+                'code' => 500,
+                'trace_id' => uniqid(),
+            ]), 500);
         }
     }
 }

@@ -2,113 +2,95 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Bookmark\CreateBookmarkAction;
+use App\Actions\Bookmark\DeleteBookmarkAction;
+use App\Actions\Bookmark\GetBookmarksAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Bookmark\BookmarkListRequest;
+use App\Http\Requests\Bookmark\BookmarkRequest;
+use App\Http\Resources\ErrorResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
+/**
+ * Bookmark controller with DDD structure
+ */
 class BookmarkController extends Controller
 {
+    public function __construct(
+        private GetBookmarksAction $getBookmarksAction,
+        private CreateBookmarkAction $createBookmarkAction,
+        private DeleteBookmarkAction $deleteBookmarkAction
+    ) {}
+
     /**
      * Get bookmarks list
+     *
+     * POST /api/bookmark/index
      */
-    public function index(Request $request): JsonResponse
+    public function index(BookmarkListRequest $request): JsonResponse
     {
-        $request->validate([
-            'page' => 'integer|min:1',
-            'page_size' => 'integer|min:1|max:100',
-        ]);
-
         try {
-            $page = $request->input('page', 1);
-            $pageSize = $request->input('page_size', 10);
+            // Request validation is handled automatically by BookmarkListRequest
+            $result = $this->getBookmarksAction->execute($request->validated());
 
-            // TODO: Implement actual bookmark retrieval logic
-            // This is a placeholder that should be replaced with real functionality
+            // Return the result directly since GetBookmarksAction already returns JsonResponse
+            return $result;
 
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'list' => [],
-                    'count' => 0,
-                    'page' => $page,
-                    'page_size' => $pageSize,
-                ],
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'error' => [
-                    'message' => 'Failed to retrieve bookmarks',
-                    'code' => $e->getCode(),
-                ],
-            ], 500);
+            // Use ErrorResource for consistent error format
+            return response()->json(new ErrorResource([
+                'message' => $e->getMessage(),
+                'code' => 500,
+                'trace_id' => uniqid(),
+            ]), 500);
         }
     }
 
     /**
      * Create bookmark
+     *
+     * POST /api/bookmark/create
      */
-    public function create(Request $request): JsonResponse
+    public function create(BookmarkRequest $request): JsonResponse
     {
-        $request->validate([
-            'post_id' => 'required|string',
-        ]);
-
         try {
-            $postId = $request->input('post_id');
+            // Request validation is handled automatically by BookmarkRequest
+            $result = $this->createBookmarkAction->execute($request->validated());
 
-            // TODO: Implement actual bookmark creation logic
-            // This is a placeholder that should be replaced with real functionality
+            // Return the result directly since CreateBookmarkAction already returns JsonResponse
+            return $result;
 
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'id' => uniqid(),
-                    'post_id' => $postId,
-                    'created_at' => now()->toIso8601String(),
-                ],
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'error' => [
-                    'message' => 'Failed to create bookmark',
-                    'code' => $e->getCode(),
-                ],
-            ], 500);
+            // Use ErrorResource for consistent error format
+            return response()->json(new ErrorResource([
+                'message' => $e->getMessage(),
+                'code' => 500,
+                'trace_id' => uniqid(),
+            ]), 500);
         }
     }
 
     /**
      * Delete bookmark
+     *
+     * DELETE /api/bookmark/delete
      */
-    public function delete(Request $request): JsonResponse
+    public function delete(BookmarkRequest $request): JsonResponse
     {
-        $request->validate([
-            'post_id' => 'required|string',
-        ]);
-
         try {
-            $postId = $request->input('post_id');
+            // Request validation is handled automatically by BookmarkRequest
+            $result = $this->deleteBookmarkAction->execute($request->validated());
 
-            // TODO: Implement actual bookmark deletion logic
-            // This is a placeholder that should be replaced with real functionality
+            // Return the result directly since DeleteBookmarkAction already returns JsonResponse
+            return $result;
 
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'post_id' => $postId,
-                    'deleted' => true,
-                ],
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'error' => [
-                    'message' => 'Failed to delete bookmark',
-                    'code' => $e->getCode(),
-                ],
-            ], 500);
+            // Use ErrorResource for consistent error format
+            return response()->json(new ErrorResource([
+                'message' => $e->getMessage(),
+                'code' => 500,
+                'trace_id' => uniqid(),
+            ]), 500);
         }
     }
 }
