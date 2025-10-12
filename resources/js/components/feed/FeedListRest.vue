@@ -87,8 +87,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../../stores/auth'
 import { Sparkles, Users } from 'lucide-vue-next'
 import { Tabs, TabsList, TabsTrigger } from '../ui'
 import { feedApi } from '../../api'
@@ -98,10 +99,13 @@ import CommentsModal from './CommentsModal.vue'
 import ReportModal from './ReportModal.vue'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const activeTab = ref('subscriptions')
 const isOpen = ref(false)
 const post = ref(null)
-const isAuthenticated = ref(false)
+
+// Use auth store for authentication status
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 const newsData = ref(null)
 const loading = ref(false)
 const error = ref(null)
@@ -113,13 +117,14 @@ const allNews = ref([])
 // Check if user is authenticated
 onMounted(() => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('auth_token')
-    if (!token) {
+    // Check authentication status
+    authStore.checkAuth()
+    
+    if (isAuthenticated.value) {
+      fetchNews()
+    } else {
       router.push('/login')
-      return
     }
-    isAuthenticated.value = true
-    fetchNews()
   }
 })
 

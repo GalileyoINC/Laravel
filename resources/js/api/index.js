@@ -30,7 +30,11 @@ api.interceptors.response.use(
       // Token expired or invalid
       localStorage.removeItem('auth_token')
       localStorage.removeItem('user_profile')
-      window.location.href = '/login'
+      
+      // Only redirect if not already on login page
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

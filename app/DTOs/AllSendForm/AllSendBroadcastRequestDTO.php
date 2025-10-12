@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AllSendBroadcastRequestDTO
 {
     public function __construct(
-        public readonly string $uuid,
+        public readonly ?string $uuid = null,
         public readonly string $text,
         public readonly ?string $textShort = null,
         public readonly ?array $subscriptions = null,
@@ -25,7 +25,7 @@ class AllSendBroadcastRequestDTO
     public static function fromArray(array $data): static
     {
         return new self(
-            uuid: $data['uuid'],
+            uuid: $data['uuid'] ?? null,
             text: $data['text'],
             textShort: $data['text_short'] ?? null,
             subscriptions: $data['subscriptions'] ?? null,
@@ -42,7 +42,7 @@ class AllSendBroadcastRequestDTO
     public static function fromRequest(Request $request): static
     {
         return new self(
-            uuid: $request->input('uuid'),
+            uuid: $request->input('uuid') ?: null,
             text: $request->input('text'),
             textShort: $request->input('text_short'),
             subscriptions: $request->input('subscriptions'),
@@ -75,6 +75,6 @@ class AllSendBroadcastRequestDTO
 
     public function validate(): bool
     {
-        return ! empty($this->uuid) && ! empty($this->text);
+        return ! empty($this->text);
     }
 }

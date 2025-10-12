@@ -28,9 +28,9 @@ class BookmarkController extends Controller
     /**
      * Get bookmarks list
      *
-     * POST /api/bookmark/index
+     * GET /api/v1/bookmark/list
      */
-    public function index(BookmarkListRequest $request): JsonResponse
+    public function list(BookmarkListRequest $request): JsonResponse
     {
         try {
             // Request validation is handled automatically by BookmarkListRequest
@@ -47,6 +47,16 @@ class BookmarkController extends Controller
                 'trace_id' => uniqid(),
             ]), 500);
         }
+    }
+
+    /**
+     * Get bookmarks list (legacy endpoint)
+     *
+     * POST /api/bookmark/index
+     */
+    public function index(BookmarkListRequest $request): JsonResponse
+    {
+        return $this->list($request);
     }
 
     /**

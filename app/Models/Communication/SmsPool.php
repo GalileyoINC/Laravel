@@ -98,6 +98,11 @@ class SmsPool extends Model
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_pool');
     }
 
+    public function bookmarks()
+    {
+        return $this->hasMany(\App\Models\Bookmark::class, 'post_id');
+    }
+
     public function photos()
     {
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_pool');

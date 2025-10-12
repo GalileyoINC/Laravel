@@ -35,8 +35,8 @@ export const feedApi = {
 
   // Create post
   createPost(data) {
-    return api.post('/all-send-form/send', {
-      text: data.content,
+    return api.post('/v1/all-send-form/send', {
+      text: data.content || '',
       text_short: data.satelliteContent || null,
       subscriptions: data.profileId ? [+data.profileId] : [],
       schedule: data.scheduledFor || null,

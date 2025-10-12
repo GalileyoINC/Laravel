@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\AllSendForm\AllSendFormService;
 use App\Services\AllSendForm\AllSendFormServiceInterface;
 use App\Services\Authentication\AuthService;
 use App\Services\Authentication\AuthServiceInterface;
+use App\Services\Bookmark\BookmarkService;
+use App\Services\Bookmark\BookmarkServiceInterface;
 use App\Services\Bundle\BundleService;
 use App\Services\Bundle\BundleServiceInterface;
 use App\Services\Chat\ChatService;
@@ -159,6 +162,12 @@ class AppServiceProvider extends ServiceProvider
         );
 
         // ===== NEWLY MIGRATED SERVICES =====
+
+        // Register Bookmark services
+        $this->app->bind(
+            BookmarkServiceInterface::class,
+            BookmarkService::class
+        );
 
         // Register Bundle services
         $this->app->bind(

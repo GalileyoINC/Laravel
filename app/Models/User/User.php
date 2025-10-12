@@ -217,6 +217,11 @@ class User extends Authenticatable
         return $this->belongsTo(App\Models\User\User::class, 'id_inviter');
     }
 
+    public function bookmarks()
+    {
+        return $this->hasMany(\App\Models\Bookmark::class, 'user_id');
+    }
+
     public function addresses()
     {
         return $this->hasMany(App\Models\User\Address::class, 'id_user');

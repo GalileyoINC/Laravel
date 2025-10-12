@@ -6,7 +6,7 @@ namespace App\Http\Requests\Bookmark;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BookmarkRequest extends FormRequest
+class BookmarkListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class BookmarkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'post_id' => ['required', 'string', 'max:255'],
             'page' => ['nullable', 'integer', 'min:1'],
             'page_size' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'type' => ['nullable', 'string', 'max:50'],
         ];
     }
 
@@ -38,14 +38,12 @@ class BookmarkRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'post_id.required' => 'Post ID is required',
-            'post_id.string' => 'Post ID must be a string',
-            'post_id.max' => 'Post ID cannot exceed 255 characters',
             'page.integer' => 'Page must be an integer',
             'page.min' => 'Page must be at least 1',
             'page_size.integer' => 'Page size must be an integer',
             'page_size.min' => 'Page size must be at least 1',
             'page_size.max' => 'Page size cannot exceed 100',
+            'type.max' => 'Type cannot exceed 50 characters',
         ];
     }
 
@@ -57,9 +55,9 @@ class BookmarkRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'post_id' => 'post ID',
             'page' => 'page number',
             'page_size' => 'page size',
+            'type' => 'content type',
         ];
     }
 }

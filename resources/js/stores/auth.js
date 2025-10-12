@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import { api } from '../api'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -8,13 +8,13 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.token && !!state.user
+    isAuthenticated: (state) => !!state.token
   },
 
   actions: {
     async login(email, password) {
       try {
-        const response = await axios.post('/api/auth/login', {
+        const response = await api.post('/auth/login', {
           email,
           password
         })
@@ -47,9 +47,14 @@ export const useAuthStore = defineStore('auth', {
       const token = localStorage.getItem('auth_token')
       const userProfile = localStorage.getItem('user_profile')
       
+      console.log('checkAuth:', { token, userProfile })
+      
       if (token && userProfile) {
         this.token = token
         this.user = JSON.parse(userProfile)
+        console.log('Auth restored:', { token: this.token, user: this.user })
+      } else {
+        console.log('No auth data found in localStorage')
       }
     }
   }

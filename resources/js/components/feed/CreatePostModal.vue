@@ -380,7 +380,7 @@ import {
   Upload,
   X,
 } from 'lucide-vue-next'
-import { feedApi } from '../../api'
+import { feedApi, api } from '../../api'
 
 const props = defineProps({
   isOpen: {
@@ -451,18 +451,10 @@ const selectUser = (user) => {
 
 const fetchAllUsers = async () => {
   try {
-    const token = localStorage.getItem('auth_token')
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/users`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
+    const response = await api.get('/users')
     
-    if (response.ok) {
-      const data = await response.json()
-      allUsers.value = data.data || []
+    if (response.data.status === 'success') {
+      allUsers.value = response.data.data || []
     } else {
       console.error('Users API error:', response.status, response.statusText)
     }
@@ -553,17 +545,13 @@ const createPost = async () => {
       formData.append('user_id', selectedUser.value.id)
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/news/create`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: formData,
+    const result = await feedApi.createPost({
+      content: content.value || '',
+      satelliteContent: satelliteContent.value || null,
+      profileId: formData.get('subscriptions') ? [formData.get('subscriptions')] : [],
+      scheduledFor: formData.get('schedule'),
+      isScheduled: formData.get('is_schedule') === '1',
     })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
 
     // Reset form
     content.value = ''

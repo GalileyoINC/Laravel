@@ -1,5 +1,21 @@
 <template>
   <div class="container mx-auto px-4 py-8">
+    <!-- Navigation Breadcrumb -->
+    <div class="mb-6">
+      <nav class="flex items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+        <router-link 
+          to="/dashboard" 
+          class="hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+        >
+          Dashboard
+        </router-link>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <span class="text-slate-700 dark:text-slate-300">Profile</span>
+      </nav>
+    </div>
+
     <div v-if="loading" class="text-center">
       <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       <p class="mt-2 text-slate-600 dark:text-slate-300">Loading profile...</p>
@@ -37,8 +53,17 @@
               </span>
             </div>
             
-            <!-- Edit Button -->
-            <div class="ml-auto">
+            <!-- Action Buttons -->
+            <div class="ml-auto flex gap-2">
+              <router-link
+                to="/dashboard"
+                class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50 transition-colors dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                <svg class="mr-2 inline h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Dashboard
+              </router-link>
               <button 
                 @click="openEditModal"
                 class="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 transition-colors"

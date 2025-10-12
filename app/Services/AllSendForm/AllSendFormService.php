@@ -7,6 +7,7 @@ namespace App\Services\AllSendForm;
 use App\DTOs\AllSendForm\AllSendBroadcastRequestDTO;
 use App\DTOs\AllSendForm\AllSendImageUploadRequestDTO;
 use App\DTOs\AllSendForm\AllSendOptionsRequestDTO;
+use App\Models\Communication\SmsPool;
 use App\Models\Subscription\FollowerList;
 use App\Models\Subscription\Subscription;
 use App\Models\User\User;
@@ -69,34 +70,33 @@ class AllSendFormService implements AllSendFormServiceInterface
         try {
             $results = [];
 
+            // Create post in sms_pool table
+            $smsPoolData = [
+                'id_user' => $user->id,
+                'body' => $dto->text,
+                'text_short' => $dto->textShort,
+                'url' => $dto->isLink ? $dto->url : null,
+                'purpose' => 1, // 1 = general
+                'is_schedule' => $dto->isSchedule ? 1 : 0,
+                'schedule' => $dto->schedule,
+                'timezone' => $dto->timezone,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            // Save to sms_pool table
+            $smsPool = SmsPool::create($smsPoolData);
+
             // Send to subscriptions
             if ($dto->subscriptions) {
                 foreach ($dto->subscriptions as $subscriptionId) {
                     $subscription = Subscription::find($subscriptionId);
                     if ($subscription && $subscription->is_active && $subscription->is_public) {
-                        // Create broadcast record (simplified)
-                        $broadcastData = [
-                            'uuid' => $dto->uuid,
-                            'text' => $dto->text,
-                            'text_short' => $dto->textShort,
-                            'url' => $dto->isLink ? $dto->url : null,
-                            'id_subscription' => $subscriptionId,
-                            'id_user' => $user->id,
-                            'is_schedule' => $dto->isSchedule,
-                            'schedule' => $dto->schedule,
-                            'timezone' => $dto->timezone,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
-
-                        // In real application, save to database and queue for sending
-                        // $broadcast = Broadcast::create($broadcastData);
-
                         $results[] = [
                             'type' => 'subscription',
                             'id' => $subscriptionId,
                             'name' => $subscription->name,
-                            'status' => 'queued',
+                            'status' => 'sent',
                         ];
                     }
                 }
@@ -110,32 +110,24 @@ class AllSendFormService implements AllSendFormServiceInterface
                         ->first();
 
                     if ($feed) {
-                        // Create private broadcast record (simplified)
-                        $privateBroadcastData = [
-                            'uuid' => $dto->uuid,
-                            'text' => $dto->text,
-                            'text_short' => $dto->textShort,
-                            'url' => $dto->isLink ? $dto->url : null,
-                            'id_follower_list' => $feedId,
-                            'id_user' => $user->id,
-                            'is_schedule' => $dto->isSchedule,
-                            'schedule' => $dto->schedule,
-                            'timezone' => $dto->timezone,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
-
-                        // In real application, save to database and queue for sending
-                        // $privateBroadcast = PrivateBroadcast::create($privateBroadcastData);
-
                         $results[] = [
                             'type' => 'private_feed',
                             'id' => $feedId,
                             'name' => $feed->title,
-                            'status' => 'queued',
+                            'status' => 'sent',
                         ];
                     }
                 }
+            }
+
+            // If no specific subscriptions/feeds, just create a general post
+            if (empty($dto->subscriptions) && empty($dto->privateFeeds)) {
+                $results[] = [
+                    'type' => 'general',
+                    'id' => $smsPool->id,
+                    'name' => 'General Post',
+                    'status' => 'sent',
+                ];
             }
 
             return [
@@ -143,6 +135,7 @@ class AllSendFormService implements AllSendFormServiceInterface
                 'message' => 'Broadcast sent successfully',
                 'results' => $results,
                 'total_sent' => count($results),
+                'post_id' => $smsPool->id,
             ];
 
         } catch (Exception $e) {
