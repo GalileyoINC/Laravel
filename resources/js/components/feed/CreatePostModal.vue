@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="max-h-[90vh] max-w-2xl w-full overflow-y-auto rounded-lg bg-white dark:bg-slate-900">
+  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 p-4 pt-20">
+    <div class="max-h-[80vh] max-w-2xl w-full overflow-y-auto rounded-lg bg-white dark:bg-slate-900 shadow-xl">
       <!-- Header -->
       <div class="flex items-center gap-2 border-b border-slate-200 p-6 dark:border-slate-700">
         <CalendarDays class="h-5 w-5" />

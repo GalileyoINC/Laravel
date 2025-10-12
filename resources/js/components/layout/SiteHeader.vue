@@ -50,11 +50,13 @@
     </div>
 
     <!-- Create Post Modal -->
-    <CreatePostModal
-      :is-open="isCreatePostOpen"
-      @close="closeCreatePost"
-      @created="handlePostCreated"
-    />
+    <Teleport to="body">
+      <CreatePostModal
+        :is-open="isCreatePostOpen"
+        @close="closeCreatePost"
+        @created="handlePostCreated"
+      />
+    </Teleport>
   </header>
 </template>
 

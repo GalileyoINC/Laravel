@@ -30,11 +30,13 @@
     </Suspense>
 
     <!-- Create Post Modal -->
-    <CreatePostModal
-      :is-open="showCreatePost"
-      @close="showCreatePost = false"
-      @created="handlePostCreated"
-    />
+    <Teleport to="body">
+      <CreatePostModal
+        :is-open="showCreatePost"
+        @close="showCreatePost = false"
+        @created="handlePostCreated"
+      />
+    </Teleport>
   </main>
 </template>
 
