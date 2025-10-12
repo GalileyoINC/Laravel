@@ -7,7 +7,7 @@ namespace App\Services\Phone;
 use App\DTOs\Phone\PhoneUpdateRequestDTO;
 use App\DTOs\Phone\PhoneVerifyRequestDTO;
 use App\DTOs\Phone\PhoneVerifyResponseDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * Phone service interface

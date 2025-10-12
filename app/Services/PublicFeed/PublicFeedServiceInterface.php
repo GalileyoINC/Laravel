@@ -7,7 +7,7 @@ namespace App\Services\PublicFeed;
 use App\DTOs\PublicFeed\PublicFeedImageUploadRequestDTO;
 use App\DTOs\PublicFeed\PublicFeedOptionsRequestDTO;
 use App\DTOs\PublicFeed\PublicFeedPublishRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * PublicFeed service interface

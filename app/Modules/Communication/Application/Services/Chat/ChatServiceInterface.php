@@ -6,7 +6,7 @@ namespace App\Services\Chat;
 
 use App\DTOs\Chat\ChatListRequestDTO;
 use App\DTOs\Chat\ChatMessagesRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * Chat service interface

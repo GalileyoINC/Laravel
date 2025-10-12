@@ -9,7 +9,7 @@ use App\DTOs\Order\PayOrderDTO;
 use App\Models\Finance\CreditCard;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

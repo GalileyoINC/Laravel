@@ -9,7 +9,7 @@ use App\DTOs\Comment\CommentDeleteRequestDTO;
 use App\DTOs\Comment\CommentListRequestDTO;
 use App\DTOs\Comment\CommentUpdateRequestDTO;
 use App\Models\Content\Comment;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

@@ -6,7 +6,7 @@ namespace App\Services\PrivateFeed;
 
 use App\DTOs\PrivateFeed\PrivateFeedCreateRequestDTO;
 use App\DTOs\PrivateFeed\PrivateFeedListRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * PrivateFeed service interface

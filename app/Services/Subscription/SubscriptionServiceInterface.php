@@ -7,7 +7,7 @@ namespace App\Services\Subscription;
 use App\DTOs\Subscription\FeedOptionsDTO;
 use App\DTOs\Subscription\MarketstackSubscriptionDTO;
 use App\DTOs\Subscription\SubscriptionRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * Subscription service interface

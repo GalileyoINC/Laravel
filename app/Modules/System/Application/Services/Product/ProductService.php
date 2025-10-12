@@ -9,7 +9,7 @@ use App\DTOs\Product\ProductAlertsRequestDTO;
 use App\DTOs\Product\ProductListRequestDTO;
 use App\Models\Product;
 use App\Models\ProductDigitalAlerts;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

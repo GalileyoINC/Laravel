@@ -9,7 +9,7 @@ use App\DTOs\Subscription\MarketstackSubscriptionDTO;
 use App\DTOs\Subscription\SubscriptionRequestDTO;
 use App\Models\Subscription\FollowerList;
 use App\Models\Subscription\Subscription;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use App\Models\User\UserSubscription;
 use Exception;
 use Illuminate\Support\Facades\Log;

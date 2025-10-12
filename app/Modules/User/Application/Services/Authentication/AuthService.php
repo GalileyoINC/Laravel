@@ -7,7 +7,7 @@ namespace App\Modules\User\Application\Services\Authentication;
 use App\DTOs\Authentication\AuthResponseDTO;
 use App\DTOs\Authentication\LoginRequestDTO;
 use App\Models\Device\Device\Device;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;

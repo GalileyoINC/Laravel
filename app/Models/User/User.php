@@ -219,163 +219,163 @@ class User extends Authenticatable
 
     public function addresses()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\Address::class, 'id_user');
+        return $this->hasMany(App\Models\User\Address::class, 'id_user');
     }
 
     public function admin_members()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\AdminMember::class, 'id_member');
+        return $this->hasMany(App\Models\User\AdminMember::class, 'id_member');
     }
 
     public function affiliates()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\Affiliate::class, 'id_user_parent');
+        return $this->hasMany(App\Models\User\Affiliate::class, 'id_user_parent');
     }
 
     public function affiliate_invites()
     {
-        return $this->hasMany(App\Models\User\AffiliateApp\Models\User\App\Models\User\Invite::class, 'id_user');
+        return $this->hasMany(App\Models\User\AffiliateApp\Models\User\Invite::class, 'id_user');
     }
 
     public function bp_subscriptions()
     {
-        return $this->hasMany(App\Models\Subscription\BpApp\Models\Subscription\App\Models\Subscription\Subscription::class, 'id_user');
+        return $this->hasMany(App\Models\Subscription\BpApp\Models\Subscription\Subscription::class, 'id_user');
     }
 
     public function comments()
     {
-        return $this->hasMany(App\Models\Content\App\Models\Content\Comment::class, 'id_user');
+        return $this->hasMany(App\Models\Content\Comment::class, 'id_user');
     }
 
     public function contacts()
     {
-        return $this->hasMany(App\Models\Communication\App\Models\Communication\Contact::class, 'id_user');
+        return $this->hasMany(App\Models\Communication\Contact::class, 'id_user');
     }
 
     public function contract_lines()
     {
-        return $this->hasMany(App\Models\Finance\App\Models\Finance\ContractLine::class, 'id_user');
+        return $this->hasMany(App\Models\Finance\ContractLine::class, 'id_user');
     }
 
     public function conversation_messages()
     {
-        return $this->hasMany(App\Models\Communication\App\Models\Communication\ConversationMessage::class, 'id_user');
+        return $this->hasMany(App\Models\Communication\ConversationMessage::class, 'id_user');
     }
 
     public function conversations()
     {
-        return $this->belongsToMany(App\Models\Communication\App\Models\Communication\Conversation::class, 'conversation_user', 'id_user', 'id_conversation');
+        return $this->belongsToMany(App\Models\Communication\Conversation::class, 'conversation_user', 'id_user', 'id_conversation');
     }
 
     public function credit_cards()
     {
-        return $this->hasMany(App\Models\Finance\App\Models\Finance\CreditCard::class, 'id_user');
+        return $this->hasMany(App\Models\Finance\CreditCard::class, 'id_user');
     }
 
     public function devices()
     {
-        return $this->hasMany(App\Models\Device\App\Models\Device\Device::class, 'id_user');
+        return $this->hasMany(App\Models\Device\Device::class, 'id_user');
     }
 
     public function followers()
     {
-        return $this->hasMany(App\Models\Subscription\App\Models\Subscription\Follower::class, 'id_user_leader');
+        return $this->hasMany(App\Models\Subscription\Follower::class, 'id_user_leader');
     }
 
     public function follower_lists()
     {
-        return $this->hasMany(App\Models\Subscription\App\Models\Subscription\FollowerList::class, 'id_user');
+        return $this->hasMany(App\Models\Subscription\FollowerList::class, 'id_user');
     }
 
     public function influencer_assistants()
     {
-        return $this->hasMany(App\Models\Subscription\App\Models\Subscription\InfluencerAssistant::class, 'id_influencer');
+        return $this->hasMany(App\Models\Subscription\InfluencerAssistant::class, 'id_influencer');
     }
 
     public function invites()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\Invite::class, 'id_user');
+        return $this->hasMany(App\Models\User\Invite::class, 'id_user');
     }
 
     public function invite_affiliates()
     {
-        return $this->hasMany(InviteApp\Models\User\App\Models\User\Affiliate::class, 'id_inviter');
+        return $this->hasMany(InviteApp\Models\User\Affiliate::class, 'id_inviter');
     }
 
     public function invoices()
     {
-        return $this->hasMany(App\Models\Finance\App\Models\Finance\Invoice::class, 'id_user');
+        return $this->hasMany(App\Models\Finance\Invoice::class, 'id_user');
     }
 
     public function log_authorizes()
     {
-        return $this->hasMany(App\Models\Analytics\App\Models\Analytics\LogAuthorize::class, 'id_user');
+        return $this->hasMany(App\Models\Analytics\LogAuthorize::class, 'id_user');
     }
 
     public function login_statistics()
     {
-        return $this->hasMany(App\Models\Analytics\App\Models\Analytics\LoginStatistic::class, 'id_user');
+        return $this->hasMany(App\Models\Analytics\LoginStatistic::class, 'id_user');
     }
 
     public function member_requests()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\MemberRequest::class, 'id_user_from');
+        return $this->hasMany(App\Models\User\MemberRequest::class, 'id_user_from');
     }
 
     public function member_templates()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\MemberTemplate::class, 'id_admin');
+        return $this->hasMany(App\Models\User\MemberTemplate::class, 'id_admin');
     }
 
     public function money_transactions()
     {
-        return $this->hasMany(App\Models\Finance\App\Models\Finance\MoneyTransaction::class, 'id_user');
+        return $this->hasMany(App\Models\Finance\MoneyTransaction::class, 'id_user');
     }
 
     public function phone_numbers()
     {
-        return $this->hasMany(App\Models\Device\App\Models\Device\PhoneNumber::class, 'id_user');
+        return $this->hasMany(App\Models\Device\PhoneNumber::class, 'id_user');
     }
 
     public function sms_pools()
     {
-        return $this->hasMany(App\Models\Communication\App\Models\Communication\SmsPool::class, 'id_user');
+        return $this->hasMany(App\Models\Communication\SmsPool::class, 'id_user');
     }
 
     public function sms_pool_phone_numbers()
     {
-        return $this->hasMany(SmsPoolApp\Models\Device\App\Models\Device\PhoneNumber::class, 'id_user');
+        return $this->hasMany(SmsPoolApp\Models\Device\PhoneNumber::class, 'id_user');
     }
 
     public function sms_pool_reactions()
     {
-        return $this->hasMany(App\Models\Communication\App\Models\Communication\SmsPoolReaction::class, 'id_user');
+        return $this->hasMany(App\Models\Communication\SmsPoolReaction::class, 'id_user');
     }
 
     public function sms_shedules()
     {
-        return $this->hasMany(App\Models\Communication\App\Models\Communication\SmsShedule::class, 'id_user');
+        return $this->hasMany(App\Models\Communication\SmsShedule::class, 'id_user');
     }
 
     public function sps_add_user_requests()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\SpsAddUserRequest::class, 'id_user');
+        return $this->hasMany(App\Models\User\SpsAddUserRequest::class, 'id_user');
     }
 
     public function sps_contracts()
     {
-        return $this->hasMany(App\Models\Finance\App\Models\Finance\SpsContract::class, 'id_user');
+        return $this->hasMany(App\Models\Finance\SpsContract::class, 'id_user');
     }
 
     public function subscriptions()
     {
-        return $this->belongsToMany(App\Models\Subscription\App\Models\Subscription\Subscription::class, 'user_subscription_address', 'id_user', 'id_subscription')
+        return $this->belongsToMany(App\Models\Subscription\Subscription::class, 'user_subscription_address', 'id_user', 'id_subscription')
             ->withPivot('id', 'zip');
     }
 
     public function subscription_wizards()
     {
-        return $this->hasMany(App\Models\Subscription\App\Models\Subscription\SubscriptionWizard::class, 'id_user');
+        return $this->hasMany(App\Models\Subscription\SubscriptionWizard::class, 'id_user');
     }
 
     public function users()
@@ -385,31 +385,31 @@ class User extends Authenticatable
 
     public function user_follower_alerts()
     {
-        return $this->hasMany(App\Models\Notification\App\Models\Notification\UserFollowerAlert::class, 'id_user');
+        return $this->hasMany(App\Models\Notification\UserFollowerAlert::class, 'id_user');
     }
 
     public function user_friends()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\UserFriend::class, 'id_user');
+        return $this->hasMany(App\Models\User\UserFriend::class, 'id_user');
     }
 
     public function user_plans()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\UserPlan::class, 'id_user');
+        return $this->hasMany(App\Models\User\UserPlan::class, 'id_user');
     }
 
     public function user_plan_shedules()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\UserPlanShedule::class, 'id_user');
+        return $this->hasMany(App\Models\User\UserPlanShedule::class, 'id_user');
     }
 
     public function user_point_histories()
     {
-        return $this->hasMany(App\Models\User\App\Models\User\UserPointHistory::class, 'id_user');
+        return $this->hasMany(App\Models\User\UserPointHistory::class, 'id_user');
     }
 
     public function services()
     {
-        return $this->belongsToMany(App\Models\Finance\App\Models\Finance\Service::class, 'user_service', 'id_user', 'id_service');
+        return $this->belongsToMany(App\Models\Finance\Service::class, 'user_service', 'id_user', 'id_service');
     }
 }

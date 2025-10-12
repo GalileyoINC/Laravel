@@ -6,7 +6,7 @@ namespace App\Services\Bookmark;
 
 use App\DTOs\Bookmark\BookmarkListRequestDTO;
 use App\DTOs\Bookmark\BookmarkRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 interface BookmarkServiceInterface
 {

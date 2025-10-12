@@ -8,7 +8,7 @@ use App\DTOs\Phone\PhoneUpdateRequestDTO;
 use App\DTOs\Phone\PhoneVerifyRequestDTO;
 use App\DTOs\Phone\PhoneVerifyResponseDTO;
 use App\Models\Device\Device\PhoneNumber;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

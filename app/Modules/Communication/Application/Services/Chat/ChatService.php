@@ -8,7 +8,7 @@ use App\DTOs\Chat\ChatListRequestDTO;
 use App\DTOs\Chat\ChatMessagesRequestDTO;
 use App\Models\Communication\Conversation;
 use App\Models\Communication\ConversationMessage;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

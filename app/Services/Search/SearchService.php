@@ -6,7 +6,7 @@ namespace App\Services\Search;
 
 use App\DTOs\Search\SearchRequestDTO;
 use App\Models\Communication\SmsPool;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

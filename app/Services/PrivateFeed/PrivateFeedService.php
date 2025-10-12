@@ -7,7 +7,7 @@ namespace App\Services\PrivateFeed;
 use App\DTOs\PrivateFeed\PrivateFeedCreateRequestDTO;
 use App\DTOs\PrivateFeed\PrivateFeedListRequestDTO;
 use App\Models\Subscription\FollowerList;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;

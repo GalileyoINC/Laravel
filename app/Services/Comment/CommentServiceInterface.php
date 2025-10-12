@@ -8,7 +8,7 @@ use App\DTOs\Comment\CommentCreateRequestDTO;
 use App\DTOs\Comment\CommentDeleteRequestDTO;
 use App\DTOs\Comment\CommentListRequestDTO;
 use App\DTOs\Comment\CommentUpdateRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * Comment service interface

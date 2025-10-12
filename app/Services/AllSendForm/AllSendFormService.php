@@ -9,7 +9,7 @@ use App\DTOs\AllSendForm\AllSendImageUploadRequestDTO;
 use App\DTOs\AllSendForm\AllSendOptionsRequestDTO;
 use App\Models\Subscription\FollowerList;
 use App\Models\Subscription\Subscription;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;

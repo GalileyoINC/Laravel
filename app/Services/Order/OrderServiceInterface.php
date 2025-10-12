@@ -6,7 +6,7 @@ namespace App\Services\Order;
 
 use App\DTOs\Order\CreateOrderDTO;
 use App\DTOs\Order\PayOrderDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * Order service interface

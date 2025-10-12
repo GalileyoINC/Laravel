@@ -7,7 +7,7 @@ namespace App\Services\Product;
 use App\DTOs\Product\ApplePurchaseRequestDTO;
 use App\DTOs\Product\ProductAlertsRequestDTO;
 use App\DTOs\Product\ProductListRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * Product service interface

@@ -8,7 +8,7 @@ use App\DTOs\PublicFeed\PublicFeedImageUploadRequestDTO;
 use App\DTOs\PublicFeed\PublicFeedOptionsRequestDTO;
 use App\DTOs\PublicFeed\PublicFeedPublishRequestDTO;
 use App\Models\Subscription\Subscription;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

@@ -9,7 +9,7 @@ use App\DTOs\Report\ReportStatisticRequestDTO;
 use App\Models\Communication\SmsPool;
 use App\Models\Device\Device\PhoneNumber;
 use App\Models\Finance\ContractLine;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 class ReportService implements ReportServiceInterface
 {

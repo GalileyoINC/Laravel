@@ -7,7 +7,7 @@ namespace App\Services\AllSendForm;
 use App\DTOs\AllSendForm\AllSendBroadcastRequestDTO;
 use App\DTOs\AllSendForm\AllSendImageUploadRequestDTO;
 use App\DTOs\AllSendForm\AllSendOptionsRequestDTO;
-use App\Models\User\User\User;
+use App\Models\User\User;
 
 /**
  * AllSendForm service interface

@@ -7,7 +7,7 @@ namespace App\Services\Influencer;
 use App\DTOs\Influencer\InfluencerFeedCreateRequestDTO;
 use App\DTOs\Influencer\InfluencerFeedListRequestDTO;
 use App\Models\Subscription\InfluencerPage;
-use App\Models\User\User\User;
+use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
