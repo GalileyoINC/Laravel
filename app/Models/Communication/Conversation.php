@@ -37,7 +37,7 @@ class Conversation extends Model
 
     public function conversation_messages()
     {
-        return $this->hasMany(App\Models\Communication\ConversationMessage::class, 'id_conversation');
+        return $this->hasMany(\App\Models\Communication\ConversationMessage::class, 'id_conversation');
     }
 
     public function conversation_unvieweds()
@@ -47,6 +47,6 @@ class Conversation extends Model
 
     public function users()
     {
-        return $this->belongsToMany(App\Models\User\User::class, 'conversation_user', 'id_conversation', 'id_user');
+        return $this->belongsToMany(\App\Models\User\User::class, 'conversation_user', 'id_conversation', 'id_user');
     }
 }

@@ -6,7 +6,7 @@ namespace App\Services\Device;
 
 use App\DTOs\Device\DeviceListRequestDTO;
 use App\DTOs\Device\DevicePushRequestDTO;
-use App\Models\Device\Device\Device;
+use App\Models\Device\Device;
 
 interface DeviceServiceInterface
 {

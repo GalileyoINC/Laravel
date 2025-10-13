@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Subscription;
 
 use Carbon\Carbon;
+use Database\Factories\InfluencerPageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -46,5 +47,10 @@ class InfluencerPage extends Model
     public function subscription()
     {
         return $this->belongsTo(App\Models\Subscription\Subscription::class, 'id_subscription');
+    }
+
+    protected static function newFactory()
+    {
+        return InfluencerPageFactory::new();
     }
 }

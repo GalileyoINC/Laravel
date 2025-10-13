@@ -11,7 +11,7 @@ use App\DTOs\News\NewsListRequestDTO;
 use App\DTOs\News\ReactionRequestDTO;
 use App\DTOs\News\ReportNewsRequestDTO;
 use App\Models\Communication\SmsPool;
-use App\Models\Content\Reaction;
+use App\Models\Communication\SmsPoolReaction;
 use App\Models\Content\Report;
 use App\Models\User\Mute;
 use App\Models\User\User;
@@ -272,29 +272,29 @@ class NewsService implements NewsServiceInterface
     {
         try {
             // Check if reaction already exists
-            $existingReaction = Reaction::where('id_news', $dto->idNews)
+            $existingReaction = SmsPoolReaction::where('id_sms_pool', $dto->idNews)
                 ->where('id_user', $user->id)
                 ->first();
 
             if ($existingReaction) {
-                // Update existing reaction
-                $existingReaction->update([
-                    'reaction_type' => $dto->reactionType,
-                    'message' => $dto->message,
-                    'updated_at' => now(),
-                ]);
+                // Update existing reaction using query builder
+                SmsPoolReaction::where('id_sms_pool', $dto->idNews)
+                    ->where('id_user', $user->id)
+                    ->update([
+                        'id_reaction' => $dto->reactionType,
+                    ]);
 
-                return $existingReaction;
+                return SmsPoolReaction::where('id_sms_pool', $dto->idNews)
+                    ->where('id_user', $user->id)
+                    ->first();
             }
 
             // Create new reaction
-            $reaction = Reaction::create([
-                'id_news' => $dto->idNews,
+            $reaction = SmsPoolReaction::create([
+                'id_sms_pool' => $dto->idNews,
                 'id_user' => $user->id,
-                'reaction_type' => $dto->reactionType,
-                'message' => $dto->message,
+                'id_reaction' => $dto->reactionType,
                 'created_at' => now(),
-                'updated_at' => now(),
             ]);
 
             return $reaction;
@@ -311,13 +311,11 @@ class NewsService implements NewsServiceInterface
     public function removeReaction(ReactionRequestDTO $dto, User $user)
     {
         try {
-            $reaction = Reaction::where('id_news', $dto->idNews)
+            $deleted = SmsPoolReaction::where('id_sms_pool', $dto->idNews)
                 ->where('id_user', $user->id)
-                ->first();
+                ->delete();
 
-            if ($reaction) {
-                $reaction->delete();
-
+            if ($deleted > 0) {
                 return ['success' => true, 'message' => 'Reaction removed successfully'];
             }
 

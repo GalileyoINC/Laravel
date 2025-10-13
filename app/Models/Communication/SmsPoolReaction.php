@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Communication;
 
 use Carbon\Carbon;
+use Database\Factories\SmsPoolReactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,6 +33,8 @@ class SmsPoolReaction extends Model
     public $timestamps = false;
 
     protected $table = 'sms_pool_reaction';
+    
+    protected $primaryKey = ['id_sms_pool', 'id_user'];
 
     protected $casts = [
         'id_sms_pool' => 'int',
@@ -40,7 +43,10 @@ class SmsPoolReaction extends Model
     ];
 
     protected $fillable = [
+        'id_sms_pool',
+        'id_user',
         'id_reaction',
+        'created_at',
     ];
 
     public function reaction()
@@ -56,5 +62,10 @@ class SmsPoolReaction extends Model
     public function user()
     {
         return $this->belongsTo(App\Models\User\User::class, 'id_user');
+    }
+
+    protected static function newFactory()
+    {
+        return SmsPoolReactionFactory::new();
     }
 }

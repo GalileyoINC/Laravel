@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Content;
 
 use Carbon\Carbon;
+use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -48,5 +49,10 @@ class News extends Model
     public function news_contents()
     {
         return $this->hasMany(NewsContent::class, 'id_news');
+    }
+
+    protected static function newFactory()
+    {
+        return NewsFactory::new();
     }
 }

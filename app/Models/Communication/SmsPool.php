@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Communication;
 
 use Carbon\Carbon;
+use Database\Factories\SmsPoolFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -122,5 +123,10 @@ class SmsPool extends Model
     public function user_point_histories()
     {
         return $this->hasMany(App\Models\User\UserPointHistory::class, 'id_sms_pool');
+    }
+
+    protected static function newFactory()
+    {
+        return SmsPoolFactory::new();
     }
 }

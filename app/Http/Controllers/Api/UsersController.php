@@ -47,7 +47,7 @@ class UsersController extends Controller
     public function view(int $id): JsonResponse
     {
         try {
-            $user = \App\Models\User::findOrFail($id);
+            $user = \App\Models\User\User::findOrFail($id);
 
             return response()->json([
                 'status' => 'success',
@@ -64,7 +64,7 @@ class UsersController extends Controller
     public function exportToCsv(): JsonResponse
     {
         try {
-            $users = \App\Models\User::all();
+            $users = \App\Models\User\User::all();
 
             return response()->json([
                 'status' => 'success',

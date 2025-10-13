@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
+use Database\Factories\UserSubscriptionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -47,5 +48,10 @@ class UserSubscription extends Model
     public function user()
     {
         return $this->belongsTo(App\Models\User\User::class, 'id_user');
+    }
+
+    protected static function newFactory()
+    {
+        return UserSubscriptionFactory::new();
     }
 }

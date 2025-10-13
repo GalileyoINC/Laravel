@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\DTOs\Maintenance;
+
+use Illuminate\Http\Request;
+
+class SummarizeRequestDTO
+{
+    public function __construct(
+        public readonly int $size,
+        public readonly string $text
+    ) {}
+
+    /**
+     * Create DTO from array
+     *
+     * @param array<string, mixed> $data
+     * @return static
+     */
+    public static function fromArray(array $data): static
+    {
+        return new self(
+            size: (int) $data['size'],
+            text: (string) $data['text']
+        );
+    }
+
+    /**
+     * Create DTO from request
+     *
+     * @param Request $request
+     * @return static
+     */
+    public static function fromRequest(Request $request): static
+    {
+        return new self(
+            size: (int) $request->input('size'),
+            text: (string) $request->input('text')
+        );
+    }
+
+    /**
+     * Convert to array
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+            'size' => $this->size,
+            'text' => $this->text,
+        ];
+    }
+
+    /**
+     * Validate the DTO data
+     *
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function validate(): void
+    {
+        if ($this->size < 1 || $this->size > 10000) {
+            throw new \InvalidArgumentException('Size must be between 1 and 10000 characters');
+        }
+
+        if (empty($this->text) || strlen($this->text) > 50000) {
+            throw new \InvalidArgumentException('Text must be between 1 and 50000 characters');
+        }
+    }
+}

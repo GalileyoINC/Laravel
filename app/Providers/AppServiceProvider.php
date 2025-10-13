@@ -34,6 +34,8 @@ use App\Services\Influencer\InfluencerService;
 use App\Services\Influencer\InfluencerServiceInterface;
 use App\Services\Invoice\InvoiceService;
 use App\Services\Invoice\InvoiceServiceInterface;
+use App\Services\Maintenance\MaintenanceService;
+use App\Services\Maintenance\MaintenanceServiceInterface;
 use App\Services\News\NewsService;
 use App\Services\News\NewsServiceInterface;
 use App\Services\Order\OrderService;
@@ -221,6 +223,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             StaffServiceInterface::class,
             StaffService::class
+        );
+
+        // Register Maintenance services
+        $this->app->bind(
+            MaintenanceServiceInterface::class,
+            MaintenanceService::class
         );
     }
 

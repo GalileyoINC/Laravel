@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Comment;
-use App\Models\CreditCard;
-use App\Models\Device;
-use App\Models\Follower;
-use App\Models\FollowerList;
-use App\Models\InfluencerPage;
-use App\Models\News;
-use App\Models\Reaction;
-use App\Models\SmsPool;
-use App\Models\SmsPoolReaction;
-use App\Models\Subscription;
-use App\Models\User;
-use App\Models\UserSubscription;
+use App\Models\Content\Comment;
+use App\Models\Finance\CreditCard;
+use App\Models\Device\Device;
+use App\Models\Subscription\Follower;
+use App\Models\Subscription\FollowerList;
+use App\Models\Subscription\InfluencerPage;
+use App\Models\Content\News;
+use App\Models\Content\Reaction;
+use App\Models\Communication\SmsPool;
+use App\Models\Communication\SmsPoolReaction;
+use App\Models\Subscription\Subscription;
+use App\Models\User\User;
+use App\Models\User\UserSubscription;
+use App\Models\Subscription\SubscriptionCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -35,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         // Create subscription categories first
         $this->command->info('📂 Creating subscription categories...');
-        $categories = \App\Models\SubscriptionCategory::factory(10)->create();
+        $categories = SubscriptionCategory::factory(10)->create();
         $this->command->info("✅ Created {$categories->count()} subscription categories");
 
         // Create subscriptions

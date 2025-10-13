@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\EmailPoolController;
 use App\Http\Controllers\Api\EmailTemplateController;
 use App\Http\Controllers\Api\InfluencerController;
 use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\MaintenanceController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PhoneController;
@@ -339,4 +340,9 @@ Route::prefix('v1/bookmark')->middleware('auth:sanctum')->group(function () {
     Route::get('list', [BookmarkController::class, 'list']);
     Route::post('create', [BookmarkController::class, 'create']);
     Route::delete('delete/{id}', [BookmarkController::class, 'delete']);
+});
+
+// Maintenance Controller - System maintenance
+Route::prefix('v1/maintenance')->middleware('auth:sanctum')->group(function () {
+    Route::post('summarize', [MaintenanceController::class, 'summarize']);
 });

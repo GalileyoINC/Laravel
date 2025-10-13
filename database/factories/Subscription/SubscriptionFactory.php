@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Database\Factories;
+namespace Database\Factories\Subscription;
 
 use App\Models\Subscription\Subscription;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -44,7 +44,7 @@ class SubscriptionFactory extends Factory
                 'tags' => fake()->words(3),
             ]),
             'is_custom' => fake()->boolean(30), // 30% chance
-            'id_influencer' => fake()->boolean(40) ? fake()->numberBetween(1, 50) : null,
+            'id_influencer' => null,
             'price' => fake()->randomFloat(2, 0, 100),
             'bonus_point' => fake()->numberBetween(0, 1000),
             'token' => fake()->boolean(60) ? fake()->uuid() : null,

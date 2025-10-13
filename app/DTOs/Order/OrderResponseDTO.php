@@ -44,7 +44,7 @@ class OrderResponseDTO
             paymentMethod: $order->payment_method,
             createdAt: $order->created_at?->format('Y-m-d H:i:s'),
             products: $order->products ?? [],
-            paymentDetails: $order->payment_details ?? []
+            paymentDetails: is_string($order->payment_details) ? json_decode($order->payment_details, true) ?? [] : ($order->payment_details ?? [])
         );
     }
 

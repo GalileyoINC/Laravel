@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Finance;
 
 use Carbon\Carbon;
+use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -139,5 +140,13 @@ class Service extends Model
     public function users()
     {
         return $this->belongsToMany(App\Models\User\User::class, 'user_service', 'id_service', 'id_user');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return ServiceFactory::new();
     }
 }

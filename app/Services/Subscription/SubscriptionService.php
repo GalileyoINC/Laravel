@@ -36,19 +36,13 @@ class SubscriptionService implements SubscriptionServiceInterface
                     [
                         'id_user' => $user->id,
                         'id_subscription' => $dto->idSubscription,
-                        'sub_type' => $dto->subType,
                     ],
-                    [
-                        'zip' => $dto->zip,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]
+                    []
                 );
             } else {
                 // Unsubscribe user
                 UserSubscription::where('id_user', $user->id)
                     ->where('id_subscription', $dto->idSubscription)
-                    ->where('sub_type', $dto->subType)
                     ->delete();
             }
 
@@ -110,9 +104,11 @@ class SubscriptionService implements SubscriptionServiceInterface
         try {
             $categories = Subscription::where('is_active', true)
                 ->where('is_public', true)
-                ->distinct()
-                ->pluck('category')
+                ->with('subscription_category')
+                ->get()
+                ->pluck('subscription_category.name')
                 ->filter()
+                ->unique()
                 ->values()
                 ->toArray();
 

@@ -6,7 +6,7 @@ namespace App\Services\Device;
 
 use App\DTOs\Device\DeviceListRequestDTO;
 use App\DTOs\Device\DevicePushRequestDTO;
-use App\Models\Device\Device\Device;
+use App\Models\Device\Device;
 use Log;
 
 class DeviceService implements DeviceServiceInterface
@@ -17,8 +17,8 @@ class DeviceService implements DeviceServiceInterface
 
         if ($dto->search) {
             $query->where(function ($q) use ($dto) {
-                $q->where('device_uuid', 'like', '%'.$dto->search.'%')
-                    ->orWhere('device_name', 'like', '%'.$dto->search.'%')
+                $q->where('uuid', 'like', '%'.$dto->search.'%')
+                    ->orWhere('os', 'like', '%'.$dto->search.'%')
                     ->orWhereHas('user', function ($userQuery) use ($dto) {
                         $userQuery->where('first_name', 'like', '%'.$dto->search.'%')
                             ->orWhere('last_name', 'like', '%'.$dto->search.'%')
@@ -67,7 +67,7 @@ class DeviceService implements DeviceServiceInterface
         // Mock push notification sending - replace with actual push service
         $notification = [
             'device_id' => $device->id,
-            'device_uuid' => $device->device_uuid,
+            'device_uuid' => $device->uuid,
             'title' => $dto->title,
             'body' => $dto->body,
             'data' => $dto->data,

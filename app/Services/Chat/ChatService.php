@@ -23,7 +23,7 @@ class ChatService implements ChatServiceInterface
     public function getConversationList(ChatListRequestDTO $dto, User $user)
     {
         try {
-            $query = Conversation::whereHas('conversationUsers', function ($q) use ($user) {
+            $query = Conversation::whereHas('users', function ($q) use ($user) {
                 $q->where('id_user', $user->id);
             });
 
@@ -32,7 +32,7 @@ class ChatService implements ChatServiceInterface
                 // Add filter logic here
             }
 
-            $conversations = $query->with(['conversationUsers', 'conversationMessages' => function ($q) {
+            $conversations = $query->with(['users', 'conversation_messages' => function ($q) {
                 $q->latest()->limit(1);
             }])
                 ->orderBy('updated_at', 'desc')
@@ -54,7 +54,7 @@ class ChatService implements ChatServiceInterface
     public function getConversationMessages(ChatMessagesRequestDTO $dto, User $user)
     {
         try {
-            $conversation = Conversation::whereHas('conversationUsers', function ($q) use ($user) {
+            $conversation = Conversation::whereHas('users', function ($q) use ($user) {
                 $q->where('id_user', $user->id);
             })->find($dto->conversationId);
 
@@ -83,9 +83,9 @@ class ChatService implements ChatServiceInterface
     public function getConversationView(int $conversationId, User $user)
     {
         try {
-            $conversation = Conversation::whereHas('conversationUsers', function ($q) use ($user) {
+            $conversation = Conversation::whereHas('users', function ($q) use ($user) {
                 $q->where('id_user', $user->id);
-            })->with(['conversationUsers.user', 'conversationMessages.user'])
+            })->with(['users', 'conversation_messages.user'])
                 ->find($conversationId);
 
             if (! $conversation) {

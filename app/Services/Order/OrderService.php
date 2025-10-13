@@ -7,8 +7,8 @@ namespace App\Services\Order;
 use App\DTOs\Order\CreateOrderDTO;
 use App\DTOs\Order\PayOrderDTO;
 use App\Models\Finance\CreditCard;
+use App\Models\Finance\Service;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +28,7 @@ class OrderService implements OrderServiceInterface
             DB::beginTransaction();
 
             // Get product details
-            $product = Product::find($dto->productId);
+            $product = Service::find($dto->productId);
             if (! $product) {
                 throw new Exception('Product not found');
             }

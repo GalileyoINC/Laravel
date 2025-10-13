@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
+use Database\Factories\ReactionFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,5 +36,10 @@ class Reaction extends Model
     {
         return $this->belongsToMany(App\Models\Communication\SmsPool::class, 'sms_pool_reaction', 'id_reaction', 'id_sms_pool')
             ->withPivot('id_user');
+    }
+
+    protected static function newFactory()
+    {
+        return ReactionFactory::new();
     }
 }

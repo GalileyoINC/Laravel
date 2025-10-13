@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Subscription;
 
 use Carbon\Carbon;
+use Database\Factories\FollowerListFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -72,5 +73,10 @@ class FollowerList extends Model
     public function sms_shedules()
     {
         return $this->hasMany(App\Models\Communication\SmsShedule::class, 'id_follower_list');
+    }
+
+    protected static function newFactory()
+    {
+        return FollowerListFactory::new();
     }
 }

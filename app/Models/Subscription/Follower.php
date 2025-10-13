@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Subscription;
 
 use Carbon\Carbon;
+use Database\Factories\FollowerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -56,5 +57,10 @@ class Follower extends Model
     public function user()
     {
         return $this->belongsTo(App\Models\User\User::class, 'id_user_leader');
+    }
+
+    protected static function newFactory()
+    {
+        return FollowerFactory::new();
     }
 }

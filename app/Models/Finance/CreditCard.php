@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Finance;
 
 use Carbon\Carbon;
+use Database\Factories\CreditCardFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -82,5 +83,13 @@ class CreditCard extends Model
     public function money_transactions()
     {
         return $this->hasMany(App\Models\Finance\MoneyTransaction::class, 'id_credit_card');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return CreditCardFactory::new();
     }
 }
