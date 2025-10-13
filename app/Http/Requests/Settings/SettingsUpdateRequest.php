@@ -23,20 +23,3 @@ class SettingsUpdateRequest extends FormRequest
         ];
     }
 }
-
-// SettingsPublicRequest.php
-class SettingsPublicRequest extends FormRequest
-{
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    public function rules(): array
-    {
-        return [
-            'user_point_settings' => 'sometimes|array',
-            'safe_settings' => 'sometimes|array',
-        ];
-    }
-}
