@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Bundle\CreateBundleAction;
-use App\Actions\Bundle\GetBundleDeviceDataAction;
-use App\Actions\Bundle\GetBundleListAction;
-use App\Actions\Bundle\UpdateBundleAction;
+use App\Domain\Actions\Bundle\CreateBundleAction;
+use App\Domain\Actions\Bundle\GetBundleDeviceDataAction;
+use App\Domain\Actions\Bundle\GetBundleListAction;
+use App\Domain\Actions\Bundle\UpdateBundleAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Bundle\BundleCreateRequest;
 use App\Http\Requests\Bundle\BundleDeviceDataRequest;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\ContractLine\GetUnpaidContractsAction;
+use App\Domain\Actions\ContractLine\GetUnpaidContractsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContractLine\ContractLineListRequest;
 use App\Http\Resources\ContractLineResource;

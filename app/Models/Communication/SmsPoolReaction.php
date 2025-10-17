@@ -33,7 +33,7 @@ class SmsPoolReaction extends Model
     public $timestamps = false;
 
     protected $table = 'sms_pool_reaction';
-    
+
     protected $primaryKey = ['id_sms_pool', 'id_user'];
 
     protected $casts = [

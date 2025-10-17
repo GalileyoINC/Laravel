@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Unit\Device;
 
-use App\DTOs\Device\DeviceListRequestDTO;
-use App\DTOs\Device\DevicePushRequestDTO;
+use App\Domain\DTOs\Device\DeviceListRequestDTO;
+use App\Domain\DTOs\Device\DevicePushRequestDTO;
+use App\Domain\Services\Device\DeviceService;
 use App\Models\Device\Device;
 use App\Models\User\User;
-use App\Services\Device\DeviceService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
+use Mockery;
 use Tests\TestCase;
 
 class DeviceServiceTest extends TestCase
@@ -32,7 +33,7 @@ class DeviceServiceTest extends TestCase
     {
         // Arrange
         Device::factory()->count(5)->create();
-        
+
         $dto = new DeviceListRequestDTO(
             page: 1,
             limit: 3,
@@ -92,7 +93,7 @@ class DeviceServiceTest extends TestCase
         // Arrange
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
-        
+
         Device::factory()->create(['id_user' => $user1->id]);
         Device::factory()->create(['id_user' => $user2->id]);
         Device::factory()->create(['id_user' => $user1->id]);
@@ -146,7 +147,7 @@ class DeviceServiceTest extends TestCase
         $user = User::factory()->create([
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'email' => 'john.doe@example.com'
+            'email' => 'john.doe@example.com',
         ]);
         Device::factory()->create(['id_user' => $user->id]);
 
@@ -188,7 +189,7 @@ class DeviceServiceTest extends TestCase
     {
         // Act & Assert
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
-        
+
         $this->deviceService->getById(999);
     }
 
@@ -210,7 +211,7 @@ class DeviceServiceTest extends TestCase
     {
         // Act & Assert
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
-        
+
         $this->deviceService->delete(999);
     }
 
@@ -234,7 +235,7 @@ class DeviceServiceTest extends TestCase
         // Mock Log facade
         Log::shouldReceive('info')
             ->once()
-            ->with('Push notification sent', \Mockery::type('array'));
+            ->with('Push notification sent', Mockery::type('array'));
 
         // Act
         $result = $this->deviceService->sendPushNotification($dto);
@@ -270,7 +271,7 @@ class DeviceServiceTest extends TestCase
         // Mock Log facade
         Log::shouldReceive('info')
             ->once()
-            ->with('Push notification sent', \Mockery::type('array'));
+            ->with('Push notification sent', Mockery::type('array'));
 
         // Act
         $result = $this->deviceService->sendPushNotification($dto);
@@ -301,7 +302,7 @@ class DeviceServiceTest extends TestCase
 
         // Act & Assert
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
-        
+
         $this->deviceService->sendPushNotification($dto);
     }
 }

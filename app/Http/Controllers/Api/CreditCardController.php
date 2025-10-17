@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\CreditCard\GetCreditCardAction;
-use App\Actions\CreditCard\GetCreditCardListAction;
-use App\Actions\CreditCard\GetGatewayProfileAction;
+use App\Domain\Actions\CreditCard\GetCreditCardAction;
+use App\Domain\Actions\CreditCard\GetCreditCardListAction;
+use App\Domain\Actions\CreditCard\GetGatewayProfileAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreditCard\CreditCardListRequest;
 use App\Http\Resources\CreditCardResource;

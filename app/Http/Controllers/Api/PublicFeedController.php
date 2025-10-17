@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\PublicFeed\GetPublicFeedOptionsAction;
-use App\DTOs\PublicFeed\PublicFeedImageUploadRequestDTO;
-use App\DTOs\PublicFeed\PublicFeedPublishRequestDTO;
+use App\Domain\Actions\PublicFeed\GetPublicFeedOptionsAction;
+use App\Domain\DTOs\PublicFeed\PublicFeedImageUploadRequestDTO;
+use App\Domain\DTOs\PublicFeed\PublicFeedPublishRequestDTO;
+use App\Domain\Services\PublicFeed\PublicFeedServiceInterface;
 use App\Http\Controllers\Controller;
-use App\Services\PublicFeed\PublicFeedServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

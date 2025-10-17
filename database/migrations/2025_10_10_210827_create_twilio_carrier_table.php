@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('twilio_carrier', function (Blueprint $table) {
             $table->bigInteger('id', true);
-            $table->string('name')->unique('name');
+            $table->string('name')->unique();
             $table->dateTime('created_at');
         });
     }

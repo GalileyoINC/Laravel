@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\News\CreateNewsAction;
-use App\Actions\News\GetLastNewsAction;
-use App\Actions\News\GetNewsByFollowerListAction;
-use App\Actions\News\GetNewsByInfluencersAction;
-use App\Actions\News\MuteSubscriptionAction;
-use App\Actions\News\RemoveReactionAction;
-use App\Actions\News\ReportNewsAction;
-use App\Actions\News\SetReactionAction;
-use App\Actions\News\UnmuteSubscriptionAction;
+use App\Domain\Actions\News\CreateNewsAction;
+use App\Domain\Actions\News\GetLastNewsAction;
+use App\Domain\Actions\News\GetNewsByFollowerListAction;
+use App\Domain\Actions\News\GetNewsByInfluencersAction;
+use App\Domain\Actions\News\MuteSubscriptionAction;
+use App\Domain\Actions\News\RemoveReactionAction;
+use App\Domain\Actions\News\ReportNewsAction;
+use App\Domain\Actions\News\SetReactionAction;
+use App\Domain\Actions\News\UnmuteSubscriptionAction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

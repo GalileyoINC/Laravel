@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Unit\Chat;
 
-use App\DTOs\Chat\ChatListRequestDTO;
+use App\Domain\DTOs\Chat\ChatListRequestDTO;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 

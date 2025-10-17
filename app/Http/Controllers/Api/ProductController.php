@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Product\GetProductAlertsAction;
-use App\Actions\Product\GetProductListAction;
-use App\Actions\Product\ProcessApplePurchaseAction;
+use App\Domain\Actions\Product\GetProductAlertsAction;
+use App\Domain\Actions\Product\GetProductListAction;
+use App\Domain\Actions\Product\ProcessApplePurchaseAction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

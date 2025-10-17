@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Maintenance\SummarizeAction;
+use App\Domain\Actions\Maintenance\SummarizeAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Maintenance\SummarizeRequest;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 class MaintenanceController extends Controller
@@ -26,11 +27,11 @@ class MaintenanceController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'summarized' => $result['summarized']
-                ]
+                    'summarized' => $result['summarized'],
+                ],
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

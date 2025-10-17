@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Report\GetInfluencerTotalAction;
-use App\Actions\Report\GetLoginStatisticAction;
-use App\Actions\Report\GetReferralReportAction;
-use App\Actions\Report\GetSmsReportAction;
-use App\Actions\Report\GetSoldDevicesAction;
-use App\Actions\Report\GetStatisticAction;
+use App\Domain\Actions\Report\GetInfluencerTotalAction;
+use App\Domain\Actions\Report\GetLoginStatisticAction;
+use App\Domain\Actions\Report\GetReferralReportAction;
+use App\Domain\Actions\Report\GetSmsReportAction;
+use App\Domain\Actions\Report\GetSoldDevicesAction;
+use App\Domain\Actions\Report\GetStatisticAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Report\ReportCsvRequest;
 use App\Http\Requests\Report\ReportStatisticRequest;

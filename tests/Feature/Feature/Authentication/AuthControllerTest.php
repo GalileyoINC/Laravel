@@ -248,10 +248,10 @@ class AuthControllerTest extends TestCase
 
         // Assert
         $response->assertStatus(200);
-        
+
         $responseData = $response->json();
         $this->assertNotEmpty($responseData['access_token']);
-        
+
         // Verify token exists in database
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $user->id,

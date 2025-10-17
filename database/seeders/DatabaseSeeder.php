@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Communication\SmsPool;
+use App\Models\Communication\SmsPoolReaction;
 use App\Models\Content\Comment;
-use App\Models\Finance\CreditCard;
+use App\Models\Content\News;
+use App\Models\Content\Reaction;
 use App\Models\Device\Device;
+use App\Models\Finance\CreditCard;
 use App\Models\Subscription\Follower;
 use App\Models\Subscription\FollowerList;
 use App\Models\Subscription\InfluencerPage;
-use App\Models\Content\News;
-use App\Models\Content\Reaction;
-use App\Models\Communication\SmsPool;
-use App\Models\Communication\SmsPoolReaction;
 use App\Models\Subscription\Subscription;
+use App\Models\Subscription\SubscriptionCategory;
 use App\Models\User\User;
 use App\Models\User\UserSubscription;
-use App\Models\Subscription\SubscriptionCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -132,31 +132,37 @@ class DatabaseSeeder extends Seeder
         $this->command->info('👤 Creating demo users...');
 
         // Admin user
-        User::factory()->create([
-            'email' => 'admin@galileyo.com',
-            'first_name' => 'Admin',
-            'last_name' => 'User',
-            'role' => 1,
-            'is_valid_email' => true,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@galileyo.com'],
+            User::factory()->make([
+                'first_name' => 'Admin',
+                'last_name' => 'User',
+                'role' => 1,
+                'is_valid_email' => true,
+            ])->toArray()
+        );
 
         // Test user
-        User::factory()->create([
-            'email' => 'test@galileyo.com',
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'role' => 2,
-            'is_valid_email' => true,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'test@galileyo.com'],
+            User::factory()->make([
+                'first_name' => 'Test',
+                'last_name' => 'User',
+                'role' => 2,
+                'is_valid_email' => true,
+            ])->toArray()
+        );
 
         // Influencer user
-        User::factory()->influencer()->create([
-            'email' => 'influencer@galileyo.com',
-            'first_name' => 'Influencer',
-            'last_name' => 'User',
-            'role' => 2,
-            'is_valid_email' => true,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'influencer@galileyo.com'],
+            User::factory()->influencer()->make([
+                'first_name' => 'Influencer',
+                'last_name' => 'User',
+                'role' => 2,
+                'is_valid_email' => true,
+            ])->toArray()
+        );
 
         $this->command->info('✅ Created demo users');
 

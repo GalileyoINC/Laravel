@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Unit\Users;
 
-use App\DTOs\Users\UsersListRequestDTO;
+use App\Domain\DTOs\Users\UsersListRequestDTO;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 

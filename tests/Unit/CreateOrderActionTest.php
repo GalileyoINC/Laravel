@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Actions\Order\CreateOrderAction;
-use App\DTOs\Order\CreateOrderDTO;
-use App\Models\Finance\Service;
-use App\Models\Order;
+use App\Domain\Actions\Order\CreateOrderAction;
+use App\Domain\DTOs\Order\CreateOrderDTO;
+use App\Domain\Services\Order\OrderServiceInterface;
 use App\Models\User\User;
-use App\Services\Order\OrderServiceInterface;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +20,7 @@ class CreateOrderActionTest extends TestCase
     use RefreshDatabase;
 
     protected CreateOrderAction $createOrderAction;
+
     protected $mockOrderService;
 
     protected function setUp(): void
@@ -42,7 +42,7 @@ class CreateOrderActionTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         Auth::shouldReceive('user')->andReturn($user);
-        
+
         $service = \App\Models\Finance\Service::factory()->create();
         $order = \App\Models\Order::factory()->create([
             'id_user' => $user->id,
@@ -71,7 +71,7 @@ class CreateOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(200, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals($order->id, $responseData['id']);
         $this->assertEquals('pending', $responseData['status']);
@@ -96,7 +96,7 @@ class CreateOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(400, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertArrayHasKey('errors', $responseData);
         $this->assertArrayHasKey('message', $responseData);
@@ -120,7 +120,7 @@ class CreateOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(401, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals('User not authenticated', $responseData['error']);
         $this->assertEquals(401, $responseData['code']);
@@ -132,13 +132,13 @@ class CreateOrderActionTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         Auth::shouldReceive('user')->andReturn($user);
-        
+
         $service = \App\Models\Finance\Service::factory()->create();
 
         $this->mockOrderService
             ->shouldReceive('createOrder')
             ->once()
-            ->andThrow(new \Exception('Service error'));
+            ->andThrow(new Exception('Service error'));
 
         $orderData = [
             'product_id' => $service->id,
@@ -152,7 +152,7 @@ class CreateOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(500, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals('An internal server error occurred.', $responseData['error']);
         $this->assertEquals(500, $responseData['code']);

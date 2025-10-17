@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\DTOs\Order\CreateOrderDTO;
-use App\DTOs\Order\PayOrderDTO;
+use App\Domain\DTOs\Order\CreateOrderDTO;
+use App\Domain\DTOs\Order\PayOrderDTO;
+use App\Domain\Services\Order\OrderService;
 use App\Models\Finance\CreditCard;
 use App\Models\Finance\Service;
 use App\Models\Order;
 use App\Models\User\User;
-use App\Services\Order\OrderService;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -32,7 +33,7 @@ class OrderServiceTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $service = Service::factory()->create(['price' => 50.00]);
-        
+
         $dto = new CreateOrderDTO(
             productId: $service->id,
             quantity: 2,
@@ -55,7 +56,7 @@ class OrderServiceTest extends TestCase
         $this->assertEquals('pending', $result->status);
         $this->assertFalse($result->is_paid);
         $this->assertEquals('Test order', $result->notes);
-        
+
         $this->assertDatabaseHas('orders', [
             'id_user' => $user->id,
             'id_product' => $service->id,
@@ -72,7 +73,7 @@ class OrderServiceTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $service = Service::factory()->create(['price' => 25.50]);
-        
+
         $dto = new CreateOrderDTO(
             productId: $service->id,
             quantity: 3,
@@ -94,7 +95,7 @@ class OrderServiceTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create();
-        
+
         $dto = new CreateOrderDTO(
             productId: 999, // Non-existent product
             quantity: 1,
@@ -105,9 +106,9 @@ class OrderServiceTest extends TestCase
         );
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Product not found');
-        
+
         $this->orderService->createOrder($dto, $user);
     }
 
@@ -123,7 +124,7 @@ class OrderServiceTest extends TestCase
             'id_product' => $service->id,
             'is_paid' => false,
         ]);
-        
+
         $dto = new PayOrderDTO(
             idOrder: $order->id,
             idCreditCard: $creditCard->id,
@@ -140,7 +141,7 @@ class OrderServiceTest extends TestCase
         $this->assertTrue($result->is_paid);
         $this->assertEquals($creditCard->id, $result->id_credit_card);
         $this->assertEquals('PAY_123456', $result->payment_reference);
-        
+
         $this->assertDatabaseHas('orders', [
             'id' => $order->id,
             'status' => 'paid',
@@ -155,7 +156,7 @@ class OrderServiceTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $creditCard = CreditCard::factory()->create(['id_user' => $user->id]);
-        
+
         $dto = new PayOrderDTO(
             idOrder: 999, // Non-existent order
             idCreditCard: $creditCard->id,
@@ -164,9 +165,9 @@ class OrderServiceTest extends TestCase
         );
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Order not found or unauthorized');
-        
+
         $this->orderService->payOrder($dto, $user);
     }
 
@@ -181,7 +182,7 @@ class OrderServiceTest extends TestCase
             'id_user' => $user->id,
             'id_product' => $service->id,
         ]);
-        
+
         $dto = new PayOrderDTO(
             idOrder: $order->id,
             idCreditCard: $creditCard->id,
@@ -190,9 +191,9 @@ class OrderServiceTest extends TestCase
         );
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Order is already paid');
-        
+
         $this->orderService->payOrder($dto, $user);
     }
 
@@ -206,7 +207,7 @@ class OrderServiceTest extends TestCase
             'id_user' => $user->id,
             'id_product' => $service->id,
         ]);
-        
+
         $dto = new PayOrderDTO(
             idOrder: $order->id,
             idCreditCard: 999, // Non-existent credit card
@@ -215,9 +216,9 @@ class OrderServiceTest extends TestCase
         );
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Credit card not found or unauthorized');
-        
+
         $this->orderService->payOrder($dto, $user);
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Unit\Device;
 
-use App\DTOs\Device\DevicePushRequestDTO;
+use App\Domain\DTOs\Device\DevicePushRequestDTO;
 use Tests\TestCase;
 
 class DevicePushRequestDTOTest extends TestCase

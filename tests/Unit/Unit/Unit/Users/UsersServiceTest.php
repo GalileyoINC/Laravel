@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Unit\Users;
 
-use App\DTOs\Users\UsersListRequestDTO;
+use App\Domain\DTOs\Users\UsersListRequestDTO;
+use App\Domain\Services\Users\UsersService;
 use App\Models\User\User;
-use App\Services\Users\UsersService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -29,7 +29,7 @@ class UsersServiceTest extends TestCase
     {
         // Arrange
         User::factory()->count(5)->create();
-        
+
         $dto = new UsersListRequestDTO(
             page: 1,
             pageSize: 3,
@@ -53,7 +53,7 @@ class UsersServiceTest extends TestCase
         User::factory()->create(['role' => 1, 'is_valid_email' => true]);
         User::factory()->create(['role' => 2, 'is_valid_email' => true]);
         User::factory()->create(['role' => 1, 'is_valid_email' => true]);
-        
+
         $dto = new UsersListRequestDTO(
             page: 1,
             pageSize: 10,
@@ -78,7 +78,7 @@ class UsersServiceTest extends TestCase
         User::factory()->create(['first_name' => 'John', 'last_name' => 'Doe', 'email' => 'john@example.com', 'is_valid_email' => true]);
         User::factory()->create(['first_name' => 'Jane', 'last_name' => 'Smith', 'email' => 'jane@example.com', 'is_valid_email' => true]);
         User::factory()->create(['first_name' => 'Bob', 'last_name' => 'Johnson', 'email' => 'bob@example.com', 'is_valid_email' => true]);
-        
+
         $dto = new UsersListRequestDTO(
             page: 1,
             pageSize: 10,
@@ -103,7 +103,7 @@ class UsersServiceTest extends TestCase
         User::factory()->create(['is_valid_email' => true]);
         User::factory()->create(['is_valid_email' => false]);
         User::factory()->create(['is_valid_email' => true]);
-        
+
         $dto = new UsersListRequestDTO(
             page: 1,
             pageSize: 10,
@@ -127,7 +127,7 @@ class UsersServiceTest extends TestCase
         User::factory()->create(['is_valid_email' => true]);
         User::factory()->create(['is_valid_email' => false]);
         User::factory()->create(['is_valid_email' => true]);
-        
+
         $dto = new UsersListRequestDTO(
             page: 1,
             pageSize: 10,
@@ -148,7 +148,7 @@ class UsersServiceTest extends TestCase
     {
         // Arrange
         User::factory()->count(10)->create(['is_valid_email' => true]);
-        
+
         $dto = new UsersListRequestDTO(
             page: 2,
             pageSize: 3,
@@ -190,7 +190,7 @@ class UsersServiceTest extends TestCase
         User::factory()->create(['first_name' => 'Charlie', 'is_valid_email' => true]);
         User::factory()->create(['first_name' => 'Alice', 'is_valid_email' => true]);
         User::factory()->create(['first_name' => 'Bob', 'is_valid_email' => true]);
-        
+
         $dto = new UsersListRequestDTO(
             page: 1,
             pageSize: 10,
@@ -214,7 +214,7 @@ class UsersServiceTest extends TestCase
     {
         // Arrange
         User::factory()->create();
-        
+
         $dto = new UsersListRequestDTO(
             page: 1,
             pageSize: 1,

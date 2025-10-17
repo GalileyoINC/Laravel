@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Chat\GetChatListAction;
+use App\Domain\Actions\Chat\GetChatListAction;
 use App\Http\Controllers\Controller;
 use App\Models\Communication\ConversationFile;
 use Exception;

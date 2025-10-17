@@ -37,7 +37,7 @@ class Conversation extends Model
 
     public function conversation_messages()
     {
-        return $this->hasMany(\App\Models\Communication\ConversationMessage::class, 'id_conversation');
+        return $this->hasMany(ConversationMessage::class, 'id_conversation');
     }
 
     public function conversation_unvieweds()

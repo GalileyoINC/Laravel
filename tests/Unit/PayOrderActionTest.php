@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Actions\Order\PayOrderAction;
-use App\DTOs\Order\PayOrderDTO;
-use App\Models\Finance\CreditCard;
-use App\Models\Order;
+use App\Domain\Actions\Order\PayOrderAction;
+use App\Domain\DTOs\Order\PayOrderDTO;
+use App\Domain\Services\Order\OrderServiceInterface;
 use App\Models\User\User;
-use App\Services\Order\OrderServiceInterface;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +20,7 @@ class PayOrderActionTest extends TestCase
     use RefreshDatabase;
 
     protected PayOrderAction $payOrderAction;
+
     protected $mockOrderService;
 
     protected function setUp(): void
@@ -42,7 +42,7 @@ class PayOrderActionTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         Auth::shouldReceive('user')->andReturn($user);
-        
+
         $creditCard = \App\Models\Finance\CreditCard::factory()->create(['id_user' => $user->id]);
         $order = \App\Models\Order::factory()->paid()->create([
             'id_user' => $user->id,
@@ -68,7 +68,7 @@ class PayOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(200, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals($order->id, $responseData['id']);
         $this->assertEquals('paid', $responseData['status']);
@@ -93,7 +93,7 @@ class PayOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(400, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertArrayHasKey('errors', $responseData);
         $this->assertArrayHasKey('message', $responseData);
@@ -116,7 +116,7 @@ class PayOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(401, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals('User not authenticated', $responseData['error']);
         $this->assertEquals(401, $responseData['code']);
@@ -128,13 +128,13 @@ class PayOrderActionTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         Auth::shouldReceive('user')->andReturn($user);
-        
+
         $creditCard = \App\Models\Finance\CreditCard::factory()->create(['id_user' => $user->id]);
 
         $this->mockOrderService
             ->shouldReceive('payOrder')
             ->once()
-            ->andThrow(new \Exception('Payment failed'));
+            ->andThrow(new Exception('Payment failed'));
 
         $paymentData = [
             'id_order' => 1,
@@ -147,7 +147,7 @@ class PayOrderActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(500, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals('An internal server error occurred.', $responseData['error']);
         $this->assertEquals(500, $responseData['code']);

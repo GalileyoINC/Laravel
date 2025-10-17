@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Customer\ChangePasswordAction;
-use App\Actions\Customer\GetProfileAction;
-use App\Actions\Customer\RemoveAvatarAction;
-use App\Actions\Customer\RemoveHeaderAction;
-use App\Actions\Customer\UpdatePrivacyAction;
-use App\Actions\Customer\UpdateProfileAction;
+use App\Domain\Actions\Customer\ChangePasswordAction;
+use App\Domain\Actions\Customer\GetProfileAction;
+use App\Domain\Actions\Customer\RemoveAvatarAction;
+use App\Domain\Actions\Customer\RemoveHeaderAction;
+use App\Domain\Actions\Customer\UpdatePrivacyAction;
+use App\Domain\Actions\Customer\UpdateProfileAction;
+use App\Domain\Services\Customer\CustomerServiceInterface;
 use App\Http\Controllers\Controller;
-use App\Services\Customer\CustomerServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

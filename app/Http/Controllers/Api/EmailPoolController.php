@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\EmailPool\DeleteEmailPoolAction;
-use App\Actions\EmailPool\GetEmailAttachmentAction;
-use App\Actions\EmailPool\GetEmailPoolAction;
-use App\Actions\EmailPool\GetEmailPoolListAction;
-use App\Actions\EmailPool\ResendEmailAction;
+use App\Domain\Actions\EmailPool\DeleteEmailPoolAction;
+use App\Domain\Actions\EmailPool\GetEmailAttachmentAction;
+use App\Domain\Actions\EmailPool\GetEmailPoolAction;
+use App\Domain\Actions\EmailPool\GetEmailPoolListAction;
+use App\Domain\Actions\EmailPool\ResendEmailAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmailPool\EmailPoolListRequest;
 use App\Http\Resources\EmailPoolResource;

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Authentication;
 
-use App\DTOs\Authentication\AuthResponseDTO;
-use App\DTOs\Authentication\LoginRequestDTO;
+use App\Domain\DTOs\Authentication\AuthResponseDTO;
+use App\Domain\DTOs\Authentication\LoginRequestDTO;
+use App\Domain\Services\Authentication\AuthService;
 use App\Models\Device\Device;
 use App\Models\User\User;
-use App\Services\Authentication\AuthService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -31,7 +31,7 @@ class AuthServiceTest extends TestCase
     public function test_authenticate_with_valid_credentials_returns_auth_response(): void
     {
         // Arrange
-        $user = \App\Models\User\User::factory()->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
             'password_hash' => Hash::make('password123'),
         ]);
@@ -121,7 +121,7 @@ class AuthServiceTest extends TestCase
     public function test_authenticate_updates_existing_device_record(): void
     {
         // Arrange
-        $user = \App\Models\User\User::factory()->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
             'password_hash' => Hash::make('password123'),
         ]);
@@ -148,7 +148,7 @@ class AuthServiceTest extends TestCase
 
         // Assert
         $this->assertInstanceOf(AuthResponseDTO::class, $result);
-        
+
         // Verify device was updated
         $existingDevice->refresh();
         $this->assertEquals($result->access_token, $existingDevice->access_token);
@@ -162,7 +162,7 @@ class AuthServiceTest extends TestCase
     public function test_authenticate_with_missing_device_info_uses_defaults(): void
     {
         // Arrange
-        $user = \App\Models\User\User::factory()->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
             'password_hash' => Hash::make('password123'),
         ]);
@@ -178,7 +178,7 @@ class AuthServiceTest extends TestCase
 
         // Assert
         $this->assertInstanceOf(AuthResponseDTO::class, $result);
-        
+
         $device = Device::where('id_user', $user->id)->first();
         $this->assertEquals('unknown', $device->uuid);
         $this->assertEquals('unknown', $device->os);

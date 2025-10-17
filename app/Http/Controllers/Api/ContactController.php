@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Contact\DeleteContactAction;
-use App\Actions\Contact\GetContactAction;
-use App\Actions\Contact\GetContactListAction;
+use App\Domain\Actions\Contact\DeleteContactAction;
+use App\Domain\Actions\Contact\GetContactAction;
+use App\Domain\Actions\Contact\GetContactListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\ContactListRequest;
 use App\Http\Resources\ContactResource;

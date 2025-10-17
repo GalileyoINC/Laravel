@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Bookmark\CreateBookmarkAction;
-use App\Actions\Bookmark\DeleteBookmarkAction;
-use App\Actions\Bookmark\GetBookmarksAction;
+use App\Domain\Actions\Bookmark\CreateBookmarkAction;
+use App\Domain\Actions\Bookmark\DeleteBookmarkAction;
+use App\Domain\Actions\Bookmark\GetBookmarksAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Bookmark\BookmarkListRequest;
 use App\Http\Requests\Bookmark\BookmarkRequest;

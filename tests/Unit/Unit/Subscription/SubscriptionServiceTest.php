@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Subscription;
 
-use App\DTOs\Subscription\FeedOptionsDTO;
-use App\DTOs\Subscription\SubscriptionRequestDTO;
+use App\Domain\DTOs\Subscription\FeedOptionsDTO;
+use App\Domain\DTOs\Subscription\SubscriptionRequestDTO;
+use App\Domain\Services\Subscription\SubscriptionService;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionCategory;
 use App\Models\User\User;
 use App\Models\User\UserSubscription;
-use App\Services\Subscription\SubscriptionService;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -155,7 +156,7 @@ class SubscriptionServiceTest extends TestCase
         );
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Subscription not found');
 
         $this->subscriptionService->setSubscription($dto, $user);
@@ -168,7 +169,7 @@ class SubscriptionServiceTest extends TestCase
         $category1 = SubscriptionCategory::factory()->create(['name' => 'Category 1']);
         $category2 = SubscriptionCategory::factory()->create(['name' => 'Category 2']);
         $category3 = SubscriptionCategory::factory()->create(['name' => 'Category 3']);
-        
+
         Subscription::factory()->create([
             'is_active' => true,
             'is_public' => true,
@@ -200,7 +201,7 @@ class SubscriptionServiceTest extends TestCase
         // Arrange
         $category1 = SubscriptionCategory::factory()->create(['name' => 'Active Category 1']);
         $category2 = SubscriptionCategory::factory()->create(['name' => 'Active Category 2']);
-        
+
         Subscription::factory()->count(2)->create([
             'is_active' => true,
             'is_public' => true,

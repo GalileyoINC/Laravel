@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Order\CreateOrderAction;
-use App\Actions\Order\PayOrderAction;
+use App\Domain\Actions\Order\CreateOrderAction;
+use App\Domain\Actions\Order\PayOrderAction;
+use App\Domain\Services\Order\OrderServiceInterface;
 use App\Http\Controllers\Controller;
-use App\Services\Order\OrderServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

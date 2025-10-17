@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('news', function (Blueprint $table) {
             $table->bigInteger('id', true);
-            $table->string('name')->unique('name');
-            $table->string('slug')->unique('slug');
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->json('params')->nullable();

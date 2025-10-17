@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Device\DeleteDeviceAction;
-use App\Actions\Device\GetDeviceAction;
-use App\Actions\Device\GetDeviceListAction;
-use App\Actions\Device\SendPushNotificationAction;
+use App\Domain\Actions\Device\DeleteDeviceAction;
+use App\Domain\Actions\Device\GetDeviceAction;
+use App\Domain\Actions\Device\GetDeviceListAction;
+use App\Domain\Actions\Device\SendPushNotificationAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\DeviceListRequest;
 use App\Http\Requests\Device\DevicePushRequest;

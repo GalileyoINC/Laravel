@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\EmailTemplate\GetEmailTemplateAction;
-use App\Actions\EmailTemplate\GetEmailTemplateBodyAction;
-use App\Actions\EmailTemplate\GetEmailTemplateListAction;
-use App\Actions\EmailTemplate\SendAdminEmailAction;
-use App\Actions\EmailTemplate\UpdateEmailTemplateAction;
+use App\Domain\Actions\EmailTemplate\GetEmailTemplateAction;
+use App\Domain\Actions\EmailTemplate\GetEmailTemplateBodyAction;
+use App\Domain\Actions\EmailTemplate\GetEmailTemplateListAction;
+use App\Domain\Actions\EmailTemplate\SendAdminEmailAction;
+use App\Domain\Actions\EmailTemplate\UpdateEmailTemplateAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmailTemplate\EmailTemplateListRequest;
 use App\Http\Requests\EmailTemplate\EmailTemplateSendRequest;

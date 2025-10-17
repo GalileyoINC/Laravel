@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Subscription\SetSubscriptionAction;
-use App\DTOs\Subscription\FeedOptionsDTO;
-use App\DTOs\Subscription\MarketstackSubscriptionDTO;
+use App\Domain\Actions\Subscription\SetSubscriptionAction;
+use App\Domain\DTOs\Subscription\FeedOptionsDTO;
+use App\Domain\DTOs\Subscription\MarketstackSubscriptionDTO;
+use App\Domain\Services\Subscription\SubscriptionServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Models\Communication\SmsPoolPhoto;
-use App\Services\Subscription\SubscriptionServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

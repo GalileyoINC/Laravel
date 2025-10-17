@@ -1,0 +1,38 @@
+{
+	"name": "Galileyo",
+	"short_name": "G",
+	"description": "Connecting Voices",
+	"start_url": "/",
+	"scope": "https://beta.galileyo.com",
+	"icons": [
+		{
+			"src": "/android-chrome-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/android-chrome-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	],
+	"background_color":"#ffffff",
+	"theme_color":"#ffffff",
+	"display": "standalone",
+	"screenshots": [
+		{
+			"src": "screenshots/photo_2024-03-04_15-17-27.jpg",
+			"sizes": "1280x746",
+			"type": "image/jpg",
+			"form_factor": "wide",
+			"label": "Wonder Widgets"
+		},
+		{
+			"src": "screenshots/photo_2024-03-04_15-16-34.jpg",
+			"sizes": "375x790",
+			"type": "image/jpg",
+			"form_factor": "narrow",
+			"label": "Wonder Widgets"
+		}
+	]
+}

@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('zip_us', function (Blueprint $table) {
             $table->bigInteger('id', true);
             $table->string('zip', 8);
-            $table->geometry('geopoint', 'point');
+            $table->text('geopoint')->nullable(); // Changed from geometry to text for SQLite compatibility
             $table->string('city', 32)->nullable();
             $table->string('state', 2)->nullable();
             $table->string('timezone', 3)->nullable();
             $table->string('daylight_savings_time_flag', 1)->nullable();
 
-            $table->spatialIndex(['geopoint'], 'geopoint');
+            // Removed spatial index as it's not supported in SQLite
         });
     }
 

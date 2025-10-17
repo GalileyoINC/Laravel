@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('settings_safe', function (Blueprint $table) {
-            $table->string('name', 35)->unique('name');
+            $table->string('name', 35)->unique();
             $table->text('value');
 
             $table->primary(['name']);

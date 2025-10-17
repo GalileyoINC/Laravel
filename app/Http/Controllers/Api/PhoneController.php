@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Phone\UpdatePhoneSettingsAction;
-use App\Actions\Phone\VerifyPhoneAction;
+use App\Domain\Actions\Phone\UpdatePhoneSettingsAction;
+use App\Domain\Actions\Phone\VerifyPhoneAction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

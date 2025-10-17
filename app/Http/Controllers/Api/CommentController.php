@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Comment\CreateCommentAction;
-use App\Actions\Comment\GetCommentsAction;
+use App\Domain\Actions\Comment\CreateCommentAction;
+use App\Domain\Actions\Comment\GetCommentsAction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

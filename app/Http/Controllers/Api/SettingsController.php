@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Settings\FlushSettingsAction;
-use App\Actions\Settings\GenerateBitpayConfigAction;
-use App\Actions\Settings\GetPublicSettingsAction;
-use App\Actions\Settings\GetSettingsAction;
-use App\Actions\Settings\UpdateSettingsAction;
+use App\Domain\Actions\Settings\FlushSettingsAction;
+use App\Domain\Actions\Settings\GenerateBitpayConfigAction;
+use App\Domain\Actions\Settings\GetPublicSettingsAction;
+use App\Domain\Actions\Settings\GetSettingsAction;
+use App\Domain\Actions\Settings\UpdateSettingsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\SettingsPublicRequest;
 use App\Http\Requests\Settings\SettingsUpdateRequest;

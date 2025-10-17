@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Authentication;
 
-use App\Actions\Authentication\LoginAction;
-use App\DTOs\Authentication\AuthResponseDTO;
-use App\DTOs\Authentication\LoginRequestDTO;
-use App\Services\Authentication\AuthServiceInterface;
+use App\Domain\Actions\Authentication\LoginAction;
+use App\Domain\DTOs\Authentication\AuthResponseDTO;
+use App\Domain\Services\Authentication\AuthServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Tests\TestCase;
 
 class LoginActionTest extends TestCase
 {
     private LoginAction $loginAction;
+
     private AuthServiceInterface $mockAuthService;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->mockAuthService = $this->createMock(AuthServiceInterface::class);
         $this->loginAction = new LoginAction($this->mockAuthService);
     }
@@ -64,7 +65,7 @@ class LoginActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(200, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals(123, $responseData['user_id']);
         $this->assertEquals('test-token-123', $responseData['access_token']);
@@ -97,7 +98,7 @@ class LoginActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(401, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals('Invalid credentials', $responseData['error']);
         $this->assertEquals(401, $responseData['code']);
@@ -112,7 +113,7 @@ class LoginActionTest extends TestCase
         $this->mockAuthService
             ->expects($this->once())
             ->method('authenticate')
-            ->willThrowException(new \Exception('Database connection failed'));
+            ->willThrowException(new Exception('Database connection failed'));
 
         $loginData = [
             'email' => 'test@example.com',
@@ -126,7 +127,7 @@ class LoginActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(500, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals('Login failed', $responseData['error']);
         $this->assertEquals(500, $responseData['code']);
@@ -154,7 +155,7 @@ class LoginActionTest extends TestCase
         // Assert
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(401, $result->getStatusCode());
-        
+
         $responseData = $result->getData(true);
         $this->assertEquals('Invalid credentials', $responseData['error']);
         $this->assertEquals(401, $responseData['code']);

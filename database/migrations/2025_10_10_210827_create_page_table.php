@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('page', function (Blueprint $table) {
             $table->bigInteger('id', true);
-            $table->string('name')->unique('name');
-            $table->string('slug')->unique('slug');
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->tinyInteger('status')->default(0);
             $table->json('params')->nullable();
             $table->dateTime('created_at');

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\DTOs\Order\CreateOrderDTO;
+use App\Domain\DTOs\Order\CreateOrderDTO;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 

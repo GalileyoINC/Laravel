@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\Unit\Chat;
 
-use App\DTOs\Chat\ChatListRequestDTO;
-use App\DTOs\Chat\ChatMessagesRequestDTO;
+use App\Domain\DTOs\Chat\ChatListRequestDTO;
+use App\Domain\DTOs\Chat\ChatMessagesRequestDTO;
+use App\Domain\Services\Chat\ChatService;
 use App\Models\Communication\Conversation;
 use App\Models\Communication\ConversationMessage;
 use App\Models\User\User;
-use App\Services\Chat\ChatService;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -33,7 +34,7 @@ class ChatServiceTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $conversation = Conversation::factory()->create();
-        
+
         // Add user to conversation
         $conversation->users()->attach($user->id);
 
@@ -56,7 +57,7 @@ class ChatServiceTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create();
-        
+
         // Create multiple conversations
         for ($i = 0; $i < 5; $i++) {
             $conversation = Conversation::factory()->create();
@@ -101,10 +102,10 @@ class ChatServiceTest extends TestCase
         // Arrange
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
-        
+
         $conversation1 = Conversation::factory()->create();
         $conversation1->users()->attach($user1->id);
-        
+
         $conversation2 = Conversation::factory()->create();
         $conversation2->users()->attach($user2->id);
 
@@ -128,7 +129,7 @@ class ChatServiceTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $conversation = Conversation::factory()->create();
-        
+
         // Add user to conversation
         $conversation->users()->attach($user->id);
 
@@ -158,7 +159,7 @@ class ChatServiceTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $conversation = Conversation::factory()->create();
-        
+
         // Add user to conversation
         $conversation->users()->attach($user->id);
 
@@ -194,9 +195,9 @@ class ChatServiceTest extends TestCase
         );
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Conversation not found');
-        
+
         $this->chatService->getConversationMessages($dto, $user);
     }
 
@@ -207,7 +208,7 @@ class ChatServiceTest extends TestCase
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
         $conversation = Conversation::factory()->create();
-        
+
         // Add only user2 to conversation
         $conversation->users()->attach($user2->id);
 
@@ -218,9 +219,9 @@ class ChatServiceTest extends TestCase
         );
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Conversation not found');
-        
+
         $this->chatService->getConversationMessages($dto, $user1);
     }
 
@@ -230,7 +231,7 @@ class ChatServiceTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $conversation = Conversation::factory()->create();
-        
+
         // Add user to conversation
         $conversation->users()->attach($user->id);
 
@@ -257,9 +258,9 @@ class ChatServiceTest extends TestCase
         $user = User::factory()->create();
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Conversation not found');
-        
+
         $this->chatService->getConversationView(999, $user);
     }
 
@@ -270,14 +271,14 @@ class ChatServiceTest extends TestCase
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
         $conversation = Conversation::factory()->create();
-        
+
         // Add only user2 to conversation
         $conversation->users()->attach($user2->id);
 
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Conversation not found');
-        
+
         $this->chatService->getConversationView($conversation->id, $user1);
     }
 

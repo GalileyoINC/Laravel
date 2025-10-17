@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Unit\News;
 
-use App\DTOs\News\NewsListRequestDTO;
-use App\DTOs\News\ReactionRequestDTO;
+use App\Domain\DTOs\News\NewsListRequestDTO;
+use App\Domain\DTOs\News\ReactionRequestDTO;
+use App\Domain\Services\News\NewsService;
 use App\Models\Communication\SmsPool;
 use App\Models\Communication\SmsPoolReaction;
 use App\Models\User\User;
-use App\Services\News\NewsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -84,7 +84,7 @@ class NewsServiceTest extends TestCase
 
         // Assert
         $this->assertCount(1, $result);
-        $this->assertStringContainsString('financial', strtolower($result->first()->body));
+        $this->assertStringContainsString('financial', mb_strtolower($result->first()->body));
     }
 
     /** @test */
@@ -126,7 +126,7 @@ class NewsServiceTest extends TestCase
         $smsPool = SmsPool::factory()->create([
             'id_subscription' => null,
         ]);
-        
+
         // Create reaction emoji first
         $reactionEmoji = \App\Models\Content\Reaction::create(['emoji' => '👍']);
 
@@ -161,11 +161,11 @@ class NewsServiceTest extends TestCase
         $smsPool = SmsPool::factory()->create([
             'id_subscription' => null,
         ]);
-        
+
         // Create reaction emojis
         $reactionLike = \App\Models\Content\Reaction::create(['emoji' => '👍']);
         $reactionLove = \App\Models\Content\Reaction::create(['emoji' => '❤️']);
-        
+
         // Create existing reaction
         SmsPoolReaction::factory()->create([
             'id_sms_pool' => $smsPool->id,
@@ -198,10 +198,10 @@ class NewsServiceTest extends TestCase
         $smsPool = SmsPool::factory()->create([
             'id_subscription' => null,
         ]);
-        
+
         // Create reaction emoji
         $reactionLike = \App\Models\Content\Reaction::create(['emoji' => '👍']);
-        
+
         SmsPoolReaction::factory()->create([
             'id_sms_pool' => $smsPool->id,
             'id_user' => $user->id,
@@ -252,7 +252,7 @@ class NewsServiceTest extends TestCase
     {
         // This tests the private method indirectly through the service
         $user = User::factory()->create();
-        
+
         // Test different purposes
         $generalNews = SmsPool::factory()->create([
             'purpose' => 1,
@@ -274,7 +274,7 @@ class NewsServiceTest extends TestCase
 
         // Assert
         $this->assertCount(3, $result);
-        
+
         $types = $result->pluck('type')->toArray();
         $this->assertContains('general', $types);
         $this->assertContains('influencer', $types);

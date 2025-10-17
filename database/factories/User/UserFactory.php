@@ -34,7 +34,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'email' => fake()->unique()->safeEmail(),
+            'email' => fake()->unique()->userName().'_'.time().'@galileyo.com',
             'auth_key' => Str::random(32),
             'password_hash' => static::$password ??= Hash::make('password'),
             'password_reset_token' => null,

@@ -25,8 +25,8 @@ class OrderControllerTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create();
-        $service = \App\Models\Finance\Service::factory()->create(['price' => 50.00]);
-        
+        $service = Service::factory()->create(['price' => 50.00]);
+
         $this->actingAs($user, 'sanctum');
 
         $orderData = [
@@ -110,13 +110,13 @@ class OrderControllerTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create();
-        $service = \App\Models\Finance\Service::factory()->create();
-        $creditCard = \App\Models\Finance\CreditCard::factory()->create(['id_user' => $user->id]);
-        $order = \App\Models\Order::factory()->pending()->create([
+        $service = Service::factory()->create();
+        $creditCard = CreditCard::factory()->create(['id_user' => $user->id]);
+        $order = Order::factory()->pending()->create([
             'id_user' => $user->id,
             'id_product' => $service->id,
         ]);
-        
+
         $this->actingAs($user, 'sanctum');
 
         $paymentData = [

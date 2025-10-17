@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\AllSendForm\GetAllSendOptionsAction;
-use App\DTOs\AllSendForm\AllSendBroadcastRequestDTO;
-use App\DTOs\AllSendForm\AllSendImageUploadRequestDTO;
+use App\Domain\Actions\AllSendForm\GetAllSendOptionsAction;
+use App\Domain\DTOs\AllSendForm\AllSendBroadcastRequestDTO;
+use App\Domain\DTOs\AllSendForm\AllSendImageUploadRequestDTO;
+use App\Domain\Services\AllSendForm\AllSendFormServiceInterface;
 use App\Http\Controllers\Controller;
-use App\Services\AllSendForm\AllSendFormServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
