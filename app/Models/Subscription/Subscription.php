@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Subscription
@@ -104,7 +105,16 @@ class Subscription extends Model
         'show_comments',
     ];
 
+    // Modes for statistics helpers
+    public const ACTIVE_ONLY = 1;
+
     public function user()
+    {
+        return $this->belongsTo(\App\Models\User\User::class, 'id_influencer');
+    }
+
+    // Alias expected by controllers
+    public function influencer()
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_influencer');
     }
@@ -119,6 +129,12 @@ class Subscription extends Model
         return $this->hasMany(InfluencerPage::class, 'id_subscription');
     }
 
+    // Alias expected by controllers
+    public function influencerPage()
+    {
+        return $this->hasOne(InfluencerPage::class, 'id_subscription');
+    }
+
     public function sms_shedules()
     {
         return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_subscription');
@@ -128,5 +144,73 @@ class Subscription extends Model
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
             ->withPivot('id', 'zip');
+    }
+
+    // Alias expected by controllers for counting/queries
+    public function userSubscriptions()
+    {
+        return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
+            ->withPivot('id', 'zip');
+    }
+
+    /**
+     * Return all subscriptions as [id => label] for filter dropdowns.
+     * Uses title if available, otherwise falls back to name.
+     */
+    public static function getAllAsArray(): array
+    {
+        return self::query()
+            ->orderBy('id')
+            ->get(['id', 'title', 'name'])
+            ->mapWithKeys(function ($s) {
+                $label = $s->title ?? $s->name ?? ('Subscription #'.$s->id);
+                return [$s->id => $label];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Return subscriptions as array of ['id' => int, 'name' => string]
+     * suitable for blade dropdowns expecting keys by name.
+     */
+    public static function getForDropDown(): array
+    {
+        return self::query()
+            ->orderBy('id')
+            ->get(['id', 'title', 'name'])
+            ->map(function ($s) {
+                return [
+                    'id' => $s->id,
+                    'name' => $s->title ?? $s->name ?? ('Subscription #' . $s->id),
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Get user counts per subscription.
+     * Returns array of ['id_subscription' => int, 'cnt' => int].
+     */
+    public static function getUserStatistics(int $mode = self::ACTIVE_ONLY): array
+    {
+        try {
+            $rows = DB::table('user_subscription_address')
+                ->join('user', 'user_subscription_address.id_user', '=', 'user.id')
+                ->select('user_subscription_address.id_subscription as id_subscription', DB::raw('COUNT(*) as cnt'))
+                ->when($mode === self::ACTIVE_ONLY, function ($q) {
+                    $q->where('user.status', 1);
+                })
+                ->groupBy('user_subscription_address.id_subscription')
+                ->get();
+
+            return $rows->map(function ($r) {
+                return [
+                    'id_subscription' => (int) $r->id_subscription,
+                    'cnt' => (int) $r->cnt,
+                ];
+            })->toArray();
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 }

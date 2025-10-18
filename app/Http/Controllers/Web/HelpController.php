@@ -21,7 +21,14 @@ class HelpController extends Controller
      */
     public function index(): View
     {
-        return ViewFacade::make('help.index');
+        $phpVersion = \PHP_VERSION;
+        $extensions = \get_loaded_extensions();
+        sort($extensions);
+
+        return ViewFacade::make('help.index', [
+            'phpVersion' => $phpVersion,
+            'phpExtensions' => $extensions,
+        ]);
     }
 
     /**

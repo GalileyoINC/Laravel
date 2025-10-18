@@ -61,7 +61,7 @@
                                     <th>Email</th>
                                     <th>Service</th>
                                     <th>Pay Interval</th>
-                                    <th>Exp Date</th>
+                                    <th>End At</th>
                                     <th class="action-column-1">Actions</th>
                                 </tr>
                             </thead>
@@ -75,10 +75,10 @@
                                         <td>{{ $contractLine->service_name }}</td>
                                         <td>
                                             @if($contractLine->pay_interval)
-                                                {{ \App\Services\DateUtils::intervalToString($contractLine->pay_interval) }}
+                                                {{ $contractLine->pay_interval == 1 ? 'Monthly' : ($contractLine->pay_interval == 12 ? 'Annual' : $contractLine->pay_interval) }}
                                             @endif
                                         </td>
-                                        <td>{{ $contractLine->exp_date ? $contractLine->exp_date->format('Y-m-d') : '' }}</td>
+                                        <td>{{ $contractLine->end_at ? $contractLine->end_at->format('Y-m-d') : '' }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('user.show', $contractLine->id_user) }}" class="btn btn-xs btn-info" target="_blank">

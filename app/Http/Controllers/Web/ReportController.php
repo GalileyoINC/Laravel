@@ -6,8 +6,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Device\PhoneNumber;
-use App\Models\Subscription\ContractLine;
-use App\Models\System\Service;
+use App\Models\Finance\ContractLine;
+use App\Models\Finance\Service;
 use App\Models\User\User;
 use Carbon\Carbon;
 use Exception;
@@ -78,7 +78,8 @@ class ReportController extends Controller
             return $this->exportInfluencerTotalCsv($report);
         }
 
-        $data = $report->searchInfluencerTotal($request->all());
+        // TODO: implement influencer total report search logic
+        $data = [];
 
         return ViewFacade::make('report.influencer-total', [
             'name' => $name,
@@ -238,7 +239,8 @@ class ReportController extends Controller
             return $this->exportEndedCsv($report);
         }
 
-        $data = $report->search($request->all());
+        // TODO: implement ended report search logic
+        $data = [];
         $services = Service::all()->keyBy('id')->toArray();
 
         return ViewFacade::make('report.ended', [
@@ -255,7 +257,8 @@ class ReportController extends Controller
     public function reaction(Request $request, ?string $name = null): View
     {
         $report = $this->getReactionReport($name);
-        $data = $report->search($request->all());
+        // TODO: implement reaction report search logic
+        $data = [];
 
         return ViewFacade::make('report.reaction', [
             'name' => $name,
@@ -333,7 +336,8 @@ class ReportController extends Controller
     public function userPoint(Request $request, ?string $name = null): View
     {
         $report = $this->getUserPointReport($name);
-        $data = $report->search($request->all());
+        // TODO: implement user point report search logic
+        $data = [];
 
         return ViewFacade::make('report.user-point', [
             'name' => $name,

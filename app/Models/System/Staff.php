@@ -75,4 +75,19 @@ class Staff extends Model
     {
         return SystemStaffFactory::new();
     }
+
+    public static function getForDropDown(): array
+    {
+        try {
+            return self::query()
+                ->orderBy('username')
+                ->get(['id', 'username'])
+                ->mapWithKeys(function ($s) {
+                    return [$s->id => (string) $s->username];
+                })
+                ->toArray();
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
 }

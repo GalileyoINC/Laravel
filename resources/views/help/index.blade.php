@@ -218,10 +218,36 @@ $message = \Yii::$app->mailer->composeByTemplate(\common\models\EmailTemplate::I
         <div class="col-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <span>PHP Info</span>
+                    <span>PHP Runtime</span>
                 </div>
                 <div class="panel-body">
-                    <pre>{{ phpinfo() }}</pre>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th style="width:220px;">PHP Version</th>
+                                    <td>{{ $phpVersion ?? PHP_VERSION }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Loaded Modules</th>
+                                    <td>
+                                        @php($mods = $phpExtensions ?? get_loaded_extensions())
+                                        @if(is_array($mods) && count($mods))
+                                            <div style="max-height:260px; overflow:auto;">
+                                                <ul class="list-unstyled" style="columns:3; -webkit-columns:3; -moz-columns:3;">
+                                                    @foreach($mods as $m)
+                                                        <li>{{ $m }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @else
+                                            <em>No extensions detected.</em>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

@@ -55,7 +55,7 @@ class SmsPoolController extends Controller
 
         $smsPools = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        $subscriptions = Subscription::getAllAsArray();
+        $subscriptions = Subscription::getForDropDown();
 
         return ViewFacade::make('sms-pool.index', [
             'smsPools' => $smsPools,

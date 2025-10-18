@@ -49,4 +49,42 @@ class ActiveRecordLog extends Model
         'field',
         'changes',
     ];
+
+    // Relationships
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(\App\Models\System\Staff::class, 'id_staff');
+    }
+
+    // Action type labels for filters and exports
+    public static function getActionTypeList(): array
+    {
+        $defaults = [
+            1 => 'Create',
+            2 => 'Update',
+            3 => 'Delete',
+        ];
+
+        try {
+            $codes = static::query()->select('action_type')->distinct()->pluck('action_type')->filter(function ($v) {
+                return $v !== null;
+            })->all();
+
+            $map = $defaults;
+            foreach ($codes as $code) {
+                if (!array_key_exists($code, $map)) {
+                    $map[$code] = 'Action '.$code;
+                }
+            }
+            ksort($map);
+            return $map;
+        } catch (\Throwable) {
+            return $defaults;
+        }
+    }
 }

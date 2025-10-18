@@ -41,6 +41,8 @@
         </div>
     @endif
 
+    <div class="panel panel-default">
+        <div class="panel-body">
     <ul class="nav nav-tabs" role="tablist" id="JS__settings_tab">
         <li role="presentation" class="nav-item">
             <a class="nav-link active" href="#main" aria-controls="main" role="tab" data-toggle="tab">Main</a>
@@ -51,11 +53,9 @@
         <li role="presentation" class="nav-item">
             <a class="nav-link" href="#app" aria-controls="app" role="tab" data-toggle="tab">APP</a>
         </li>
-        @if(!auth()->user()->showSettingsRO())
             <li role="presentation" class="nav-item">
                 <a class="nav-link" href="#api" aria-controls="api" role="tab" data-toggle="tab">API</a>
             </li>
-        @endif
     </ul>
 
     <!-- Tab panes -->
@@ -371,7 +371,6 @@
             </form>
         </div>
 
-        @if(!auth()->user()->showSettingsRO())
             <div role="tabpanel" class="tab-pane" id="api">
                 <form action="{{ route('settings.update-api') }}" method="POST">
                     @csrf
@@ -550,7 +549,6 @@
                     </button>
                 </form>
             </div>
-        @endif
 
         <div role="tabpanel" class="tab-pane" id="app">
             <form action="{{ route('settings.update-app') }}" method="POST">

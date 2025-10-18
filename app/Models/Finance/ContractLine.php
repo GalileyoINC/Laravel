@@ -105,4 +105,11 @@ class ContractLine extends Model
     {
         return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_contract_line');
     }
+
+    // Added to support queries in ContractLineController@unpaid
+    public function userPlan()
+    {
+        return $this->hasOne(\App\Models\User\UserPlan::class, 'id_user', 'id_user')
+            ->whereColumn('user_plan.id_service', 'contract_line.id_service');
+    }
 }

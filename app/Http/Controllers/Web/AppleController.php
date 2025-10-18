@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\System\AppleAppTransaction;
-use App\Models\System\AppleNotification;
+use App\Models\Order\AppleAppTransaction;
+use App\Models\Notification\AppleNotification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

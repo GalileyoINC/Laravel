@@ -33,15 +33,20 @@ class BundleController extends Controller
      */
     public function index(Request $request): View
     {
-            $dto = new BundleListRequestDTO(
-                page: $request->get('page', 1),
-                limit: $request->get('limit', 20),
-                search: $request->get('search'),
-                status: $request->get('status')
-            );
+            $query = Bundle::query();
 
-            $result = $this->getBundleListAction->execute($dto->toArray());
-            $bundles = $result->getData()->data;
+            if ($request->filled('search')) {
+                $search = $request->get('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%");
+                });
+            }
+
+            if ($request->filled('status')) {
+                $query->where('is_active', $request->get('status'));
+            }
+
+            $bundles = $query->orderBy('created_at', 'desc')->paginate(20);
 
             return ViewFacade::make('bundle.index', [
                 'bundles' => $bundles,

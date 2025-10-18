@@ -10,7 +10,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span>{{ $this->title }}</span>
+            <span>{{ $title ?? 'Message Send Dashboard' }}</span>
         </div>
         <div class="panel-body">
             <div class="row">

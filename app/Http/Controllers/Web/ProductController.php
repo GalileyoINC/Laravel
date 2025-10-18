@@ -15,7 +15,7 @@ use App\Http\Requests\Product\Web\ProductSubscriptionRequest;
 use App\Http\Requests\Service\Web\ServiceSettingsRequest;
 use App\Models\Device\Device;
 use App\Models\Device\DevicePlan;
-use App\Models\System\Service;
+use App\Models\Finance\Service;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -36,19 +36,28 @@ class ProductController extends Controller
      */
     public function subscription(Request $request): View
     {
-        $dto = new ProductListRequestDTO(
-            limit: $request->get('limit', 20),
-            offset: $request->get('offset', 0),
-            filter: [
-                'type' => Service::TYPE_SUBSCRIBE,
-                'search' => $request->get('search'),
-                'is_active' => $request->get('is_active'),
-                'price_min' => $request->get('price_min'),
-                'price_max' => $request->get('price_max'),
-            ]
-        );
+        $query = Service::where('type', Service::TYPE_SUBSCRIBE);
 
-        $subscriptions = $this->getProductListAction->execute($dto->toArray());
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('is_active')) {
+            $query->where('is_active', (bool) $request->get('is_active'));
+        }
+
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->get('price_min'));
+        }
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->get('price_max'));
+        }
+
+        $subscriptions = $query->orderBy('created_at', 'desc')->paginate(20);
 
         $customParams = Service::loadCustomParams();
 
@@ -182,7 +191,7 @@ class ProductController extends Controller
      */
     public function device(Request $request): View
     {
-        $query = Device::with('mainPhoto');
+        $query = Device::query();
 
         // Search functionality
         if ($request->filled('search')) {

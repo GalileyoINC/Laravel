@@ -76,6 +76,12 @@ class MoneyTransaction extends Model
         return $this->belongsTo(\App\Models\Finance\CreditCard::class, 'id_credit_card');
     }
 
+    // Alias used by controllers/views
+    public function creditCard()
+    {
+        return $this->belongsTo(\App\Models\Finance\CreditCard::class, 'id_credit_card');
+    }
+
     public function invoice()
     {
         return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
@@ -99,5 +105,23 @@ class MoneyTransaction extends Model
     public function money_transactions()
     {
         return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_refund');
+    }
+
+    /**
+     * Determine if the transaction can be refunded.
+     * Conservative default: only successful, not voided, and has total > 0.
+     */
+    public function canBeRefund(): bool
+    {
+        return (bool) ($this->is_success && ! $this->is_void && ($this->total ?? 0) > 0);
+    }
+
+    /**
+     * Determine if the transaction can be voided.
+     * Conservative default: only successful and not already voided.
+     */
+    public function canBeVoided(): bool
+    {
+        return (bool) ($this->is_success && ! $this->is_void);
     }
 }

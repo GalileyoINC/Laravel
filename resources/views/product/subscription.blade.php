@@ -114,9 +114,9 @@
                                 @endif
                             </td>
                             <td>
-                                @if($subscription->id == \App\Models\System\Service::ID_CUSTOM_WITH_SATELLITE)
+                                @if($subscription->id == \App\Models\Finance\Service::ID_CUSTOM_WITH_SATELLITE)
                                     Customizable (1-10)
-                                @elseif($subscription->id == \App\Models\System\Service::ID_CUSTOM_WITHOUT_SATELLITE)
+                                @elseif($subscription->id == \App\Models\Finance\Service::ID_CUSTOM_WITHOUT_SATELLITE)
                                     None
                                 @elseif($subscription->isCustom())
                                     {{ $customParams['phone_min'] }} - {{ $customParams['phone_max'] }}

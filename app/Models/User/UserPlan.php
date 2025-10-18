@@ -98,6 +98,17 @@ class UserPlan extends Model
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * Helper for controllers/views to render pay interval options.
+     */
+    public static function getPayIntervals(): array
+    {
+        return [
+            1 => 'Monthly',
+            12 => 'Annual',
+        ];
+    }
+
     public function admin_members()
     {
         return $this->hasMany(\App\Models\User\AdminMember::class, 'id_plan');

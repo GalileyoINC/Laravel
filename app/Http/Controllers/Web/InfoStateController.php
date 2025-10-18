@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subscription\Subscription;
-use App\Models\System\InfoState;
+use App\Models\Analytics\InfoState;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

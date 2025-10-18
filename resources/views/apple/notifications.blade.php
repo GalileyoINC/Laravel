@@ -31,17 +31,7 @@
                             </select>
                         </div>
                         <div class="form-group mr-2">
-                            <input type="text" name="transaction_id" class="form-control" placeholder="Transaction ID" value="{{ request('transaction_id') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="original_transaction_id" class="form-control" placeholder="Original Transaction ID" value="{{ request('original_transaction_id') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="is_process" class="form-control">
-                                <option value="">All Process Status</option>
-                                <option value="1" {{ request('is_process') == '1' ? 'selected' : '' }}>Processed</option>
-                                <option value="0" {{ request('is_process') == '0' ? 'selected' : '' }}>Not Processed</option>
-                            </select>
+                            <input type="text" name="subtype" class="form-control" placeholder="Subtype" value="{{ request('subtype') }}">
                         </div>
                         <div class="form-group mr-2">
                             <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">

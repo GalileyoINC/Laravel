@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Communication\Web\AdminSendEmailRequest;
 use App\Http\Requests\Communication\Web\EmailTemplateRequest;
-use App\Models\EmailTemplate\EmailTemplate;
+use App\Models\Communication\EmailTemplate;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -60,6 +60,7 @@ class EmailTemplateController extends Controller
 
         return ViewFacade::make('email-template.index', [
             'emailTemplates' => $emailTemplates,
+            'templates' => $emailTemplates,
             'filters' => $request->only(['search', 'name', 'subject', 'from', 'created_at_from', 'created_at_to']),
         ]);
     }

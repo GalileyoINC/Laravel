@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\System\ActiveRecordLog;
-use App\Models\User\Staff;
+use App\Models\System\Staff;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

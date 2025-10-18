@@ -34,7 +34,8 @@ class SubscriptionController extends Controller
         $userStatistics = [];
         $activeSubscriptions = Subscription::where('is_active', true)->get();
         foreach ($activeSubscriptions as $subscription) {
-            $userStatistics[$subscription->id] = $subscription->userSubscriptions()->where('is_active', true)->count();
+            // Count active users (status = 1) attached to this subscription
+            $userStatistics[$subscription->id] = $subscription->users()->where('user.status', 1)->count();
         }
 
         $query = Subscription::query();
@@ -81,7 +82,7 @@ class SubscriptionController extends Controller
             $query->whereDate('sended_at', '<=', $request->get('sended_at_to'));
         }
 
-        $subscriptions = $query->with(['influencerPage', 'influencer'])->orderBy('created_at', 'desc')->paginate(20);
+        $subscriptions = $query->with(['influencerPage', 'influencer'])->orderBy('id', 'desc')->paginate(20);
 
         $selectedCategory = $categoryId ? SubscriptionCategory::find($categoryId) : null;
         $title = $selectedCategory ? $selectedCategory->name : 'News Category';
@@ -300,7 +301,7 @@ class SubscriptionController extends Controller
             $subscriptions = $query->orderBy('created_at', 'desc')->get();
 
             $csvData = [];
-            $csvData[] = ['ID', 'Category', 'Title', 'Description', 'Percent', 'Alias', 'Is Active', 'Is Custom', 'Show Reactions', 'Show Comments', 'Created At'];
+            $csvData[] = ['ID', 'Category', 'Title', 'Description', 'Percent', 'Alias', 'Is Active', 'Is Custom', 'Show Reactions', 'Show Comments', 'Sended At'];
 
             foreach ($subscriptions as $subscription) {
                 $csvData[] = [
@@ -314,7 +315,7 @@ class SubscriptionController extends Controller
                     $subscription->is_custom ? 'Yes' : 'No',
                     $subscription->show_reactions ? 'Yes' : 'No',
                     $subscription->show_comments ? 'Yes' : 'No',
-                    $subscription->created_at->format('Y-m-d H:i:s'),
+                    $subscription->sended_at ? $subscription->sended_at->format('Y-m-d H:i:s') : '',
                 ];
             }
 

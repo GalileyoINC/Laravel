@@ -7,7 +7,7 @@ namespace App\Domain\Services\Product;
 use App\Domain\DTOs\Product\ApplePurchaseRequestDTO;
 use App\Domain\DTOs\Product\ProductAlertsRequestDTO;
 use App\Domain\DTOs\Product\ProductListRequestDTO;
-use App\Models\Product;
+use App\Models\Finance\Service;
 use App\Models\ProductDigitalAlerts;
 use App\Models\User\User;
 use Exception;
@@ -24,15 +24,22 @@ class ProductService implements ProductServiceInterface
     public function getProductList(ProductListRequestDTO $dto, ?User $user): array
     {
         try {
-            $query = Product::query();
+            $query = Service::query();
 
             // Apply filters
             if (! empty($dto->filter)) {
                 if (isset($dto->filter['type'])) {
                     $query->where('type', $dto->filter['type']);
                 }
-                if (isset($dto->filter['category'])) {
-                    $query->where('category', $dto->filter['category']);
+                if (isset($dto->filter['search']) && $dto->filter['search'] !== '') {
+                    $search = $dto->filter['search'];
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                          ->orWhere('description', 'like', "%{$search}%");
+                    });
+                }
+                if (isset($dto->filter['is_active']) && $dto->filter['is_active'] !== '') {
+                    $query->where('is_active', (bool) $dto->filter['is_active']);
                 }
                 if (isset($dto->filter['price_min'])) {
                     $query->where('price', '>=', $dto->filter['price_min']);

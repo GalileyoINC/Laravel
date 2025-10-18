@@ -427,4 +427,27 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(\App\Models\Finance\Service::class, 'user_service', 'id_user', 'id_service');
     }
+
+    // Role helpers to align with views that check staff-like methods on Auth::user()
+    public function isSuper(): bool
+    {
+        return false;
+    }
+
+    public function isAdmin(): bool
+    {
+        return false;
+    }
+
+    // Settings read-only flag (used in settings view)
+    public function showSettingsRO(): bool
+    {
+        return true;
+    }
+
+    // Permission to view settings (used in SettingsController@index)
+    public function showSettings(): bool
+    {
+        return true;
+    }
 }

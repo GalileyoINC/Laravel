@@ -53,6 +53,14 @@ class Service extends Model
 {
     use HasFactory;
 
+    public const TYPE_SUBSCRIBE = 1;
+    public const TYPE_DEVICE_PLAN = 2;
+    public const TYPE_ALERT = 3;
+
+    // Optional IDs for custom plans (used in some legacy blades)
+    public const ID_CUSTOM_WITH_SATELLITE = 999001;
+    public const ID_CUSTOM_WITHOUT_SATELLITE = 999002;
+
     protected $table = 'service';
 
     protected $casts = [
@@ -148,5 +156,39 @@ class Service extends Model
     protected static function newFactory()
     {
         return ServiceFactory::new();
+    }
+
+    // ===== Helpers expected by controllers =====
+    public static function loadCustomParams(): array
+    {
+        // Placeholder: return empty params until customized
+        return [];
+    }
+
+    public function isCustom(): bool
+    {
+        // Placeholder: treat as non-custom by default
+        return false;
+    }
+
+    public function isNewSubscription(): bool
+    {
+        // Placeholder: consider subscription-type services as "new subscriptions"
+        return (int) ($this->type ?? 0) === self::TYPE_SUBSCRIBE;
+    }
+
+    public function showFeedCnt(): ?string
+    {
+        $settings = is_array($this->settings ?? null) ? $this->settings : [];
+        $value = $settings['feed_cnt']
+            ?? $settings['max_feed_cnt']
+            ?? $settings['feeds']
+            ?? null;
+
+        if (is_array($value)) {
+            return implode(' - ', array_filter($value, fn($v) => $v !== null && $v !== ''));
+        }
+
+        return $value !== null ? (string) $value : null;
     }
 }

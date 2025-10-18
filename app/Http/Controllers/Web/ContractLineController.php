@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Finance\ContractLine;
 use App\Models\Finance\Service;
-use App\Models\Finance\UserPlan;
+use App\Models\User\UserPlan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -26,10 +26,10 @@ class ContractLineController extends Controller
                 $q->where('end_at', '<', now());
             });
 
-        // Filter by expiration date (days)
+        // Filter by end_at date (days)
         $expDateDays = $request->get('exp_date', 30);
         if ($expDateDays) {
-            $query->where('exp_date', '>=', now()->subDays($expDateDays));
+            $query->where('end_at', '>=', now()->subDays($expDateDays));
         }
 
         // Search functionality
@@ -52,7 +52,7 @@ class ContractLineController extends Controller
             $query->where('pay_interval', $request->get('pay_interval'));
         }
 
-        $contractLines = $query->orderBy('exp_date', 'asc')->paginate(20);
+        $contractLines = $query->orderBy('end_at', 'asc')->paginate(20);
 
         // Get dropdown data
         $services = Service::whereIn('type', [Service::TYPE_SUBSCRIBE, Service::TYPE_DEVICE_PLAN])
@@ -65,6 +65,7 @@ class ContractLineController extends Controller
             'services' => $services,
             'payIntervals' => $payIntervals,
             'expDateDays' => $expDateDays,
+            'title' => 'Users who are overdue for their next payment',
             'filters' => $request->only(['search', 'id_service', 'pay_interval', 'exp_date']),
         ]);
     }
@@ -82,7 +83,7 @@ class ContractLineController extends Controller
             // Apply same filters as unpaid
             $expDateDays = $request->get('exp_date', 30);
             if ($expDateDays) {
-                $query->where('exp_date', '>=', now()->subDays($expDateDays));
+                $query->where('end_at', '>=', now()->subDays($expDateDays));
             }
 
             if ($request->filled('search')) {
@@ -102,10 +103,10 @@ class ContractLineController extends Controller
                 $query->where('pay_interval', $request->get('pay_interval'));
             }
 
-            $contractLines = $query->orderBy('exp_date', 'asc')->get();
+            $contractLines = $query->orderBy('end_at', 'asc')->get();
 
             $csvData = [];
-            $csvData[] = ['User ID', 'First Name', 'Last Name', 'Email', 'Service', 'Pay Interval', 'Exp Date'];
+            $csvData[] = ['User ID', 'First Name', 'Last Name', 'Email', 'Service', 'Pay Interval', 'End At'];
 
             foreach ($contractLines as $contractLine) {
                 $csvData[] = [
@@ -114,8 +115,8 @@ class ContractLineController extends Controller
                     $contractLine->last_name,
                     $contractLine->email,
                     $contractLine->service_name,
-                    $contractLine->pay_interval ? \App\Services\DateUtils::intervalToString($contractLine->pay_interval) : '',
-                    $contractLine->exp_date ? $contractLine->exp_date->format('Y-m-d') : '',
+                    $contractLine->pay_interval ? ($contractLine->pay_interval == 1 ? 'Monthly' : ($contractLine->pay_interval == 12 ? 'Annual' : (string)$contractLine->pay_interval)) : '',
+                    $contractLine->end_at ? $contractLine->end_at->format('Y-m-d') : '',
                 ];
             }
 

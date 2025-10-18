@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Communication\SmsPool;
-use App\Models\Communication\SmsSchedule;
+use App\Models\Communication\SmsShedule as SmsSchedule;
 use App\Models\Subscription\Subscription;
 use Exception;
 use Illuminate\Http\Request;
@@ -88,7 +88,7 @@ class SmsScheduleController extends Controller
         // Get dropdown data
         $purposes = SmsPool::getPurposes();
         $statuses = SmsSchedule::getStatuses();
-        $subscriptions = Subscription::getForDropDown();
+        $subscriptions = Subscription::getAllAsArray();
 
         return ViewFacade::make('sms-schedule.index', [
             'smsSchedules' => $smsSchedules,

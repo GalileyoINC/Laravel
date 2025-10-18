@@ -81,14 +81,26 @@ class SmsShedule extends Model
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
+    // Alias expected by controllers
+    public function followerList()
+    {
+        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
+    }
+
     public function sms_pool()
+    {
+        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
+    }
+
+    // Alias expected by controllers
+    public function smsPool()
     {
         return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'id_staff');
+        return $this->belongsTo(\App\Models\System\Staff::class, 'id_staff');
     }
 
     public function subscription()
@@ -99,5 +111,38 @@ class SmsShedule extends Model
     public function sms_pool_photos()
     {
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_shedule');
+    }
+
+    /**
+     * Provide schedule statuses for filters and labeling.
+     */
+    public static function getStatuses(): array
+    {
+        // Default status map (adjust as needed if you have canonical values)
+        $defaults = [
+            0 => 'Pending',
+            1 => 'Queued',
+            2 => 'Sent',
+            3 => 'Failed',
+            4 => 'Canceled',
+        ];
+
+        try {
+            $codes = static::query()->select('status')->distinct()->pluck('status')->filter(function ($v) {
+                return $v !== null;
+            })->all();
+
+            $map = $defaults;
+            foreach ($codes as $code) {
+                if (!array_key_exists($code, $map)) {
+                    $map[$code] = 'Status '.$code;
+                }
+            }
+
+            ksort($map);
+            return $map;
+        } catch (\Throwable) {
+            return $defaults;
+        }
     }
 }

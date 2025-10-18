@@ -59,6 +59,22 @@ class Follower extends Model
         return $this->belongsTo(\App\Models\User\User::class, 'id_user_leader');
     }
 
+    // Added to align with controller usage
+    public function followerList()
+    {
+        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
+    }
+
+    public function userLeader()
+    {
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user_leader');
+    }
+
+    public function userFollower()
+    {
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user_follower');
+    }
+
     protected static function newFactory()
     {
         return FollowerFactory::new();

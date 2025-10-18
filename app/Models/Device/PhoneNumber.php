@@ -44,6 +44,9 @@ class PhoneNumber extends Model
 
     protected $table = 'phone_number';
 
+    // Phone type constants (extend as needed)
+    public const TYPE_NONE = 0;
+
     protected $casts = [
         'id_user' => 'int',
         'id_provider' => 'int',
