@@ -41,41 +41,19 @@
     @endif
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Staff Filters</h6>
-        </div>
         <div class="card-body">
-            <form action="{{ route('staff.index') }}" method="GET" class="mb-4">
-                <div class="form-row">
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Search by username or email" value="{{ $filters['search'] ?? '' }}">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="status" class="form-control">
-                            <option value="">Select Status</option>
-                            <option value="1" {{ ($filters['status'] ?? '') == '1' ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ ($filters['status'] ?? '') == '0' ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="role" class="form-control">
-                            <option value="">Select Role</option>
-                            <option value="1" {{ ($filters['role'] ?? '') == '1' ? 'selected' : '' }}>Super Admin</option>
-                            <option value="10" {{ ($filters['role'] ?? '') == '10' ? 'selected' : '' }}>Admin</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <input type="date" name="created_at" class="form-control" value="{{ $filters['created_at'] ?? '' }}">
-                    </div>
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary">Apply Filters</button>
-                        <a href="{{ route('staff.index') }}" class="btn btn-secondary">Reset Filters</a>
-                    </div>
-                </div>
-            </form>
+            <!-- Summary -->
+            <div class="summary" style="margin-bottom:10px;">
+                @if($staff->total() > 0)
+                    Showing <b>{{ $staff->firstItem() }}-{{ $staff->lastItem() }}</b> of <b>{{ $staff->total() }}</b> items.
+                @else
+                    Showing <b>0-0</b> of <b>0</b> items.
+                @endif
+            </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <form action="{{ route('staff.index') }}" method="GET" id="filters-form"></form>
+                <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         @if(Auth::user()->isSuper())
@@ -87,6 +65,39 @@
                         <th>Status</th>
                         <th>Created At</th>
                         <th class="{{ Auth::user()->isSuper() ? 'action-column-4' : 'action-column-2' }}">Actions</th>
+                    </tr>
+                    <tr class="filters">
+                        @if(Auth::user()->isSuper())
+                            <td>
+                                <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
+                            </td>
+                        @else
+                            <td>
+                                <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
+                            </td>
+                        @endif
+                        <td></td>
+                        <td>
+                            <select name="role" class="form-control" form="filters-form">
+                                <option value=""></option>
+                                <option value="1" {{ ($filters['role'] ?? '') == '1' ? 'selected' : '' }}>Super Admin</option>
+                                <option value="10" {{ ($filters['role'] ?? '') == '10' ? 'selected' : '' }}>Admin</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="status" class="form-control" form="filters-form">
+                                <option value=""></option>
+                                <option value="1" {{ ($filters['status'] ?? '') == '1' ? 'selected' : '' }}>Active</option>
+                                <option value="0" {{ ($filters['status'] ?? '') == '0' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="date" name="created_at" class="form-control" form="filters-form" value="{{ $filters['created_at'] ?? '' }}">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                            <a href="{{ route('staff.index') }}" class="btn btn-default ml-2">Clear</a>
+                        </td>
                     </tr>
                     </thead>
                     <tbody>
@@ -111,7 +122,7 @@
                                     <span class="badge badge-warning">Inactive</span>
                                 @endif
                             </td>
-                            <td>{{ $member->created_at->format('Y-m-d') }}</td>
+                            <td>{{ $member->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="{{ route('staff.show', $member) }}" class="btn btn-sm btn-info">

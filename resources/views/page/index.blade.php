@@ -41,43 +41,47 @@
     @endif
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Page Filters</h6>
-        </div>
         <div class="card-body">
-            <form action="{{ route('page.index') }}" method="GET" class="mb-4">
-                <div class="form-row">
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Search by name, slug, or title" value="{{ $filters['search'] ?? '' }}">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="status" class="form-control">
-                            <option value="">Select Status</option>
-                            <option value="1" {{ ($filters['status'] ?? '') == '1' ? 'selected' : '' }}>Published</option>
-                            <option value="0" {{ ($filters['status'] ?? '') == '0' ? 'selected' : '' }}>Draft</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="createTimeRange" class="form-control" placeholder="Date Range" value="{{ $filters['createTimeRange'] ?? '' }}" id="dateRangePicker">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <button type="submit" class="btn btn-primary">Apply Filters</button>
-                        <a href="{{ route('page.index') }}" class="btn btn-secondary">Reset Filters</a>
-                    </div>
-                </div>
-            </form>
+            <!-- Summary -->
+            <div class="summary" style="margin-bottom:10px;">
+                @if($pages->total() > 0)
+                    Showing <b>{{ $pages->firstItem() }}-{{ $pages->lastItem() }}</b> of <b>{{ $pages->total() }}</b> items.
+                @else
+                    Showing <b>0-0</b> of <b>0</b> items.
+                @endif
+            </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <form method="GET" id="filters-form"></form>
+                <table class="table table-striped table-bordered" width="100%" cellspacing="0">
                     <thead>
-                    <tr>
-                        <th class="grid__id">ID</th>
-                        <th>Name</th>
-                        <th>Slug</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th class="action-column-1">Actions</th>
-                    </tr>
+                        <tr>
+                            <th class="grid__id">ID</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th class="action-column-1">Actions</th>
+                        </tr>
+                        <tr class="filters">
+                            <td><input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}"></td>
+                            <td><input type="text" class="form-control" name="name" form="filters-form" value="{{ request('name') }}"></td>
+                            <td><input type="text" class="form-control" name="slug" form="filters-form" value="{{ request('slug') }}"></td>
+                            <td>
+                                <select name="status" class="form-control" form="filters-form">
+                                    <option value=""></option>
+                                    <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Published</option>
+                                    <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Draft</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                <a href="{{ route('page.index') }}" class="btn btn-default ml-2">Clear</a>
+                            </td>
+                        </tr>
                     </thead>
                     <tbody>
                     @forelse($pages as $page)
@@ -92,7 +96,7 @@
                                     <span class="badge badge-warning">Draft</span>
                                 @endif
                             </td>
-                            <td>{{ $page->created_at->format('Y-m-d') }}</td>
+                            <td>{{ $page->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="{{ route('page.edit', $page) }}" class="btn btn-sm btn-success">

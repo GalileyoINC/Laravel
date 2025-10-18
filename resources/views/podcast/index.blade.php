@@ -16,27 +16,14 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="type" class="form-control">
-                                <option value="">All Types</option>
-                                <option value="audio" {{ request('type') == 'audio' ? 'selected' : '' }}>Audio</option>
-                                <option value="video" {{ request('type') == 'video' ? 'selected' : '' }}>Video</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('podcast.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($podcasts->total() > 0)
+                            Showing <b>{{ $podcasts->firstItem() }}-{{ $podcasts->lastItem() }}</b> of <b>{{ $podcasts->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -47,7 +34,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -57,6 +45,24 @@
                                     <th>Created At</th>
                                     <th>Type</th>
                                     <th class="action-column-1">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td><input type="text" class="form-control" name="id" value="{{ request('id') }}" form="filters-form"></td>
+                                    <td>&nbsp;</td>
+                                    <td><input type="text" class="form-control" name="title" value="{{ request('title') }}" form="filters-form"></td>
+                                    <td><input type="text" class="form-control" name="url" value="{{ request('url') }}" form="filters-form"></td>
+                                    <td><input type="date" class="form-control" name="created_at" value="{{ request('created_at') }}" form="filters-form"></td>
+                                    <td>
+                                        <select name="type" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="audio" {{ request('type') == 'audio' ? 'selected' : '' }}>Audio</option>
+                                            <option value="video" {{ request('type') == 'video' ? 'selected' : '' }}>Video</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('podcast.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,7 +84,7 @@
                                                 {{ Str::limit($podcast->url, 50) }}
                                             </a>
                                         </td>
-                                        <td>{{ $podcast->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $podcast->created_at->format('M d, Y') }}</td>
                                         <td>
                                             @if($podcast->type === 'audio')
                                                 <span class="label label-info">Audio</span>

@@ -37,51 +37,14 @@
                         Alerts
                     </div>
                     <div class="panel-body">
-                        <!-- Filters -->
-                        <form method="GET" class="form-inline mb-3">
-                            @if($selectedCategory)
-                                <input type="hidden" name="idCategory" value="{{ $selectedCategory->id }}">
+                        <!-- Summary -->
+                        <div class="summary" style="margin-bottom:10px;">
+                            @if($subscriptions->total() > 0)
+                                Showing <b>{{ $subscriptions->firstItem() }}-{{ $subscriptions->lastItem() }}</b> of <b>{{ $subscriptions->total() }}</b> items.
+                            @else
+                                Showing <b>0-0</b> of <b>0</b> items.
                             @endif
-                            <div class="form-group mr-2">
-                                <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                            </div>
-                            <div class="form-group mr-2">
-                                <select name="is_active" class="form-control">
-                                    <option value="">All Status</option>
-                                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                            </div>
-                            <div class="form-group mr-2">
-                                <select name="is_custom" class="form-control">
-                                    <option value="">All Custom</option>
-                                    <option value="1" {{ request('is_custom') == '1' ? 'selected' : '' }}>Custom</option>
-                                    <option value="0" {{ request('is_custom') == '0' ? 'selected' : '' }}>Not Custom</option>
-                                </select>
-                            </div>
-                            <div class="form-group mr-2">
-                                <select name="show_reactions" class="form-control">
-                                    <option value="">All Reactions</option>
-                                    <option value="1" {{ request('show_reactions') == '1' ? 'selected' : '' }}>Show Reactions</option>
-                                    <option value="0" {{ request('show_reactions') == '0' ? 'selected' : '' }}>Hide Reactions</option>
-                                </select>
-                            </div>
-                            <div class="form-group mr-2">
-                                <select name="show_comments" class="form-control">
-                                    <option value="">All Comments</option>
-                                    <option value="1" {{ request('show_comments') == '1' ? 'selected' : '' }}>Show Comments</option>
-                                    <option value="0" {{ request('show_comments') == '0' ? 'selected' : '' }}>Hide Comments</option>
-                                </select>
-                            </div>
-                            <div class="form-group mr-2">
-                                <input type="date" name="sended_at_from" class="form-control" value="{{ request('sended_at_from') }}">
-                            </div>
-                            <div class="form-group mr-2">
-                                <input type="date" name="sended_at_to" class="form-control" value="{{ request('sended_at_to') }}">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                            <a href="{{ route('subscription.index') }}" class="btn btn-default ml-2">Clear</a>
-                        </form>
+                        </div>
 
                         <!-- Export Button -->
                         <div class="mb-3">
@@ -92,7 +55,12 @@
 
                         <!-- Table -->
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
+                            <form method="GET" id="filters-form">
+                                @if($selectedCategory)
+                                    <input type="hidden" name="idCategory" value="{{ $selectedCategory->id }}">
+                                @endif
+                            </form>
+                            <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Image</th>
@@ -125,6 +93,72 @@
                                         @endif
                                         <th>Followers*</th>
                                         <th class="action-column-4">Actions</th>
+                                    </tr>
+                                    <tr class="filters">
+                                        <td></td>
+                                        <td>
+                                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                        </td>
+                                        @if(auth()->user()->isSuper() && !in_array($selectedCategory ? $selectedCategory->id : null, [1]))
+                                            <td></td>
+                                        @endif
+                                        @if($selectedCategory && in_array($selectedCategory->id, [1]))
+                                            <td></td>
+                                        @endif
+                                        <td></td>
+                                        @if($selectedCategory && in_array($selectedCategory->id, [2, 3, 4]))
+                                            <td></td>
+                                        @endif
+                                        @if($selectedCategory && in_array($selectedCategory->id, [5]))
+                                            <td></td>
+                                        @endif
+                                        <td></td>
+                                        @if($selectedCategory && in_array($selectedCategory->id, [2, 3, 4, 5]))
+                                            <td></td>
+                                        @endif
+                                        <td>
+                                            <select name="is_active" class="form-control" form="filters-form">
+                                                <option value=""></option>
+                                                <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
+                                                <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
+                                            </select>
+                                        </td>
+                                        @if($selectedCategory && in_array($selectedCategory->id, [2, 5]))
+                                            <td>
+                                                <select name="is_custom" class="form-control" form="filters-form">
+                                                    <option value=""></option>
+                                                    <option value="1" {{ request('is_custom') == '1' ? 'selected' : '' }}>Custom</option>
+                                                    <option value="0" {{ request('is_custom') == '0' ? 'selected' : '' }}>Not Custom</option>
+                                                </select>
+                                            </td>
+                                        @endif
+                                        <td>
+                                            <select name="show_reactions" class="form-control" form="filters-form">
+                                                <option value=""></option>
+                                                <option value="1" {{ request('show_reactions') == '1' ? 'selected' : '' }}>Show Reactions</option>
+                                                <option value="0" {{ request('show_reactions') == '0' ? 'selected' : '' }}>Hide Reactions</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="show_comments" class="form-control" form="filters-form">
+                                                <option value=""></option>
+                                                <option value="1" {{ request('show_comments') == '1' ? 'selected' : '' }}>Show Comments</option>
+                                                <option value="0" {{ request('show_comments') == '0' ? 'selected' : '' }}>Hide Comments</option>
+                                            </select>
+                                        </td>
+                                        @if($selectedCategory && in_array($selectedCategory->id, [2, 3, 4, 5]))
+                                            <td>
+                                                <div class="d-flex" style="gap:6px;">
+                                                    <input type="date" name="sended_at_from" class="form-control" form="filters-form" value="{{ request('sended_at_from') }}">
+                                                    <input type="date" name="sended_at_to" class="form-control" form="filters-form" value="{{ request('sended_at_to') }}">
+                                                </div>
+                                            </td>
+                                        @endif
+                                        <td></td>
+                                        <td>
+                                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                            <a href="{{ route('subscription.index') }}" class="btn btn-default ml-2">Clear</a>
+                                        </td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -194,7 +228,7 @@
                                                 @endif
                                             </td>
                                             @if($selectedCategory && in_array($selectedCategory->id, [2, 3, 4, 5]))
-                                                <td>{{ $subscription->sended_at ? $subscription->sended_at->format('Y-m-d') : '-' }}</td>
+                                                <td>{{ $subscription->sended_at ? $subscription->sended_at->format('M d, Y') : '-' }}</td>
                                             @endif
                                             <td>{{ $userStatistics[$subscription->id] ?? 0 }}</td>
                                             <td>

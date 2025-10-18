@@ -7,6 +7,17 @@
     </div>
     
     <div class="box-body">
+        <!-- Summary -->
+        <div class="summary" style="margin-bottom:10px;">
+            @if(method_exists($contacts, 'total') && $contacts->total() > 0)
+                Showing <b>{{ $contacts->firstItem() }}-{{ $contacts->lastItem() }}</b> of <b>{{ $contacts->total() }}</b> items.
+            @elseif(!method_exists($contacts, 'total') && count($contacts) > 0)
+                Showing <b>1-{{ count($contacts) }}</b> of <b>{{ count($contacts) }}</b> items.
+            @else
+                Showing <b>0-0</b> of <b>0</b> items.
+            @endif
+        </div>
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>

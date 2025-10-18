@@ -11,49 +11,14 @@
                     <h3 class="panel-title">Messages Pool Archive</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="purpose" class="form-control">
-                                <option value="">All Purposes</option>
-                                @foreach($purposes as $key => $value)
-                                    <option value="{{ $key }}" {{ request('purpose') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="id_subscription" class="form-control">
-                                <option value="">All Subscriptions</option>
-                                @foreach($subscriptions as $id => $name)
-                                    <option value="{{ $id }}" {{ request('id_subscription') == $id ? 'selected' : '' }}>
-                                        {{ $name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="followerListName" class="form-control" placeholder="Private Feed" value="{{ request('followerListName') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_from" class="form-control" value="{{ request('updated_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_to" class="form-control" value="{{ request('updated_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('sms-pool-archive.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($smsPoolArchives->total() > 0)
+                            Showing <b>{{ $smsPoolArchives->firstItem() }}-{{ $smsPoolArchives->lastItem() }}</b> of <b>{{ $smsPoolArchives->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -64,7 +29,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -76,6 +42,46 @@
                                     <th>Created At</th>
                                     <th>Updated At</th>
                                     <th class="action-column-1">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                    </td>
+                                    <td>
+                                        <select name="purpose" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            @foreach($purposes as $key => $value)
+                                                <option value="{{ $key }}" {{ request('purpose') == $key ? 'selected' : '' }}>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="id_subscription" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            @foreach($subscriptions as $id => $name)
+                                                <option value="{{ $id }}" {{ request('id_subscription') == $id ? 'selected' : '' }}>
+                                                    {{ $name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="followerListName" class="form-control" form="filters-form" value="{{ request('followerListName') }}" placeholder="Private Feed">
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('sms-pool-archive.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -95,8 +101,8 @@
                                             @endif
                                         </td>
                                         <td>{{ Str::limit($smsPoolArchive->body, 50) }}</td>
-                                        <td>{{ $smsPoolArchive->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $smsPoolArchive->updated_at->format('Y-m-d') }}</td>
+                                        <td>{{ $smsPoolArchive->created_at->format('M d, Y') }}</td>
+                                        <td>{{ $smsPoolArchive->updated_at->format('M d, Y') }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('sms-pool-archive.show', $smsPoolArchive) }}" class="btn btn-xs btn-info">

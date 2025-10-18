@@ -11,26 +11,14 @@
                     <h3 class="panel-title">Emergency Tips Requests</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="first_name" class="form-control" placeholder="First Name" value="{{ request('first_name') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="email" name="email" class="form-control" placeholder="Email" value="{{ request('email') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('emergency-tips-request.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($emergencyTipsRequests->total() > 0)
+                            Showing <b>{{ $emergencyTipsRequests->firstItem() }}-{{ $emergencyTipsRequests->lastItem() }}</b> of <b>{{ $emergencyTipsRequests->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -41,7 +29,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -50,6 +39,27 @@
                                     <th>Created At</th>
                                     <th class="action-column-1">Actions</th>
                                 </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="first_name" class="form-control" form="filters-form" placeholder="First Name" value="{{ request('first_name') }}">
+                                    </td>
+                                    <td>
+                                        <input type="email" name="email" class="form-control" form="filters-form" placeholder="Email" value="{{ request('email') }}">
+                                    </td>
+                                    <td>
+                                        <div class="d-flex" style="gap:6px;">
+                                            <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
+                                            <input type="date" name="created_at_to" class="form-control" form="filters-form" value="{{ request('created_at_to') }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('emergency-tips-request.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
+                                </tr>
                             </thead>
                             <tbody>
                                 @forelse($emergencyTipsRequests as $emergencyTipsRequest)
@@ -57,7 +67,7 @@
                                         <td>{{ $emergencyTipsRequest->id }}</td>
                                         <td>{{ $emergencyTipsRequest->first_name }}</td>
                                         <td>{{ $emergencyTipsRequest->email }}</td>
-                                        <td>{{ $emergencyTipsRequest->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $emergencyTipsRequest->created_at->format('M d, Y') }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('emergency-tips-request.show', $emergencyTipsRequest) }}" class="btn btn-xs btn-info">

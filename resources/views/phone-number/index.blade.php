@@ -15,6 +15,13 @@
     </div>
     
     <div class="box-body">
+        <div class="summary" style="margin: 0 0 10px 0;">
+            @if($phoneNumbers->total() > 0)
+                Showing <b>{{ $phoneNumbers->firstItem() }}-{{ $phoneNumbers->lastItem() }}</b> of <b>{{ $phoneNumbers->total() }}</b> items.
+            @else
+                Showing <b>0-0</b> of <b>0</b> items.
+            @endif
+        </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
@@ -28,6 +35,38 @@
                         <th>Active</th>
                         <th>Created At</th>
                         <th>Actions</th>
+                    </tr>
+                    <tr class="filters">
+                        <td><input type="text" class="form-control" name="id" value="{{ request('id') }}" placeholder="ID"></td>
+                        <td><input type="text" class="form-control" name="number" value="{{ request('number') }}" placeholder="Number"></td>
+                        <td><input type="text" class="form-control" name="userName" value="{{ request('userName') }}" placeholder="User"></td>
+                        <td><input type="text" class="form-control" name="type" value="{{ request('type') }}" placeholder="Type"></td>
+                        <td>
+                            <select class="form-control" name="is_valid">
+                                <option value=""></option>
+                                <option value="1" {{ request('is_valid') === '1' ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ request('is_valid') === '0' ? 'selected' : '' }}>No</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" name="is_primary">
+                                <option value=""></option>
+                                <option value="1" {{ request('is_primary') === '1' ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ request('is_primary') === '0' ? 'selected' : '' }}>No</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" name="is_active">
+                                <option value=""></option>
+                                <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Active</option>
+                                <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </td>
+                        <td><input type="date" class="form-control" name="created_at" value="{{ request('created_at') }}"></td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" onclick="applyFilters(this)">Filter</button>
+                            <a href="{{ route('phone-number.index') }}" class="btn btn-default ml-2">Clear</a>
+                        </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,11 +98,11 @@
                                     <span class="text-danger"><i class="fas fa-times"></i></span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="text-center">
                                 @if($phone->is_active)
-                                    <span class="label label-success">Active</span>
+                                    <span class="text-success"><i class="fas fa-check"></i></span>
                                 @else
-                                    <span class="label label-danger">Inactive</span>
+                                    <span class="text-danger"><i class="fas fa-times"></i></span>
                                 @endif
                             </td>
                             <td>{{ $phone->created_at->format('M d, Y') }}</td>

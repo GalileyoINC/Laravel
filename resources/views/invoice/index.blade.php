@@ -13,45 +13,19 @@
     </div>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Invoice Filters</h6>
-        </div>
         <div class="card-body">
-            <form action="{{ route('invoice.index') }}" method="GET" class="mb-4">
-                <div class="form-row">
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Search by ID, name, or email" value="{{ $filters['search'] ?? '' }}">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="paid_status" class="form-control">
-                            <option value="">Select Status</option>
-                            <option value="0" {{ ($filters['paid_status'] ?? '') == '0' ? 'selected' : '' }}>Unpaid</option>
-                            <option value="1" {{ ($filters['paid_status'] ?? '') == '1' ? 'selected' : '' }}>Paid</option>
-                            <option value="2" {{ ($filters['paid_status'] ?? '') == '2' ? 'selected' : '' }}>Refunded</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="createTimeRange" class="form-control" placeholder="Date Range" value="{{ $filters['createTimeRange'] ?? '' }}" id="dateRangePicker">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="number" name="total_min" class="form-control" placeholder="Min Total" value="{{ $filters['total_min'] ?? '' }}" step="0.01">
-                            </div>
-                            <div class="col-6">
-                                <input type="number" name="total_max" class="form-control" placeholder="Max Total" value="{{ $filters['total_max'] ?? '' }}" step="0.01">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary">Apply Filters</button>
-                        <a href="{{ route('invoice.index') }}" class="btn btn-secondary">Reset Filters</a>
-                    </div>
-                </div>
-            </form>
+            <!-- Summary -->
+            <div class="summary" style="margin-bottom:10px;">
+                @if($invoices->total() > 0)
+                    Showing <b>{{ $invoices->firstItem() }}-{{ $invoices->lastItem() }}</b> of <b>{{ $invoices->total() }}</b> items.
+                @else
+                    Showing <b>0-0</b> of <b>0</b> items.
+                @endif
+            </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <form method="GET" id="filters-form"></form>
+                <table class="table table-striped table-bordered" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         <th class="grid__id">ID</th>
@@ -63,6 +37,36 @@
                         <th>Total</th>
                         <th>Created At</th>
                         <th class="action-column-3">Actions</th>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
+                        </td>
+                        <td></td>
+                        <td></td>
+                        @if(Auth::user()->isSuper())
+                            <td class="bg-admin">
+                                <select name="paid_status" class="form-control" form="filters-form">
+                                    <option value=""></option>
+                                    <option value="0" {{ ($filters['paid_status'] ?? '') == '0' ? 'selected' : '' }}>Unpaid</option>
+                                    <option value="1" {{ ($filters['paid_status'] ?? '') == '1' ? 'selected' : '' }}>Paid</option>
+                                    <option value="2" {{ ($filters['paid_status'] ?? '') == '2' ? 'selected' : '' }}>Refunded</option>
+                                </select>
+                            </td>
+                        @endif
+                        <td>
+                            <div class="row" style="gap:6px;">
+                                <input type="number" name="total_min" class="form-control" placeholder="Min" value="{{ $filters['total_min'] ?? '' }}" step="0.01" style="max-width:120px;">
+                                <input type="number" name="total_max" class="form-control" placeholder="Max" value="{{ $filters['total_max'] ?? '' }}" step="0.01" style="max-width:120px;">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="date" name="created_at" class="form-control" form="filters-form" value="{{ $filters['created_at'] ?? '' }}">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                            <a href="{{ route('invoice.index') }}" class="btn btn-default ml-2">Clear</a>
+                        </td>
                     </tr>
                     </thead>
                     <tbody>
@@ -91,7 +95,7 @@
                                 </td>
                             @endif
                             <td>{{ number_format($invoice->total, 2) }} {{ config('app.currency', '$') }}</td>
-                            <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
+                            <td>{{ $invoice->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-info">

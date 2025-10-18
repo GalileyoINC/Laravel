@@ -11,23 +11,14 @@
                     <h3 class="panel-title">API Logs</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="key" class="form-control" placeholder="Key" value="{{ request('key') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('api-log.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($apiLogs->total() > 0)
+                            Showing <b>{{ $apiLogs->firstItem() }}-{{ $apiLogs->lastItem() }}</b> of <b>{{ $apiLogs->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -38,7 +29,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -46,6 +38,25 @@
                                     <th>Value</th>
                                     <th>Created At</th>
                                     <th class="action-column-2">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="key" class="form-control" form="filters-form" placeholder="Key" value="{{ request('key') }}">
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <div class="d-flex" style="gap:6px;">
+                                            <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
+                                            <input type="date" name="created_at_to" class="form-control" form="filters-form" value="{{ request('created_at_to') }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('api-log.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,7 +73,7 @@
                                                 {{ Str::limit($apiLog->value, 100) }}
                                             @endif
                                         </td>
-                                        <td>{{ $apiLog->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>{{ $apiLog->created_at->format('M d, Y H:i') }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('api-log.show', $apiLog) }}" class="btn btn-xs btn-info">

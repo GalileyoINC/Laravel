@@ -18,55 +18,14 @@
                         </a>
                     </div>
 
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="type" class="form-control">
-                                <option value="">All Types</option>
-                                @foreach($sendingTypes as $key => $value)
-                                    <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="status" class="form-control">
-                                <option value="">All Statuses</option>
-                                @foreach($statuses as $key => $value)
-                                    <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="email" name="from" class="form-control" placeholder="From" value="{{ request('from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="email" name="to" class="form-control" placeholder="To" value="{{ request('to') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="subject" class="form-control" placeholder="Subject" value="{{ request('subject') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_from" class="form-control" value="{{ request('updated_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_to" class="form-control" value="{{ request('updated_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('email-pool-archive.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($emailPoolArchives->total() > 0)
+                            Showing <b>{{ $emailPoolArchives->firstItem() }}-{{ $emailPoolArchives->lastItem() }}</b> of <b>{{ $emailPoolArchives->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -77,7 +36,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -90,25 +50,63 @@
                                     <th>Updated At</th>
                                     <th class="action-column-2">Actions</th>
                                 </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="search" class="form-control" form="filters-form" value="{{ request('search') }}" placeholder="Search...">
+                                    </td>
+                                    <td>
+                                        <select name="type" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            @foreach($sendingTypes as $key => $value)
+                                                <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="status" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            @foreach($statuses as $key => $value)
+                                                <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="email" name="from" class="form-control" form="filters-form" value="{{ request('from') }}">
+                                    </td>
+                                    <td>
+                                        <input type="email" name="to" class="form-control" form="filters-form" value="{{ request('to') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="subject" class="form-control" form="filters-form" value="{{ request('subject') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('email-pool-archive.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
+                                </tr>
                             </thead>
                             <tbody>
                                 @forelse($emailPoolArchives as $emailPoolArchive)
                                     <tr>
-                                        <td>{{ $emailPoolArchive->id }}</td>
-                                        <td>{{ $sendingTypes[$emailPoolArchive->type] ?? $emailPoolArchive->type }}</td>
-                                        <td>{{ $statuses[$emailPoolArchive->status] ?? $emailPoolArchive->status }}</td>
-                                        <td>{{ $emailPoolArchive->from }}</td>
-                                        <td>{{ Str::limit($emailPoolArchive->to, 30) }}</td>
-                                        <td>{{ Str::limit($emailPoolArchive->subject, 50) }}</td>
-                                        <td>{{ $emailPoolArchive->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $emailPoolArchive->updated_at->format('Y-m-d') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('email-pool-archive.show', $emailPoolArchive) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                                <form method="POST" action="{{ route('email-pool-archive.destroy', $emailPoolArchive) }}" style="display: inline;">
-                                                    @csrf
+                                        <th class="grid__id">ID</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Subject</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                        <th class="action-column-2">Actions</th>
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
                                                         <i class="fas fa-trash fa-fw"></i>

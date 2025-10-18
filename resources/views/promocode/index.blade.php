@@ -88,6 +88,15 @@
                     </div>
                 </div>
                 <div class="panel-body">
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($promocodes->total() > 0)
+                            Showing <b>{{ $promocodes->firstItem() }}-{{ $promocodes->lastItem() }}</b> of <b>{{ $promocodes->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
+
                     <!-- Table -->
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
@@ -101,6 +110,40 @@
                                     <th>Active From</th>
                                     <th>Active To</th>
                                     <th class="action-column-2">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <form method="GET" id="filters-form"></form>
+                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                    </td>
+                                    <td>
+                                        <select name="type" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="discount" {{ request('type') == 'discount' ? 'selected' : '' }}>Discount</option>
+                                            <option value="trial" {{ request('type') == 'trial' ? 'selected' : '' }}>Trial</option>
+                                            <option value="influencer" {{ request('type') == 'influencer' ? 'selected' : '' }}>Influencer</option>
+                                            <option value="test" {{ request('type') == 'test' ? 'selected' : '' }}>Test</option>
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <select name="is_active" id="is_active" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="date" name="active_from_from" class="form-control" form="filters-form" value="{{ request('active_from_from') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" name="active_to_to" class="form-control" form="filters-form" value="{{ request('active_to_to') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('promocode.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -129,8 +172,8 @@
                                                 <span class="label label-danger">Inactive</span>
                                             @endif
                                         </td>
-                                        <td>{{ $promocode->active_from->format('Y-m-d') }}</td>
-                                        <td>{{ $promocode->active_to->format('Y-m-d') }}</td>
+                                        <td>{{ $promocode->active_from->format('M d, Y') }}</td>
+                                        <td>{{ $promocode->active_to->format('M d, Y') }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('promocode.edit', $promocode) }}" class="btn btn-xs btn-success JS__load_in_modal">

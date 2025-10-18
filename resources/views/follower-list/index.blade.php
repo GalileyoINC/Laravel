@@ -11,39 +11,14 @@
                     <h3 class="panel-title">Private Feeds</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="name" class="form-control" placeholder="Name" value="{{ request('name') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="userName" class="form-control" placeholder="User Name" value="{{ request('userName') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="is_active" class="form-control">
-                                <option value="">All Status</option>
-                                <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_from" class="form-control" value="{{ request('updated_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_to" class="form-control" value="{{ request('updated_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('follower-list.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($followerLists->total() > 0)
+                            Showing <b>{{ $followerLists->firstItem() }}-{{ $followerLists->lastItem() }}</b> of <b>{{ $followerLists->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -54,16 +29,42 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
-                                    <th class="text-center">Image</th>
+                                    <th class="text-center"></th>
                                     <th>Name</th>
                                     <th>User</th>
-                                    <th>Is Active</th>
+                                    <th>Active</th>
                                     <th>Created At</th>
                                     <th>Updated At</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}">
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td>
+                                        <input type="text" class="form-control" name="name" form="filters-form" value="{{ request('name') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="userName" form="filters-form" value="{{ request('userName') }}">
+                                    </td>
+                                    <td>
+                                        <select class="form-control" name="is_active" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Yes</option>
+                                            <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>No</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control" name="updated_at" form="filters-form" value="{{ request('updated_at') }}">
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,15 +88,15 @@
                                                 -
                                             @endif
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             @if($followerList->is_active)
-                                                <span class="badge badge-success">Yes</span>
+                                                <span class="text-success"><i class="fas fa-check"></i></span>
                                             @else
-                                                <span class="badge badge-danger">No</span>
+                                                <span class="text-danger"><i class="fas fa-times"></i></span>
                                             @endif
                                         </td>
-                                        <td>{{ $followerList->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $followerList->updated_at->format('Y-m-d') }}</td>
+                                        <td>{{ $followerList->created_at->format('M d, Y') }}</td>
+                                        <td>{{ $followerList->updated_at->format('M d, Y') }}</td>
                                     </tr>
                                 @empty
                                     <tr>

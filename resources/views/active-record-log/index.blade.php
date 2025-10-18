@@ -11,49 +11,14 @@
                     <h3 class="panel-title">Active Record Logs</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="userName" class="form-control" placeholder="User" value="{{ request('userName') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="staffName" class="form-control">
-                                <option value="">All Staff</option>
-                                @foreach($staffList as $key => $value)
-                                    <option value="{{ $key }}" {{ request('staffName') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="action_type" class="form-control">
-                                <option value="">All Actions</option>
-                                @foreach($actionTypes as $key => $value)
-                                    <option value="{{ $key }}" {{ request('action_type') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="model" class="form-control" placeholder="Model" value="{{ request('model') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="field" class="form-control" placeholder="Field" value="{{ request('field') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('active-record-log.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($activeRecordLogs->total() > 0)
+                            Showing <b>{{ $activeRecordLogs->firstItem() }}-{{ $activeRecordLogs->lastItem() }}</b> of <b>{{ $activeRecordLogs->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -64,7 +29,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -78,12 +44,58 @@
                                     <th>Changes</th>
                                     <th class="action-column-2">Actions</th>
                                 </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                    </td>
+                                    <td>
+                                        <div class="d-flex" style="gap:6px;">
+                                            <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
+                                            <input type="date" name="created_at_to" class="form-control" form="filters-form" value="{{ request('created_at_to') }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="userName" class="form-control" form="filters-form" placeholder="User" value="{{ request('userName') }}">
+                                    </td>
+                                    <td>
+                                        <select name="staffName" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            @foreach($staffList as $key => $value)
+                                                <option value="{{ $key }}" {{ request('staffName') == $key ? 'selected' : '' }}>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="action_type" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            @foreach($actionTypes as $key => $value)
+                                                <option value="{{ $key }}" {{ request('action_type') == $key ? 'selected' : '' }}>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="model" class="form-control" form="filters-form" placeholder="Model" value="{{ request('model') }}">
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <input type="text" name="field" class="form-control" form="filters-form" placeholder="Field" value="{{ request('field') }}">
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('active-record-log.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
+                                </tr>
                             </thead>
                             <tbody>
                                 @forelse($activeRecordLogs as $log)
                                     <tr>
                                         <td>{{ $log->id }}</td>
-                                        <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>{{ $log->created_at->format('M d, Y H:i') }}</td>
                                         <td>
                                             @if($log->user)
                                                 <a href="{{ route('user.show', $log->user) }}">

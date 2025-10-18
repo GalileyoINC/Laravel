@@ -18,20 +18,14 @@
                         </a>
                     </div>
 
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="userInfluencerName" class="form-control" placeholder="Influencer Name" value="{{ request('userInfluencerName') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="userAssistantName" class="form-control" placeholder="Assistant Name" value="{{ request('userAssistantName') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('influencer-assistant.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($influencerAssistants->total() > 0)
+                            Showing <b>{{ $influencerAssistants->firstItem() }}-{{ $influencerAssistants->lastItem() }}</b> of <b>{{ $influencerAssistants->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -42,12 +36,28 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>Influencer</th>
                                     <th>Assistant</th>
                                     <th class="action-column-1">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <div class="d-flex" style="gap:6px;">
+                                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                            <input type="text" name="userInfluencerName" class="form-control" form="filters-form" placeholder="Influencer Name" value="{{ request('userInfluencerName') }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="userAssistantName" class="form-control" form="filters-form" placeholder="Assistant Name" value="{{ request('userAssistantName') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('influencer-assistant.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>

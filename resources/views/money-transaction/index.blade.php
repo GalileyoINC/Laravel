@@ -16,66 +16,19 @@
     </div>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Transaction Filters</h6>
-        </div>
         <div class="card-body">
-            <form action="{{ route('money-transaction.index') }}" method="GET" class="mb-4">
-                <div class="form-row">
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Search by ID, transaction ID, or user" value="{{ $filters['search'] ?? '' }}">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="transaction_type" class="form-control">
-                            <option value="">Select Type</option>
-                            <option value="1" {{ ($filters['transaction_type'] ?? '') == '1' ? 'selected' : '' }}>Payment</option>
-                            <option value="2" {{ ($filters['transaction_type'] ?? '') == '2' ? 'selected' : '' }}>Refund</option>
-                            <option value="3" {{ ($filters['transaction_type'] ?? '') == '3' ? 'selected' : '' }}>Void</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="is_success" class="form-control">
-                            <option value="">Select Success</option>
-                            <option value="1" {{ ($filters['is_success'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ ($filters['is_success'] ?? '') == '0' ? 'selected' : '' }}>No</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="is_void" class="form-control">
-                            <option value="">Select Void</option>
-                            <option value="1" {{ ($filters['is_void'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ ($filters['is_void'] ?? '') == '0' ? 'selected' : '' }}>No</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="is_test" class="form-control">
-                            <option value="">Select Test</option>
-                            <option value="1" {{ ($filters['is_test'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ ($filters['is_test'] ?? '') == '0' ? 'selected' : '' }}>No</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="createTimeRange" class="form-control" placeholder="Date Range" value="{{ $filters['createTimeRange'] ?? '' }}" id="dateRangePicker">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="number" name="total_min" class="form-control" placeholder="Min Total" value="{{ $filters['total_min'] ?? '' }}" step="0.01">
-                            </div>
-                            <div class="col-6">
-                                <input type="number" name="total_max" class="form-control" placeholder="Max Total" value="{{ $filters['total_max'] ?? '' }}" step="0.01">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary">Apply Filters</button>
-                        <a href="{{ route('money-transaction.index') }}" class="btn btn-secondary">Reset Filters</a>
-                    </div>
-                </div>
-            </form>
+            <!-- Summary -->
+            <div class="summary" style="margin-bottom:10px;">
+                @if($transactions->total() > 0)
+                    Showing <b>{{ $transactions->firstItem() }}-{{ $transactions->lastItem() }}</b> of <b>{{ $transactions->total() }}</b> items.
+                @else
+                    Showing <b>0-0</b> of <b>0</b> items.
+                @endif
+            </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <form action="{{ route('money-transaction.index') }}" method="GET" id="filters-form"></form>
+                <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         <th class="grid__id">ID</th>
@@ -91,6 +44,58 @@
                         <th>Total</th>
                         <th>Created At</th>
                         <th class="action-column-5">Actions</th>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <select name="transaction_type" class="form-control" form="filters-form">
+                                <option value=""></option>
+                                <option value="1" {{ ($filters['transaction_type'] ?? '') == '1' ? 'selected' : '' }}>Payment</option>
+                                <option value="2" {{ ($filters['transaction_type'] ?? '') == '2' ? 'selected' : '' }}>Refund</option>
+                                <option value="3" {{ ($filters['transaction_type'] ?? '') == '3' ? 'selected' : '' }}>Void</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td>
+                            <select name="is_success" class="form-control" form="filters-form">
+                                <option value=""></option>
+                                <option value="1" {{ ($filters['is_success'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ ($filters['is_success'] ?? '') == '0' ? 'selected' : '' }}>No</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="is_void" class="form-control" form="filters-form">
+                                <option value=""></option>
+                                <option value="1" {{ ($filters['is_void'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ ($filters['is_void'] ?? '') == '0' ? 'selected' : '' }}>No</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="is_test" class="form-control" form="filters-form">
+                                <option value=""></option>
+                                <option value="1" {{ ($filters['is_test'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ ($filters['is_test'] ?? '') == '0' ? 'selected' : '' }}>No</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="row" style="gap:6px;">
+                                <input type="number" name="total_min" class="form-control" placeholder="Min" value="{{ $filters['total_min'] ?? '' }}" step="0.01" style="max-width:120px;">
+                                <input type="number" name="total_max" class="form-control" placeholder="Max" value="{{ $filters['total_max'] ?? '' }}" step="0.01" style="max-width:120px;">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="date" name="created_at" class="form-control" form="filters-form" value="{{ $filters['created_at'] ?? '' }}">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                            <a href="{{ route('money-transaction.index') }}" class="btn btn-default ml-2">Clear</a>
+                        </td>
                     </tr>
                     </thead>
                     <tbody>
@@ -158,8 +163,6 @@
                                     <span class="badge badge-secondary">No</span>
                                 @endif
                             </td>
-                            <td>{{ number_format($transaction->total, 2) }} {{ config('app.currency', '$') }}</td>
-                            <td>{{ $transaction->created_at->format('Y-m-d H:i:s') }}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="{{ route('money-transaction.show', $transaction) }}" class="btn btn-sm btn-info">

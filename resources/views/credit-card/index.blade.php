@@ -11,48 +11,14 @@
                     <h3 class="panel-title">Credit Cards</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="type" class="form-control">
-                                <option value="">All Types</option>
-                                <option value="Visa" {{ request('type') == 'Visa' ? 'selected' : '' }}>Visa</option>
-                                <option value="MasterCard" {{ request('type') == 'MasterCard' ? 'selected' : '' }}>MasterCard</option>
-                                <option value="American Express" {{ request('type') == 'American Express' ? 'selected' : '' }}>American Express</option>
-                                <option value="Discover" {{ request('type') == 'Discover' ? 'selected' : '' }}>Discover</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="expiration_year" class="form-control">
-                                <option value="">All Years</option>
-                                @foreach($years as $year)
-                                    <option value="{{ $year }}" {{ request('expiration_year') == $year ? 'selected' : '' }}>
-                                        {{ $year }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="number" name="user_id" class="form-control" placeholder="User ID" value="{{ request('user_id') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_from" class="form-control" value="{{ request('updated_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_to" class="form-control" value="{{ request('updated_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('credit-card.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($creditCards->total() > 0)
+                            Showing <b>{{ $creditCards->firstItem() }}-{{ $creditCards->lastItem() }}</b> of <b>{{ $creditCards->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -63,7 +29,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -77,6 +44,45 @@
                                     <th>Created At</th>
                                     <th>Updated At</th>
                                     <th class="action-column-1">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <select name="type" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="Visa" {{ request('type') == 'Visa' ? 'selected' : '' }}>Visa</option>
+                                            <option value="MasterCard" {{ request('type') == 'MasterCard' ? 'selected' : '' }}>MasterCard</option>
+                                            <option value="American Express" {{ request('type') == 'American Express' ? 'selected' : '' }}>American Express</option>
+                                            <option value="Discover" {{ request('type') == 'Discover' ? 'selected' : '' }}>Discover</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="expiration_year" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            @foreach($years as $year)
+                                                <option value="{{ $year }}" {{ request('expiration_year') == $year ? 'selected' : '' }}>
+                                                    {{ $year }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('credit-card.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,8 +110,8 @@
                                         </td>
                                         <td>{{ $card->expiration_year }} / {{ $card->expiration_month }}</td>
                                         <td>{{ $card->anet_customer_payment_profile_id ?: '-' }}</td>
-                                        <td>{{ $card->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $card->updated_at->format('Y-m-d') }}</td>
+                                        <td>{{ $card->created_at->format('M d, Y') }}</td>
+                                        <td>{{ $card->updated_at->format('M d, Y') }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('credit-card.show', $card) }}" class="btn btn-sm btn-info">

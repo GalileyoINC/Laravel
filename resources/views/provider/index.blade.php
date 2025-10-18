@@ -11,36 +11,14 @@
                     <h3 class="panel-title">Providers</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="name" class="form-control" placeholder="Name" value="{{ request('name') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="email" name="email" class="form-control" placeholder="Email" value="{{ request('email') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="is_satellite" class="form-control">
-                                <option value="">All Satellite Status</option>
-                                <option value="1" {{ request('is_satellite') == '1' ? 'selected' : '' }}>Satellite</option>
-                                <option value="0" {{ request('is_satellite') == '0' ? 'selected' : '' }}>Not Satellite</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="country" class="form-control" placeholder="Country" value="{{ request('country') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('provider.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($providers->total() > 0)
+                            Showing <b>{{ $providers->firstItem() }}-{{ $providers->lastItem() }}</b> of <b>{{ $providers->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Create Button -->
                     <div class="mb-3">
@@ -54,7 +32,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -63,6 +42,31 @@
                                     <th>Country</th>
                                     <th>Created At</th>
                                     <th class="action-column-3">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="name" class="form-control" form="filters-form" value="{{ request('name') }}" placeholder="Name">
+                                    </td>
+                                    <td>
+                                        <input type="email" name="email" class="form-control" form="filters-form" value="{{ request('email') }}" placeholder="Email">
+                                    </td>
+                                    <td>
+                                        <select name="is_satellite" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="1" {{ request('is_satellite') == '1' ? 'selected' : '' }}>Satellite</option>
+                                            <option value="0" {{ request('is_satellite') == '0' ? 'selected' : '' }}>Not Satellite</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="country" class="form-control" form="filters-form" value="{{ request('country') }}" placeholder="Country">
+                                    </td>
+                                    <td>
+                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('provider.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,7 +82,7 @@
                                             @endif
                                         </td>
                                         <td>{{ $provider->country ?? '-' }}</td>
-                                        <td>{{ $provider->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>{{ $provider->created_at->format('M d, Y') }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('provider.show', $provider) }}" class="btn btn-xs btn-info">

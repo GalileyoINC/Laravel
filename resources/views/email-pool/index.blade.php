@@ -16,37 +16,14 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="type" class="form-control">
-                                <option value="">All Types</option>
-                                <option value="immediate" {{ request('type') == 'immediate' ? 'selected' : '' }}>Immediate</option>
-                                <option value="later" {{ request('type') == 'later' ? 'selected' : '' }}>Later</option>
-                                <option value="background" {{ request('type') == 'background' ? 'selected' : '' }}>Background</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="status" class="form-control">
-                                <option value="">All Statuses</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>Sent</option>
-                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
-                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('email-pool.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($emailPools->total() > 0)
+                            Showing <b>{{ $emailPools->firstItem() }}-{{ $emailPools->lastItem() }}</b> of <b>{{ $emailPools->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -57,7 +34,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -70,6 +48,50 @@
                                     <th>Subject</th>
                                     <th>Created At</th>
                                     <th class="action-column-2">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}">
+                                    </td>
+                                    <td>
+                                        <select name="type" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="immediate" {{ request('type') == 'immediate' ? 'selected' : '' }}>Immediate</option>
+                                            <option value="later" {{ request('type') == 'later' ? 'selected' : '' }}>Later</option>
+                                            <option value="background" {{ request('type') == 'background' ? 'selected' : '' }}>Background</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="status" class="form-control" form="filters-form">
+                                            <option value=""></option>
+                                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>Sent</option>
+                                            <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
+                                            <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="from" form="filters-form" value="{{ request('from') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="to_addr" form="filters-form" value="{{ request('to_addr') }}" placeholder="To">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="reply" form="filters-form" value="{{ request('reply') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="bcc" form="filters-form" value="{{ request('bcc') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="subject" form="filters-form" value="{{ request('subject') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('email-pool.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -114,7 +136,7 @@
                                         <td>{{ $emailPool->reply ?: '-' }}</td>
                                         <td>{{ $emailPool->bcc ?: '-' }}</td>
                                         <td>{{ Str::limit($emailPool->subject, 50) }}</td>
-                                        <td>{{ $emailPool->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>{{ $emailPool->created_at->format('M d, Y') }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('email-pool.show', $emailPool) }}" class="btn btn-sm btn-info">

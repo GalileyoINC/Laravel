@@ -358,41 +358,68 @@
                 });
             }
 
-            // Treeview functionality
-            const treeviewLinks = document.querySelectorAll('.sidebar-menu .treeview > a, .sidebar-menu .treeview-toggle');
-            treeviewLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+            // Sidebar submenu persistence (open state)
+            const MENU_STATE_KEY = 'sidebar_open_items_v1';
+            const getKeyForButton = (btn) => (btn.querySelector('span')?.innerText || btn.innerText || '').trim();
+            const saved = (() => {
+                try { return JSON.parse(localStorage.getItem(MENU_STATE_KEY) || '[]'); } catch { return []; }
+            })();
+
+            const updateStorage = () => {
+                const openKeys = Array.from(document.querySelectorAll('.sidebar-menu li.open > button'))
+                    .map(getKeyForButton)
+                    .filter(Boolean);
+                localStorage.setItem(MENU_STATE_KEY, JSON.stringify(openKeys));
+            };
+
+            const setOpen = (li, open) => {
+                if (!li) return;
+                const child = li.querySelector(':scope > ul.child_menu');
+                if (!child) return;
+                if (open) {
+                    li.classList.add('open');
+                    child.style.display = 'block';
+                } else {
+                    li.classList.remove('open');
+                    child.style.display = 'none';
+                }
+            };
+
+            // Initialize: restore saved open items
+            document.querySelectorAll('.sidebar-menu li > button').forEach((btn) => {
+                const li = btn.closest('li');
+                const key = getKeyForButton(btn);
+                if (saved.includes(key)) setOpen(li, true);
+            });
+
+            // Toggle handler for buttons
+            document.querySelectorAll('.sidebar-menu li > button').forEach((btn) => {
+                btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const treeview = this.parentElement;
-                    const treeviewMenu = treeview.querySelector('.treeview-menu');
-                    
-                    // Close all other treeviews at the same level
-                    const parentTreeview = treeview.parentElement.parentElement;
-                    if (parentTreeview && parentTreeview.classList.contains('treeview')) {
-                        parentTreeview.querySelectorAll('.treeview').forEach(otherTreeview => {
-                            if (otherTreeview !== treeview) {
-                                otherTreeview.classList.remove('active');
-                                const otherMenu = otherTreeview.querySelector('.treeview-menu');
-                                if (otherMenu) {
-                                    otherMenu.style.display = 'none';
-                                }
-                            }
-                        });
-                    }
-                    
-                    // Toggle current treeview
-                    if (treeview.classList.contains('active')) {
-                        treeview.classList.remove('active');
-                        if (treeviewMenu) {
-                            treeviewMenu.style.display = 'none';
-                        }
-                    } else {
-                        treeview.classList.add('active');
-                        if (treeviewMenu) {
-                            treeviewMenu.style.display = 'block';
-                        }
-                    }
+                    const li = btn.closest('li');
+                    const isOpen = li.classList.contains('open');
+                    setOpen(li, !isOpen);
+                    updateStorage();
                 });
+            });
+
+            // Ensure the parent menus of current active link are open
+            const currentPath = location.pathname.replace(/\/$/, '');
+            const links = document.querySelectorAll('.sidebar-menu a[href]');
+            links.forEach((a) => {
+                try {
+                    const linkPath = new URL(a.href, location.origin).pathname.replace(/\/$/, '');
+                    if (linkPath && currentPath === linkPath) {
+                        a.classList.add('active');
+                        let parent = a.closest('li');
+                        while (parent) {
+                            const hasChild = parent.querySelector(':scope > ul.child_menu');
+                            if (hasChild) setOpen(parent, true);
+                            parent = parent.parentElement?.closest('li');
+                        }
+                        updateStorage();
+                    }
+                } catch {}
             });
         });
     </script>

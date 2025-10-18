@@ -12,6 +12,13 @@
     </div>
     
     <div class="box-body">
+        <div class="summary" style="margin: 0 0 10px 0;">
+            @if($users->total() > 0)
+                Showing <b>{{ $users->firstItem() }}-{{ $users->lastItem() }}</b> of <b>{{ $users->total() }}</b> items.
+            @else
+                Showing <b>0-0</b> of <b>0</b> items.
+            @endif
+        </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>

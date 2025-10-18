@@ -11,23 +11,14 @@
                     <h3 class="panel-title">Subscription Categories</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="name" class="form-control" placeholder="Name" value="{{ request('name') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="number" name="id_parent" class="form-control" placeholder="Parent ID" value="{{ request('id_parent') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="number" name="position_no" class="form-control" placeholder="Position" value="{{ request('position_no') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('subscription-category.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($subscriptionCategories->total() > 0)
+                            Showing <b>{{ $subscriptionCategories->firstItem() }}-{{ $subscriptionCategories->lastItem() }}</b> of <b>{{ $subscriptionCategories->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -38,7 +29,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -46,6 +38,24 @@
                                     <th>Parent ID</th>
                                     <th>Position No</th>
                                     <th class="action-column-2">Actions</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="name" class="form-control" form="filters-form" placeholder="Name" value="{{ request('name') }}">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="id_parent" class="form-control" form="filters-form" placeholder="Parent ID" value="{{ request('id_parent') }}">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="position_no" class="form-control" form="filters-form" placeholder="Position" value="{{ request('position_no') }}">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                                        <a href="{{ route('subscription-category.index') }}" class="btn btn-default ml-2">Clear</a>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>

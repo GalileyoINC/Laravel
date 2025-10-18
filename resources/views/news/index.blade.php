@@ -12,7 +12,15 @@
     </div>
     
     <div class="box-body">
+        <div class="summary" style="margin: 0 0 10px 0;">
+            @if($news->total() > 0)
+                Showing <b>{{ $news->firstItem() }}-{{ $news->lastItem() }}</b> of <b>{{ $news->total() }}</b> items.
+            @else
+                Showing <b>0-0</b> of <b>0</b> items.
+            @endif
+        </div>
         <div class="table-responsive">
+            <form method="GET" id="filters-form"></form>
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -22,6 +30,25 @@
                         <th>Status</th>
                         <th>Created At</th>
                         <th>Actions</th>
+                    </tr>
+                    <tr class="filters">
+                        <td><input type="text" class="form-control" name="id" value="{{ request('id') }}" form="filters-form"></td>
+                        <td><input type="text" class="form-control" name="name" value="{{ request('name') }}" form="filters-form"></td>
+                        <td><input type="text" class="form-control" name="title" value="{{ request('title') }}" form="filters-form"></td>
+                        <td>
+                            <select class="form-control" name="status" form="filters-form">
+                                <option value=""></option>
+                                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Published</option>
+                                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Draft</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" name="created_at" value="{{ request('created_at') }}" form="filters-form">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
+                            <a href="{{ route('news.index') }}" class="btn btn-default ml-2">Clear</a>
+                        </td>
                     </tr>
                 </thead>
                 <tbody>

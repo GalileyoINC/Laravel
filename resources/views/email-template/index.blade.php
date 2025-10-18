@@ -12,6 +12,17 @@
     </div>
     
     <div class="box-body">
+        <!-- Summary -->
+        <div class="summary" style="margin-bottom:10px;">
+            @if(method_exists($templates, 'total') && $templates->total() > 0)
+                Showing <b>{{ $templates->firstItem() }}-{{ $templates->lastItem() }}</b> of <b>{{ $templates->total() }}</b> items.
+            @elseif(!method_exists($templates, 'total') && count($templates) > 0)
+                Showing <b>1-{{ count($templates) }}</b> of <b>{{ count($templates) }}</b> items.
+            @else
+                Showing <b>0-0</b> of <b>0</b> items.
+            @endif
+        </div>
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>

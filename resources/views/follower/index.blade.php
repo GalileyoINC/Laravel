@@ -11,42 +11,14 @@
                     <h3 class="panel-title">Followers</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="followerListName" class="form-control" placeholder="List Name" value="{{ request('followerListName') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="userLeaderName" class="form-control" placeholder="Leader Name" value="{{ request('userLeaderName') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="userFollowerName" class="form-control" placeholder="Follower Name" value="{{ request('userFollowerName') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="is_active" class="form-control">
-                                <option value="">All Status</option>
-                                <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_from" class="form-control" value="{{ request('updated_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_to" class="form-control" value="{{ request('updated_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('follower.index') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    <!-- Summary -->
+                    <div class="summary" style="margin-bottom:10px;">
+                        @if($followers->total() > 0)
+                            Showing <b>{{ $followers->firstItem() }}-{{ $followers->lastItem() }}</b> of <b>{{ $followers->total() }}</b> items.
+                        @else
+                            Showing <b>0-0</b> of <b>0</b> items.
+                        @endif
+                    </div>
 
                     <!-- Export Button -->
                     <div class="mb-3">
@@ -57,7 +29,8 @@
 
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <form method="GET" id="filters-form"></form>
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -66,6 +39,26 @@
                                     <th>Follower</th>
                                     <th>Created At</th>
                                     <th>Updated At</th>
+                                </tr>
+                                <tr class="filters">
+                                    <td>
+                                        <input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="followerListName" form="filters-form" value="{{ request('followerListName') }}" placeholder="List Name">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="userLeaderName" form="filters-form" value="{{ request('userLeaderName') }}" placeholder="Leader Name">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="userFollowerName" form="filters-form" value="{{ request('userFollowerName') }}" placeholder="Follower Name">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control" name="updated_at" form="filters-form" value="{{ request('updated_at') }}">
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -91,8 +84,8 @@
                                                 -
                                             @endif
                                         </td>
-                                        <td>{{ $follower->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $follower->updated_at->format('Y-m-d') }}</td>
+                                        <td>{{ $follower->created_at->format('M d, Y') }}</td>
+                                        <td>{{ $follower->updated_at->format('M d, Y') }}</td>
                                     </tr>
                                 @empty
                                     <tr>
