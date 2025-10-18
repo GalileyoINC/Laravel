@@ -48,11 +48,11 @@ class BpSubscription extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function invoices()
     {
-        return $this->hasMany(App\Models\Finance\Invoice::class, 'id_bp_subscribe');
+        return $this->hasMany(\App\Models\Finance\Invoice::class, 'id_bp_subscribe');
     }
 }

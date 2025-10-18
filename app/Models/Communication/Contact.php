@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Communication;
 
 use Carbon\Carbon;
+use Database\Factories\CommunicationContactFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,6 +49,14 @@ class Contact extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return CommunicationContactFactory::new();
     }
 }

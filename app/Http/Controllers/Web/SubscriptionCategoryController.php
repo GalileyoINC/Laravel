@@ -47,7 +47,7 @@ class SubscriptionCategoryController extends Controller
 
         $subscriptionCategories = $query->orderBy('position_no', 'asc')->orderBy('id', 'asc')->paginate(20);
 
-        return ViewFacade::make('web.subscription-category.index', [
+        return ViewFacade::make('subscription-category.index', [
             'subscriptionCategories' => $subscriptionCategories,
             'filters' => $request->only(['search', 'name', 'id_parent', 'position_no']),
         ]);
@@ -58,7 +58,7 @@ class SubscriptionCategoryController extends Controller
      */
     public function show(SubscriptionCategory $subscriptionCategory): View
     {
-        return ViewFacade::make('web.subscription-category.show', [
+        return ViewFacade::make('subscription-category.show', [
             'subscriptionCategory' => $subscriptionCategory,
         ]);
     }
@@ -68,7 +68,7 @@ class SubscriptionCategoryController extends Controller
      */
     public function edit(SubscriptionCategory $subscriptionCategory): View
     {
-        return ViewFacade::make('web.subscription-category.edit', [
+        return ViewFacade::make('subscription-category.edit', [
             'subscriptionCategory' => $subscriptionCategory,
         ]);
     }
@@ -78,17 +78,10 @@ class SubscriptionCategoryController extends Controller
      */
     public function update(SubscriptionCategoryRequest $request, SubscriptionCategory $subscriptionCategory): Response
     {
-        try {
             $subscriptionCategory->update($request->validated());
 
-            return redirect()->route('web.subscription.index', ['idCategory' => $subscriptionCategory->id])
+            return redirect()->route('subscription.index', ['idCategory' => $subscriptionCategory->id])
                 ->with('success', 'Subscription category updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update subscription category: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -96,7 +89,6 @@ class SubscriptionCategoryController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = SubscriptionCategory::query();
 
             // Apply same filters as index
@@ -145,10 +137,5 @@ class SubscriptionCategoryController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export subscription categories: '.$e->getMessage()]);
-        }
     }
 }

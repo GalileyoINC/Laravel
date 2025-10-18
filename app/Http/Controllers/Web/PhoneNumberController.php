@@ -105,7 +105,7 @@ class PhoneNumberController extends Controller
 
         $phoneNumbers = $query->orderBy('updated_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.phone-number.index', [
+        return ViewFacade::make('phone-number.index', [
             'phoneNumbers' => $phoneNumbers,
             'filters' => $request->only(['search', 'userName', 'number', 'is_valid', 'type', 'id_provider', 'twilio_type', 'is_active', 'is_primary', 'is_send', 'created_at_from', 'created_at_to', 'updated_at_from', 'updated_at_to']),
         ]);
@@ -116,7 +116,7 @@ class PhoneNumberController extends Controller
      */
     public function show(PhoneNumber $phoneNumber): View
     {
-        return ViewFacade::make('web.phone-number.show', [
+        return ViewFacade::make('phone-number.show', [
             'phoneNumber' => $phoneNumber,
         ]);
     }
@@ -126,7 +126,7 @@ class PhoneNumberController extends Controller
      */
     public function edit(PhoneNumber $phoneNumber): View
     {
-        return ViewFacade::make('web.phone-number.edit', [
+        return ViewFacade::make('phone-number.edit', [
             'phoneNumber' => $phoneNumber,
         ]);
     }
@@ -136,19 +136,12 @@ class PhoneNumberController extends Controller
      */
     public function update(PhoneNumberRequest $request, PhoneNumber $phoneNumber): Response
     {
-        try {
             $phoneNumber->update($request->validated());
 
-            $redirectRoute = $request->get('referer') === 'user' ? 'web.user.index' : 'web.phone-number.index';
+            $redirectRoute = $request->get('referer') === 'user' ? 'user.index' : 'web.phone-number.index';
 
             return redirect()->route($redirectRoute)
                 ->with('success', 'Phone number updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update phone number: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -161,7 +154,7 @@ class PhoneNumberController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        return ViewFacade::make('web.phone-number.super-update', [
+        return ViewFacade::make('phone-number.super-update', [
             'phoneNumber' => $phoneNumber,
         ]);
     }
@@ -175,18 +168,10 @@ class PhoneNumberController extends Controller
         if (! auth()->user()->isSuper()) {
             abort(403, 'Unauthorized access.');
         }
-
-        try {
             $phoneNumber->update($request->validated());
 
-            return redirect()->route('web.phone-number.index')
+            return redirect()->route('phone-number.index')
                 ->with('success', 'Phone number updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update phone number: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -194,16 +179,10 @@ class PhoneNumberController extends Controller
      */
     public function destroy(PhoneNumber $phoneNumber): Response
     {
-        try {
             $phoneNumber->update(['is_active' => false]);
 
-            return redirect()->route('web.phone-number.index')
+            return redirect()->route('phone-number.index')
                 ->with('success', 'Phone number deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete phone number: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -216,7 +195,7 @@ class PhoneNumberController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        return ViewFacade::make('web.phone-number.send-sms', [
+        return ViewFacade::make('phone-number.send-sms', [
             'phoneNumber' => $phoneNumber,
         ]);
     }
@@ -230,8 +209,6 @@ class PhoneNumberController extends Controller
         if (! auth()->user()->isSuper()) {
             abort(403, 'Unauthorized access.');
         }
-
-        try {
             // Here you would implement the actual SMS sending logic
             // For now, we'll just simulate it
 
@@ -243,14 +220,8 @@ class PhoneNumberController extends Controller
             // Simulate SMS sending
             // SmsHelper::sendSms($smsData);
 
-            return redirect()->route('web.phone-number.index')
+            return redirect()->route('phone-number.index')
                 ->with('success', 'SMS sent successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to send SMS: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -269,7 +240,7 @@ class PhoneNumberController extends Controller
             $phoneNumber->number = '';
         }
 
-        return ViewFacade::make('web.phone-number.create', [
+        return ViewFacade::make('phone-number.create', [
             'phoneNumber' => $phoneNumber,
             'user' => $user,
         ]);
@@ -280,7 +251,6 @@ class PhoneNumberController extends Controller
      */
     public function store(PhoneNumberRequest $request, User $user): Response
     {
-        try {
             $phoneNumber = PhoneNumber::where('id_user', $user->id)->first();
 
             if (! $phoneNumber) {
@@ -291,14 +261,8 @@ class PhoneNumberController extends Controller
             $phoneNumber->fill($request->validated());
             $phoneNumber->save();
 
-            return redirect()->route('web.user.index')
+            return redirect()->route('user.index')
                 ->with('success', 'Phone number created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create phone number: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -306,7 +270,6 @@ class PhoneNumberController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = PhoneNumber::with(['user', 'provider']);
 
             // Apply same filters as index
@@ -409,10 +372,5 @@ class PhoneNumberController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export phone numbers: '.$e->getMessage()]);
-        }
     }
 }

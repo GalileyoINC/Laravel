@@ -58,7 +58,7 @@ class EmailTemplateController extends Controller
 
         $emailTemplates = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.email-template.index', [
+        return ViewFacade::make('email-template.index', [
             'emailTemplates' => $emailTemplates,
             'filters' => $request->only(['search', 'name', 'subject', 'from', 'created_at_from', 'created_at_to']),
         ]);
@@ -69,7 +69,7 @@ class EmailTemplateController extends Controller
      */
     public function show(EmailTemplate $emailTemplate): View
     {
-        return ViewFacade::make('web.email-template.show', [
+        return ViewFacade::make('email-template.show', [
             'emailTemplate' => $emailTemplate,
         ]);
     }
@@ -79,7 +79,7 @@ class EmailTemplateController extends Controller
      */
     public function edit(EmailTemplate $emailTemplate): View
     {
-        return ViewFacade::make('web.email-template.edit', [
+        return ViewFacade::make('email-template.edit', [
             'emailTemplate' => $emailTemplate,
         ]);
     }
@@ -89,17 +89,10 @@ class EmailTemplateController extends Controller
      */
     public function update(EmailTemplateRequest $request, EmailTemplate $emailTemplate): Response
     {
-        try {
             $emailTemplate->update($request->validated());
 
-            return redirect()->route('web.email-template.show', $emailTemplate)
+            return redirect()->route('email-template.show', $emailTemplate)
                 ->with('success', 'Email template updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update email template: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -118,7 +111,7 @@ class EmailTemplateController extends Controller
         // Replace placeholders in body
         $content = $emailTemplate->placeBody($params);
 
-        return ViewFacade::make('web.email-template.view-body', [
+        return ViewFacade::make('email-template.view-body', [
             'content' => $content,
         ]);
     }
@@ -128,7 +121,7 @@ class EmailTemplateController extends Controller
      */
     public function adminSend(EmailTemplate $emailTemplate): View
     {
-        return ViewFacade::make('web.email-template.admin-send', [
+        return ViewFacade::make('email-template.admin-send', [
             'emailTemplate' => $emailTemplate,
         ]);
     }
@@ -138,7 +131,6 @@ class EmailTemplateController extends Controller
      */
     public function sendTestEmail(AdminSendEmailRequest $request, EmailTemplate $emailTemplate): Response
     {
-        try {
             // Here you would implement the actual email sending logic
             // For now, we'll just simulate it
 
@@ -151,14 +143,8 @@ class EmailTemplateController extends Controller
             // Simulate email sending
             // Mail::send(new EmailTemplateMail($emailTemplate, $emailData));
 
-            return redirect()->route('web.email-pool.index')
+            return redirect()->route('email-pool.index')
                 ->with('success', 'Test email sent successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to send test email: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -166,7 +152,6 @@ class EmailTemplateController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = EmailTemplate::query();
 
             // Apply same filters as index
@@ -225,10 +210,5 @@ class EmailTemplateController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export email templates: '.$e->getMessage()]);
-        }
     }
 }

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Product\GetProductAlertsAction;
+use App\Domain\Actions\Product\GetProductListAction;
+use App\Domain\Actions\Product\ProcessApplePurchaseAction;
+use App\Domain\DTOs\Product\ProductListRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\Web\ProductDevicePlanRequest;
 use App\Http\Requests\Product\Web\ProductDeviceRequest;
@@ -21,41 +25,34 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    public function __construct(
+        private readonly GetProductListAction $getProductListAction,
+        private readonly GetProductAlertsAction $getProductAlertsAction,
+        private readonly ProcessApplePurchaseAction $processApplePurchaseAction
+    ) {}
+
     /**
      * Display subscription products
      */
     public function subscription(Request $request): View
     {
-        $query = Service::where('type', Service::TYPE_SUBSCRIBE);
+        $dto = new ProductListRequestDTO(
+            limit: $request->get('limit', 20),
+            offset: $request->get('offset', 0),
+            filter: [
+                'type' => Service::TYPE_SUBSCRIBE,
+                'search' => $request->get('search'),
+                'is_active' => $request->get('is_active'),
+                'price_min' => $request->get('price_min'),
+                'price_max' => $request->get('price_max'),
+            ]
+        );
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
+        $subscriptions = $this->getProductListAction->execute($dto->toArray());
 
-        // Filter by active status
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->get('is_active'));
-        }
-
-        // Filter by price range
-        if ($request->filled('price_min')) {
-            $query->where('price', '>=', $request->get('price_min'));
-        }
-        if ($request->filled('price_max')) {
-            $query->where('price', '<=', $request->get('price_max'));
-        }
-
-        $subscriptions = $query->orderBy('id')->paginate(20);
-
-        // Load custom parameters
         $customParams = Service::loadCustomParams();
 
-        return ViewFacade::make('web.product.subscription', [
+        return ViewFacade::make('product.subscription', [
             'subscriptions' => $subscriptions,
             'filters' => $request->only(['search', 'is_active', 'price_min', 'price_max']),
             'customParams' => $customParams,
@@ -68,10 +65,10 @@ class ProductController extends Controller
     public function editSubscription(Service $service): View
     {
         if ($service->isCustom()) {
-            return redirect()->route('web.product.edit-custom-subscription', $service);
+            return redirect()->route('product.edit-custom-subscription', $service);
         }
 
-        return ViewFacade::make('web.product.edit-subscription', [
+        return ViewFacade::make('product.edit-subscription', [
             'service' => $service,
         ]);
     }
@@ -81,29 +78,22 @@ class ProductController extends Controller
      */
     public function updateSubscription(ProductSubscriptionRequest $request, Service $service): Response
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
-                'special_price' => $validated['special_price'] ?? null,
-                'is_special_price' => $validated['is_special_price'] ?? false,
-                'is_active' => $validated['is_active'] ?? true,
-                'settings' => $validated['settings'] ?? [],
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'special_price' => $validated['special_price'] ?? null,
+            'is_special_price' => $validated['is_special_price'] ?? false,
+            'is_active' => $validated['is_active'] ?? true,
+            'settings' => $validated['settings'] ?? [],
+        ];
 
-            $service->update($data);
+        $service->update($data);
 
-            return redirect()->route('web.product.subscription')
-                ->with('success', 'Subscription updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update subscription: '.$e->getMessage()])
-                ->withInput();
-        }
+        return redirect()->route('product.subscription')
+            ->with('success', 'Subscription updated successfully.');
     }
 
     /**
@@ -111,7 +101,7 @@ class ProductController extends Controller
      */
     public function settings(): View
     {
-        return ViewFacade::make('web.product.settings');
+        return ViewFacade::make('product.settings');
     }
 
     /**
@@ -119,20 +109,10 @@ class ProductController extends Controller
      */
     public function updateSettings(ServiceSettingsRequest $request): Response
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            // Update service settings logic here
-            // This would typically update configuration values
-
-            return redirect()->route('web.product.subscription')
-                ->with('success', 'Settings updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update settings: '.$e->getMessage()])
-                ->withInput();
-        }
+        return redirect()->route('product.subscription')
+            ->with('success', 'Settings updated successfully.');
     }
 
     /**
@@ -158,7 +138,7 @@ class ProductController extends Controller
 
         $alerts = $query->orderBy('id')->paginate(20);
 
-        return ViewFacade::make('web.product.alert', [
+        return ViewFacade::make('product.alert', [
             'alerts' => $alerts,
             'filters' => $request->only(['search', 'is_active']),
         ]);
@@ -169,7 +149,7 @@ class ProductController extends Controller
      */
     public function editAlert(Service $service): View
     {
-        return ViewFacade::make('web.product.edit-subscription', [
+        return ViewFacade::make('product.edit-subscription', [
             'service' => $service,
         ]);
     }
@@ -179,29 +159,22 @@ class ProductController extends Controller
      */
     public function updateAlert(ProductSubscriptionRequest $request, Service $service): Response
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
-                'special_price' => $validated['special_price'] ?? null,
-                'is_special_price' => $validated['is_special_price'] ?? false,
-                'is_active' => $validated['is_active'] ?? true,
-                'settings' => $validated['settings'] ?? [],
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'special_price' => $validated['special_price'] ?? null,
+            'is_special_price' => $validated['is_special_price'] ?? false,
+            'is_active' => $validated['is_active'] ?? true,
+            'settings' => $validated['settings'] ?? [],
+        ];
 
-            $service->update($data);
+        $service->update($data);
 
-            return redirect()->route('web.product.alert')
-                ->with('success', 'Alert updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update alert: '.$e->getMessage()])
-                ->withInput();
-        }
+        return redirect()->route('product.alert')
+            ->with('success', 'Alert updated successfully.');
     }
 
     /**
@@ -235,7 +208,7 @@ class ProductController extends Controller
 
         $devices = $query->orderBy('id')->paginate(20);
 
-        return ViewFacade::make('web.product.device', [
+        return ViewFacade::make('product.device', [
             'devices' => $devices,
             'filters' => $request->only(['search', 'is_active', 'price_min', 'price_max']),
         ]);
@@ -246,7 +219,7 @@ class ProductController extends Controller
      */
     public function createDevice(): View
     {
-        return ViewFacade::make('web.product.create-device');
+        return ViewFacade::make('product.create-device');
     }
 
     /**
@@ -254,28 +227,21 @@ class ProductController extends Controller
      */
     public function storeDevice(ProductDeviceRequest $request): Response
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
-                'special_price' => $validated['special_price'] ?? null,
-                'is_special_price' => $validated['is_special_price'] ?? false,
-                'is_active' => $validated['is_active'] ?? true,
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'special_price' => $validated['special_price'] ?? null,
+            'is_special_price' => $validated['is_special_price'] ?? false,
+            'is_active' => $validated['is_active'] ?? true,
+        ];
 
-            $device = Device::create($data);
+        $device = Device::create($data);
 
-            return redirect()->route('web.product.device')
-                ->with('success', 'Device created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create device: '.$e->getMessage()])
-                ->withInput();
-        }
+        return redirect()->route('product.device')
+            ->with('success', 'Device created successfully.');
     }
 
     /**
@@ -287,7 +253,7 @@ class ProductController extends Controller
 
         $activePlans = DevicePlan::where('is_active', 1)->paginate(20);
 
-        return ViewFacade::make('web.product.edit-device', [
+        return ViewFacade::make('product.edit-device', [
             'device' => $device,
             'activePlans' => $activePlans,
         ]);
@@ -298,28 +264,21 @@ class ProductController extends Controller
      */
     public function updateDevice(ProductDeviceRequest $request, Device $device): Response
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
-                'special_price' => $validated['special_price'] ?? null,
-                'is_special_price' => $validated['is_special_price'] ?? false,
-                'is_active' => $validated['is_active'] ?? $device->is_active,
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'special_price' => $validated['special_price'] ?? null,
+            'is_special_price' => $validated['is_special_price'] ?? false,
+            'is_active' => $validated['is_active'] ?? $device->is_active,
+        ];
 
-            $device->update($data);
+        $device->update($data);
 
-            return redirect()->route('web.product.device')
-                ->with('success', 'Device updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update device: '.$e->getMessage()])
-                ->withInput();
-        }
+        return redirect()->route('product.device')
+            ->with('success', 'Device updated successfully.');
     }
 
     /**
@@ -329,7 +288,7 @@ class ProductController extends Controller
     {
         $device->load('photos');
 
-        return ViewFacade::make('web.product._photos', [
+        return ViewFacade::make('product._photos', [
             'device' => $device,
         ]);
     }
@@ -339,16 +298,11 @@ class ProductController extends Controller
      */
     public function deletePhoto(Request $request): Response
     {
-        try {
             $photoId = $request->get('id');
 
             // Delete photo logic here
 
             return response()->json(['success' => 'Photo deleted successfully']);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to delete photo: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -356,16 +310,11 @@ class ProductController extends Controller
      */
     public function setMainPhoto(Request $request): Response
     {
-        try {
             $photoId = $request->get('id');
 
             // Set main photo logic here
 
             return response()->json(['success' => 'Main photo set successfully']);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to set main photo: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -373,7 +322,6 @@ class ProductController extends Controller
      */
     public function uploadPhoto(Request $request, Device $device): Response
     {
-        try {
             $request->validate([
                 'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
@@ -385,15 +333,11 @@ class ProductController extends Controller
                 'initialPreview' => [Storage::url($path)],
                 'initialPreviewConfig' => [[
                     'caption' => $file->getClientOriginalName(),
-                    'url' => route('web.product.delete-photo'),
+                    'url' => route('product.delete-photo'),
                     'key' => 'temp_key',
                     'type' => 'image',
                 ]],
             ]);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to upload photo: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -419,7 +363,7 @@ class ProductController extends Controller
 
         $plans = $query->orderBy('id')->paginate(20);
 
-        return ViewFacade::make('web.product.device-plan', [
+        return ViewFacade::make('product.device-plan', [
             'plans' => $plans,
             'filters' => $request->only(['search', 'is_active']),
         ]);
@@ -430,7 +374,7 @@ class ProductController extends Controller
      */
     public function createPlan(): View
     {
-        return ViewFacade::make('web.product.create-device-plan');
+        return ViewFacade::make('product.create-device-plan');
     }
 
     /**
@@ -438,7 +382,6 @@ class ProductController extends Controller
      */
     public function storePlan(ProductDevicePlanRequest $request): Response
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -450,14 +393,8 @@ class ProductController extends Controller
 
             $plan = DevicePlan::create($data);
 
-            return redirect()->route('web.product.plan')
+            return redirect()->route('product.plan')
                 ->with('success', 'Device plan created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create device plan: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -465,7 +402,7 @@ class ProductController extends Controller
      */
     public function editPlan(DevicePlan $plan): View
     {
-        return ViewFacade::make('web.product.edit-device-plan', [
+        return ViewFacade::make('product.edit-device-plan', [
             'plan' => $plan,
         ]);
     }
@@ -475,7 +412,6 @@ class ProductController extends Controller
      */
     public function updatePlan(ProductDevicePlanRequest $request, DevicePlan $plan): Response
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -487,14 +423,8 @@ class ProductController extends Controller
 
             $plan->update($data);
 
-            return redirect()->route('web.product.plan')
+            return redirect()->route('product.plan')
                 ->with('success', 'Device plan updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update device plan: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -502,7 +432,6 @@ class ProductController extends Controller
      */
     public function attachPlan(Request $request, DevicePlan $plan, Device $device): Response
     {
-        try {
             $validated = $request->validate([
                 'price' => ['nullable', 'numeric', 'min:0'],
                 'is_default' => ['nullable', 'boolean'],
@@ -510,13 +439,8 @@ class ProductController extends Controller
 
             // Attach plan logic here
 
-            return redirect()->route('web.product.edit-device', $device)
+            return redirect()->route('product.edit-device', $device)
                 ->with('success', 'Plan attached successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to attach plan: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -524,15 +448,9 @@ class ProductController extends Controller
      */
     public function detachPlan(DevicePlan $plan, Device $device): Response
     {
-        try {
             // Detach plan logic here
 
-            return redirect()->route('web.product.edit-device', $device)
+            return redirect()->route('product.edit-device', $device)
                 ->with('success', 'Plan detached successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to detach plan: '.$e->getMessage()]);
-        }
     }
 }

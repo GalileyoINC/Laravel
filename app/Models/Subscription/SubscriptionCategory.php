@@ -42,6 +42,6 @@ class SubscriptionCategory extends Model
 
     public function subscriptions()
     {
-        return $this->hasMany(App\Models\Subscription\Subscription::class, 'id_subscription_category');
+        return $this->hasMany(\App\Models\Subscription\Subscription::class, 'id_subscription_category');
     }
 }

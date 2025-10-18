@@ -77,12 +77,12 @@ class InvoiceLine extends Model
 
     public function contract_line()
     {
-        return $this->belongsTo(App\Models\Finance\ContractLine::class, 'id_contract_line');
+        return $this->belongsTo(\App\Models\Finance\ContractLine::class, 'id_contract_line');
     }
 
     public function invoice()
     {
-        return $this->belongsTo(App\Models\Finance\Invoice::class, 'id_invoice');
+        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
     }
 
     public function contract_line_paids()
@@ -92,6 +92,6 @@ class InvoiceLine extends Model
 
     public function user_plans()
     {
-        return $this->hasMany(App\Models\User\UserPlan::class, 'id_invoice_line');
+        return $this->hasMany(\App\Models\User\UserPlan::class, 'id_invoice_line');
     }
 }

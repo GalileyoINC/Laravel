@@ -78,17 +78,17 @@ class ContractLine extends Model
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
     public function sps_contract()
     {
-        return $this->belongsTo(App\Models\Finance\SpsContract::class, 'id_sps_contract');
+        return $this->belongsTo(\App\Models\Finance\SpsContract::class, 'id_sps_contract');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function contract_line_paids()
@@ -103,6 +103,6 @@ class ContractLine extends Model
 
     public function user_plan_shedules()
     {
-        return $this->hasMany(App\Models\User\UserPlanShedule::class, 'id_contract_line');
+        return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_contract_line');
     }
 }

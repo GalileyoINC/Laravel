@@ -77,7 +77,7 @@ class ActiveRecordLogController extends Controller
         $actionTypes = ActiveRecordLog::getActionTypeList();
         $staffList = Staff::getForDropDown();
 
-        return ViewFacade::make('web.active-record-log.index', [
+        return ViewFacade::make('active-record-log.index', [
             'activeRecordLogs' => $activeRecordLogs,
             'actionTypes' => $actionTypes,
             'staffList' => $staffList,
@@ -90,7 +90,6 @@ class ActiveRecordLogController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = ActiveRecordLog::with(['user', 'staff']);
 
             // Apply same filters as index
@@ -167,10 +166,5 @@ class ActiveRecordLogController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export active record logs: '.$e->getMessage()]);
-        }
     }
 }

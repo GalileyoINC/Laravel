@@ -41,11 +41,11 @@ class UserService extends Model
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 }

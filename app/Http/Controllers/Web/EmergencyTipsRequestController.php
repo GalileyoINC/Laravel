@@ -50,7 +50,7 @@ class EmergencyTipsRequestController extends Controller
 
         $emergencyTipsRequests = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.emergency-tips-request.index', [
+        return ViewFacade::make('emergency-tips-request.index', [
             'emergencyTipsRequests' => $emergencyTipsRequests,
             'filters' => $request->only(['search', 'first_name', 'email', 'created_at_from', 'created_at_to']),
         ]);
@@ -61,7 +61,7 @@ class EmergencyTipsRequestController extends Controller
      */
     public function show(EmergencyTipsRequest $emergencyTipsRequest): View
     {
-        return ViewFacade::make('web.emergency-tips-request.show', [
+        return ViewFacade::make('emergency-tips-request.show', [
             'emergencyTipsRequest' => $emergencyTipsRequest,
         ]);
     }
@@ -71,7 +71,6 @@ class EmergencyTipsRequestController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = EmergencyTipsRequest::query();
 
             // Apply same filters as index
@@ -124,10 +123,5 @@ class EmergencyTipsRequestController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export emergency tips requests: '.$e->getMessage()]);
-        }
     }
 }

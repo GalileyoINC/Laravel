@@ -72,7 +72,7 @@ class CreditCardController extends Controller
         // Get years for filter dropdown
         $years = array_combine(range(2021, date('Y') + 20), range(2021, date('Y') + 20));
 
-        return ViewFacade::make('web.credit-card.index', [
+        return ViewFacade::make('credit-card.index', [
             'creditCards' => $creditCards,
             'years' => $years,
             'filters' => $request->only(['search', 'type', 'expiration_year', 'user_id', 'created_at_from', 'created_at_to', 'updated_at_from', 'updated_at_to']),
@@ -84,7 +84,7 @@ class CreditCardController extends Controller
      */
     public function show(CreditCard $creditCard): View
     {
-        return ViewFacade::make('web.credit-card.show', [
+        return ViewFacade::make('credit-card.show', [
             'creditCard' => $creditCard,
         ]);
     }
@@ -94,7 +94,6 @@ class CreditCardController extends Controller
      */
     public function getGatewayProfile(CreditCard $creditCard): Response
     {
-        try {
             if (! $creditCard->anet_customer_payment_profile_id) {
                 return redirect()->back()
                     ->withErrors(['error' => 'No gateway profile ID found for this credit card.']);
@@ -109,11 +108,6 @@ class CreditCardController extends Controller
                 'expiration' => "{$creditCard->expiration_year}/{$creditCard->expiration_month}",
                 'message' => 'Gateway profile retrieved successfully',
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to retrieve gateway profile: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -121,7 +115,6 @@ class CreditCardController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = CreditCard::with('user');
 
             // Apply same filters as index
@@ -192,10 +185,5 @@ class CreditCardController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export credit cards: '.$e->getMessage()]);
-        }
     }
 }

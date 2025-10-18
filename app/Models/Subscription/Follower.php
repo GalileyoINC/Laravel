@@ -51,12 +51,12 @@ class Follower extends Model
 
     public function follower_list()
     {
-        return $this->belongsTo(App\Models\Subscription\FollowerList::class, 'id_follower_list');
+        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user_leader');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user_leader');
     }
 
     protected static function newFactory()

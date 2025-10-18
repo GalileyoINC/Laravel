@@ -34,7 +34,7 @@ class Reaction extends Model
 
     public function sms_pools()
     {
-        return $this->belongsToMany(App\Models\Communication\SmsPool::class, 'sms_pool_reaction', 'id_reaction', 'id_sms_pool')
+        return $this->belongsToMany(\App\Models\Communication\SmsPool::class, 'sms_pool_reaction', 'id_reaction', 'id_sms_pool')
             ->withPivot('id_user');
     }
 

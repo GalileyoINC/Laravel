@@ -90,26 +90,26 @@ class UserPlan extends Model
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function admin_members()
     {
-        return $this->hasMany(App\Models\User\AdminMember::class, 'id_plan');
+        return $this->hasMany(\App\Models\User\AdminMember::class, 'id_plan');
     }
 
     public function member_templates()
     {
-        return $this->hasMany(App\Models\User\MemberTemplate::class, 'id_plan');
+        return $this->hasMany(\App\Models\User\MemberTemplate::class, 'id_plan');
     }
 
     public function sps_contracts()
     {
-        return $this->hasMany(App\Models\Finance\SpsContract::class, 'id_plan');
+        return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_plan');
     }
 }

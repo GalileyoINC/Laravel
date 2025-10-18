@@ -86,7 +86,7 @@ class FollowerController extends Controller
 
         $followers = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.follower.index', [
+        return ViewFacade::make('follower.index', [
             'followers' => $followers,
             'filters' => $request->only(['search', 'followerListName', 'userLeaderName', 'userFollowerName', 'is_active', 'created_at_from', 'created_at_to', 'updated_at_from', 'updated_at_to']),
         ]);
@@ -97,7 +97,6 @@ class FollowerController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = Follower::with(['followerList', 'userLeader', 'userFollower']);
 
             // Apply same filters as index
@@ -187,10 +186,5 @@ class FollowerController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export followers: '.$e->getMessage()]);
-        }
     }
 }

@@ -70,7 +70,7 @@ class LogsController extends Controller
 
         $logs = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.logs.active-record-logs', [
+        return ViewFacade::make('logs.active-record-logs', [
             'logs' => $logs,
             'filters' => $request->only(['search', 'action_type', 'model', 'id_user', 'id_staff', 'created_at_from', 'created_at_to']),
         ]);
@@ -107,7 +107,7 @@ class LogsController extends Controller
 
         $logs = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.logs.api-logs', [
+        return ViewFacade::make('logs.api-logs', [
             'logs' => $logs,
             'filters' => $request->only(['search', 'key', 'created_at_from', 'created_at_to']),
         ]);
@@ -118,7 +118,7 @@ class LogsController extends Controller
      */
     public function showApiLog(ApiLog $apiLog): View
     {
-        return ViewFacade::make('web.logs.api-log-show', [
+        return ViewFacade::make('logs.api-log-show', [
             'apiLog' => $apiLog,
         ]);
     }
@@ -128,7 +128,6 @@ class LogsController extends Controller
      */
     public function deleteByKey(Request $request, string $key): Response
     {
-        try {
             if (! auth()->user()->isSuper()) {
                 return redirect()->back()
                     ->withErrors(['error' => 'Unauthorized access.']);
@@ -136,13 +135,8 @@ class LogsController extends Controller
 
             ApiLog::where('key', $key)->delete();
 
-            return redirect()->route('web.logs.api-logs')
+            return redirect()->route('logs.api-logs')
                 ->with('success', 'API logs deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete API logs: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -150,7 +144,6 @@ class LogsController extends Controller
      */
     public function exportActiveRecordLogs(Request $request): Response
     {
-        try {
             $query = ActiveRecordLog::with(['user', 'staff']);
 
             // Apply same filters as index
@@ -224,11 +217,6 @@ class LogsController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export active record logs: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -236,7 +224,6 @@ class LogsController extends Controller
      */
     public function exportApiLogs(Request $request): Response
     {
-        try {
             $query = ApiLog::query();
 
             // Apply same filters as index
@@ -285,10 +272,5 @@ class LogsController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export API logs: '.$e->getMessage()]);
-        }
     }
 }

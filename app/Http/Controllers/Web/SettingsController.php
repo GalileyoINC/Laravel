@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Settings\FlushSettingsAction;
+use App\Domain\Actions\Settings\GetSettingsAction;
+use App\Domain\Actions\Settings\UpdateSettingsAction;
+use App\Domain\DTOs\Settings\SettingsUpdateRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\Web\SettingsApiRequest;
 use App\Http\Requests\Settings\Web\SettingsAppRequest;
@@ -20,21 +24,21 @@ use Illuminate\View\View;
 
 class SettingsController extends Controller
 {
+    public function __construct(
+        private readonly FlushSettingsAction $flushSettingsAction,
+        private readonly GetSettingsAction $getSettingsAction,
+        private readonly UpdateSettingsAction $updateSettingsAction
+    ) {}
+
     /**
      * Flush settings cache
      */
     public function flush(): Response
     {
-        try {
-            Settings::flush();
+        $this->flushSettingsAction->execute([]);
 
-            return redirect()->route('web.settings.index')
-                ->with('success', 'Settings cache flushed successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to flush settings: '.$e->getMessage()]);
-        }
+        return redirect()->route('settings.index')
+            ->with('success', 'Settings cache flushed successfully.');
     }
 
     /**
@@ -57,7 +61,7 @@ class SettingsController extends Controller
         $apiForm->initValues();
         $appForm->initValues();
 
-        return ViewFacade::make('web.settings.index', [
+        return ViewFacade::make('settings.index', [
             'smsForm' => $smsForm,
             'mainForm' => $mainForm,
             'apiForm' => $apiForm,
@@ -70,23 +74,21 @@ class SettingsController extends Controller
      */
     public function updateMain(SettingsMainRequest $request): Response
     {
-        try {
-            if (! auth()->user()->showSettingsRO()) {
-                $validated = $request->validated();
-                $this->saveMainSettings($validated);
+        if (! auth()->user()->showSettingsRO()) {
+            $validated = $request->validated();
 
-                return redirect()->route('web.settings.index', ['#' => 'main'])
-                    ->with('success', 'Main settings updated successfully.');
-            }
+            $dto = new SettingsUpdateRequestDTO(
+                settings: $validated
+            );
 
-            return redirect()->back()
-                ->withErrors(['error' => 'You do not have permission to update settings.']);
+            $this->updateSettingsAction->execute($dto->toArray());
 
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update main settings: '.$e->getMessage()])
-                ->withInput();
+            return redirect()->route('settings.index', ['#' => 'main'])
+                ->with('success', 'Main settings updated successfully.');
         }
+
+        return redirect()->back()
+            ->withErrors(['error' => 'You do not have permission to update settings.']);
     }
 
     /**
@@ -94,23 +96,22 @@ class SettingsController extends Controller
      */
     public function updateSms(SettingsSmsRequest $request): Response
     {
-        try {
-            if (! auth()->user()->showSettingsRO()) {
-                $validated = $request->validated();
-                $this->saveSmsSettings($validated);
+        if (! auth()->user()->showSettingsRO()) {
+            $validated = $request->validated();
 
-                return redirect()->route('web.settings.index', ['#' => 'sms'])
-                    ->with('success', 'SMS settings updated successfully.');
-            }
+            $dto = new SettingsUpdateRequestDTO(
+                settings: $validated,
+                sms_settings: $validated
+            );
 
-            return redirect()->back()
-                ->withErrors(['error' => 'You do not have permission to update settings.']);
+            $this->updateSettingsAction->execute($dto->toArray());
 
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update SMS settings: '.$e->getMessage()])
-                ->withInput();
+            return redirect()->route('settings.index', ['#' => 'sms'])
+                ->with('success', 'SMS settings updated successfully.');
         }
+
+        return redirect()->back()
+            ->withErrors(['error' => 'You do not have permission to update settings.']);
     }
 
     /**
@@ -118,23 +119,22 @@ class SettingsController extends Controller
      */
     public function updateApi(SettingsApiRequest $request): Response
     {
-        try {
-            if (! auth()->user()->showSettingsRO()) {
-                $validated = $request->validated();
-                $this->saveApiSettings($validated);
+        if (! auth()->user()->showSettingsRO()) {
+            $validated = $request->validated();
 
-                return redirect()->route('web.settings.index', ['#' => 'api'])
-                    ->with('success', 'API settings updated successfully.');
-            }
+            $dto = new SettingsUpdateRequestDTO(
+                settings: $validated,
+                api_settings: $validated
+            );
 
-            return redirect()->back()
-                ->withErrors(['error' => 'You do not have permission to update settings.']);
+            $this->updateSettingsAction->execute($dto->toArray());
 
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update API settings: '.$e->getMessage()])
-                ->withInput();
+            return redirect()->route('settings.index', ['#' => 'api'])
+                ->with('success', 'API settings updated successfully.');
         }
+
+        return redirect()->back()
+            ->withErrors(['error' => 'You do not have permission to update settings.']);
     }
 
     /**
@@ -142,23 +142,22 @@ class SettingsController extends Controller
      */
     public function updateApp(SettingsAppRequest $request): Response
     {
-        try {
-            if (! auth()->user()->showSettingsRO()) {
-                $validated = $request->validated();
-                $this->saveAppSettings($validated);
+        if (! auth()->user()->showSettingsRO()) {
+            $validated = $request->validated();
 
-                return redirect()->route('web.settings.index', ['#' => 'app'])
-                    ->with('success', 'App settings updated successfully.');
-            }
+            $dto = new SettingsUpdateRequestDTO(
+                settings: $validated,
+                app_settings: $validated
+            );
 
-            return redirect()->back()
-                ->withErrors(['error' => 'You do not have permission to update settings.']);
+            $this->updateSettingsAction->execute($dto->toArray());
 
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update app settings: '.$e->getMessage()])
-                ->withInput();
+            return redirect()->route('settings.index', ['#' => 'app'])
+                ->with('success', 'App settings updated successfully.');
         }
+
+        return redirect()->back()
+            ->withErrors(['error' => 'You do not have permission to update settings.']);
     }
 
     /**
@@ -172,7 +171,7 @@ class SettingsController extends Controller
         $userPointSettingsForm->initValues();
         $model->initValues();
 
-        return ViewFacade::make('web.settings.public', [
+        return ViewFacade::make('settings.public', [
             'model' => $model,
             'userPointSettingsForm' => $userPointSettingsForm,
         ]);
@@ -183,18 +182,16 @@ class SettingsController extends Controller
      */
     public function updatePublic(SettingsPublicRequest $request): Response
     {
-        try {
-            $validated = $request->validated();
-            $this->savePublicSettings($validated);
+        $validated = $request->validated();
 
-            return redirect()->route('web.settings.public')
-                ->with('success', 'Public settings updated successfully.');
+        $dto = new SettingsUpdateRequestDTO(
+            settings: $validated
+        );
 
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update public settings: '.$e->getMessage()])
-                ->withInput();
-        }
+        $this->updateSettingsAction->execute($dto->toArray());
+
+        return redirect()->route('settings.public')
+            ->with('success', 'Public settings updated successfully.');
     }
 
     /**
@@ -202,18 +199,16 @@ class SettingsController extends Controller
      */
     public function updateUserPoint(UserPointSettingsRequest $request): Response
     {
-        try {
-            $validated = $request->validated();
-            $this->saveUserPointSettings($validated);
+        $validated = $request->validated();
 
-            return redirect()->route('web.settings.public')
-                ->with('success', 'User point settings updated successfully.');
+        $dto = new SettingsUpdateRequestDTO(
+            settings: $validated
+        );
 
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update user point settings: '.$e->getMessage()])
-                ->withInput();
-        }
+        $this->updateSettingsAction->execute($dto->toArray());
+
+        return redirect()->route('settings.public')
+            ->with('success', 'User point settings updated successfully.');
     }
 
     /**
@@ -221,68 +216,13 @@ class SettingsController extends Controller
      */
     public function bitpayGeneration(Request $request): Response
     {
-        try {
-            if ($request->ajax()) {
-                // BitPay client generation logic here
-                $pairingCode = $this->generateBitPayConfig();
+        if ($request->ajax()) {
+            $pairingCode = $this->generateBitPayConfig();
 
-                return response()->json($pairingCode);
-            }
-
-            return response()->json(['error' => 'Invalid request'], 400);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to generate BitPay config: '.$e->getMessage()], 500);
+            return response()->json($pairingCode);
         }
-    }
 
-    // Helper methods
-    private function saveMainSettings(array $data): void
-    {
-        // Save main settings logic here
-        foreach ($data as $key => $value) {
-            Settings::set($key, $value);
-        }
-    }
-
-    private function saveSmsSettings(array $data): void
-    {
-        // Save SMS settings logic here
-        foreach ($data as $key => $value) {
-            Settings::set($key, $value);
-        }
-    }
-
-    private function saveApiSettings(array $data): void
-    {
-        // Save API settings logic here
-        foreach ($data as $key => $value) {
-            Settings::set($key, $value);
-        }
-    }
-
-    private function saveAppSettings(array $data): void
-    {
-        // Save app settings logic here
-        foreach ($data as $key => $value) {
-            Settings::set($key, $value);
-        }
-    }
-
-    private function savePublicSettings(array $data): void
-    {
-        // Save public settings logic here
-        foreach ($data as $key => $value) {
-            Settings::set($key, $value);
-        }
-    }
-
-    private function saveUserPointSettings(array $data): void
-    {
-        // Save user point settings logic here
-        foreach ($data as $key => $value) {
-            Settings::set($key, $value);
-        }
+        return response()->json(['error' => 'Invalid request'], 400);
     }
 
     private function generateBitPayConfig(): string

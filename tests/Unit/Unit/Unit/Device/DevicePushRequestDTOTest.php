@@ -14,7 +14,7 @@ class DevicePushRequestDTOTest extends TestCase
     {
         // Arrange & Act
         $dto = new DevicePushRequestDTO(
-            id: 123,
+            deviceId: 123,
             title: 'Test Notification',
             body: 'This is a test message',
             data: ['key' => 'value', 'number' => 42],
@@ -23,7 +23,7 @@ class DevicePushRequestDTOTest extends TestCase
         );
 
         // Assert
-        $this->assertEquals(123, $dto->id);
+        $this->assertEquals(123, $dto->deviceId);
         $this->assertEquals('Test Notification', $dto->title);
         $this->assertEquals('This is a test message', $dto->body);
         $this->assertEquals(['key' => 'value', 'number' => 42], $dto->data);
@@ -36,7 +36,7 @@ class DevicePushRequestDTOTest extends TestCase
     {
         // Arrange & Act
         $dto = new DevicePushRequestDTO(
-            id: 456,
+            deviceId: 456,
             title: 'Simple Notification',
             body: 'Basic message',
             data: null,
@@ -45,7 +45,7 @@ class DevicePushRequestDTOTest extends TestCase
         );
 
         // Assert
-        $this->assertEquals(456, $dto->id);
+        $this->assertEquals(456, $dto->deviceId);
         $this->assertEquals('Simple Notification', $dto->title);
         $this->assertEquals('Basic message', $dto->body);
         $this->assertNull($dto->data);
@@ -58,7 +58,7 @@ class DevicePushRequestDTOTest extends TestCase
     {
         // Arrange & Act
         $dto = new DevicePushRequestDTO(
-            id: 789,
+            deviceId: 789,
             title: '',
             body: '',
             data: null,
@@ -67,7 +67,7 @@ class DevicePushRequestDTOTest extends TestCase
         );
 
         // Assert
-        $this->assertEquals(789, $dto->id);
+        $this->assertEquals(789, $dto->deviceId);
         $this->assertEquals('', $dto->title);
         $this->assertEquals('', $dto->body);
         $this->assertNull($dto->data);
@@ -80,7 +80,7 @@ class DevicePushRequestDTOTest extends TestCase
     {
         // Arrange & Act
         $dto = new DevicePushRequestDTO(
-            id: 0,
+            deviceId: 0,
             title: 'Zero ID Test',
             body: 'Testing zero ID',
             data: null,
@@ -89,7 +89,7 @@ class DevicePushRequestDTOTest extends TestCase
         );
 
         // Assert
-        $this->assertEquals(0, $dto->id);
+        $this->assertEquals(0, $dto->deviceId);
         $this->assertEquals('Zero ID Test', $dto->title);
         $this->assertEquals('Testing zero ID', $dto->body);
         $this->assertNull($dto->data);
@@ -102,7 +102,7 @@ class DevicePushRequestDTOTest extends TestCase
     {
         // Arrange & Act
         $dto = new DevicePushRequestDTO(
-            id: -1,
+            deviceId: -1,
             title: 'Negative ID Test',
             body: 'Testing negative ID',
             data: null,
@@ -111,7 +111,7 @@ class DevicePushRequestDTOTest extends TestCase
         );
 
         // Assert
-        $this->assertEquals(-1, $dto->id);
+        $this->assertEquals(-1, $dto->deviceId);
         $this->assertEquals('Negative ID Test', $dto->title);
         $this->assertEquals('Testing negative ID', $dto->body);
         $this->assertNull($dto->data);
@@ -124,7 +124,7 @@ class DevicePushRequestDTOTest extends TestCase
     {
         // Arrange & Act
         $dto = new DevicePushRequestDTO(
-            id: 999999,
+            deviceId: 999999,
             title: 'Very Long Notification Title That Exceeds Normal Length',
             body: 'This is a very long notification body that contains a lot of text and should test the limits of the DTO constructor',
             data: ['very_long_key' => 'very_long_value', 'array' => [1, 2, 3, 4, 5]],
@@ -133,7 +133,7 @@ class DevicePushRequestDTOTest extends TestCase
         );
 
         // Assert
-        $this->assertEquals(999999, $dto->id);
+        $this->assertEquals(999999, $dto->deviceId);
         $this->assertEquals('Very Long Notification Title That Exceeds Normal Length', $dto->title);
         $this->assertEquals('This is a very long notification body that contains a lot of text and should test the limits of the DTO constructor', $dto->body);
         $this->assertEquals(['very_long_key' => 'very_long_value', 'array' => [1, 2, 3, 4, 5]], $dto->data);
@@ -146,7 +146,7 @@ class DevicePushRequestDTOTest extends TestCase
     {
         // Arrange & Act
         $dto = new DevicePushRequestDTO(
-            id: 123,
+            deviceId: 123,
             title: 'Special Chars: !@#$%^&*()_+-=[]{}|;:,.<>?',
             body: 'Unicode: 🚀📱💻🔥',
             data: ['special' => '!@#$%^&*()', 'unicode' => '🚀📱💻'],
@@ -155,7 +155,7 @@ class DevicePushRequestDTOTest extends TestCase
         );
 
         // Assert
-        $this->assertEquals(123, $dto->id);
+        $this->assertEquals(123, $dto->deviceId);
         $this->assertEquals('Special Chars: !@#$%^&*()_+-=[]{}|;:,.<>?', $dto->title);
         $this->assertEquals('Unicode: 🚀📱💻🔥', $dto->body);
         $this->assertEquals(['special' => '!@#$%^&*()', 'unicode' => '🚀📱💻'], $dto->data);

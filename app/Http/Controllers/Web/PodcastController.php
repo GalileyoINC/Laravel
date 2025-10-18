@@ -46,7 +46,7 @@ class PodcastController extends Controller
 
         $podcasts = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.podcast.index', [
+        return ViewFacade::make('podcast.index', [
             'podcasts' => $podcasts,
             'filters' => $request->only(['search', 'type', 'created_at_from', 'created_at_to']),
         ]);
@@ -57,7 +57,7 @@ class PodcastController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.podcast.create');
+        return ViewFacade::make('podcast.create');
     }
 
     /**
@@ -71,8 +71,6 @@ class PodcastController extends Controller
             'type' => 'required|string|in:audio,video',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        try {
             $podcast = new Podcast();
             $podcast->title = $request->get('title');
             $podcast->url = $request->get('url');
@@ -86,14 +84,8 @@ class PodcastController extends Controller
 
             $podcast->save();
 
-            return redirect()->route('web.podcast.index')
+            return redirect()->route('podcast.index')
                 ->with('success', 'Podcast created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create podcast: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -101,7 +93,7 @@ class PodcastController extends Controller
      */
     public function edit(Podcast $podcast): View
     {
-        return ViewFacade::make('web.podcast.edit', [
+        return ViewFacade::make('podcast.edit', [
             'podcast' => $podcast,
         ]);
     }
@@ -117,8 +109,6 @@ class PodcastController extends Controller
             'type' => 'required|string|in:audio,video',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        try {
             $podcast->title = $request->get('title');
             $podcast->url = $request->get('url');
             $podcast->type = $request->get('type');
@@ -136,14 +126,8 @@ class PodcastController extends Controller
 
             $podcast->save();
 
-            return redirect()->route('web.podcast.index')
+            return redirect()->route('podcast.index')
                 ->with('success', 'Podcast updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update podcast: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -151,7 +135,6 @@ class PodcastController extends Controller
      */
     public function destroy(Podcast $podcast): Response
     {
-        try {
             // Delete image if exists
             if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
                 Storage::disk('public')->delete($podcast->image);
@@ -159,13 +142,8 @@ class PodcastController extends Controller
 
             $podcast->delete();
 
-            return redirect()->route('web.podcast.index')
+            return redirect()->route('podcast.index')
                 ->with('success', 'Podcast deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete podcast: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -173,7 +151,6 @@ class PodcastController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = Podcast::query();
 
             // Apply same filters as index
@@ -224,10 +201,5 @@ class PodcastController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export podcasts: '.$e->getMessage()]);
-        }
     }
 }

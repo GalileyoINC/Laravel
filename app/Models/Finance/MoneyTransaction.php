@@ -73,31 +73,31 @@ class MoneyTransaction extends Model
 
     public function credit_card()
     {
-        return $this->belongsTo(App\Models\Finance\CreditCard::class, 'id_credit_card');
+        return $this->belongsTo(\App\Models\Finance\CreditCard::class, 'id_credit_card');
     }
 
     public function invoice()
     {
-        return $this->belongsTo(App\Models\Finance\Invoice::class, 'id_invoice');
+        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
     }
 
     public function money_transaction()
     {
-        return $this->belongsTo(App\Models\Finance\MoneyTransaction::class, 'id_refund');
+        return $this->belongsTo(\App\Models\Finance\MoneyTransaction::class, 'id_refund');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function log_authorizes()
     {
-        return $this->hasMany(App\Models\Analytics\LogAuthorize::class, 'id_money_transaction');
+        return $this->hasMany(\App\Models\Analytics\LogAuthorize::class, 'id_money_transaction');
     }
 
     public function money_transactions()
     {
-        return $this->hasMany(App\Models\Finance\MoneyTransaction::class, 'id_refund');
+        return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_refund');
     }
 }

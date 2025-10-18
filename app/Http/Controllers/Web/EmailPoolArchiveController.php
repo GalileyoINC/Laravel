@@ -80,7 +80,7 @@ class EmailPoolArchiveController extends Controller
         $sendingTypes = EmailPool::getSendingTypes();
         $statuses = EmailPool::getStatuses();
 
-        return ViewFacade::make('web.email-pool-archive.index', [
+        return ViewFacade::make('email-pool-archive.index', [
             'emailPoolArchives' => $emailPoolArchives,
             'sendingTypes' => $sendingTypes,
             'statuses' => $statuses,
@@ -95,7 +95,7 @@ class EmailPoolArchiveController extends Controller
     {
         $emailPoolArchive->load(['attachments']);
 
-        return ViewFacade::make('web.email-pool-archive.show', [
+        return ViewFacade::make('email-pool-archive.show', [
             'emailPoolArchive' => $emailPoolArchive,
         ]);
     }
@@ -124,16 +124,10 @@ class EmailPoolArchiveController extends Controller
      */
     public function destroy(EmailPoolArchive $emailPoolArchive): Response
     {
-        try {
             $emailPoolArchive->delete();
 
-            return redirect()->route('web.email-pool-archive.index')
+            return redirect()->route('email-pool-archive.index')
                 ->with('success', 'Email pool archive deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete email pool archive: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -141,7 +135,6 @@ class EmailPoolArchiveController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = EmailPoolArchive::with(['attachments']);
 
             // Apply same filters as index
@@ -219,10 +212,5 @@ class EmailPoolArchiveController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export email pool archive: '.$e->getMessage()]);
-        }
     }
 }

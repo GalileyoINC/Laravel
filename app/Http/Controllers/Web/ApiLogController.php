@@ -45,7 +45,7 @@ class ApiLogController extends Controller
 
         $apiLogs = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.api-log.index', [
+        return ViewFacade::make('api-log.index', [
             'apiLogs' => $apiLogs,
             'filters' => $request->only(['search', 'key', 'created_at_from', 'created_at_to']),
         ]);
@@ -56,7 +56,7 @@ class ApiLogController extends Controller
      */
     public function show(ApiLog $apiLog): View
     {
-        return ViewFacade::make('web.api-log.show', [
+        return ViewFacade::make('api-log.show', [
             'apiLog' => $apiLog,
         ]);
     }
@@ -66,17 +66,11 @@ class ApiLogController extends Controller
      */
     public function deleteByKey(ApiLog $apiLog): Response
     {
-        try {
             $key = $apiLog->key;
             ApiLog::where('key', $key)->delete();
 
-            return redirect()->route('web.api-log.index')
+            return redirect()->route('api-log.index')
                 ->with('success', "All API logs with key '{$key}' deleted successfully.");
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete API logs: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -84,7 +78,6 @@ class ApiLogController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = ApiLog::query();
 
             // Apply same filters as index
@@ -133,10 +126,5 @@ class ApiLogController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export API logs: '.$e->getMessage()]);
-        }
     }
 }

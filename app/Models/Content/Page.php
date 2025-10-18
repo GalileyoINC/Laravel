@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Content;
 
 use Carbon\Carbon;
+use Database\Factories\ContentPageFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,5 +47,13 @@ class Page extends Model
     public function page_contents()
     {
         return $this->hasMany(PageContent::class, 'id_page');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return ContentPageFactory::new();
     }
 }

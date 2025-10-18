@@ -74,21 +74,21 @@ class SpsContract extends Model
 
     public function user_plan()
     {
-        return $this->belongsTo(App\Models\User\UserPlan::class, 'id_plan');
+        return $this->belongsTo(\App\Models\User\UserPlan::class, 'id_plan');
     }
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function contract_lines()
     {
-        return $this->hasMany(App\Models\Finance\ContractLine::class, 'id_sps_contract');
+        return $this->hasMany(\App\Models\Finance\ContractLine::class, 'id_sps_contract');
     }
 }

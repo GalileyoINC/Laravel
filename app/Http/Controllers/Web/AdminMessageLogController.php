@@ -47,7 +47,7 @@ class AdminMessageLogController extends Controller
 
         $adminMessageLogs = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.admin-message-log.index', [
+        return ViewFacade::make('admin-message-log.index', [
             'adminMessageLogs' => $adminMessageLogs,
             'filters' => $request->only(['objType', 'objId', 'search', 'created_at_from', 'created_at_to']),
         ]);
@@ -58,7 +58,6 @@ class AdminMessageLogController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = AdminMessageLog::query();
 
             // Apply same filters as index
@@ -109,10 +108,5 @@ class AdminMessageLogController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export admin message logs: '.$e->getMessage()]);
-        }
     }
 }

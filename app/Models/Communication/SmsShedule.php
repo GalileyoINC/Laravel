@@ -73,17 +73,17 @@ class SmsShedule extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function follower_list()
     {
-        return $this->belongsTo(App\Models\Subscription\FollowerList::class, 'id_follower_list');
+        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
     public function sms_pool()
     {
-        return $this->belongsTo(App\Models\Communication\SmsPool::class, 'id_sms_pool');
+        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
     public function staff()
@@ -93,7 +93,7 @@ class SmsShedule extends Model
 
     public function subscription()
     {
-        return $this->belongsTo(App\Models\Subscription\Subscription::class, 'id_subscription');
+        return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
     public function sms_pool_photos()

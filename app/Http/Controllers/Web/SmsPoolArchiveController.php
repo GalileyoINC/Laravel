@@ -77,7 +77,7 @@ class SmsPoolArchiveController extends Controller
         $purposes = SmsPool::getPurposes();
         $subscriptions = Subscription::getForDropDown();
 
-        return ViewFacade::make('web.sms-pool-archive.index', [
+        return ViewFacade::make('sms-pool-archive.index', [
             'smsPoolArchives' => $smsPoolArchives,
             'purposes' => $purposes,
             'subscriptions' => $subscriptions,
@@ -92,7 +92,7 @@ class SmsPoolArchiveController extends Controller
     {
         $smsPoolArchive->load(['user', 'staff', 'subscription', 'followerList']);
 
-        return ViewFacade::make('web.sms-pool-archive.show', [
+        return ViewFacade::make('sms-pool-archive.show', [
             'smsPoolArchive' => $smsPoolArchive,
         ]);
     }
@@ -102,7 +102,6 @@ class SmsPoolArchiveController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = SmsPoolArchive::with(['user', 'staff', 'subscription', 'followerList']);
 
             // Apply same filters as index
@@ -186,10 +185,5 @@ class SmsPoolArchiveController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export SMS pool archive: '.$e->getMessage()]);
-        }
     }
 }

@@ -45,6 +45,6 @@ class ProductPhoto extends Model
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 }

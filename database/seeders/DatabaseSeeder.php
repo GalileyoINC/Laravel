@@ -29,10 +29,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->command->info('🌱 Starting database seeding...');
 
-        // Create users
-        $this->command->info('👥 Creating users...');
+        // Run the demo data seeder first
+        $this->call(DemoDataSeeder::class);
+
+        // Continue with existing seeding logic
+        $this->command->info('👥 Creating additional users...');
         $users = User::factory(50)->create();
-        $this->command->info("✅ Created {$users->count()} users");
+        $this->command->info("✅ Created {$users->count()} additional users");
 
         // Create subscription categories first
         $this->command->info('📂 Creating subscription categories...');
@@ -45,9 +48,9 @@ class DatabaseSeeder extends Seeder
         $this->command->info("✅ Created {$subscriptions->count()} subscriptions");
 
         // Create news
-        $this->command->info('📰 Creating news...');
+        $this->command->info('📰 Creating additional news...');
         $news = News::factory(100)->create();
-        $this->command->info("✅ Created {$news->count()} news articles");
+        $this->command->info("✅ Created {$news->count()} additional news articles");
 
         // Create comments
         $this->command->info('💬 Creating comments...');
@@ -60,9 +63,9 @@ class DatabaseSeeder extends Seeder
         $this->command->info("✅ Created {$creditCards->count()} credit cards");
 
         // Create devices
-        $this->command->info('📱 Creating devices...');
+        $this->command->info('📱 Creating additional devices...');
         $devices = Device::factory(60)->create();
-        $this->command->info("✅ Created {$devices->count()} devices");
+        $this->command->info("✅ Created {$devices->count()} additional devices");
 
         // Create SMS pools
         $this->command->info('📨 Creating SMS pools...');

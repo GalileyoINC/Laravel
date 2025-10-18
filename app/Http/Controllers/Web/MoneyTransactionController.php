@@ -80,7 +80,7 @@ class MoneyTransactionController extends Controller
         // Calculate total sum
         $totalSum = $query->sum('total');
 
-        return ViewFacade::make('web.money-transaction.index', [
+        return ViewFacade::make('money-transaction.index', [
             'transactions' => $transactions,
             'filters' => $request->only(['search', 'transaction_type', 'is_success', 'is_void', 'is_test', 'createTimeRange', 'total_min', 'total_max']),
             'totalSum' => $totalSum,
@@ -94,7 +94,7 @@ class MoneyTransactionController extends Controller
     {
         $moneyTransaction->load(['user', 'invoice', 'creditCard']);
 
-        return ViewFacade::make('web.money-transaction.show', [
+        return ViewFacade::make('money-transaction.show', [
             'transaction' => $moneyTransaction,
         ]);
     }
@@ -104,7 +104,6 @@ class MoneyTransactionController extends Controller
      */
     public function void(MoneyTransaction $moneyTransaction): Response
     {
-        try {
             if (! $moneyTransaction->canBeVoided()) {
                 return response()->json(['error' => 'Transaction cannot be voided'], 400);
             }
@@ -114,10 +113,6 @@ class MoneyTransactionController extends Controller
             }
 
             return response()->json(['success' => 'Transaction voided successfully']);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to void transaction: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -129,7 +124,7 @@ class MoneyTransactionController extends Controller
             abort(400, 'Transaction cannot be refunded');
         }
 
-        return ViewFacade::make('web.money-transaction.refund', [
+        return ViewFacade::make('money-transaction.refund', [
             'transaction' => $moneyTransaction,
         ]);
     }
@@ -139,7 +134,6 @@ class MoneyTransactionController extends Controller
      */
     public function processRefund(RefundRequest $request, MoneyTransaction $moneyTransaction): Response
     {
-        try {
             if (! $moneyTransaction->canBeRefund()) {
                 return response()->json(['error' => 'Transaction cannot be refunded'], 400);
             }
@@ -150,10 +144,6 @@ class MoneyTransactionController extends Controller
             // This would typically call a payment gateway API
 
             return response()->json(['success' => 'Refund processed successfully']);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to process refund: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -161,7 +151,6 @@ class MoneyTransactionController extends Controller
      */
     public function toCsv(Request $request): Response
     {
-        try {
             $query = MoneyTransaction::with(['user', 'creditCard']);
 
             // Apply same filters as index
@@ -248,10 +237,6 @@ class MoneyTransactionController extends Controller
             };
 
             return response()->stream($callback, 200, $headers);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to export CSV: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -267,7 +252,7 @@ class MoneyTransactionController extends Controller
         // This would typically involve complex database queries
         // For now, we'll return a basic view structure
 
-        return ViewFacade::make('web.money-transaction.report', [
+        return ViewFacade::make('money-transaction.report', [
             'month' => $month,
             'firstDayOfThisMonth' => $firstDayOfThisMonth,
             'firstDayOfNextMonth' => $firstDayOfNextMonth,

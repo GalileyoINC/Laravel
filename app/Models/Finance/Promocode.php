@@ -61,7 +61,7 @@ class Promocode extends Model
 
     public function invoices()
     {
-        return $this->belongsToMany(App\Models\Finance\Invoice::class, 'invoice_promocode', 'id_promo', 'id_invoice')
+        return $this->belongsToMany(\App\Models\Finance\Invoice::class, 'invoice_promocode', 'id_promo', 'id_invoice')
             ->withPivot('id');
     }
 

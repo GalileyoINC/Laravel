@@ -57,7 +57,7 @@ class AppleController extends Controller
 
         $transactions = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.apple.app-transactions', [
+        return ViewFacade::make('apple.app-transactions', [
             'transactions' => $transactions,
             'filters' => $request->only(['search', 'status', 'is_process', 'id_user', 'created_at_from', 'created_at_to']),
         ]);
@@ -68,7 +68,7 @@ class AppleController extends Controller
      */
     public function showAppTransaction(AppleAppTransaction $transaction): View
     {
-        return ViewFacade::make('web.apple.app-transaction-show', [
+        return ViewFacade::make('apple.app-transaction-show', [
             'transaction' => $transaction,
         ]);
     }
@@ -110,7 +110,7 @@ class AppleController extends Controller
 
         $notifications = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.apple.notifications', [
+        return ViewFacade::make('apple.notifications', [
             'notifications' => $notifications,
             'filters' => $request->only(['search', 'notification_type', 'subtype', 'created_at_from', 'created_at_to']),
         ]);
@@ -121,7 +121,7 @@ class AppleController extends Controller
      */
     public function showNotification(AppleNotification $notification): View
     {
-        return ViewFacade::make('web.apple.notification-show', [
+        return ViewFacade::make('apple.notification-show', [
             'notification' => $notification,
         ]);
     }
@@ -131,17 +131,11 @@ class AppleController extends Controller
      */
     public function processTransaction(Request $request, AppleAppTransaction $transaction): Response
     {
-        try {
             // Process transaction logic here
             $transaction->update(['is_process' => true]);
 
             return redirect()->back()
                 ->with('success', 'Transaction processed successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to process transaction: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -149,17 +143,11 @@ class AppleController extends Controller
      */
     public function retryTransaction(Request $request, AppleAppTransaction $transaction): Response
     {
-        try {
             // Retry transaction logic here
             $transaction->update(['is_process' => false]);
 
             return redirect()->back()
                 ->with('success', 'Transaction retry initiated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to retry transaction: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -167,7 +155,6 @@ class AppleController extends Controller
      */
     public function exportAppTransactions(Request $request): Response
     {
-        try {
             $query = AppleAppTransaction::query();
 
             // Apply same filters as index
@@ -228,11 +215,6 @@ class AppleController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export transactions: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -240,7 +222,6 @@ class AppleController extends Controller
      */
     public function exportNotifications(Request $request): Response
     {
-        try {
             $query = AppleNotification::query();
 
             // Apply same filters as index
@@ -295,10 +276,5 @@ class AppleController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export notifications: '.$e->getMessage()]);
-        }
     }
 }

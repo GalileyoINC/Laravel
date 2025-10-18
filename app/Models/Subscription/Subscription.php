@@ -106,7 +106,7 @@ class Subscription extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_influencer');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_influencer');
     }
 
     public function subscription_category()
@@ -121,12 +121,12 @@ class Subscription extends Model
 
     public function sms_shedules()
     {
-        return $this->hasMany(App\Models\Communication\SmsShedule::class, 'id_subscription');
+        return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_subscription');
     }
 
     public function users()
     {
-        return $this->belongsToMany(App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
+        return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
             ->withPivot('id', 'zip');
     }
 }

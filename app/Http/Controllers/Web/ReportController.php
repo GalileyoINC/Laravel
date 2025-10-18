@@ -28,13 +28,13 @@ class ReportController extends Controller
         // For now, we'll create a basic structure
 
         if ($date) {
-            return ViewFacade::make('web.report.login-statistic-by-day', [
+            return ViewFacade::make('report.login-statistic-by-day', [
                 'date' => $date,
                 'data' => $this->getLoginStatisticByDay($request, $date),
             ]);
         }
 
-        return ViewFacade::make('web.report.login-statistic', [
+        return ViewFacade::make('report.login-statistic', [
             'data' => $this->getLoginStatistic($request),
         ]);
     }
@@ -61,7 +61,7 @@ class ReportController extends Controller
 
         $devices = $query->orderBy('invoice.created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.report.sold-devices', [
+        return ViewFacade::make('report.sold-devices', [
             'devices' => $devices,
             'filters' => $request->only(['search']),
         ]);
@@ -80,7 +80,7 @@ class ReportController extends Controller
 
         $data = $report->searchInfluencerTotal($request->all());
 
-        return ViewFacade::make('web.report.influencer-total', [
+        return ViewFacade::make('report.influencer-total', [
             'name' => $name,
             'report' => $report,
             'data' => $data,
@@ -99,7 +99,7 @@ class ReportController extends Controller
         $services = Service::where('type', Service::TYPE_SUBSCRIBE)->get()->toArray();
         $report = $this->getReferralReport($date);
 
-        return ViewFacade::make('web.report.referral', [
+        return ViewFacade::make('report.referral', [
             'currDate' => $currDate,
             'reportDates' => $reportDates,
             'services' => $services,
@@ -163,7 +163,7 @@ class ReportController extends Controller
             ->orderBy('sps_terminated_at', 'desc')
             ->get();
 
-        return ViewFacade::make('web.report.sps-termination', [
+        return ViewFacade::make('report.sps-termination', [
             'users' => $users,
         ]);
     }
@@ -207,7 +207,7 @@ class ReportController extends Controller
         $pivotelCount = $this->getPhoneCount(PhoneNumber::TYPE_PIVOTEL, $lastDay);
         $satelliteCount = $this->getPhoneCount(PhoneNumber::TYPE_SATELLITE, $lastDay);
 
-        return ViewFacade::make('web.report.statistic', [
+        return ViewFacade::make('report.statistic', [
             'date' => $date,
             'months' => $months,
             'inMonth' => $inMonth,
@@ -241,7 +241,7 @@ class ReportController extends Controller
         $data = $report->search($request->all());
         $services = Service::all()->keyBy('id')->toArray();
 
-        return ViewFacade::make('web.report.ended', [
+        return ViewFacade::make('report.ended', [
             'name' => $name,
             'report' => $report,
             'data' => $data,
@@ -257,7 +257,7 @@ class ReportController extends Controller
         $report = $this->getReactionReport($name);
         $data = $report->search($request->all());
 
-        return ViewFacade::make('web.report.reaction', [
+        return ViewFacade::make('report.reaction', [
             'name' => $name,
             'report' => $report,
             'data' => $data,
@@ -269,12 +269,7 @@ class ReportController extends Controller
      */
     public function devicesPlans(Request $request, ?string $date = null): View
     {
-        try {
             $date = $date ? Carbon::parse($date) : Carbon::now();
-        } catch (Exception) {
-            $date = Carbon::now();
-        }
-
         $query = DB::table('invoice_line')
             ->join('invoice', 'invoice_line.id_invoice', '=', 'invoice.id')
             ->join('user', 'invoice.id_user', '=', 'user.id')
@@ -284,7 +279,7 @@ class ReportController extends Controller
 
         $devices = $query->orderBy('invoice.created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.report.devices-plans', [
+        return ViewFacade::make('report.devices-plans', [
             'devices' => $devices,
             'date' => $date,
             'filters' => $request->only(['search']),
@@ -312,7 +307,7 @@ class ReportController extends Controller
 
         $sms = $query->orderBy('sms_pool.created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.report.sms', [
+        return ViewFacade::make('report.sms', [
             'sms' => $sms,
             'filters' => $request->only(['search']),
         ]);
@@ -326,7 +321,7 @@ class ReportController extends Controller
         $reportByMonth = $this->getCustomerSourceReportByMonth($request->all());
         $reportByYears = $this->getCustomerSourceReportByYears($request->all());
 
-        return ViewFacade::make('web.report.customer-source', [
+        return ViewFacade::make('report.customer-source', [
             'reportByMonth' => $reportByMonth,
             'reportByYears' => $reportByYears,
         ]);
@@ -340,7 +335,7 @@ class ReportController extends Controller
         $report = $this->getUserPointReport($name);
         $data = $report->search($request->all());
 
-        return ViewFacade::make('web.report.user-point', [
+        return ViewFacade::make('report.user-point', [
             'name' => $name,
             'report' => $report,
             'data' => $data,

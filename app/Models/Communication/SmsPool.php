@@ -85,12 +85,12 @@ class SmsPool extends Model
 
     public function comments()
     {
-        return $this->hasMany(App\Models\Content\Comment::class, 'id_sms_pool');
+        return $this->hasMany(\App\Models\Content\Comment::class, 'id_sms_pool');
     }
 
     public function phone_numbers()
     {
-        return $this->belongsToMany(App\Models\Device\PhoneNumber::class, 'sms_pool_phone_number', 'id_sms_pool', 'id_phone_number')
+        return $this->belongsToMany(\App\Models\Device\PhoneNumber::class, 'sms_pool_phone_number', 'id_sms_pool', 'id_phone_number')
             ->withPivot('id', 'id_user', 'number', 'is_satellite', 'status', 'sid', 'error', 'id_provider', 'type');
     }
 
@@ -117,12 +117,12 @@ class SmsPool extends Model
 
     public function sms_shedules()
     {
-        return $this->hasMany(App\Models\Communication\SmsShedule::class, 'id_sms_pool');
+        return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_sms_pool');
     }
 
     public function user_point_histories()
     {
-        return $this->hasMany(App\Models\User\UserPointHistory::class, 'id_sms_pool');
+        return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_sms_pool');
     }
 
     protected static function newFactory()

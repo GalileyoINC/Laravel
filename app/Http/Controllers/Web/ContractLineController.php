@@ -60,7 +60,7 @@ class ContractLineController extends Controller
             ->toArray();
         $payIntervals = UserPlan::getPayIntervals();
 
-        return ViewFacade::make('web.contract-line.unpaid', [
+        return ViewFacade::make('contract-line.unpaid', [
             'contractLines' => $contractLines,
             'services' => $services,
             'payIntervals' => $payIntervals,
@@ -74,7 +74,6 @@ class ContractLineController extends Controller
      */
     public function exportUnpaid(Request $request): Response
     {
-        try {
             $query = ContractLine::with(['user', 'service'])
                 ->whereHas('userPlan', function ($q) {
                     $q->where('end_at', '<', now());
@@ -132,10 +131,5 @@ class ContractLineController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export unpaid contract lines: '.$e->getMessage()]);
-        }
     }
 }

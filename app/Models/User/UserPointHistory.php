@@ -53,17 +53,17 @@ class UserPointHistory extends Model
 
     public function comment()
     {
-        return $this->belongsTo(App\Models\Content\Comment::class, 'id_comment');
+        return $this->belongsTo(\App\Models\Content\Comment::class, 'id_comment');
     }
 
     public function sms_pool()
     {
-        return $this->belongsTo(App\Models\Communication\SmsPool::class, 'id_sms_pool');
+        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function user_point_setting()

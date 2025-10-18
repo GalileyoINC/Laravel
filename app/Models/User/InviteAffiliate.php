@@ -48,11 +48,11 @@ class InviteAffiliate extends Model
 
     public function invoice()
     {
-        return $this->belongsTo(App\Models\Finance\Invoice::class, 'id_reward_invoice');
+        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_reward_invoice');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_inviter');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_inviter');
     }
 }

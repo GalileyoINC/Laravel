@@ -33,7 +33,6 @@ class BundleController extends Controller
      */
     public function index(Request $request): View
     {
-        try {
             $dto = new BundleListRequestDTO(
                 page: $request->get('page', 1),
                 limit: $request->get('limit', 20),
@@ -44,17 +43,10 @@ class BundleController extends Controller
             $result = $this->getBundleListAction->execute($dto->toArray());
             $bundles = $result->getData()->data;
 
-            return ViewFacade::make('web.bundle.index', [
+            return ViewFacade::make('bundle.index', [
                 'bundles' => $bundles,
                 'filters' => $request->only(['search', 'status']),
             ]);
-        } catch (Exception $e) {
-            return ViewFacade::make('web.bundle.index', [
-                'bundles' => collect(),
-                'filters' => [],
-                'error' => 'Failed to load bundles: '.$e->getMessage(),
-            ]);
-        }
     }
 
     /**
@@ -62,7 +54,7 @@ class BundleController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.bundle.create');
+        return ViewFacade::make('bundle.create');
     }
 
     /**
@@ -70,7 +62,6 @@ class BundleController extends Controller
      */
     public function store(BundleRequest $request): RedirectResponse
     {
-        try {
             $validated = $request->validated();
 
             $dto = new CreateBundleDTO(
@@ -84,19 +75,13 @@ class BundleController extends Controller
             $result = $this->createBundleAction->execute($dto);
 
             if ($result->getData()->success) {
-                return Redirect::to(route('web.bundle.index'))
+                return Redirect::to(route('bundle.index'))
                     ->with('success', 'Bundle created successfully.');
             }
 
             return Redirect::back()
                 ->withErrors(['error' => $result->getData()->message ?? 'Failed to create bundle.'])
                 ->withInput();
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to create bundle: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -106,7 +91,7 @@ class BundleController extends Controller
     {
         $bundle->load(['bundle_items', 'invoice_lines']);
 
-        return ViewFacade::make('web.bundle.show', [
+        return ViewFacade::make('bundle.show', [
             'bundle' => $bundle,
         ]);
     }
@@ -116,7 +101,7 @@ class BundleController extends Controller
      */
     public function edit(Bundle $bundle): View
     {
-        return ViewFacade::make('web.bundle.edit', [
+        return ViewFacade::make('bundle.edit', [
             'bundle' => $bundle,
         ]);
     }
@@ -126,7 +111,6 @@ class BundleController extends Controller
      */
     public function update(BundleRequest $request, Bundle $bundle): RedirectResponse
     {
-        try {
             $validated = $request->validated();
 
             $dto = new UpdateBundleDTO(
@@ -141,19 +125,13 @@ class BundleController extends Controller
             $result = $this->updateBundleAction->execute($dto);
 
             if ($result->getData()->success) {
-                return Redirect::to(route('web.bundle.index'))
+                return Redirect::to(route('bundle.index'))
                     ->with('success', 'Bundle updated successfully.');
             }
 
             return Redirect::back()
                 ->withErrors(['error' => $result->getData()->message ?? 'Failed to update bundle.'])
                 ->withInput();
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to update bundle: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -161,7 +139,6 @@ class BundleController extends Controller
      */
     public function destroy(Bundle $bundle): RedirectResponse
     {
-        try {
             // Check if bundle has associated items
             if ($bundle->bundle_items()->count() > 0) {
                 return Redirect::back()
@@ -170,13 +147,8 @@ class BundleController extends Controller
 
             $bundle->delete();
 
-            return Redirect::to(route('web.bundle.index'))
+            return Redirect::to(route('bundle.index'))
                 ->with('success', 'Bundle deleted successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to delete bundle: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -184,7 +156,6 @@ class BundleController extends Controller
      */
     public function toggleStatus(Bundle $bundle): RedirectResponse
     {
-        try {
             $bundle->update([
                 'is_active' => ! $bundle->is_active,
             ]);
@@ -193,11 +164,6 @@ class BundleController extends Controller
 
             return Redirect::back()
                 ->with('success', "Bundle {$status} successfully.");
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to toggle bundle status: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -205,7 +171,6 @@ class BundleController extends Controller
      */
     public function getDeviceData(Request $request)
     {
-        try {
             $deviceId = $request->input('idDevice');
 
             $action = new \App\Domain\Actions\Bundle\GetBundleDeviceDataAction(
@@ -219,11 +184,5 @@ class BundleController extends Controller
             $result = $action->execute($dto);
 
             return response()->json($result->getData());
-
-        } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Failed to get device data: '.$e->getMessage(),
-            ], 500);
-        }
     }
 }

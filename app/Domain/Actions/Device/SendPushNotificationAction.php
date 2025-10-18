@@ -7,7 +7,6 @@ namespace App\Domain\Actions\Device;
 use App\Domain\DTOs\Device\DevicePushRequestDTO;
 use App\Domain\Services\Device\DeviceServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class SendPushNotificationAction
@@ -16,13 +15,13 @@ class SendPushNotificationAction
         private readonly DeviceServiceInterface $deviceService
     ) {}
 
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): array
     {
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
+        try {
             $dto = new DevicePushRequestDTO(
-                id: $data['id'],
+                deviceId: $data['device_id'],
                 title: $data['title'],
                 body: $data['body'],
                 data: $data['data'] ?? null,
@@ -31,22 +30,12 @@ class SendPushNotificationAction
             );
 
             $result = $this->deviceService->sendPushNotification($dto);
-
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Push notification sent successfully',
-                'data' => $result,
-            ]);
-
+            return $result;
         } catch (Exception $e) {
             DB::rollBack();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to send push notification: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

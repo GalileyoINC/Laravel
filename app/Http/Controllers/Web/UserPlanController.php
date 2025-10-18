@@ -56,7 +56,7 @@ class UserPlanController extends Controller
             ->where('is_active', true)
             ->pluck('name', 'id');
 
-        return ViewFacade::make('web.user-plan.unpaid', [
+        return ViewFacade::make('user-plan.unpaid', [
             'userPlans' => $userPlans,
             'services' => $services,
             'expDate' => $expDate,
@@ -69,7 +69,7 @@ class UserPlanController extends Controller
      */
     public function edit(UserPlan $userPlan): View
     {
-        return ViewFacade::make('web.user-plan.edit', [
+        return ViewFacade::make('user-plan.edit', [
             'userPlan' => $userPlan,
         ]);
     }
@@ -79,17 +79,10 @@ class UserPlanController extends Controller
      */
     public function update(UserPlanRequest $request, UserPlan $userPlan): Response
     {
-        try {
             $userPlan->update($request->validated());
 
-            return redirect()->route('web.user.show', $userPlan->user)
+            return redirect()->route('user.show', $userPlan->user)
                 ->with('success', 'User plan updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update user plan: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -97,7 +90,6 @@ class UserPlanController extends Controller
      */
     public function exportUnpaid(Request $request): Response
     {
-        try {
             $expDate = $request->get('exp_date', 30);
 
             $query = UserPlan::with(['user', 'service'])
@@ -153,10 +145,5 @@ class UserPlanController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export unpaid user plans: '.$e->getMessage()]);
-        }
     }
 }

@@ -43,11 +43,11 @@ class AdminMember extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_member');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_member');
     }
 
     public function user_plan()
     {
-        return $this->belongsTo(App\Models\User\UserPlan::class, 'id_plan');
+        return $this->belongsTo(\App\Models\User\UserPlan::class, 'id_plan');
     }
 }

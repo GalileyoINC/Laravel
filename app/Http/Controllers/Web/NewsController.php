@@ -48,7 +48,7 @@ class NewsController extends Controller
 
         $news = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.news.index', [
+        return ViewFacade::make('news.index', [
             'news' => $news,
             'filters' => $request->only(['search', 'status']),
         ]);
@@ -59,7 +59,7 @@ class NewsController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.news.create');
+        return ViewFacade::make('news.create');
     }
 
     /**
@@ -67,7 +67,6 @@ class NewsController extends Controller
      */
     public function store(NewsRequest $request): RedirectResponse
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -86,14 +85,8 @@ class NewsController extends Controller
 
             $news = News::create($data);
 
-            return Redirect::to(route('web.news.index'))
+            return Redirect::to(route('news.index'))
                 ->with('success', 'News created successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to create news: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -101,7 +94,7 @@ class NewsController extends Controller
      */
     public function show(News $news): View
     {
-        return ViewFacade::make('web.news.show', [
+        return ViewFacade::make('news.show', [
             'news' => $news,
         ]);
     }
@@ -111,7 +104,7 @@ class NewsController extends Controller
      */
     public function edit(News $news): View
     {
-        return ViewFacade::make('web.news.edit', [
+        return ViewFacade::make('news.edit', [
             'news' => $news,
         ]);
     }
@@ -121,7 +114,6 @@ class NewsController extends Controller
      */
     public function update(NewsRequest $request, News $news): RedirectResponse
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -143,14 +135,8 @@ class NewsController extends Controller
 
             $news->update($data);
 
-            return Redirect::to(route('web.news.index'))
+            return Redirect::to(route('news.index'))
                 ->with('success', 'News updated successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to update news: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -158,19 +144,13 @@ class NewsController extends Controller
      */
     public function destroy(News $news): RedirectResponse
     {
-        try {
             if ($news->image) {
                 Storage::disk('public')->delete($news->image);
             }
             $news->delete();
 
-            return Redirect::to(route('web.news.index'))
+            return Redirect::to(route('news.index'))
                 ->with('success', 'News deleted successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to delete news: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -178,7 +158,6 @@ class NewsController extends Controller
      */
     public function toggleStatus(News $news): RedirectResponse
     {
-        try {
             $news->update([
                 'status' => $news->status === 1 ? 0 : 1,
             ]);
@@ -187,11 +166,6 @@ class NewsController extends Controller
 
             return Redirect::back()
                 ->with('success', "News {$status} successfully.");
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to toggle news status: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -201,7 +175,7 @@ class NewsController extends Controller
     {
         $news->load('news_contents');
 
-        return ViewFacade::make('web.news.content', [
+        return ViewFacade::make('news.content', [
             'news' => $news,
         ]);
     }

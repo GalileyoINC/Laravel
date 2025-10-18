@@ -52,11 +52,11 @@ class MemberTemplate extends Model
 
     public function user_plan()
     {
-        return $this->belongsTo(App\Models\User\UserPlan::class, 'id_plan');
+        return $this->belongsTo(\App\Models\User\UserPlan::class, 'id_plan');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_admin');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_admin');
     }
 }

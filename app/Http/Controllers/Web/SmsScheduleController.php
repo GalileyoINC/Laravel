@@ -90,7 +90,7 @@ class SmsScheduleController extends Controller
         $statuses = SmsSchedule::getStatuses();
         $subscriptions = Subscription::getForDropDown();
 
-        return ViewFacade::make('web.sms-schedule.index', [
+        return ViewFacade::make('sms-schedule.index', [
             'smsSchedules' => $smsSchedules,
             'purposes' => $purposes,
             'statuses' => $statuses,
@@ -106,7 +106,7 @@ class SmsScheduleController extends Controller
     {
         $smsSchedule->load(['user', 'staff', 'subscription', 'followerList', 'smsPool']);
 
-        return ViewFacade::make('web.sms-schedule.show', [
+        return ViewFacade::make('sms-schedule.show', [
             'smsSchedule' => $smsSchedule,
         ]);
     }
@@ -116,7 +116,6 @@ class SmsScheduleController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = SmsSchedule::with(['user', 'staff', 'subscription', 'followerList', 'smsPool']);
 
             // Apply same filters as index
@@ -213,10 +212,5 @@ class SmsScheduleController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export SMS schedules: '.$e->getMessage()]);
-        }
     }
 }

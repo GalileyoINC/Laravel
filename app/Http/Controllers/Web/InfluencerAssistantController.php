@@ -58,7 +58,7 @@ class InfluencerAssistantController extends Controller
 
         $influencerAssistants = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.influencer-assistant.index', [
+        return ViewFacade::make('influencer-assistant.index', [
             'influencerAssistants' => $influencerAssistants,
             'filters' => $request->only(['search', 'userInfluencerName', 'userAssistantName']),
         ]);
@@ -74,7 +74,7 @@ class InfluencerAssistantController extends Controller
         $assistants = $users->pluck('full_name', 'id')->toArray();
         $influencers = $users->where('is_influencer', true)->pluck('full_name', 'id')->toArray();
 
-        return ViewFacade::make('web.influencer-assistant.create', [
+        return ViewFacade::make('influencer-assistant.create', [
             'assistants' => $assistants,
             'influencers' => $influencers,
         ]);
@@ -85,17 +85,10 @@ class InfluencerAssistantController extends Controller
      */
     public function store(InfluencerAssistantRequest $request): Response
     {
-        try {
             InfluencerAssistant::create($request->validated());
 
-            return redirect()->route('web.influencer-assistant.index')
+            return redirect()->route('influencer-assistant.index')
                 ->with('success', 'Influencer assistant created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create influencer assistant: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -106,21 +99,14 @@ class InfluencerAssistantController extends Controller
         if (! $request->isMethod('POST')) {
             return redirect()->back()->withErrors(['error' => 'Method not allowed.']);
         }
-
-        try {
             $influencerAssistant = InfluencerAssistant::where('id_influencer', $idInfluencer)
                 ->where('id_assistant', $idAssistant)
                 ->firstOrFail();
 
             $influencerAssistant->delete();
 
-            return redirect()->route('web.influencer-assistant.index')
+            return redirect()->route('influencer-assistant.index')
                 ->with('success', 'Record deleted successfully.');
-
-        } catch (Exception) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Record can not be deleted. Perhaps it is referenced by other records.']);
-        }
     }
 
     /**
@@ -128,7 +114,6 @@ class InfluencerAssistantController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = InfluencerAssistant::with(['influencer', 'assistant']);
 
             // Apply same filters as index
@@ -187,10 +172,5 @@ class InfluencerAssistantController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export influencer assistants: '.$e->getMessage()]);
-        }
     }
 }

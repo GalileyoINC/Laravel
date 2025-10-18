@@ -53,7 +53,7 @@ class StaffController extends Controller
 
         $staff = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.staff.index', [
+        return ViewFacade::make('staff.index', [
             'staff' => $staff,
             'filters' => $request->only(['search', 'status', 'role', 'created_at']),
         ]);
@@ -64,7 +64,7 @@ class StaffController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.staff.create');
+        return ViewFacade::make('staff.create');
     }
 
     /**
@@ -72,7 +72,6 @@ class StaffController extends Controller
      */
     public function store(StaffRequest $request): RedirectResponse
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -90,14 +89,8 @@ class StaffController extends Controller
 
             Staff::create($data);
 
-            return Redirect::to(route('web.staff.index'))
+            return Redirect::to(route('staff.index'))
                 ->with('success', 'Staff created successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to create staff: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -105,7 +98,7 @@ class StaffController extends Controller
      */
     public function show(Staff $staff): View
     {
-        return ViewFacade::make('web.staff.show', [
+        return ViewFacade::make('staff.show', [
             'staff' => $staff,
         ]);
     }
@@ -115,7 +108,7 @@ class StaffController extends Controller
      */
     public function edit(Staff $staff): View
     {
-        return ViewFacade::make('web.staff.edit', [
+        return ViewFacade::make('staff.edit', [
             'staff' => $staff,
         ]);
     }
@@ -125,7 +118,6 @@ class StaffController extends Controller
      */
     public function update(StaffRequest $request, Staff $staff): RedirectResponse
     {
-        try {
             // Check permissions
             if (! $this->canChange($staff)) {
                 return Redirect::back()
@@ -153,14 +145,8 @@ class StaffController extends Controller
 
             $staff->update($data);
 
-            return Redirect::to(route('web.staff.index'))
+            return Redirect::to(route('staff.index'))
                 ->with('success', 'Staff updated successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to update staff: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -168,7 +154,6 @@ class StaffController extends Controller
      */
     public function destroy(Staff $staff): RedirectResponse
     {
-        try {
             // Check permissions
             if (! $this->canChange($staff)) {
                 return Redirect::back()
@@ -177,13 +162,8 @@ class StaffController extends Controller
 
             $staff->delete();
 
-            return Redirect::to(route('web.staff.index'))
+            return Redirect::to(route('staff.index'))
                 ->with('success', 'Staff deleted successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to delete staff: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -191,7 +171,6 @@ class StaffController extends Controller
      */
     public function loginAs(Staff $staff): RedirectResponse
     {
-        try {
             // Only super admin can login as other staff
             if (! Auth::user()->isSuper()) {
                 return Redirect::back()
@@ -203,13 +182,8 @@ class StaffController extends Controller
 
             request()->session()->put('loginFromSuper', true);
 
-            return Redirect::to(route('web.site.index'))
+            return Redirect::to(route('site.index'))
                 ->with('success', 'Logged in as: '.$staff->username);
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to login as staff: '.$e->getMessage()]);
-        }
     }
 
     /**

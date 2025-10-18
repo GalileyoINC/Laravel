@@ -36,7 +36,7 @@ class Session extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(App\Models\User\User::class, 'userId');
+        return $this->belongsTo(\App\Models\User\User::class, 'userId');
     }
 
     /**

@@ -60,16 +60,16 @@ class UserPlanShedule extends Model
 
     public function contract_line()
     {
-        return $this->belongsTo(App\Models\Finance\ContractLine::class, 'id_contract_line');
+        return $this->belongsTo(\App\Models\Finance\ContractLine::class, 'id_contract_line');
     }
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 }

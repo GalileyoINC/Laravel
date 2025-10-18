@@ -34,28 +34,19 @@ class ContactController extends Controller
      */
     public function index(Request $request): View
     {
-        try {
-            $dto = new ContactListRequestDTO(
-                page: $request->get('page', 1),
-                limit: $request->get('limit', 20),
-                search: $request->get('search'),
-                status: $request->get('status', 1)
-            );
+        $dto = new ContactListRequestDTO(
+            page: $request->get('page', 1),
+            limit: $request->get('limit', 20),
+            search: $request->get('search'),
+            status: $request->get('status', 1)
+        );
 
-            $result = $this->getContactListAction->execute($dto->toArray());
-            $contacts = $result->getData()->data;
+        $contacts = $this->getContactListAction->execute($dto->toArray());
 
-            return ViewFacade::make('web.contact.index', [
-                'contacts' => $contacts,
-                'filters' => $request->only(['search', 'status']),
-            ]);
-        } catch (Exception $e) {
-            return ViewFacade::make('web.contact.index', [
-                'contacts' => collect(),
-                'filters' => [],
-                'error' => 'Failed to load contacts: '.$e->getMessage(),
-            ]);
-        }
+        return ViewFacade::make('contact.index', [
+            'contacts' => $contacts,
+            'filters' => $request->only(['search', 'status']),
+        ]);
     }
 
     /**
@@ -63,7 +54,7 @@ class ContactController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.contact.create');
+        return ViewFacade::make('contact.create');
     }
 
     /**
@@ -71,34 +62,21 @@ class ContactController extends Controller
      */
     public function store(ContactRequest $request): RedirectResponse
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $dto = new CreateContactDTO(
-                idUser: $validated['id_user'] ?? null,
-                name: $validated['name'],
-                email: $validated['email'],
-                subject: $validated['subject'] ?? null,
-                body: $validated['body'],
-                status: $validated['status'] ?? 1
-            );
+        $dto = new CreateContactDTO(
+            idUser: $validated['id_user'] ?? null,
+            name: $validated['name'],
+            email: $validated['email'],
+            subject: $validated['subject'] ?? null,
+            body: $validated['body'],
+            status: $validated['status'] ?? 1
+        );
 
-            $result = $this->createContactAction->execute($dto);
+        $contact = $this->createContactAction->execute($dto);
 
-            if ($result->getData()->success) {
-                return Redirect::to(route('web.contact.index'))
-                    ->with('success', 'Contact created successfully.');
-            }
-
-            return Redirect::back()
-                ->withErrors(['error' => $result->getData()->message ?? 'Failed to create contact.'])
-                ->withInput();
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to create contact: '.$e->getMessage()])
-                ->withInput();
-        }
+        return Redirect::to(route('contact.index'))
+            ->with('success', 'Contact created successfully.');
     }
 
     /**
@@ -108,7 +86,7 @@ class ContactController extends Controller
     {
         $contact->load('user');
 
-        return ViewFacade::make('web.contact.show', [
+        return ViewFacade::make('contact.show', [
             'contact' => $contact,
         ]);
     }
@@ -118,7 +96,7 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact): View
     {
-        return ViewFacade::make('web.contact.edit', [
+        return ViewFacade::make('contact.edit', [
             'contact' => $contact,
         ]);
     }
@@ -128,17 +106,10 @@ class ContactController extends Controller
      */
     public function update(ContactRequest $request, Contact $contact): RedirectResponse
     {
-        try {
-            $contact->update($request->validated());
+        $contact->update($request->validated());
 
-            return Redirect::to(route('web.contact.index'))
-                ->with('success', 'Contact updated successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to update contact: '.$e->getMessage()])
-                ->withInput();
-        }
+        return Redirect::to(route('contact.index'))
+            ->with('success', 'Contact updated successfully.');
     }
 
     /**
@@ -146,25 +117,14 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact): RedirectResponse
     {
-        try {
-            $dto = new \App\DTOs\Contact\ContactDeleteRequestDTO(
-                id: $contact->id
-            );
+        $dto = new \App\Domain\DTOs\Contact\ContactDeleteRequestDTO(
+            id: $contact->id
+        );
 
-            $result = $this->deleteContactAction->execute($dto);
+        $this->deleteContactAction->execute($dto->toArray());
 
-            if ($result->getData()->success) {
-                return Redirect::to(route('web.contact.index'))
-                    ->with('success', 'Contact deleted successfully.');
-            }
-
-            return Redirect::back()
-                ->withErrors(['error' => $result->getData()->message ?? 'Failed to delete contact.']);
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to delete contact: '.$e->getMessage()]);
-        }
+        return Redirect::to(route('contact.index'))
+            ->with('success', 'Contact deleted successfully.');
     }
 
     /**
@@ -172,19 +132,13 @@ class ContactController extends Controller
      */
     public function toggleStatus(Contact $contact): RedirectResponse
     {
-        try {
-            $newStatus = $contact->status === 1 ? 2 : 1; // Toggle between active and viewed
-            $contact->update(['status' => $newStatus]);
+        $newStatus = $contact->status === 1 ? 2 : 1;
+        $contact->update(['status' => $newStatus]);
 
-            $status = $newStatus === 1 ? 'marked as active' : 'marked as viewed';
+        $status = $newStatus === 1 ? 'marked as active' : 'marked as viewed';
 
-            return Redirect::back()
-                ->with('success', "Contact {$status} successfully.");
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to toggle contact status: '.$e->getMessage()]);
-        }
+        return Redirect::back()
+            ->with('success', "Contact {$status} successfully.");
     }
 
     /**
@@ -192,15 +146,9 @@ class ContactController extends Controller
      */
     public function markAsReplied(Contact $contact): RedirectResponse
     {
-        try {
-            $contact->update(['status' => 2]); // STATUS_VIEWED/REPLIED
+        $contact->update(['status' => 2]);
 
-            return Redirect::back()
-                ->with('success', 'Contact marked as replied successfully.');
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to mark contact as replied: '.$e->getMessage()]);
-        }
+        return Redirect::back()
+            ->with('success', 'Contact marked as replied successfully.');
     }
 }

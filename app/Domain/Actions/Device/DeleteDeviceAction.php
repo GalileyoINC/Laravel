@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Device;
 
 use App\Domain\Services\Device\DeviceServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class DeleteDeviceAction
@@ -15,27 +14,18 @@ class DeleteDeviceAction
         private readonly DeviceServiceInterface $deviceService
     ) {}
 
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): bool
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
-
             $this->deviceService->delete($data['id']);
-
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Device deleted successfully',
-            ]);
-
+            return true;
         } catch (Exception $e) {
             DB::rollBack();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to delete device: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

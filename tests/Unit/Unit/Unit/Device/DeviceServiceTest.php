@@ -224,7 +224,7 @@ class DeviceServiceTest extends TestCase
         ]);
 
         $dto = new DevicePushRequestDTO(
-            id: $device->id,
+            deviceId: $device->id,
             title: 'Test Notification',
             body: 'This is a test message',
             data: ['key' => 'value'],
@@ -260,7 +260,7 @@ class DeviceServiceTest extends TestCase
         $device = Device::factory()->create();
 
         $dto = new DevicePushRequestDTO(
-            id: $device->id,
+            deviceId: $device->id,
             title: 'Simple Notification',
             body: 'Basic message',
             data: null,
@@ -292,7 +292,7 @@ class DeviceServiceTest extends TestCase
     {
         // Arrange
         $dto = new DevicePushRequestDTO(
-            id: 999,
+            deviceId: 999,
             title: 'Test',
             body: 'Test',
             data: null,

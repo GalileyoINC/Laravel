@@ -60,7 +60,7 @@ class IEXController extends Controller
 
         $webhooks = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.iex.webhooks', [
+        return ViewFacade::make('iex.webhooks', [
             'webhooks' => $webhooks,
             'filters' => $request->only(['search', 'event', 'set', 'created_at_from', 'created_at_to', 'updated_at_from', 'updated_at_to']),
         ]);
@@ -71,7 +71,7 @@ class IEXController extends Controller
      */
     public function showWebhook(IexWebhook $webhook): View
     {
-        return ViewFacade::make('web.iex.webhook-show', [
+        return ViewFacade::make('iex.webhook-show', [
             'webhook' => $webhook,
         ]);
     }
@@ -121,7 +121,7 @@ class IEXController extends Controller
 
         $indexes = $query->orderBy('name')->paginate(20);
 
-        return ViewFacade::make('web.iex.marketstack', [
+        return ViewFacade::make('iex.marketstack', [
             'indexes' => $indexes,
             'filters' => $request->only(['search', 'country', 'currency', 'has_intraday', 'has_eod', 'is_active']),
         ]);
@@ -132,7 +132,7 @@ class IEXController extends Controller
      */
     public function showMarketstack(MarketstackIndx $index): View
     {
-        return ViewFacade::make('web.iex.marketstack-show', [
+        return ViewFacade::make('iex.marketstack-show', [
             'index' => $index,
         ]);
     }
@@ -142,7 +142,7 @@ class IEXController extends Controller
      */
     public function editMarketstack(MarketstackIndx $index): View
     {
-        return ViewFacade::make('web.iex.marketstack-edit', [
+        return ViewFacade::make('iex.marketstack-edit', [
             'index' => $index,
         ]);
     }
@@ -152,7 +152,6 @@ class IEXController extends Controller
      */
     public function updateMarketstack(Request $request, MarketstackIndx $index): Response
     {
-        try {
             $request->validate([
                 'name' => 'required|string|max:255',
                 'symbol' => 'required|string|max:10',
@@ -173,13 +172,8 @@ class IEXController extends Controller
                 'is_active' => $request->boolean('is_active'),
             ]);
 
-            return redirect()->route('web.iex.marketstack')
+            return redirect()->route('iex.marketstack')
                 ->with('success', 'Marketstack Index updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update index: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -187,7 +181,7 @@ class IEXController extends Controller
      */
     public function createMarketstack(): View
     {
-        return ViewFacade::make('web.iex.marketstack-create');
+        return ViewFacade::make('iex.marketstack-create');
     }
 
     /**
@@ -195,7 +189,6 @@ class IEXController extends Controller
      */
     public function storeMarketstack(Request $request): Response
     {
-        try {
             $request->validate([
                 'name' => 'required|string|max:255',
                 'symbol' => 'required|string|max:10',
@@ -216,13 +209,8 @@ class IEXController extends Controller
                 'is_active' => $request->boolean('is_active'),
             ]);
 
-            return redirect()->route('web.iex.marketstack')
+            return redirect()->route('iex.marketstack')
                 ->with('success', 'Marketstack Index created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create index: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -230,7 +218,6 @@ class IEXController extends Controller
      */
     public function exportWebhooks(Request $request): Response
     {
-        try {
             $query = IexWebhook::query();
 
             // Apply same filters as index
@@ -288,11 +275,6 @@ class IEXController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export webhooks: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -300,7 +282,6 @@ class IEXController extends Controller
      */
     public function exportMarketstack(Request $request): Response
     {
-        try {
             $query = MarketstackIndx::query();
 
             // Apply same filters as index
@@ -364,10 +345,5 @@ class IEXController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export indexes: '.$e->getMessage()]);
-        }
     }
 }

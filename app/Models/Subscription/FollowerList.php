@@ -13,6 +13,10 @@ use Database\Factories\FollowerListFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\User;
+use App\Models\Subscription\Follower;
+use App\Models\User\Invite;
+use App\Models\Communication\SmsShedule;
 
 /**
  * Class FollowerList
@@ -57,22 +61,22 @@ class FollowerList extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     public function followers()
     {
-        return $this->hasMany(App\Models\Subscription\Follower::class, 'id_follower_list');
+        return $this->hasMany(Follower::class, 'id_follower_list');
     }
 
     public function invites()
     {
-        return $this->hasMany(App\Models\User\Invite::class, 'id_follower_list');
+        return $this->hasMany(Invite::class, 'id_follower_list');
     }
 
     public function sms_shedules()
     {
-        return $this->hasMany(App\Models\Communication\SmsShedule::class, 'id_follower_list');
+        return $this->hasMany(SmsShedule::class, 'id_follower_list');
     }
 
     protected static function newFactory()

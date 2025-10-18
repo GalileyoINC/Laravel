@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Finance;
 
 use Carbon\Carbon;
+use Database\Factories\FinanceBundleFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -56,5 +57,13 @@ class Bundle extends Model
     public function invoice_lines()
     {
         return $this->hasMany(InvoiceLine::class, 'id_bundle');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return FinanceBundleFactory::new();
     }
 }

@@ -77,12 +77,12 @@ class CreditCard extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function money_transactions()
     {
-        return $this->hasMany(App\Models\Finance\MoneyTransaction::class, 'id_credit_card');
+        return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_credit_card');
     }
 
     /**

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\System;
 
 use Carbon\Carbon;
+use Database\Factories\SystemStaffFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -59,11 +60,19 @@ class Staff extends Model
 
     public function sms_pools()
     {
-        return $this->hasMany(App\Models\Communication\SmsPool::class, 'id_staff');
+        return $this->hasMany(\App\Models\Communication\SmsPool::class, 'id_staff');
     }
 
     public function sms_shedules()
     {
-        return $this->hasMany(App\Models\Communication\SmsShedule::class, 'id_staff');
+        return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_staff');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return SystemStaffFactory::new();
     }
 }

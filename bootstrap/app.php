@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null; // Don't redirect for API requests
             }
 
-            return route('web.site.login');
+            return route('site.login');
         });
 
         // Override the default authentication exception handler for API requests

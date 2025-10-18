@@ -57,7 +57,7 @@ class InfoStateController extends Controller
         $subscriptionIds = $infoStates->pluck('key')->filter()->unique();
         $subscriptions = Subscription::whereIn('id', $subscriptionIds)->pluck('name', 'id')->toArray();
 
-        return ViewFacade::make('web.info-state.index', [
+        return ViewFacade::make('info-state.index', [
             'infoStates' => $infoStates,
             'subscriptions' => $subscriptions,
             'filters' => $request->only(['search', 'key', 'created_at_from', 'created_at_to', 'updated_at_from', 'updated_at_to']),
@@ -74,7 +74,7 @@ class InfoStateController extends Controller
             $subscription = Subscription::find($infoState->key);
         }
 
-        return ViewFacade::make('web.info-state.show', [
+        return ViewFacade::make('info-state.show', [
             'infoState' => $infoState,
             'subscription' => $subscription,
         ]);
@@ -85,16 +85,10 @@ class InfoStateController extends Controller
      */
     public function destroy(InfoState $infoState): Response
     {
-        try {
             $infoState->delete();
 
-            return redirect()->route('web.info-state.index')
+            return redirect()->route('info-state.index')
                 ->with('success', 'Info state deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete info state: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -102,7 +96,6 @@ class InfoStateController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = InfoState::query();
 
             // Apply same filters as index
@@ -159,10 +152,5 @@ class InfoStateController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export info states: '.$e->getMessage()]);
-        }
     }
 }

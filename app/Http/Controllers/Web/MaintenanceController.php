@@ -20,7 +20,7 @@ class MaintenanceController extends Controller
      */
     public function index(): View
     {
-        return ViewFacade::make('web.maintenance.index');
+        return ViewFacade::make('maintenance.index');
     }
 
     /**
@@ -32,8 +32,6 @@ class MaintenanceController extends Controller
             'key' => 'required|string',
             'value' => 'nullable|string',
         ]);
-
-        try {
             $key = $request->get('key');
             $value = $request->get('value');
 
@@ -45,10 +43,6 @@ class MaintenanceController extends Controller
             session([$key => $value]);
 
             return response()->json(['success' => true, 'message' => 'Session key set']);
-
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Failed to set session: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -56,7 +50,6 @@ class MaintenanceController extends Controller
      */
     public function clearCache(): Response
     {
-        try {
             Artisan::call('cache:clear');
             Artisan::call('config:clear');
             Artisan::call('route:clear');
@@ -64,11 +57,6 @@ class MaintenanceController extends Controller
 
             return redirect()->back()
                 ->with('success', 'Cache cleared successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to clear cache: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -76,16 +64,10 @@ class MaintenanceController extends Controller
      */
     public function clearLogs(): Response
     {
-        try {
             Artisan::call('log:clear');
 
             return redirect()->back()
                 ->with('success', 'Logs cleared successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to clear logs: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -93,17 +75,11 @@ class MaintenanceController extends Controller
      */
     public function databaseMaintenance(): Response
     {
-        try {
             Artisan::call('migrate:status');
             Artisan::call('db:seed --class=DatabaseSeeder');
 
             return redirect()->back()
                 ->with('success', 'Database maintenance completed successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to perform database maintenance: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -126,7 +102,7 @@ class MaintenanceController extends Controller
             'database_driver' => config('database.default'),
         ];
 
-        return ViewFacade::make('web.maintenance.system-info', [
+        return ViewFacade::make('maintenance.system-info', [
             'systemInfo' => $systemInfo,
         ]);
     }
@@ -136,7 +112,6 @@ class MaintenanceController extends Controller
      */
     public function queueStatus(): View
     {
-        try {
             $queueInfo = [
                 'driver' => config('queue.default'),
                 'connection' => config('queue.connections.'.config('queue.default')),
@@ -144,14 +119,9 @@ class MaintenanceController extends Controller
                 'jobs_count' => DB::table('jobs')->count(),
             ];
 
-            return ViewFacade::make('web.maintenance.queue-status', [
+            return ViewFacade::make('maintenance.queue-status', [
                 'queueInfo' => $queueInfo,
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to get queue status: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -159,7 +129,6 @@ class MaintenanceController extends Controller
      */
     public function storageStatus(): View
     {
-        try {
             $storageInfo = [
                 'disk' => config('filesystems.default'),
                 'public_path' => public_path(),
@@ -170,13 +139,8 @@ class MaintenanceController extends Controller
                 'views_path' => storage_path('framework/views'),
             ];
 
-            return ViewFacade::make('web.maintenance.storage-status', [
+            return ViewFacade::make('maintenance.storage-status', [
                 'storageInfo' => $storageInfo,
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to get storage status: '.$e->getMessage()]);
-        }
     }
 }

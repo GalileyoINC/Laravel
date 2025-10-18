@@ -62,7 +62,7 @@ class ProviderController extends Controller
 
         $providers = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.provider.index', [
+        return ViewFacade::make('provider.index', [
             'providers' => $providers,
             'filters' => $request->only(['search', 'name', 'email', 'is_satellite', 'country', 'created_at_from', 'created_at_to']),
         ]);
@@ -73,7 +73,7 @@ class ProviderController extends Controller
      */
     public function show(Provider $provider): View
     {
-        return ViewFacade::make('web.provider.show', [
+        return ViewFacade::make('provider.show', [
             'provider' => $provider,
         ]);
     }
@@ -83,7 +83,7 @@ class ProviderController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.provider.create');
+        return ViewFacade::make('provider.create');
     }
 
     /**
@@ -91,17 +91,10 @@ class ProviderController extends Controller
      */
     public function store(ProviderRequest $request): Response
     {
-        try {
             Provider::create($request->validated());
 
-            return redirect()->route('web.provider.index')
+            return redirect()->route('provider.index')
                 ->with('success', 'Provider created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create provider: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -109,7 +102,7 @@ class ProviderController extends Controller
      */
     public function edit(Provider $provider): View
     {
-        return ViewFacade::make('web.provider.edit', [
+        return ViewFacade::make('provider.edit', [
             'provider' => $provider,
         ]);
     }
@@ -119,17 +112,10 @@ class ProviderController extends Controller
      */
     public function update(ProviderRequest $request, Provider $provider): Response
     {
-        try {
             $provider->update($request->validated());
 
-            return redirect()->route('web.provider.show', $provider)
+            return redirect()->route('provider.show', $provider)
                 ->with('success', 'Provider updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update provider: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -137,16 +123,10 @@ class ProviderController extends Controller
      */
     public function destroy(Provider $provider): Response
     {
-        try {
             $provider->delete();
 
-            return redirect()->route('web.provider.index')
+            return redirect()->route('provider.index')
                 ->with('success', 'Provider deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete provider: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -154,7 +134,6 @@ class ProviderController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = Provider::query();
 
             // Apply same filters as index
@@ -219,10 +198,5 @@ class ProviderController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export providers: '.$e->getMessage()]);
-        }
     }
 }

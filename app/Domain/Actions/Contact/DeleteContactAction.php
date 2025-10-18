@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Contact;
 
 use App\Domain\Services\Contact\ContactServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class DeleteContactAction
@@ -15,27 +14,18 @@ class DeleteContactAction
         private readonly ContactServiceInterface $contactService
     ) {}
 
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): bool
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
-
             $this->contactService->markAsDeleted($data['id']);
-
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Contact marked as deleted successfully',
-            ]);
-
+            return true;
         } catch (Exception $e) {
             DB::rollBack();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to delete contact: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

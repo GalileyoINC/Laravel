@@ -20,10 +20,10 @@ class UsersService implements UsersServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsersList(UsersListRequestDTO $dto, ?User $user)
+    public function getUsersList(UsersListRequestDTO $dto, ?User $user): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         try {
-            $query = User::select('id', 'email', 'first_name', 'last_name', 'role');
+            $query = User::query()->with(['phoneNumbers']);
 
             // Apply filters
             if ($dto->validEmailOnly) {
@@ -42,14 +42,9 @@ class UsersService implements UsersServiceInterface
                 });
             }
 
-            // Apply pagination
-            $offset = ($dto->page - 1) * $dto->pageSize;
-            $users = $query->orderBy('first_name')
-                ->limit($dto->pageSize)
-                ->offset($offset)
-                ->get();
-
-            return $users;
+            // Apply pagination and return paginator
+            return $query->orderBy('first_name')
+                ->paginate($dto->pageSize, ['*'], 'page', $dto->page);
 
         } catch (Exception $e) {
             Log::error('UsersService getUsersList error: '.$e->getMessage());

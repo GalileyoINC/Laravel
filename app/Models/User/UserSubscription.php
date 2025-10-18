@@ -42,12 +42,12 @@ class UserSubscription extends Model
 
     public function subscription()
     {
-        return $this->belongsTo(App\Models\Subscription\Subscription::class, 'id_subscription');
+        return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     protected static function newFactory()

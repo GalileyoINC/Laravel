@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Settings;
 
 use App\Domain\Services\Settings\SettingsServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class FlushSettingsAction
@@ -15,27 +14,18 @@ class FlushSettingsAction
         private readonly SettingsServiceInterface $settingsService
     ) {}
 
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): bool
     {
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
-
             $this->settingsService->flushSettings();
-
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Settings flushed successfully',
-            ]);
-
+            return true;
         } catch (Exception $e) {
             DB::rollBack();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to flush settings: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

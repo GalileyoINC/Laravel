@@ -29,11 +29,11 @@ class Report extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function news()
     {
-        return $this->belongsTo(App\Models\Communication\SmsPool::class, 'id_news');
+        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_news');
     }
 }

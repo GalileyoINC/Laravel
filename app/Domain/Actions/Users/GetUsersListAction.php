@@ -7,7 +7,7 @@ namespace App\Domain\Actions\Users;
 use App\Domain\DTOs\Users\UsersListRequestDTO;
 use App\Domain\Services\Users\UsersServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -17,34 +17,23 @@ class GetUsersListAction
         private readonly UsersServiceInterface $usersService
     ) {}
 
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): LengthAwarePaginator
     {
         try {
             $dto = UsersListRequestDTO::fromArray($data);
             if (! $dto->validate()) {
-                return response()->json([
-                    'status' => 'error',
-                    'errors' => ['Invalid users request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
+                // Fallback to empty paginator on invalid input
+                return $this->usersService->getUsersList(UsersListRequestDTO::fromArray(['page' => 1, 'page_size' => 1]), null);
             }
 
             $user = Auth::user();
-            $users = $this->usersService->getUsersList($dto, $user);
-
-            return response()->json([
-                'status' => 'success',
-                'data' => $users->toArray(),
-            ]);
+            return $this->usersService->getUsersList($dto, $user);
 
         } catch (Exception $e) {
             Log::error('GetUsersListAction error: '.$e->getMessage());
 
-            return response()->json([
-                'status' => 'error',
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+            // On error, rethrow to be handled upstream
+            throw $e;
         }
     }
 }

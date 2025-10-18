@@ -86,7 +86,7 @@ class SubscriptionController extends Controller
         $selectedCategory = $categoryId ? SubscriptionCategory::find($categoryId) : null;
         $title = $selectedCategory ? $selectedCategory->name : 'News Category';
 
-        return ViewFacade::make('web.subscription.index', [
+        return ViewFacade::make('subscription.index', [
             'subscriptions' => $subscriptions,
             'categories' => $categoryHierarchy,
             'userStatistics' => $userStatistics,
@@ -103,7 +103,7 @@ class SubscriptionController extends Controller
     {
         $categories = SubscriptionCategory::orderBy('name')->get();
 
-        return ViewFacade::make('web.subscription.create', [
+        return ViewFacade::make('subscription.create', [
             'categories' => $categories,
         ]);
     }
@@ -124,8 +124,6 @@ class SubscriptionController extends Controller
             'show_comments' => 'boolean',
             'imageFile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        try {
             $subscription = new Subscription();
             $subscription->id_subscription_category = $request->get('id_subscription_category');
             $subscription->title = $request->get('title');
@@ -144,14 +142,8 @@ class SubscriptionController extends Controller
 
             $subscription->save();
 
-            return redirect()->route('web.subscription.index')
+            return redirect()->route('subscription.index')
                 ->with('success', 'Subscription created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create subscription: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -161,7 +153,7 @@ class SubscriptionController extends Controller
     {
         $categories = SubscriptionCategory::orderBy('name')->get();
 
-        return ViewFacade::make('web.subscription.edit', [
+        return ViewFacade::make('subscription.edit', [
             'subscription' => $subscription,
             'categories' => $categories,
         ]);
@@ -183,8 +175,6 @@ class SubscriptionController extends Controller
             'show_comments' => 'boolean',
             'imageFile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        try {
             $subscription->id_subscription_category = $request->get('id_subscription_category');
             $subscription->title = $request->get('title');
             $subscription->percent = $request->get('percent');
@@ -207,14 +197,8 @@ class SubscriptionController extends Controller
 
             $subscription->save();
 
-            return redirect()->route('web.subscription.index')
+            return redirect()->route('subscription.index')
                 ->with('success', 'Subscription updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update subscription: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -224,7 +208,7 @@ class SubscriptionController extends Controller
     {
         $categories = SubscriptionCategory::orderBy('name')->get();
 
-        return ViewFacade::make('web.subscription.super-update', [
+        return ViewFacade::make('subscription.super-update', [
             'subscription' => $subscription,
             'categories' => $categories,
         ]);
@@ -235,16 +219,10 @@ class SubscriptionController extends Controller
      */
     public function activate(Subscription $subscription): Response
     {
-        try {
             $subscription->update(['is_active' => true]);
 
             return redirect()->back()
                 ->with('success', 'Subscription activated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to activate subscription: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -252,16 +230,10 @@ class SubscriptionController extends Controller
      */
     public function deactivate(Subscription $subscription): Response
     {
-        try {
             $subscription->update(['is_active' => false]);
 
             return redirect()->back()
                 ->with('success', 'Subscription deactivated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to deactivate subscription: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -269,7 +241,6 @@ class SubscriptionController extends Controller
      */
     public function destroy(Subscription $subscription): Response
     {
-        try {
             // Delete image if exists
             if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {
                 Storage::disk('public')->delete($subscription->image);
@@ -277,13 +248,8 @@ class SubscriptionController extends Controller
 
             $subscription->delete();
 
-            return redirect()->route('web.subscription.index')
+            return redirect()->route('subscription.index')
                 ->with('success', 'Subscription deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete subscription: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -291,7 +257,6 @@ class SubscriptionController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = Subscription::with(['influencerPage', 'influencer']);
 
             $categoryId = $request->get('idCategory');
@@ -365,10 +330,5 @@ class SubscriptionController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export subscriptions: '.$e->getMessage()]);
-        }
     }
 }

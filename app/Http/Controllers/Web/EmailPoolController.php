@@ -54,7 +54,7 @@ class EmailPoolController extends Controller
 
         $emailPools = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.email-pool.index', [
+        return ViewFacade::make('email-pool.index', [
             'emailPools' => $emailPools,
             'filters' => $request->only(['search', 'type', 'status', 'created_at_from', 'created_at_to']),
         ]);
@@ -65,7 +65,7 @@ class EmailPoolController extends Controller
      */
     public function show(EmailPool $emailPool): View
     {
-        return ViewFacade::make('web.email-pool.show', [
+        return ViewFacade::make('email-pool.show', [
             'emailPool' => $emailPool,
         ]);
     }
@@ -75,7 +75,7 @@ class EmailPoolController extends Controller
      */
     public function viewBody(EmailPool $emailPool): View
     {
-        return ViewFacade::make('web.email-pool.view-body', [
+        return ViewFacade::make('email-pool.view-body', [
             'emailPool' => $emailPool,
         ]);
     }
@@ -85,17 +85,11 @@ class EmailPoolController extends Controller
      */
     public function resend(Request $request, EmailPool $emailPool): Response
     {
-        try {
-            // Resend logic here
-            $emailPool->update(['status' => EmailPool::STATUS_PENDING]);
+        // Resend logic here
+        $emailPool->update(['status' => EmailPool::STATUS_PENDING]);
 
-            return redirect()->back()
-                ->with('success', 'Email queued for resending successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to resend email: '.$e->getMessage()]);
-        }
+        return redirect()->back()
+            ->with('success', 'Email queued for resending successfully.');
     }
 
     /**
@@ -103,16 +97,10 @@ class EmailPoolController extends Controller
      */
     public function destroy(EmailPool $emailPool): Response
     {
-        try {
-            $emailPool->delete();
+        $emailPool->delete();
 
-            return redirect()->route('web.email-pool.index')
-                ->with('success', 'Email pool deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete email pool: '.$e->getMessage()]);
-        }
+        return redirect()->route('email-pool.index')
+            ->with('success', 'Email pool deleted successfully.');
     }
 
     /**
@@ -120,18 +108,12 @@ class EmailPoolController extends Controller
      */
     public function attachment(Request $request, $attachmentId): Response
     {
-        try {
-            // Get attachment logic here
-            // For now, return a placeholder response
-            return response()->json([
-                'message' => 'Attachment download functionality would be implemented here',
-                'attachment_id' => $attachmentId,
-            ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to download attachment: '.$e->getMessage()]);
-        }
+        // Get attachment logic here
+        // For now, return a placeholder response
+        return response()->json([
+            'message' => 'Attachment download functionality would be implemented here',
+            'attachment_id' => $attachmentId,
+        ]);
     }
 
     /**
@@ -173,7 +155,7 @@ class EmailPoolController extends Controller
 
         $emailPools = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.email-pool.archive', [
+        return ViewFacade::make('email-pool.archive', [
             'emailPools' => $emailPools,
             'filters' => $request->only(['search', 'type', 'status', 'created_at_from', 'created_at_to']),
         ]);
@@ -184,7 +166,7 @@ class EmailPoolController extends Controller
      */
     public function showArchive(EmailPoolArchive $emailPool): View
     {
-        return ViewFacade::make('web.email-pool.archive-show', [
+        return ViewFacade::make('email-pool.archive-show', [
             'emailPool' => $emailPool,
         ]);
     }
@@ -194,71 +176,65 @@ class EmailPoolController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
-            $query = EmailPool::query();
+        $query = EmailPool::query();
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('from', 'like', "%{$search}%")
-                        ->orWhere('to', 'like', "%{$search}%")
-                        ->orWhere('reply', 'like', "%{$search}%")
-                        ->orWhere('bcc', 'like', "%{$search}%")
-                        ->orWhere('subject', 'like', "%{$search}%");
-                });
-            }
-
-            if ($request->filled('type')) {
-                $query->where('type', $request->get('type'));
-            }
-
-            if ($request->filled('status')) {
-                $query->where('status', $request->get('status'));
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $emailPools = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Type', 'Status', 'From', 'To', 'Reply', 'BCC', 'Subject', 'Created At'];
-
-            foreach ($emailPools as $emailPool) {
-                $csvData[] = [
-                    $emailPool->id,
-                    $emailPool->type,
-                    $emailPool->status,
-                    $emailPool->from,
-                    $emailPool->to,
-                    $emailPool->reply,
-                    $emailPool->bcc,
-                    $emailPool->subject,
-                    $emailPool->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'email_pools_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export email pools: '.$e->getMessage()]);
+        // Apply same filters as index
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('from', 'like', "%{$search}%")
+                    ->orWhere('to', 'like', "%{$search}%")
+                    ->orWhere('reply', 'like', "%{$search}%")
+                    ->orWhere('bcc', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%");
+            });
         }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->get('type'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->get('status'));
+        }
+
+        if ($request->filled('created_at_from')) {
+            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
+        }
+        if ($request->filled('created_at_to')) {
+            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
+        }
+
+        $emailPools = $query->orderBy('created_at', 'desc')->get();
+
+        $csvData = [];
+        $csvData[] = ['ID', 'Type', 'Status', 'From', 'To', 'Reply', 'BCC', 'Subject', 'Created At'];
+
+        foreach ($emailPools as $emailPool) {
+            $csvData[] = [
+                $emailPool->id,
+                $emailPool->type,
+                $emailPool->status,
+                $emailPool->from,
+                $emailPool->to,
+                $emailPool->reply,
+                $emailPool->bcc,
+                $emailPool->subject,
+                $emailPool->created_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $filename = 'email_pools_'.now()->format('Y-m-d_H-i-s').'.csv';
+
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

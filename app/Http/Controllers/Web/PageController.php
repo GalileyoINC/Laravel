@@ -53,7 +53,7 @@ class PageController extends Controller
 
         $pages = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.page.index', [
+        return ViewFacade::make('page.index', [
             'pages' => $pages,
             'filters' => $request->only(['search', 'status', 'createTimeRange']),
         ]);
@@ -64,7 +64,7 @@ class PageController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.page.create');
+        return ViewFacade::make('page.create');
     }
 
     /**
@@ -72,7 +72,6 @@ class PageController extends Controller
      */
     public function store(PageRequest $request): Response
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -86,14 +85,8 @@ class PageController extends Controller
 
             $page = Page::create($data);
 
-            return redirect()->route('web.page.edit', $page)
+            return redirect()->route('page.edit', $page)
                 ->with('success', 'Page created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create page: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -103,7 +96,7 @@ class PageController extends Controller
     {
         $page->load('pageContents');
 
-        return ViewFacade::make('web.page.show', [
+        return ViewFacade::make('page.show', [
             'page' => $page,
         ]);
     }
@@ -115,7 +108,7 @@ class PageController extends Controller
     {
         $page->load('pageContents');
 
-        return ViewFacade::make('web.page.edit', [
+        return ViewFacade::make('page.edit', [
             'page' => $page,
         ]);
     }
@@ -125,7 +118,6 @@ class PageController extends Controller
      */
     public function update(PageRequest $request, Page $page): Response
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -139,14 +131,8 @@ class PageController extends Controller
 
             $page->update($data);
 
-            return redirect()->route('web.page.index')
+            return redirect()->route('page.index')
                 ->with('success', 'Page updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update page: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -154,7 +140,7 @@ class PageController extends Controller
      */
     public function content(Page $page, ?PageContent $pageContent = null): View
     {
-        return ViewFacade::make('web.page.content', [
+        return ViewFacade::make('page.content', [
             'page' => $page,
             'pageContent' => $pageContent,
         ]);
@@ -165,7 +151,6 @@ class PageController extends Controller
      */
     public function storeContent(PageContentRequest $request, Page $page): Response
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -176,14 +161,8 @@ class PageController extends Controller
 
             PageContent::create($data);
 
-            return redirect()->route('web.page.edit', $page)
+            return redirect()->route('page.edit', $page)
                 ->with('success', 'Page content created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create page content: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -191,7 +170,6 @@ class PageController extends Controller
      */
     public function updateContent(PageContentRequest $request, Page $page, PageContent $pageContent): Response
     {
-        try {
             $validated = $request->validated();
 
             $data = [
@@ -201,14 +179,8 @@ class PageController extends Controller
 
             $pageContent->update($data);
 
-            return redirect()->route('web.page.edit', $page)
+            return redirect()->route('page.edit', $page)
                 ->with('success', 'Page content updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update page content: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -216,7 +188,6 @@ class PageController extends Controller
      */
     public function upload(Request $request, Page $page): Response
     {
-        try {
             $request->validate([
                 'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
@@ -227,9 +198,5 @@ class PageController extends Controller
             return response()->json([
                 'location' => Storage::url($path),
             ]);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to upload image: '.$e->getMessage()], 500);
-        }
     }
 }

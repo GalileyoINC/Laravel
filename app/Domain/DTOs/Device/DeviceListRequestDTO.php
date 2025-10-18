@@ -11,6 +11,27 @@ readonly class DeviceListRequestDTO
         public int $limit,
         public ?string $search,
         public ?int $user_id,
-        public ?string $os
+        public ?string $os,
+        public ?int $pushTokenFill = null,
+        public ?string $pushToken = null,
+        public ?int $pushTurnOn = null,
+        public ?string $updatedAtFrom = null,
+        public ?string $updatedAtTo = null
     ) {}
+
+    public function toArray(): array
+    {
+        return [
+            'page' => $this->page,
+            'limit' => $this->limit,
+            'search' => $this->search,
+            'user_id' => $this->user_id,
+            'os' => $this->os,
+            'push_token_fill' => $this->pushTokenFill,
+            'push_token' => $this->pushToken,
+            'push_turn_on' => $this->pushTurnOn,
+            'updated_at_from' => $this->updatedAtFrom,
+            'updated_at_to' => $this->updatedAtTo,
+        ];
+    }
 }

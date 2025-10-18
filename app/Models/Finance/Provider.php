@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Finance;
 
 use Carbon\Carbon;
+use Database\Factories\FinanceProviderFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,7 +47,7 @@ class Provider extends Model
 
     public function phone_numbers()
     {
-        return $this->hasMany(App\Models\Device\PhoneNumber::class, 'id_provider');
+        return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_provider');
     }
 
     public function twilio_carriers()
@@ -57,5 +58,13 @@ class Provider extends Model
     public function sms_pool_phone_numbers()
     {
         return $this->hasMany(SmsPoolApp\Models\Device\PhoneNumber::class, 'id_provider');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return FinanceProviderFactory::new();
     }
 }

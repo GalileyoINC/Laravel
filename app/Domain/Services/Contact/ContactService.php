@@ -10,7 +10,7 @@ use App\Models\Communication\Contact;
 
 class ContactService implements ContactServiceInterface
 {
-    public function getList(ContactListRequestDTO $dto): array
+    public function getList(ContactListRequestDTO $dto): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $query = Contact::query();
 
@@ -24,18 +24,8 @@ class ContactService implements ContactServiceInterface
 
         $query->where('status', $dto->status);
 
-        $contacts = $query->orderBy('created_at', 'desc')
+        return $query->orderBy('created_at', 'desc')
             ->paginate($dto->limit, ['*'], 'page', $dto->page);
-
-        return [
-            'data' => $contacts->items(),
-            'pagination' => [
-                'current_page' => $contacts->currentPage(),
-                'last_page' => $contacts->lastPage(),
-                'per_page' => $contacts->perPage(),
-                'total' => $contacts->total(),
-            ],
-        ];
     }
 
     public function getById(int $id): Contact

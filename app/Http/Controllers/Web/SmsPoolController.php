@@ -57,7 +57,7 @@ class SmsPoolController extends Controller
 
         $subscriptions = Subscription::getAllAsArray();
 
-        return ViewFacade::make('web.sms-pool.index', [
+        return ViewFacade::make('sms-pool.index', [
             'smsPools' => $smsPools,
             'filters' => $request->only(['search', 'purpose', 'id_subscription', 'created_at']),
             'subscriptions' => $subscriptions,
@@ -71,7 +71,7 @@ class SmsPoolController extends Controller
     {
         $smsPool->load(['user', 'staff', 'subscription']);
 
-        return ViewFacade::make('web.sms-pool.show', [
+        return ViewFacade::make('sms-pool.show', [
             'smsPool' => $smsPool,
         ]);
     }
@@ -81,14 +81,9 @@ class SmsPoolController extends Controller
      */
     public function destroy(SmsPool $smsPool): Response
     {
-        try {
-            $smsPool->delete();
+        $smsPool->delete();
 
-            return response()->json(['success' => 'SMS pool deleted successfully']);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to delete SMS pool: '.$e->getMessage()], 500);
-        }
+        return response()->json(['success' => 'SMS pool deleted successfully']);
     }
 
     /**
@@ -146,7 +141,7 @@ class SmsPoolController extends Controller
             GROUP BY type
         ', [PhoneNumber::TYPE_NONE]);
 
-        return ViewFacade::make('web.sms-pool.send-dashboard', [
+        return ViewFacade::make('sms-pool.send-dashboard', [
             'subscriptionCategories' => $subscriptionCategories,
             'subscriptionsByCategory' => $subscriptionsByCategory,
             'byState' => $byState,
@@ -160,7 +155,7 @@ class SmsPoolController extends Controller
      */
     public function sendToAll(): View
     {
-        return ViewFacade::make('web.sms-pool.send-to', [
+        return ViewFacade::make('sms-pool.send-to', [
             'title' => 'Send message for all users with plan',
             'objType' => AdminMessageLog::TO_ALL,
             'objId' => null,
@@ -183,7 +178,7 @@ class SmsPoolController extends Controller
             ->where('user.state', $state)
             ->count();
 
-        return ViewFacade::make('web.sms-pool.send-to', [
+        return ViewFacade::make('sms-pool.send-to', [
             'title' => "Send message for {$state} ({$count})",
             'objType' => AdminMessageLog::TO_STATE,
             'objId' => $state,
@@ -196,17 +191,12 @@ class SmsPoolController extends Controller
      */
     public function processSend(SendSmsRequest $request): Response
     {
-        try {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            // Process SMS sending logic here
-            // This would typically call SMS service API
+        // Process SMS sending logic here
+        // This would typically call SMS service API
 
-            return response()->json(['success' => 'Message was sent successfully']);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to send message: '.$e->getMessage()], 500);
-        }
+        return response()->json(['success' => 'Message was sent successfully']);
     }
 
     /**
@@ -227,7 +217,7 @@ class SmsPoolController extends Controller
 
         $recipients = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.sms-pool.recipient', [
+        return ViewFacade::make('sms-pool.recipient', [
             'smsPool' => $smsPool,
             'recipients' => $recipients,
             'filters' => $request->only(['search']),

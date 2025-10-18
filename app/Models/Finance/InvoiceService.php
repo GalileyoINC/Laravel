@@ -41,11 +41,11 @@ class InvoiceService extends Model
 
     public function invoice()
     {
-        return $this->belongsTo(App\Models\Finance\Invoice::class, 'id_invoice');
+        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
     }
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 }

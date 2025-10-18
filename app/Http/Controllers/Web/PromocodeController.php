@@ -57,7 +57,7 @@ class PromocodeController extends Controller
 
         $promocodes = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.promocode.index', [
+        return ViewFacade::make('promocode.index', [
             'promocodes' => $promocodes,
             'filters' => $request->only(['search', 'type', 'is_active', 'active_from_from', 'active_from_to', 'active_to_from', 'active_to_to']),
         ]);
@@ -68,7 +68,7 @@ class PromocodeController extends Controller
      */
     public function create(): View
     {
-        return ViewFacade::make('web.promocode.create');
+        return ViewFacade::make('promocode.create');
     }
 
     /**
@@ -87,8 +87,6 @@ class PromocodeController extends Controller
             'show_on_frontend' => 'boolean',
             'description' => 'nullable|string',
         ]);
-
-        try {
             $promocode = new Promocode();
             $promocode->type = $request->get('type');
             $promocode->text = $request->get('text');
@@ -102,14 +100,8 @@ class PromocodeController extends Controller
 
             $promocode->save();
 
-            return redirect()->route('web.promocode.index')
+            return redirect()->route('promocode.index')
                 ->with('success', 'Promocode created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create promocode: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -117,7 +109,7 @@ class PromocodeController extends Controller
      */
     public function edit(Promocode $promocode): View
     {
-        return ViewFacade::make('web.promocode.edit', [
+        return ViewFacade::make('promocode.edit', [
             'promocode' => $promocode,
         ]);
     }
@@ -138,8 +130,6 @@ class PromocodeController extends Controller
             'show_on_frontend' => 'boolean',
             'description' => 'nullable|string',
         ]);
-
-        try {
             $promocode->type = $request->get('type');
             $promocode->text = $request->get('text');
             $promocode->discount = $request->get('discount', 0);
@@ -152,14 +142,8 @@ class PromocodeController extends Controller
 
             $promocode->save();
 
-            return redirect()->route('web.promocode.index')
+            return redirect()->route('promocode.index')
                 ->with('success', 'Promocode updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update promocode: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -167,16 +151,10 @@ class PromocodeController extends Controller
      */
     public function destroy(Promocode $promocode): Response
     {
-        try {
             $promocode->delete();
 
-            return redirect()->route('web.promocode.index')
+            return redirect()->route('promocode.index')
                 ->with('success', 'Promocode deleted successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to delete promocode: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -184,7 +162,6 @@ class PromocodeController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = Promocode::query();
 
             // Apply same filters as index
@@ -251,10 +228,5 @@ class PromocodeController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export promocodes: '.$e->getMessage()]);
-        }
     }
 }

@@ -84,12 +84,12 @@ class PhoneNumber extends Model
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function sms_pools()
     {
-        return $this->belongsToMany(App\Models\Communication\SmsPool::class, 'sms_pool_phone_number', 'id_phone_number', 'id_sms_pool')
+        return $this->belongsToMany(\App\Models\Communication\SmsPool::class, 'sms_pool_phone_number', 'id_phone_number', 'id_sms_pool')
             ->withPivot('id', 'id_user', 'number', 'is_satellite', 'status', 'sid', 'error', 'id_provider', 'type');
     }
 }

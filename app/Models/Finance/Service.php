@@ -104,7 +104,7 @@ class Service extends Model
 
     public function contract_lines()
     {
-        return $this->hasMany(App\Models\Finance\ContractLine::class, 'id_service');
+        return $this->hasMany(\App\Models\Finance\ContractLine::class, 'id_service');
     }
 
     public function device_plans()
@@ -114,7 +114,7 @@ class Service extends Model
 
     public function invoices()
     {
-        return $this->belongsToMany(App\Models\Finance\Invoice::class, 'invoice_service', 'id_service', 'id_invoice');
+        return $this->belongsToMany(\App\Models\Finance\Invoice::class, 'invoice_service', 'id_service', 'id_invoice');
     }
 
     public function product_photos()
@@ -124,22 +124,22 @@ class Service extends Model
 
     public function sps_contracts()
     {
-        return $this->hasMany(App\Models\Finance\SpsContract::class, 'id_service');
+        return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_service');
     }
 
     public function user_plans()
     {
-        return $this->hasMany(App\Models\User\UserPlan::class, 'id_service');
+        return $this->hasMany(\App\Models\User\UserPlan::class, 'id_service');
     }
 
     public function user_plan_shedules()
     {
-        return $this->hasMany(App\Models\User\UserPlanShedule::class, 'id_service');
+        return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_service');
     }
 
     public function users()
     {
-        return $this->belongsToMany(App\Models\User\User::class, 'user_service', 'id_service', 'id_user');
+        return $this->belongsToMany(\App\Models\User\User::class, 'user_service', 'id_service', 'id_user');
     }
 
     /**

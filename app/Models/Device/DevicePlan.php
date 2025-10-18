@@ -46,6 +46,6 @@ class DevicePlan extends Model
 
     public function service()
     {
-        return $this->belongsTo(App\Models\Finance\Service::class, 'id_plan');
+        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_plan');
     }
 }

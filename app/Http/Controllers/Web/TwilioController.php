@@ -47,7 +47,7 @@ class TwilioController extends Controller
         $carriers = $query->orderBy('created_at', 'desc')->paginate(20);
         $providers = Provider::orderBy('name')->get();
 
-        return ViewFacade::make('web.twilio.carriers', [
+        return ViewFacade::make('twilio.carriers', [
             'carriers' => $carriers,
             'providers' => $providers,
             'filters' => $request->only(['search', 'provider_id', 'created_at_from', 'created_at_to']),
@@ -61,7 +61,7 @@ class TwilioController extends Controller
     {
         $providers = Provider::orderBy('name')->get();
 
-        return ViewFacade::make('web.twilio.carrier-edit', [
+        return ViewFacade::make('twilio.carrier-edit', [
             'carrier' => $carrier,
             'providers' => $providers,
         ]);
@@ -72,7 +72,6 @@ class TwilioController extends Controller
      */
     public function updateCarrier(Request $request, TwilioCarrier $carrier): Response
     {
-        try {
             $request->validate([
                 'provider_id' => 'required|exists:providers,id',
             ]);
@@ -81,13 +80,8 @@ class TwilioController extends Controller
                 'provider_id' => $request->get('provider_id'),
             ]);
 
-            return redirect()->route('web.twilio.carriers')
+            return redirect()->route('twilio.carriers')
                 ->with('success', 'Twilio Carrier updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update carrier: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -121,7 +115,7 @@ class TwilioController extends Controller
 
         $incoming = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.twilio.incoming', [
+        return ViewFacade::make('twilio.incoming', [
             'incoming' => $incoming,
             'filters' => $request->only(['search', 'number', 'created_at_from', 'created_at_to']),
         ]);
@@ -132,7 +126,7 @@ class TwilioController extends Controller
      */
     public function showIncoming(TwilioIncoming $incoming): View
     {
-        return ViewFacade::make('web.twilio.incoming-show', [
+        return ViewFacade::make('twilio.incoming-show', [
             'incoming' => $incoming,
         ]);
     }
@@ -142,7 +136,7 @@ class TwilioController extends Controller
      */
     public function createIncoming(): View
     {
-        return ViewFacade::make('web.twilio.incoming-create');
+        return ViewFacade::make('twilio.incoming-create');
     }
 
     /**
@@ -150,7 +144,6 @@ class TwilioController extends Controller
      */
     public function storeIncoming(Request $request): Response
     {
-        try {
             $request->validate([
                 'number' => 'required|string|max:20',
                 'body' => 'required|string|max:1600',
@@ -162,13 +155,8 @@ class TwilioController extends Controller
                 'message' => $request->get('message', ''),
             ]);
 
-            return redirect()->route('web.twilio.incoming')
+            return redirect()->route('twilio.incoming')
                 ->with('success', 'Twilio Incoming message created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create incoming message: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -176,7 +164,6 @@ class TwilioController extends Controller
      */
     public function exportCarriers(Request $request): Response
     {
-        try {
             $query = TwilioCarrier::with('provider');
 
             // Apply same filters as index
@@ -224,11 +211,6 @@ class TwilioController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export carriers: '.$e->getMessage()]);
-        }
     }
 
     /**
@@ -236,7 +218,6 @@ class TwilioController extends Controller
      */
     public function exportIncoming(Request $request): Response
     {
-        try {
             $query = TwilioIncoming::query();
 
             // Apply same filters as index
@@ -286,10 +267,5 @@ class TwilioController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export incoming messages: '.$e->getMessage()]);
-        }
     }
 }

@@ -26,13 +26,13 @@ class SiteController extends Controller
     /**
      * Show login form
      */
-    public function login(): View
+    public function login(): View|RedirectResponse
     {
         if (Auth::check()) {
-            return Redirect::to(route('web.site.index'));
+            return Redirect::to(route('site.index'));
         }
 
-        return view('web.site.login');
+        return view('site.login');
     }
 
     /**
@@ -41,10 +41,8 @@ class SiteController extends Controller
     public function loginSubmit(LoginRequest $request): RedirectResponse
     {
         if (Auth::check()) {
-            return Redirect::to(route('web.site.index'));
+            return Redirect::to(route('site.index'));
         }
-
-        try {
             $loginData = [
                 'email' => $request->validated()['username'],
                 'password' => $request->validated()['password'],
@@ -60,19 +58,13 @@ class SiteController extends Controller
                     Auth::login($user, false);
                     $request->session()->regenerate();
 
-                    return Redirect::intended(route('web.site.index'));
+                    return Redirect::to(route('site.index'));
                 }
             }
 
             return Redirect::back()
                 ->withErrors(['username' => $result->getData()->error ?? 'Login failed'])
                 ->withInput();
-
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['username' => 'Login failed: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -85,7 +77,7 @@ class SiteController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to(route('web.site.login'));
+        return Redirect::to(route('site.login'));
     }
 
     /**
@@ -93,7 +85,7 @@ class SiteController extends Controller
      */
     public function index(): View
     {
-        return ViewFacade::make('web.site.index');
+        return ViewFacade::make('site.index');
     }
 
     /**
@@ -112,7 +104,7 @@ class SiteController extends Controller
             $request->session()->forget('loginFromSuper');
         }
 
-        return Redirect::to(route('web.site.index'));
+        return Redirect::to(route('site.index'));
     }
 
     /**
@@ -122,20 +114,13 @@ class SiteController extends Controller
     {
         $staff = Staff::find(Auth::id());
         if (! $staff) {
-            return Redirect::to(route('web.site.index'))
+            return Redirect::to(route('site.index'))
                 ->withErrors(['error' => 'Staff member not found.']);
         }
-
-        try {
             $staff->update($request->validated());
 
-            return Redirect::to(route('web.site.index'))
+            return Redirect::to(route('site.index'))
                 ->with('success', 'You have successfully updated your data.');
-        } catch (Exception $e) {
-            return Redirect::back()
-                ->withErrors(['error' => 'Failed to update profile: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -143,6 +128,6 @@ class SiteController extends Controller
      */
     public function error(): View
     {
-        return ViewFacade::make('web.site.error');
+        return ViewFacade::make('site.error');
     }
 }

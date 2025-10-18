@@ -15,7 +15,7 @@ class DemoController extends Controller
      */
     public function bootstrapWysiwyg(): View
     {
-        return ViewFacade::make('web.demo.bootstrap-wysiwyg');
+        return ViewFacade::make('demo.bootstrap-wysiwyg');
     }
 
     /**
@@ -23,7 +23,7 @@ class DemoController extends Controller
      */
     public function grape(): View
     {
-        return ViewFacade::make('web.demo.grape');
+        return ViewFacade::make('demo.grape');
     }
 
     /**
@@ -31,6 +31,6 @@ class DemoController extends Controller
      */
     public function grape2(): View
     {
-        return ViewFacade::make('web.demo.grape2');
+        return ViewFacade::make('demo.grape2');
     }
 }

@@ -45,7 +45,7 @@ class RegisterController extends Controller
 
         $isUnfinishedSignup = $request->get('is_unfinished_signup', 0);
 
-        return ViewFacade::make('web.register.index', [
+        return ViewFacade::make('register.index', [
             'registers' => $registers,
             'filters' => $request->only(['search', 'is_unfinished_signup', 'created_at']),
             'isUnfinishedSignup' => $isUnfinishedSignup,
@@ -87,7 +87,7 @@ class RegisterController extends Controller
 
         $isUnfinishedSignup = $request->get('is_unfinished_signup', 0);
 
-        return ViewFacade::make('web.register.index_unique', [
+        return ViewFacade::make('register.index_unique', [
             'registers' => $registers,
             'filters' => $request->only(['search', 'is_unfinished_signup', 'created_at']),
             'isUnfinishedSignup' => $isUnfinishedSignup,
@@ -109,7 +109,6 @@ class RegisterController extends Controller
      */
     public function toCsv(Request $request): Response
     {
-        try {
             $query = Register::query();
 
             // Apply same filters as index
@@ -157,10 +156,6 @@ class RegisterController extends Controller
             };
 
             return response()->stream($callback, 200, $headers);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to export CSV: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -168,7 +163,6 @@ class RegisterController extends Controller
      */
     public function toCsvUnique(Request $request): Response
     {
-        try {
             $query = Register::query();
 
             // Apply same filters as index
@@ -220,9 +214,5 @@ class RegisterController extends Controller
             };
 
             return response()->stream($callback, 200, $headers);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to export CSV: '.$e->getMessage()], 500);
-        }
     }
 }

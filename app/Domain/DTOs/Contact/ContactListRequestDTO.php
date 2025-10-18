@@ -12,4 +12,14 @@ readonly class ContactListRequestDTO
         public ?string $search,
         public int $status
     ) {}
+
+    public function toArray(): array
+    {
+        return [
+            'page' => $this->page,
+            'limit' => $this->limit,
+            'search' => $this->search,
+            'status' => $this->status,
+        ];
+    }
 }

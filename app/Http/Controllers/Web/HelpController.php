@@ -21,7 +21,7 @@ class HelpController extends Controller
      */
     public function index(): View
     {
-        return ViewFacade::make('web.help.index');
+        return ViewFacade::make('help.index');
     }
 
     /**
@@ -29,16 +29,11 @@ class HelpController extends Controller
      */
     public function test(): Response
     {
-        try {
             // Test API functionality
             $api = new \App\Services\BivyStickService();
             $result = $api->update();
 
             return response()->json($result);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -46,15 +41,10 @@ class HelpController extends Controller
      */
     public function checkSps(): Response
     {
-        try {
             $sps = new \App\Services\SpsApiService();
             $result = $sps->checkIp();
 
             return response()->json($result);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -64,7 +54,7 @@ class HelpController extends Controller
     {
         $logFiles = $this->getLogFiles();
 
-        return ViewFacade::make('web.help.log', [
+        return ViewFacade::make('help.log', [
             'logFiles' => $logFiles,
         ]);
     }
@@ -74,7 +64,6 @@ class HelpController extends Controller
      */
     public function download(Request $request): Response
     {
-        try {
             $alias = $request->get('alias');
 
             // Validate alias for security
@@ -100,10 +89,6 @@ class HelpController extends Controller
             }
 
             return response()->download($alias);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -119,7 +104,7 @@ class HelpController extends Controller
 
         $content = file_get_contents($alias);
 
-        return ViewFacade::make('web.help.read-log', [
+        return ViewFacade::make('help.read-log', [
             'alias' => $alias,
             'content' => $content,
         ]);
@@ -130,7 +115,7 @@ class HelpController extends Controller
      */
     public function testModal(): View
     {
-        return ViewFacade::make('web.help.test-modal');
+        return ViewFacade::make('help.test-modal');
     }
 
     /**
@@ -152,7 +137,6 @@ class HelpController extends Controller
      */
     public function testMail(): Response
     {
-        try {
             $sandboxEmail = Settings::get('mail__sandbox_email');
             $adminEmail = Settings::get('mail__admin_email');
 
@@ -167,10 +151,6 @@ class HelpController extends Controller
             });
 
             return response()->json(['success' => 'Mail sent successfully']);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to send mail: '.$e->getMessage()], 500);
-        }
     }
 
     /**
@@ -178,7 +158,6 @@ class HelpController extends Controller
      */
     public function twilioLookup(Request $request): Response
     {
-        try {
             $number = $request->get('number');
 
             if (! $number) {
@@ -196,10 +175,6 @@ class HelpController extends Controller
             $result = $twilio->lookups->v1->phoneNumbers($number)->fetch(['type' => ['carrier']]);
 
             return response()->json($result->toArray());
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -207,7 +182,6 @@ class HelpController extends Controller
      */
     public function twilioSend(Request $request): Response
     {
-        try {
             $number = $request->get('number');
             $text = $request->get('text');
 
@@ -230,10 +204,6 @@ class HelpController extends Controller
             ]);
 
             return response()->json($message->toArray());
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -241,17 +211,12 @@ class HelpController extends Controller
      */
     public function iexTest(Request $request): Response
     {
-        try {
             $uri = $request->get('uri', 'stock/aapl/ohlc');
 
             $iexService = new \App\Services\IexCloudService();
             $result = $iexService->get($uri);
 
             return response()->json($result);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -267,7 +232,7 @@ class HelpController extends Controller
 
         $apiLogs = ApiLog::where('key', $key)->orderBy('created_at')->get();
 
-        return ViewFacade::make('web.help.api-log-diff', [
+        return ViewFacade::make('help.api-log-diff', [
             'apiLogs' => $apiLogs,
         ]);
     }
@@ -277,7 +242,6 @@ class HelpController extends Controller
      */
     public function sms(Request $request): Response
     {
-        try {
             $provider = $request->get('provider');
             $number = $request->get('number');
             $body = $request->get('body');
@@ -293,10 +257,6 @@ class HelpController extends Controller
                 'success' => $result,
                 'response' => $smsService->getResponse(),
             ]);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -304,7 +264,6 @@ class HelpController extends Controller
      */
     public function testPush(Request $request): Response
     {
-        try {
             $token = $request->get('token');
             $body = $request->get('body');
             $isProd = $request->get('is_prod', false);
@@ -317,10 +276,6 @@ class HelpController extends Controller
             $result = $pushService->send([$token], $body, '', $isProd);
 
             return response()->json(['success' => $result]);
-
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
 
     /**
@@ -331,7 +286,7 @@ class HelpController extends Controller
         $idFirstUser = $request->get('id_first_user');
         $idSecondUser = $request->get('id_second_user');
 
-        return ViewFacade::make('web.help.chat', [
+        return ViewFacade::make('help.chat', [
             'idFirstUser' => $idFirstUser,
             'idSecondUser' => $idSecondUser,
         ]);

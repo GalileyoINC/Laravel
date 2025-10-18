@@ -57,7 +57,7 @@ class ServiceController extends Controller
 
         $services = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        return ViewFacade::make('web.service.index', [
+        return ViewFacade::make('service.index', [
             'services' => $services,
             'filters' => $request->only(['search', 'name', 'price_from', 'price_to', 'is_active', 'type']),
         ]);
@@ -68,7 +68,7 @@ class ServiceController extends Controller
      */
     public function show(Service $service): View
     {
-        return ViewFacade::make('web.service.show', [
+        return ViewFacade::make('service.show', [
             'service' => $service,
         ]);
     }
@@ -80,7 +80,7 @@ class ServiceController extends Controller
     {
         $type = $request->get('type', Service::TYPE_SUBSCRIBE);
 
-        return ViewFacade::make('web.service.create', [
+        return ViewFacade::make('service.create', [
             'type' => $type,
         ]);
     }
@@ -90,21 +90,14 @@ class ServiceController extends Controller
      */
     public function store(ServiceRequest $request): Response
     {
-        try {
             $data = $request->validated();
             $data['type'] = $request->get('type', Service::TYPE_SUBSCRIBE);
             $data['is_active'] = false;
 
             Service::create($data);
 
-            return redirect()->route('web.service.index')
+            return redirect()->route('service.index')
                 ->with('success', 'Service created successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to create service: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -112,7 +105,7 @@ class ServiceController extends Controller
      */
     public function edit(Service $service): View
     {
-        return ViewFacade::make('web.service.edit', [
+        return ViewFacade::make('service.edit', [
             'service' => $service,
         ]);
     }
@@ -122,17 +115,10 @@ class ServiceController extends Controller
      */
     public function update(ServiceRequest $request, Service $service): Response
     {
-        try {
             $service->update($request->validated());
 
-            return redirect()->route('web.service.show', $service)
+            return redirect()->route('service.show', $service)
                 ->with('success', 'Service updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update service: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -140,7 +126,7 @@ class ServiceController extends Controller
      */
     public function settings(): View
     {
-        return ViewFacade::make('web.service.settings');
+        return ViewFacade::make('service.settings');
     }
 
     /**
@@ -148,7 +134,6 @@ class ServiceController extends Controller
      */
     public function settingsStore(ServiceSettingsRequest $request): Response
     {
-        try {
             // Here you would implement the actual settings saving logic
             // For now, we'll just simulate it
 
@@ -157,14 +142,8 @@ class ServiceController extends Controller
             // Simulate settings saving
             // Settings::updateServiceSettings($settings);
 
-            return redirect()->route('web.service.index')
+            return redirect()->route('service.index')
                 ->with('success', 'Service settings updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update service settings: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -172,7 +151,7 @@ class ServiceController extends Controller
      */
     public function updateCustom(Service $service): View
     {
-        return ViewFacade::make('web.service.update-custom', [
+        return ViewFacade::make('service.update-custom', [
             'service' => $service,
         ]);
     }
@@ -182,17 +161,10 @@ class ServiceController extends Controller
      */
     public function updateCustomStore(ServiceRequest $request, Service $service): Response
     {
-        try {
             $service->update($request->validated());
 
-            return redirect()->route('web.service.index')
+            return redirect()->route('service.index')
                 ->with('success', 'Custom service updated successfully.');
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to update custom service: '.$e->getMessage()])
-                ->withInput();
-        }
     }
 
     /**
@@ -200,7 +172,6 @@ class ServiceController extends Controller
      */
     public function export(Request $request): Response
     {
-        try {
             $query = Service::query();
 
             // Apply same filters as index
@@ -262,10 +233,5 @@ class ServiceController extends Controller
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to export services: '.$e->getMessage()]);
-        }
     }
 }

@@ -63,7 +63,7 @@ class SmsPoolPhoneNumber extends Model
 
     public function phone_number()
     {
-        return $this->belongsTo(App\Models\Device\PhoneNumber::class, 'id_phone_number');
+        return $this->belongsTo(\App\Models\Device\PhoneNumber::class, 'id_phone_number');
     }
 
     public function provider()
@@ -73,11 +73,11 @@ class SmsPoolPhoneNumber extends Model
 
     public function sms_pool()
     {
-        return $this->belongsTo(App\Models\Communication\SmsPool::class, 'id_sms_pool');
+        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 }

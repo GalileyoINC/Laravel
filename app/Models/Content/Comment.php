@@ -54,27 +54,27 @@ class Comment extends Model
 
     public function comment()
     {
-        return $this->belongsTo(App\Models\Content\Comment::class, 'id_parent');
+        return $this->belongsTo(\App\Models\Content\Comment::class, 'id_parent');
     }
 
     public function sms_pool()
     {
-        return $this->belongsTo(App\Models\Communication\SmsPool::class, 'id_sms_pool');
+        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     public function comments()
     {
-        return $this->hasMany(App\Models\Content\Comment::class, 'id_parent');
+        return $this->hasMany(\App\Models\Content\Comment::class, 'id_parent');
     }
 
     public function user_point_histories()
     {
-        return $this->hasMany(App\Models\User\UserPointHistory::class, 'id_comment');
+        return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_comment');
     }
 
     protected static function newFactory()

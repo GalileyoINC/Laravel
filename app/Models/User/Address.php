@@ -66,11 +66,11 @@ class Address extends Model
 
     public function invoice()
     {
-        return $this->belongsTo(App\Models\Finance\Invoice::class, 'id_invoice');
+        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
     }
 
     public function user()
     {
-        return $this->belongsTo(App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 }

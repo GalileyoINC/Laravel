@@ -118,3 +118,196 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+/* Box Styles */
+.box {
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    border-top: 3px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.box.box-primary {
+    border-top-color: #3c8dbc;
+}
+
+.box-header {
+    color: #444;
+    display: block;
+    padding: 10px;
+    position: relative;
+}
+
+.box-header.with-border {
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.box-header .box-title {
+    display: inline-block;
+    font-size: 18px;
+    margin: 0;
+    line-height: 1;
+}
+
+.box-header .box-tools {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+.box-body {
+    padding: 10px;
+}
+
+.box-footer {
+    border-top: 1px solid #f4f4f4;
+    padding: 10px;
+    background-color: #fff;
+}
+
+/* Panel Styles */
+.panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.panel-default {
+    border-color: #ddd;
+}
+
+.panel-default > .panel-heading {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+/* Detail View */
+.detail-view th {
+    width: 25%;
+    font-weight: 600;
+    background-color: #f5f5f5;
+}
+
+.detail-view td {
+    width: 75%;
+}
+
+/* Action Column */
+.action-column-2 {
+    width: 100px;
+}
+
+.grid__id {
+    width: 60px;
+}
+
+/* Alert Destination */
+.alert-destination {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+}
+
+/* Loader */
+#loader {
+    z-index: 10000;
+}
+
+.loader__child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+}
+
+/* Sidebar SVG Icons Fix */
+.sidebar-menu svg {
+    max-width: 20px;
+    max-height: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.sidebar-menu .svg-inline--fa.fa-chevron-down,
+.sidebar-menu svg[data-icon="chevron-down"] {
+    max-width: 10px !important;
+    max-height: 10px !important;
+    width: 10px !important;
+    height: 10px !important;
+    margin-left: 5px !important;
+}
+
+.sidebar-menu button span svg,
+.sidebar-menu button > svg:last-child {
+    max-width: 10px !important;
+    max-height: 10px !important;
+    width: 10px !important;
+    height: 10px !important;
+}
+
+.sidebar-menu button {
+    background: none;
+    border: none;
+    color: inherit;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+
+.sidebar-menu button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Align menu items - add padding if no icon */
+.sidebar-menu > li > a,
+.sidebar-menu > li > button {
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px 15px !important;
+}
+
+/* All icons should have same width */
+.sidebar-menu > li > a > svg:first-child,
+.sidebar-menu > li > button > svg:first-child {
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
+    height: 20px !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+/* Text should take remaining space */
+.sidebar-menu > li > a > span,
+.sidebar-menu > li > button > span {
+    flex: 1;
+}
+
+.sidebar-menu .child_menu {
+    display: none;
+}
+
+.sidebar-menu li.active > .child_menu {
+    display: block;
+}

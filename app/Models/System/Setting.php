@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
+use Database\Factories\SystemSettingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,4 +35,12 @@ class Setting extends Model
         'prod',
         'dev',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return SystemSettingFactory::new();
+    }
 }

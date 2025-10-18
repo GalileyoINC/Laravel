@@ -62,7 +62,7 @@ class DeviceService implements DeviceServiceInterface
 
     public function sendPushNotification(DevicePushRequestDTO $dto): array
     {
-        $device = Device::findOrFail($dto->id);
+        $device = Device::findOrFail($dto->deviceId);
 
         // Mock push notification sending - replace with actual push service
         $notification = [

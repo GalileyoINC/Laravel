@@ -61,7 +61,7 @@ class InvoiceController extends Controller
         // Calculate total sum
         $totalSum = $query->sum('total');
 
-        return ViewFacade::make('web.invoice.index', [
+        return ViewFacade::make('invoice.index', [
             'invoices' => $invoices,
             'filters' => $request->only(['search', 'paid_status', 'createTimeRange', 'total_min', 'total_max']),
             'totalSum' => $totalSum,
@@ -75,7 +75,7 @@ class InvoiceController extends Controller
     {
         $invoice->load(['user', 'invoiceLines.bundle', 'moneyTransactions.creditCard']);
 
-        return ViewFacade::make('web.invoice.show', [
+        return ViewFacade::make('invoice.show', [
             'invoice' => $invoice,
         ]);
     }
