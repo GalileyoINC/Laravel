@@ -16,7 +16,7 @@ class ExportUsersToCsvAction
      */
     public function execute(ExportUsersRequestDTO $dto): array
     {
-        $query = User::with(['phoneNumbers', 'contract_lines']);
+        $query = User::with(['phoneNumbers', 'contractLines']);
 
         if (! empty($dto->search)) {
             $search = $dto->search;
@@ -39,7 +39,7 @@ class ExportUsersToCsvAction
         foreach ($users as $user) {
             /** @var PhoneNumber|null $phone */
             $phone = $user->phoneNumbers->first();
-            $phoneNumber = $phone ? $phone->number : '';
+            $phoneNumber = $phone ? (string) $phone->getAttribute('phone_number') : '';
             $phoneType = $phone ? $phone->getFullTypeName() : '';
             $isValid = $phone ? ($phone->is_valid ? 'Yes' : 'No') : '';
 
@@ -49,7 +49,7 @@ class ExportUsersToCsvAction
             $spsActive = $user->is_sps_active ? 'Yes' : 'No';
 
             $activePlan = '';
-            $activeLines = $user->contract_lines->whereNull('terminated_at');
+            $activeLines = $user->contract_lines()->whereNull('terminated_at')->get();
             if ($activeLines->isNotEmpty()) {
                 $activePlan = $activeLines->pluck('title')->filter()->join('/');
             }

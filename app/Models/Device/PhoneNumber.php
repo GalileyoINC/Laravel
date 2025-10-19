@@ -15,12 +15,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $id_user
  * @property string|null $phone_number
  * @property bool $is_active
+ * @property int|null $type
  * @property bool|null $is_valid
  * @property bool|null $is_primary
  * @property bool|null $is_send
+ * @property string|null $twilio_type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User\User|null $user
+ * @property-read string|null $number
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber newQuery()
@@ -34,14 +37,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\DevicePhoneNumberFactory>
+ */
 class PhoneNumber extends Model
 {
     use HasFactory;
 
-    protected $table = 'phone_numbers';
+    // Legacy type constants kept for BC with reports/controllers
+    public const TYPE_NONE = 0;
+    public const TYPE_SATELLITE = 1;
+    public const TYPE_BIVY = 2;
+    public const TYPE_PIVOTEL = 3;
+    public const TYPE_MOBILE = 4;
+
+    protected $table = 'phone_number';
 
     protected $casts = [
         'id_user' => 'int',
+        'type' => 'int',
         'is_active' => 'bool',
         'is_valid' => 'bool',
         'is_primary' => 'bool',
@@ -53,6 +67,7 @@ class PhoneNumber extends Model
     protected $fillable = [
         'id_user',
         'phone_number',
+        'type',
         'is_active',
         'is_valid',
         'is_primary',
@@ -60,7 +75,7 @@ class PhoneNumber extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\User\User, static>
+     * @return BelongsTo<\App\Models\User\User, \App\Models\Device\PhoneNumber>
      */
     public function user(): BelongsTo
     {

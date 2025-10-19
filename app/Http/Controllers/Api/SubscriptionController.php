@@ -173,6 +173,7 @@ class SubscriptionController extends Controller
             return response()->json(['error' => 'Image not found'], 404);
         }
 
+        /** @var SmsPoolPhoto $smsPoolPhoto */
         // Get sizes from JSON column
         $sizes = $smsPoolPhoto->sizes;
 

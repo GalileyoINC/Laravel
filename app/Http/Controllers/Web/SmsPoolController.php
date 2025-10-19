@@ -193,7 +193,7 @@ class SmsPoolController extends Controller
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->whereHas('phoneNumber', function ($q) use ($search) {
-                $q->where('number', 'like', "%{$search}%");
+                $q->where('phone_number', 'like', "%{$search}%");
             });
         }
         $recipients = $query->orderBy('created_at', 'desc')->paginate(20);

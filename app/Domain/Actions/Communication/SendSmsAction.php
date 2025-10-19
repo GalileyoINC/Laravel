@@ -23,7 +23,7 @@ final class SendSmsAction
         // Simulate SMS sending (replace with real provider integration when available)
         Log::info('Simulated SMS send', [
             'phone_number_id' => $phone->id,
-            'number' => $phone->number,
+            'number' => (string) $phone->getAttribute('phone_number'),
             'message' => $dto->message,
         ]);
 

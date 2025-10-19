@@ -45,7 +45,7 @@ class PhoneService implements PhoneServiceInterface
             // $this->sendSMS($phone->phone, $verificationCode);
 
             return PhoneVerifyResponseDTO::fromData(
-                'Verification code sent to '.$phone->phone_number,
+                'Verification code sent to '.(string) $phone->getAttribute('phone_number'),
                 'sent'
             );
 

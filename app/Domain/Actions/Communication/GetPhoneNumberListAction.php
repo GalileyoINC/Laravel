@@ -20,8 +20,7 @@ final class GetPhoneNumberListAction
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('number', 'like', "%{$search}%")
-                    ->orWhere('twilio_type', 'like', "%{$search}%")
+                $q->where('phone_number', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($userQuery) use ($search) {
                         $userQuery->where('first_name', 'like', "%{$search}%")
                             ->orWhere('last_name', 'like', "%{$search}%")
@@ -36,12 +35,12 @@ final class GetPhoneNumberListAction
                     ->orWhere('last_name', 'like', "%{$name}%");
             });
         }
-        foreach (['number', 'type', 'twilio_type'] as $field) {
+        foreach (['phone_number'] as $field) {
             if (! empty($filters[$field])) {
                 $query->where($field, 'like', "%{$filters[$field]}%");
             }
         }
-        foreach (['is_valid', 'is_active', 'is_primary', 'is_send', 'id_provider'] as $field) {
+        foreach (['is_valid', 'is_active', 'is_primary', 'is_send'] as $field) {
             if (isset($filters[$field])) {
                 $query->where($field, (int) $filters[$field]);
             }

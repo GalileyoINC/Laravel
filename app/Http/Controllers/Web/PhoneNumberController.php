@@ -168,7 +168,7 @@ class PhoneNumberController extends Controller
         }
 
         if (! $phoneNumber->is_active) {
-            $phoneNumber->number = '';
+            $phoneNumber->setAttribute('phone_number', '');
         }
 
         return ViewFacade::make('phone-number.create', [

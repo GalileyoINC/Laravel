@@ -377,6 +377,11 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Communication\Contact::class, 'id_user');
     }
 
+    public function contract_lines(): HasMany
+    {
+        return $this->hasMany(\App\Models\Finance\ContractLine::class, 'id_user');
+    }
+
     public function contractLines(): HasMany
     {
         return $this->contract_lines();

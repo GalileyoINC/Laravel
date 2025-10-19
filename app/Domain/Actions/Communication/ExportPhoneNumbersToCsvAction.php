@@ -20,8 +20,7 @@ final class ExportPhoneNumbersToCsvAction
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('number', 'like', "%{$search}%")
-                    ->orWhere('twilio_type', 'like', "%{$search}%")
+                $q->where('phone_number', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($userQuery) use ($search) {
                         $userQuery->where('first_name', 'like', "%{$search}%")
                             ->orWhere('last_name', 'like', "%{$search}%")
@@ -36,12 +35,12 @@ final class ExportPhoneNumbersToCsvAction
                     ->orWhere('last_name', 'like', "%{$name}%");
             });
         }
-        foreach (['number', 'type', 'twilio_type'] as $field) {
+        foreach (['phone_number', 'type'] as $field) {
             if (! empty($filters[$field])) {
                 $query->where($field, 'like', "%{$filters[$field]}%");
             }
         }
-        foreach (['is_valid', 'is_active', 'is_primary', 'is_send', 'id_provider'] as $field) {
+        foreach (['is_valid', 'is_active', 'is_primary', 'is_send'] as $field) {
             if (isset($filters[$field])) {
                 $query->where($field, (int) $filters[$field]);
             }
@@ -62,7 +61,7 @@ final class ExportPhoneNumbersToCsvAction
         $items = $query->orderBy('updated_at', 'desc')->get();
 
         $rows = [];
-        $rows[] = ['ID', 'User', 'Email', 'Number', 'Valid', 'Type', 'Provider', 'Primary', 'Send', 'Created At', 'Updated At'];
+        $rows[] = ['ID', 'User', 'Email', 'Number', 'Valid', 'Type', 'Primary', 'Send', 'Created At', 'Updated At'];
         foreach ($items as $phoneNumber) {
             /** @var PhoneNumber $phoneNumber */
             $userName = '';
@@ -74,18 +73,20 @@ final class ExportPhoneNumbersToCsvAction
                 $userEmail = $user->email ?? '';
             }
 
+            $createdAt = $phoneNumber->getAttribute('created_at');
+            $updatedAt = $phoneNumber->getAttribute('updated_at');
+
             $rows[] = [
                 $phoneNumber->id,
                 $userName,
                 $userEmail,
-                $phoneNumber->number,
+                (string) $phoneNumber->getAttribute('phone_number'),
                 $phoneNumber->is_valid ? 'Yes' : 'No',
                 $phoneNumber->type ?? '',
-                '',
                 $phoneNumber->is_primary ? 'Yes' : 'No',
                 $phoneNumber->is_send ? 'Yes' : 'No',
-                $phoneNumber->created_at?->format('Y-m-d H:i:s') ?? '',
-                $phoneNumber->updated_at?->format('Y-m-d H:i:s') ?? '',
+                $createdAt ? $createdAt->format('Y-m-d H:i:s') : '',
+                $updatedAt ? $updatedAt->format('Y-m-d H:i:s') : '',
             ];
         }
 
