@@ -17,12 +17,12 @@ use App\Http\Requests\Twilio\Web\TwilioCarrierIndexRequest;
 use App\Http\Requests\Twilio\Web\TwilioCarrierUpdateRequest;
 use App\Http\Requests\Twilio\Web\TwilioIncomingIndexRequest;
 use App\Http\Requests\Twilio\Web\TwilioIncomingStoreRequest;
-use App\Models\System\Provider;
+use App\Models\Finance\Provider;
 use App\Models\System\TwilioCarrier;
 use App\Models\System\TwilioIncoming;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class TwilioController extends Controller
@@ -146,6 +146,9 @@ class TwilioController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }
@@ -167,6 +170,9 @@ class TwilioController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

@@ -23,7 +23,7 @@ use App\Models\Subscription\SubscriptionCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubscriptionController extends Controller
@@ -63,7 +63,7 @@ class SubscriptionController extends Controller
         $subscriptions = $this->getSubscriptionListAction->execute($filters, 20);
 
         $selectedCategory = $categoryId ? SubscriptionCategory::find($categoryId) : null;
-        $title = $selectedCategory ? $selectedCategory->name : 'News Category';
+        $title = $selectedCategory ? (string) $selectedCategory->getAttribute('name') : 'News Category';
 
         return ViewFacade::make('subscription.index', [
             'subscriptions' => $subscriptions,
@@ -192,8 +192,9 @@ class SubscriptionController extends Controller
     public function destroy(Subscription $subscription): RedirectResponse
     {
         // Delete image if exists
-        if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {
-            Storage::disk('public')->delete($subscription->image);
+        $imagePath = $subscription->getAttribute('image');
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
         }
 
         $subscription->delete();
@@ -213,6 +214,9 @@ class SubscriptionController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

@@ -33,6 +33,8 @@ class PageContent extends Model
 
     /** Backward compatible alias used in controllers */
     public const STATUS_DRAFT = self::STATUS_TEMP;
+    /** Alias to match request references */
+    public const STATUS_PUBLISHED = self::STATUS_PUBLISH;
 
     public $timestamps = false;
 

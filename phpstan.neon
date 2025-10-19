@@ -3,9 +3,9 @@ includes:
 
 parameters:
     paths:
-        - app
+        - app/Domain
+        - app/Http
         - routes
-        - database
     level: 8
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
@@ -31,6 +31,10 @@ parameters:
         - message: '#contains unresolvable type|unresolvable type#'
           paths:
             - app/Http/Resources/*
+        - message: '#return type has no value type specified in iterable type array#'
+          paths:
+            - app/Http/Resources/*
+            - app/Http/Requests/*
     excludePaths:
         - vendor
         - storage

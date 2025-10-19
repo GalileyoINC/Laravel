@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Subscription\PromocodeInfluencer;
 
 /**
  * Class Promocode
@@ -96,6 +97,12 @@ class Promocode extends Model
     }
 
     public function promocode_influencer()
+    {
+        return $this->hasOne(PromocodeInfluencer::class, 'id_promocode');
+    }
+
+    // Alias to satisfy controllers using ->with(['influencer'])
+    public function influencer()
     {
         return $this->hasOne(PromocodeInfluencer::class, 'id_promocode');
     }

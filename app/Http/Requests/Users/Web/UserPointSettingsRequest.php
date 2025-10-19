@@ -18,6 +18,8 @@ class UserPointSettingsRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request
+     *
+     * @return array<string, array<int, string>|string>
      */
     public function rules(): array
     {
@@ -34,6 +36,8 @@ class UserPointSettingsRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -56,6 +60,8 @@ class UserPointSettingsRequest extends FormRequest
 
     /**
      * Get custom attributes for validator errors
+     *
+     * @return array<string, string>
      */
     public function attributes(): array
     {

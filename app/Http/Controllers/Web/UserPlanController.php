@@ -8,13 +8,14 @@ use App\Domain\Actions\UserPlan\ExportUnpaidUserPlansToCsvAction;
 use App\Domain\Actions\UserPlan\GetUnpaidUserPlansAction;
 use App\Domain\Actions\UserPlan\UpdateUserPlanAction;
 use App\Domain\DTOs\UserPlan\UserPlanUpdateDTO;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\Web\UserPlanRequest;
 use App\Http\Requests\Users\Web\UserPlanUnpaidIndexRequest;
 use App\Models\Finance\Service;
 use App\Models\User\UserPlan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class UserPlanController extends Controller
@@ -34,7 +35,7 @@ class UserPlanController extends Controller
         $userPlans = $this->getUnpaidUserPlansAction->execute($filters, 20);
 
         // Get services for filter dropdown
-        $services = Service::where('type', Service::TYPE_SUBSCRIBE ?? 1)
+        $services = Service::where('type', Service::TYPE_SUBSCRIBE)
             ->where('is_active', true)
             ->pluck('name', 'id');
 
@@ -86,6 +87,9 @@ class UserPlanController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
@@ -201,7 +201,7 @@ class UserController extends Controller
     public function loginAsUser(User $user): RedirectResponse
     {
         try {
-            $result = $this->loginAsUserAction->execute(Auth::id(), $user->id);
+            $result = $this->loginAsUserAction->execute((int) Auth::id(), $user->id);
         } catch (Throwable $e) {
             return Redirect::back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -218,7 +218,7 @@ class UserController extends Controller
         $dto = new ExportUsersRequestDTO(
             search: $request->get('search'),
             status: $request->has('status') ? (int) $request->get('status') : null,
-            role: $request->has('role') ? (int) $request->get('role') : null,
+            role: $request->has('role') ? (string) $request->get('role') : null,
             validEmailOnly: $request->boolean('valid_email_only', false),
         );
 
@@ -227,6 +227,9 @@ class UserController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }
@@ -395,7 +398,7 @@ class UserController extends Controller
     public function terminate(ContractLine $contractLine): View|RedirectResponse
     {
         if (request()->isMethod('post')) {
-            $contractLine->terminated_at = now()->format('Y-m-d');
+            $contractLine->terminated_at = now();
             $contractLine->save();
 
             return Redirect::route('user.show', $contractLine->id_user)
