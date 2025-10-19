@@ -13,8 +13,10 @@
                 <div class="panel-body">
                     <!-- Summary -->
                     <div class="summary" style="margin-bottom:10px;">
-                        @if($devices->total() > 0)
+                        @if($devices instanceof \Illuminate\Contracts\Pagination\Paginator && $devices->total() > 0)
                             Showing <b>{{ $devices->firstItem() }}-{{ $devices->lastItem() }}</b> of <b>{{ $devices->total() }}</b> items.
+                        @elseif(is_array($devices) && count($devices) > 0)
+                            Showing <b>1-{{ count($devices) }}</b> of <b>{{ count($devices) }}</b> items.
                         @else
                             Showing <b>0-0</b> of <b>0</b> items.
                         @endif
@@ -86,31 +88,39 @@
                             <tbody>
                                 @forelse($devices as $device)
                                     <tr>
-                                        <td>{{ $device->id }}</td>
+                                        <td>{{ is_array($device) ? ($device['id'] ?? '') : ($device->id ?? '') }}</td>
                                         <td>
-                                            @if($device->user)
-                                                <a href="{{ route('user.show', $device->user) }}" class="JS__load_in_modal">
-                                                    {{ $device->user->email }}
+                                            @php $user = is_array($device) ? ($device['user'] ?? null) : ($device->user ?? null); @endphp
+                                            @if(is_object($user))
+                                                <a href="{{ route('user.show', $user) }}" class="JS__load_in_modal">
+                                                    {{ $user->email }}
                                                 </a>
                                                 @if(auth()->user()->isSuper())
-                                                    <span class="text-admin"> (ID {{ $device->user->id }})</span>
+                                                    <span class="text-admin"> (ID {{ $user->id }})</span>
                                                 @endif
+                                            @elseif(is_array($user))
+                                                {{ $user['email'] ?? '-' }}
                                             @else
                                                 -
                                             @endif
                                         </td>
                                         <td>
-                                            @if($device->push_turn_on)
+                                            @php $pushOn = is_array($device) ? ($device['push_turn_on'] ?? false) : ($device->push_turn_on ?? false); @endphp
+                                            @if($pushOn)
                                                 <i class="fas fa-check text-success"></i>
                                             @else
                                                 <i class="fas fa-times text-danger"></i>
                                             @endif
                                         </td>
-                                        <td>{{ $device->uuid }}</td>
-                                        <td>{{ ucfirst($device->os) }}</td>
+                                        <td>{{ is_array($device) ? ($device['uuid'] ?? '') : ($device->uuid ?? '') }}</td>
                                         <td>
-                                            @if($device->push_token)
-                                                <span>{{ strlen($device->push_token) > 28 ? substr($device->push_token, 0, 12) . '...' . substr($device->push_token, -10) : $device->push_token }}</span>
+                                            @php $os = is_array($device) ? ($device['os'] ?? '') : ($device->os ?? ''); @endphp
+                                            {{ ucfirst($os) }}
+                                        </td>
+                                        <td>
+                                            @php $pushToken = is_array($device) ? ($device['push_token'] ?? '') : ($device->push_token ?? ''); @endphp
+                                            @if($pushToken)
+                                                <span>{{ strlen($pushToken) > 28 ? substr($pushToken, 0, 12) . '...' . substr($pushToken, -10) : $pushToken }}</span>
                                                 <button class="btn btn-success btn-sm align-baseline JS__copy_title_to_clipboard" title="{{ $device->push_token }}">
                                                     <i class="fas fa-paste"></i>
                                                 </button>
@@ -119,8 +129,9 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if($device->access_token)
-                                                <span>{{ strlen($device->access_token) > 28 ? substr($device->access_token, 0, 12) . '...' . substr($device->access_token, -10) : $device->access_token }}</span>
+                                            @php $accessToken = is_array($device) ? ($device['access_token'] ?? '') : ($device->access_token ?? ''); @endphp
+                                            @if($accessToken)
+                                                <span>{{ strlen($accessToken) > 28 ? substr($accessToken, 0, 12) . '...' . substr($accessToken, -10) : $accessToken }}</span>
                                                 <button class="btn btn-success btn-sm align-baseline JS__copy_title_to_clipboard" title="{{ $device->access_token }}">
                                                     <i class="fas fa-paste"></i>
                                                 </button>
@@ -128,23 +139,35 @@
                                                 -
                                             @endif
                                         </td>
-                                        <td>{{ $device->updated_at->format('M d, Y H:i') }}</td>
+                                        <td>
+                                            @php $uAt = is_array($device) ? ($device['updated_at'] ?? null) : ($device->updated_at ?? null); @endphp
+                                            @if($uAt instanceof \Illuminate\Support\Carbon)
+                                                {{ $uAt->format('M d, Y H:i') }}
+                                            @elseif(!empty($uAt))
+                                                {{ \Illuminate\Support\Carbon::parse($uAt)->format('M d, Y H:i') }}
+                                            @else
+                                                
+                                            @endif
+                                        </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('device.show', $device) }}" class="btn btn-xs btn-info">
+                                                @php $deviceId = is_array($device) ? ($device['id'] ?? null) : ($device->id ?? null); @endphp
+                                                @if($deviceId)
+                                                <a href="{{ route('device.show', ['device' => $deviceId]) }}" class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye fa-fw"></i>
                                                 </a>
-                                                <form method="POST" action="{{ route('device.destroy', $device) }}" class="d-inline">
+                                                <form method="POST" action="{{ route('device.destroy', ['device' => $deviceId]) }}" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this device?')">
                                                         <i class="fas fa-trash fa-fw"></i>
                                                     </button>
                                                 </form>
-                                                @if($device->push_token)
-                                                    <a href="{{ route('device.push', $device) }}" class="btn btn-xs btn-admin">
+                                                @if($pushToken)
+                                                    <a href="{{ route('device.push', ['device' => $deviceId]) }}" class="btn btn-xs btn-admin">
                                                         <i class="far fa-paper-plane fa-fw"></i>
                                                     </a>
+                                                @endif
                                                 @endif
                                             </div>
                                         </td>
@@ -159,9 +182,11 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $devices->appends(request()->query())->links() }}
-                    </div>
+                    @if($devices instanceof \Illuminate\Contracts\Pagination\Paginator)
+                        <div class="d-flex justify-content-center">
+                            {{ $devices->appends(request()->query())->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

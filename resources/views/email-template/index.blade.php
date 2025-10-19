@@ -10,9 +10,9 @@
     <div class="box-body">
         <!-- Summary -->
         <div class="summary" style="margin-bottom:10px;">
-            @if(method_exists($templates, 'total') && $templates->total() > 0)
+            @if($templates instanceof \Illuminate\Contracts\Pagination\Paginator && $templates->total() > 0)
                 Showing <b>{{ $templates->firstItem() }}-{{ $templates->lastItem() }}</b> of <b>{{ $templates->total() }}</b> items.
-            @elseif(!method_exists($templates, 'total') && count($templates) > 0)
+            @elseif(is_array($templates) && count($templates) > 0)
                 Showing <b>1-{{ count($templates) }}</b> of <b>{{ count($templates) }}</b> items.
             @else
                 Showing <b>0-0</b> of <b>0</b> items.
@@ -35,33 +35,48 @@
                 <tbody>
                     @forelse($templates as $template)
                         <tr>
-                            <td>{{ $template->id }}</td>
-                            <td>{{ $template->name }}</td>
-                            <td>{{ $template->subject }}</td>
-                            <td>{{ $template->type_name ?? 'N/A' }}</td>
+                            <td>{{ is_array($template) ? ($template['id'] ?? '') : ($template->id ?? '') }}</td>
+                            <td>{{ is_array($template) ? ($template['name'] ?? '') : ($template->name ?? '') }}</td>
+                            <td>{{ is_array($template) ? ($template['subject'] ?? '') : ($template->subject ?? '') }}</td>
+                            <td>{{ is_array($template) ? ($template['type_name'] ?? 'N/A') : ($template->type_name ?? 'N/A') }}</td>
                             <td>
-                                @if($template->is_active)
+                                @php $active = is_array($template) ? ($template['is_active'] ?? false) : ($template->is_active ?? false); @endphp
+                                @if($active)
                                     <span class="label label-success">Active</span>
                                 @else
                                     <span class="label label-danger">Inactive</span>
                                 @endif
                             </td>
-                            <td>{{ $template->updated_at->format('M d, Y') }}</td>
+                            <td>
+                                @php
+                                    $updatedAt = is_array($template) ? ($template['updated_at'] ?? null) : ($template->updated_at ?? null);
+                                @endphp
+                                @if($updatedAt instanceof \Illuminate\Support\Carbon)
+                                    {{ $updatedAt->format('M d, Y') }}
+                                @elseif(!empty($updatedAt))
+                                    {{ \Illuminate\Support\Carbon::parse($updatedAt)->format('M d, Y') }}
+                                @else
+                                    
+                                @endif
+                            </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{{ route('email-template.show', $template) }}" class="btn btn-sm btn-info" title="View">
+                                    @php $templateId = is_array($template) ? ($template['id'] ?? null) : ($template->id ?? null); @endphp
+                                    @if($templateId)
+                                    <a href="{{ route('email-template.show', ['email_template' => $templateId]) }}" class="btn btn-sm btn-info" title="View">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('email-template.edit', $template) }}" class="btn btn-sm btn-primary" title="Edit">
+                                    <a href="{{ route('email-template.edit', ['email_template' => $templateId]) }}" class="btn btn-sm btn-primary" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <form action="{{ route('email-template.destroy', $template) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                    <form action="{{ route('email-template.destroy', ['email_template' => $templateId]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -74,7 +89,7 @@
             </table>
         </div>
 
-        @if(method_exists($templates, 'links'))
+        @if($templates instanceof \Illuminate\Contracts\Pagination\Paginator)
             <div class="text-center">
                 {{ $templates->links() }}
             </div>

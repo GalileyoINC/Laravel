@@ -101,7 +101,7 @@
                     </tr>
                     @php
                         $annual = $monthly = 0;
-                        $services = \App\Models\System\Service::all()->keyBy('id')->toArray();
+                        $services = \App\Models\Finance\Service::all()->keyBy('id')->toArray();
                     @endphp
                     @foreach($tbl2 as $idService => $value)
                         <tr>

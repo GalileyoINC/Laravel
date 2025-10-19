@@ -40,7 +40,9 @@ class BundleController extends Controller
             status: array_key_exists('status', $validated) ? (int) $validated['status'] : null,
         );
 
-        $bundles = $this->getBundleListAction->execute($dto->toArray());
+        $response = $this->getBundleListAction->execute($dto->toArray());
+        $payload = $response->getData(true);
+        $bundles = $payload['data'] ?? [];
 
         return ViewFacade::make('bundle.index', [
             'bundles' => $bundles,

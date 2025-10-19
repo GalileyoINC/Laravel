@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Device;
 
 use App\Domain\DTOs\Device\DeviceListRequestDTO;
 use App\Domain\Services\Device\DeviceServiceInterface;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GetDeviceListAction
 {
@@ -14,7 +13,7 @@ class GetDeviceListAction
         private readonly DeviceServiceInterface $deviceService
     ) {}
 
-    public function execute(array $data): LengthAwarePaginator
+    public function execute(array $data): array
     {
         $dto = new DeviceListRequestDTO(
             page: $data['page'] ?? 1,

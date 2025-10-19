@@ -18,8 +18,10 @@
                 <div class="panel-body">
                     <!-- Summary -->
                     <div class="summary" style="margin-bottom:10px;">
-                        @if($emailPools->total() > 0)
+                        @if($emailPools instanceof \Illuminate\Contracts\Pagination\Paginator && $emailPools->total() > 0)
                             Showing <b>{{ $emailPools->firstItem() }}-{{ $emailPools->lastItem() }}</b> of <b>{{ $emailPools->total() }}</b> items.
+                        @elseif(is_array($emailPools) && count($emailPools) > 0)
+                            Showing <b>1-{{ count($emailPools) }}</b> of <b>{{ count($emailPools) }}</b> items.
                         @else
                             Showing <b>0-0</b> of <b>0</b> items.
                         @endif
@@ -97,35 +99,38 @@
                             <tbody>
                                 @forelse($emailPools as $emailPool)
                                     <tr>
-                                        <td>{{ $emailPool->id }}</td>
+                                        <td>{{ is_array($emailPool) ? ($emailPool['id'] ?? '') : ($emailPool->id ?? '') }}</td>
                                         <td>
-                                            @if($emailPool->type === 'immediate')
+                                            @php $type = is_array($emailPool) ? ($emailPool['type'] ?? '') : ($emailPool->type ?? ''); @endphp
+                                            @if($type === 'immediate')
                                                 <span class="label label-success">Immediate</span>
-                                            @elseif($emailPool->type === 'later')
+                                            @elseif($type === 'later')
                                                 <span class="label label-warning">Later</span>
-                                            @elseif($emailPool->type === 'background')
+                                            @elseif($type === 'background')
                                                 <span class="label label-info">Background</span>
                                             @else
-                                                <span class="label label-default">{{ ucfirst($emailPool->type) }}</span>
+                                                <span class="label label-default">{{ ucfirst($type) }}</span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if($emailPool->status === 'sent')
+                                            @php $status = is_array($emailPool) ? ($emailPool['status'] ?? '') : ($emailPool->status ?? ''); @endphp
+                                            @if($status === 'sent')
                                                 <span class="label label-success">Sent</span>
-                                            @elseif($emailPool->status === 'pending')
+                                            @elseif($status === 'pending')
                                                 <span class="label label-warning">Pending</span>
-                                            @elseif($emailPool->status === 'failed')
+                                            @elseif($status === 'failed')
                                                 <span class="label label-danger">Failed</span>
-                                            @elseif($emailPool->status === 'cancelled')
+                                            @elseif($status === 'cancelled')
                                                 <span class="label label-default">Cancelled</span>
                                             @else
-                                                <span class="label label-info">{{ ucfirst($emailPool->status) }}</span>
+                                                <span class="label label-info">{{ ucfirst($status) }}</span>
                                             @endif
                                         </td>
-                                        <td>{{ $emailPool->from }}</td>
+                                        <td>{{ is_array($emailPool) ? ($emailPool['from'] ?? '') : ($emailPool->from ?? '') }}</td>
                                         <td>
                                             @php
-                                                $toArray = json_decode($emailPool->to, true);
+                                                $toRaw = is_array($emailPool) ? ($emailPool['to'] ?? '') : ($emailPool->to ?? '');
+                                                $toArray = is_string($toRaw) ? json_decode($toRaw, true) : (is_array($toRaw) ? $toRaw : []);
                                                 $toEmails = is_array($toArray) ? array_keys($toArray) : [];
                                             @endphp
                                             {{ implode(', ', array_slice($toEmails, 0, 3)) }}
@@ -133,22 +138,37 @@
                                                 <span class="text-muted">(+{{ count($toEmails) - 3 }} more)</span>
                                             @endif
                                         </td>
-                                        <td>{{ $emailPool->reply ?: '-' }}</td>
-                                        <td>{{ $emailPool->bcc ?: '-' }}</td>
-                                        <td>{{ Str::limit($emailPool->subject, 50) }}</td>
-                                        <td>{{ $emailPool->created_at->format('M d, Y') }}</td>
+                                        <td>{{ (is_array($emailPool) ? ($emailPool['reply'] ?? '') : ($emailPool->reply ?? '')) ?: '-' }}</td>
+                                        <td>{{ (is_array($emailPool) ? ($emailPool['bcc'] ?? '') : ($emailPool->bcc ?? '')) ?: '-' }}</td>
+                                        <td>
+                                            @php $subjectVal = is_array($emailPool) ? ($emailPool['subject'] ?? '') : ($emailPool->subject ?? ''); @endphp
+                                            {{ Str::limit($subjectVal, 50) }}
+                                        </td>
+                                        <td>
+                                            @php $created = is_array($emailPool) ? ($emailPool['created_at'] ?? null) : ($emailPool->created_at ?? null); @endphp
+                                            @if($created instanceof \Illuminate\Support\Carbon)
+                                                {{ $created->format('M d, Y') }}
+                                            @elseif(!empty($created))
+                                                {{ \Illuminate\Support\Carbon::parse($created)->format('M d, Y') }}
+                                            @else
+                                                
+                                            @endif
+                                        </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('email-pool.show', $emailPool) }}" class="btn btn-sm btn-info">
+                                                @php $poolId = is_array($emailPool) ? ($emailPool['id'] ?? null) : ($emailPool->id ?? null); @endphp
+                                                @if($poolId)
+                                                <a href="{{ route('email-pool.show', ['email_pool' => $poolId]) }}" class="btn btn-sm btn-info">
                                                     <i class="fas fa-eye"></i> View
                                                 </a>
-                                                <form method="POST" action="{{ route('email-pool.destroy', $emailPool) }}" class="d-inline">
+                                                <form method="POST" action="{{ route('email-pool.destroy', ['email_pool' => $poolId]) }}" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
                                                         <i class="fas fa-trash"></i> Delete
                                                     </button>
                                                 </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -162,9 +182,11 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $emailPools->appends(request()->query())->links() }}
-                    </div>
+                    @if($emailPools instanceof \Illuminate\Contracts\Pagination\Paginator)
+                        <div class="d-flex justify-content-center">
+                            {{ $emailPools->appends(request()->query())->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
