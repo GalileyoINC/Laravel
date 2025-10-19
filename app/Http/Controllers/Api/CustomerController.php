@@ -87,27 +87,17 @@ class CustomerController extends Controller
      */
     public function logout(): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $result = $this->customerService->logout($user);
-
-            return response()->json($result);
-
-        } catch (Exception $e) {
-            Log::error('CustomerController logout error: '.$e->getMessage());
-
+        $user = Auth::user();
+        if (! $user) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $result = $this->customerService->logout($user);
+
+        return response()->json($result);
     }
 
     /**
@@ -115,26 +105,16 @@ class CustomerController extends Controller
      */
     public function delete(): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $result = $this->customerService->deleteAccount($user);
-
-            return response()->json($result);
-
-        } catch (Exception $e) {
-            Log::error('CustomerController delete error: '.$e->getMessage());
-
+        $user = Auth::user();
+        if (! $user) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $result = $this->customerService->deleteAccount($user);
+
+        return response()->json($result);
     }
 }

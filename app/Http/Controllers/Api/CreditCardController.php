@@ -18,37 +18,25 @@ class CreditCardController extends Controller
 {
     public function index(CreditCardListRequest $request, GetCreditCardListAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute($request->validated());
+        $result = $action->execute($request->validated());
 
-            return CreditCardResource::collection($result)->response();
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return CreditCardResource::collection($result)->response();
     }
 
     public function view(int $id, GetCreditCardAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return CreditCardResource::make($result)->response();
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return CreditCardResource::make($result)->response();
     }
 
     public function getGatewayProfile(int $id, GetGatewayProfileAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 }

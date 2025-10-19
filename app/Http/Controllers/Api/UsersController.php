@@ -19,60 +19,39 @@ class UsersController extends Controller
 
     public function index(UsersListRequest $request): JsonResponse
     {
-        try {
-            // Delegate fetching/pagination to Action layer while preserving response shape
-            $paginator = $this->getUsersListAction->execute($request->all());
+        // Delegate fetching/pagination to Action layer while preserving response shape
+        $paginator = $this->getUsersListAction->execute($request->all());
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $paginator->items(),
-                'pagination' => [
-                    'current_page' => $paginator->currentPage(),
-                    'last_page' => $paginator->lastPage(),
-                    'per_page' => $paginator->perPage(),
-                    'total' => $paginator->total(),
-                ],
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $paginator->items(),
+            'pagination' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+            ],
+        ]);
     }
 
     public function view(int $id, GetUserDetailAction $action): JsonResponse
     {
-        try {
-            $user = $action->execute($id);
+        $user = $action->execute($id);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $user,
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $user,
+        ]);
     }
 
     public function exportToCsv(): JsonResponse
     {
-        try {
-            $users = \App\Models\User\User::all();
+        $users = \App\Models\User\User::all();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $users,
-                'csv_available' => true,
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $users,
+            'csv_available' => true,
+        ]);
     }
 }

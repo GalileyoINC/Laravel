@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Communication\ConversationFile;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -80,40 +81,30 @@ class ChatController extends Controller
      * Get chat file (GET /api/v1/chat/get-file/{id}/{type})
      * This endpoint serves files for download
      */
-    public function getFile($id, $type = 'original'): JsonResponse
+    public function getFile($id, $type = 'original'): Response
     {
-        try {
-            $fileId = (int) $id;
-            $fileType = $type ?? 'original';
+        $fileId = (int) $id;
+        $fileType = $type ?? 'original';
 
-            $conversationFile = ConversationFile::find($fileId);
-            if (! $conversationFile || empty($conversationFile->sizes[$fileType]['name'])) {
-                return response()->json([
-                    'error' => 'File not found',
-                    'code' => 404,
-                ], 404);
-            }
-
-            // Serve the file directly
-            $filePath = $conversationFile->folder_name.'/'.$conversationFile->sizes[$fileType]['name'];
-            $fileName = $conversationFile->sizes[$fileType]['name'];
-
-            if (Storage::exists($filePath)) {
-                return Storage::download($filePath, $fileName);
-            }
-
+        $conversationFile = ConversationFile::find($fileId);
+        if (! $conversationFile || empty($conversationFile->sizes[$fileType]['name'])) {
             return response()->json([
                 'error' => 'File not found on disk',
                 'code' => 404,
             ], 404);
-
-        } catch (Exception $e) {
-            Log::error('Chat file error: '.$e->getMessage());
-
-            return response()->json([
-                'error' => 'File not found or access denied',
-                'code' => 404,
-            ], 404);
         }
+
+        // Serve the file directly
+        $filePath = $conversationFile->folder_name.'/'.$conversationFile->sizes[$fileType]['name'];
+        $fileName = $conversationFile->sizes[$fileType]['name'];
+
+        if (Storage::exists($filePath)) {
+            return Storage::download($filePath, $fileName);
+        }
+
+        return response()->json([
+            'error' => 'File not found on disk',
+            'code' => 404,
+        ], 404);
     }
 }
