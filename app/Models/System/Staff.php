@@ -36,6 +36,12 @@ class Staff extends Model
 {
     use HasFactory;
 
+    public const ROLE_ADMIN = 1;
+
+    public const STATUS_ACTIVE = 1;
+
+    public const ID_SUPER = 1;
+
     protected $table = 'staff';
 
     protected $casts = [
@@ -58,6 +64,16 @@ class Staff extends Model
         'status',
         'is_superlogin',
     ];
+
+    public function isSuper(): bool
+    {
+        return (int) ($this->is_superlogin ?? 0) === 1;
+    }
+
+    public function isAdmin(): bool
+    {
+        return (int) ($this->role ?? 0) === self::ROLE_ADMIN;
+    }
 
     public static function getForDropDown(): array
     {

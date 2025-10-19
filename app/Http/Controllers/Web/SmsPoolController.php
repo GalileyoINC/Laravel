@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 class SmsPoolController extends Controller
 {

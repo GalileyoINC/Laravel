@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 class StaffController extends Controller
 {
@@ -60,7 +60,8 @@ class StaffController extends Controller
         ];
 
         // Only super admin can set super login
-        if (Auth::user()->isSuper() && isset($validated['is_superlogin'])) {
+        $currentUser = Auth::user();
+        if ($currentUser && $currentUser->isSuper() && isset($validated['is_superlogin'])) {
             $data['is_superlogin'] = $validated['is_superlogin'];
         }
 
@@ -149,7 +150,8 @@ class StaffController extends Controller
     public function loginAs(Staff $staff): RedirectResponse
     {
         // Only super admin can login as other staff
-        if (! Auth::user()->isSuper()) {
+        $currentUser = Auth::user();
+        if (! $currentUser || ! $currentUser->isSuper()) {
             return Redirect::back()
                 ->withErrors(['error' => 'Unauthorized action.']);
         }
@@ -170,11 +172,11 @@ class StaffController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser->isSuper()) {
+        if ($currentUser && $currentUser->isSuper()) {
             return true;
         }
 
-        if ($currentUser->isAdmin() && ! $staff->isSuper()) {
+        if ($currentUser && $currentUser->isAdmin() && ! $staff->isSuper()) {
             return true;
         }
 

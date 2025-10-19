@@ -63,7 +63,11 @@ class SubscriptionController extends Controller
         $subscriptions = $this->getSubscriptionListAction->execute($filters, 20);
 
         $selectedCategory = $categoryId ? SubscriptionCategory::find($categoryId) : null;
-        $title = $selectedCategory ? (string) $selectedCategory->getAttribute('name') : 'News Category';
+        if ($selectedCategory instanceof SubscriptionCategory) {
+            $title = (string) $selectedCategory->getAttribute('name');
+        } else {
+            $title = 'News Category';
+        }
 
         return ViewFacade::make('subscription.index', [
             'subscriptions' => $subscriptions,

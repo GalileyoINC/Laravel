@@ -14,7 +14,7 @@ use App\Models\Finance\Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ServiceController extends Controller
@@ -153,6 +153,9 @@ class ServiceController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

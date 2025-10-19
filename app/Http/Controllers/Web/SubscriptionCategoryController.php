@@ -12,7 +12,7 @@ use App\Models\Subscription\SubscriptionCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubscriptionCategoryController extends Controller
@@ -79,6 +79,9 @@ class SubscriptionCategoryController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

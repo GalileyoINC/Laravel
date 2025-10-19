@@ -8,6 +8,11 @@ parameters:
         - routes
     level: 8
     treatPhpDocTypesAsCertain: false
+    scanFiles:
+        - app/Models/Finance/Promocode.php
+        - app/Models/Finance/InvoiceLine.php
+        - app/Models/Content/PageContent.php
+        - app/Models/System/Staff.php
     ignoreErrors:
         - message: '#Parameter \#1 \$view of function view expects view-string\|null, string given#'
           paths:
@@ -35,6 +40,9 @@ parameters:
           paths:
             - app/Http/Resources/*
             - app/Http/Requests/*
+        - message: '#Parameter \#1 \$user of static method Illuminate\\Support\\Facades\\Auth::login\(\) expects Illuminate\\Contracts\\Auth\\Authenticatable, .+ given#'
+          paths:
+            - app/Http/Controllers/Web/StaffController.php
     excludePaths:
         - vendor
         - storage

@@ -12,7 +12,7 @@ use App\Models\Communication\SmsPool;
 use App\Models\Communication\SmsPoolArchive;
 use App\Models\Subscription\Subscription;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SmsPoolArchiveController extends Controller
@@ -65,6 +65,9 @@ class SmsPoolArchiveController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

@@ -10,6 +10,8 @@ namespace App\Models\Communication;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Finance\Provider;
 
 /**
  * Class SmsPoolPhoneNumber
@@ -61,22 +63,32 @@ class SmsPoolPhoneNumber extends Model
         'type',
     ];
 
-    public function phone_number()
+    public function phone_number(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Device\PhoneNumber::class, 'id_phone_number');
     }
+    /** Alias to satisfy controllers using ->with(['phoneNumber']) */
+    public function phoneNumber(): BelongsTo
+    {
+        return $this->phone_number();
+    }
 
-    public function provider()
+    public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class, 'id_provider');
     }
 
-    public function sms_pool()
+    public function sms_pool(): BelongsTo
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
+    /** Alias for consistency */
+    public function smsPool(): BelongsTo
+    {
+        return $this->sms_pool();
+    }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

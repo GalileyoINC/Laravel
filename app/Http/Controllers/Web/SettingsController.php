@@ -20,7 +20,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 class SettingsController extends Controller
 {
@@ -47,7 +47,8 @@ class SettingsController extends Controller
     public function index(): View
     {
         // Check if user can view settings
-        if (! auth()->user()->showSettings()) {
+        $currentUser = auth()->user();
+        if (! $currentUser || ! $currentUser->showSettings()) {
             abort(404, 'The requested page does not exist.');
         }
 
@@ -74,7 +75,8 @@ class SettingsController extends Controller
      */
     public function updateMain(SettingsMainRequest $request): RedirectResponse
     {
-        if (! auth()->user()->showSettingsRO()) {
+        $currentUser = auth()->user();
+        if ($currentUser && ! $currentUser->showSettingsRO()) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(
