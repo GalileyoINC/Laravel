@@ -4,24 +4,34 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Subscription\ExportSubscriptionsToCsvAction;
+use App\Domain\Actions\Subscription\GetSubscriptionListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Subscription\Web\SubscriptionIndexRequest;
+use App\Http\Requests\Subscription\Web\SubscriptionStoreRequest;
+use App\Http\Requests\Subscription\Web\SubscriptionUpdateRequest;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionCategory;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubscriptionController extends Controller
 {
+    public function __construct(
+        private readonly GetSubscriptionListAction $getSubscriptionListAction,
+        private readonly ExportSubscriptionsToCsvAction $exportSubscriptionsToCsvAction,
+    ) {}
+
     /**
      * Display Subscriptions
      */
-    public function index(Request $request): View
+    public function index(SubscriptionIndexRequest $request): View
     {
-        $categoryId = $request->get('idCategory');
+        $filters = $request->validated();
+        $categoryId = $filters['idCategory'] ?? null;
 
         // Get categories hierarchy
         $categories = SubscriptionCategory::orderBy('position_no')->orderBy('id')->get();
@@ -38,51 +48,7 @@ class SubscriptionController extends Controller
             $userStatistics[$subscription->id] = $subscription->users()->where('user.status', 1)->count();
         }
 
-        $query = Subscription::query();
-
-        if ($categoryId) {
-            $query->where('id_subscription_category', $categoryId);
-        }
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%")
-                    ->orWhere('alias', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by active status
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->get('is_active'));
-        }
-
-        // Filter by custom status
-        if ($request->filled('is_custom')) {
-            $query->where('is_custom', $request->get('is_custom'));
-        }
-
-        // Filter by show reactions
-        if ($request->filled('show_reactions')) {
-            $query->where('show_reactions', $request->get('show_reactions'));
-        }
-
-        // Filter by show comments
-        if ($request->filled('show_comments')) {
-            $query->where('show_comments', $request->get('show_comments'));
-        }
-
-        // Filter by date range
-        if ($request->filled('sended_at_from')) {
-            $query->whereDate('sended_at', '>=', $request->get('sended_at_from'));
-        }
-        if ($request->filled('sended_at_to')) {
-            $query->whereDate('sended_at', '<=', $request->get('sended_at_to'));
-        }
-
-        $subscriptions = $query->with(['influencerPage', 'influencer'])->orderBy('id', 'desc')->paginate(20);
+        $subscriptions = $this->getSubscriptionListAction->execute($filters, 20);
 
         $selectedCategory = $categoryId ? SubscriptionCategory::find($categoryId) : null;
         $title = $selectedCategory ? $selectedCategory->name : 'News Category';
@@ -93,7 +59,7 @@ class SubscriptionController extends Controller
             'userStatistics' => $userStatistics,
             'selectedCategory' => $selectedCategory,
             'title' => $title,
-            'filters' => $request->only(['search', 'is_active', 'is_custom', 'show_reactions', 'show_comments', 'sended_at_from', 'sended_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -112,39 +78,29 @@ class SubscriptionController extends Controller
     /**
      * Store new Subscription
      */
-    public function store(Request $request): Response
+    public function store(SubscriptionStoreRequest $request): Response
     {
-        $request->validate([
-            'id_subscription_category' => 'required|exists:subscription_categories,id',
-            'title' => 'required|string|max:255',
-            'percent' => 'nullable|numeric|min:0|max:100',
-            'alias' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'is_custom' => 'boolean',
-            'show_reactions' => 'boolean',
-            'show_comments' => 'boolean',
-            'imageFile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-            $subscription = new Subscription();
-            $subscription->id_subscription_category = $request->get('id_subscription_category');
-            $subscription->title = $request->get('title');
-            $subscription->percent = $request->get('percent');
-            $subscription->alias = $request->get('alias');
-            $subscription->description = $request->get('description');
-            $subscription->is_custom = $request->boolean('is_custom');
-            $subscription->show_reactions = $request->boolean('show_reactions');
-            $subscription->show_comments = $request->boolean('show_comments');
+        $validated = $request->validated();
+        $subscription = new Subscription();
+        $subscription->id_subscription_category = $validated['id_subscription_category'];
+        $subscription->title = $validated['title'];
+        $subscription->percent = $validated['percent'] ?? null;
+        $subscription->alias = $validated['alias'] ?? null;
+        $subscription->description = $validated['description'] ?? null;
+        $subscription->is_custom = $validated['is_custom'] ?? false;
+        $subscription->show_reactions = $validated['show_reactions'] ?? false;
+        $subscription->show_comments = $validated['show_comments'] ?? false;
 
-            // Handle image upload
-            if ($request->hasFile('imageFile')) {
-                $imagePath = $request->file('imageFile')->store('subscriptions', 'public');
-                $subscription->image = $imagePath;
-            }
+        // Handle image upload
+        if ($request->hasFile('imageFile')) {
+            $imagePath = $request->file('imageFile')->store('subscriptions', 'public');
+            $subscription->image = $imagePath;
+        }
 
-            $subscription->save();
+        $subscription->save();
 
-            return redirect()->route('subscription.index')
-                ->with('success', 'Subscription created successfully.');
+        return redirect()->route('subscription.index')
+            ->with('success', 'Subscription created successfully.');
     }
 
     /**
@@ -163,43 +119,33 @@ class SubscriptionController extends Controller
     /**
      * Update Subscription
      */
-    public function update(Request $request, Subscription $subscription): Response
+    public function update(SubscriptionUpdateRequest $request, Subscription $subscription): Response
     {
-        $request->validate([
-            'id_subscription_category' => 'required|exists:subscription_categories,id',
-            'title' => 'required|string|max:255',
-            'percent' => 'nullable|numeric|min:0|max:100',
-            'alias' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'is_custom' => 'boolean',
-            'show_reactions' => 'boolean',
-            'show_comments' => 'boolean',
-            'imageFile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-            $subscription->id_subscription_category = $request->get('id_subscription_category');
-            $subscription->title = $request->get('title');
-            $subscription->percent = $request->get('percent');
-            $subscription->alias = $request->get('alias');
-            $subscription->description = $request->get('description');
-            $subscription->is_custom = $request->boolean('is_custom');
-            $subscription->show_reactions = $request->boolean('show_reactions');
-            $subscription->show_comments = $request->boolean('show_comments');
+        $validated = $request->validated();
+        $subscription->id_subscription_category = $validated['id_subscription_category'];
+        $subscription->title = $validated['title'];
+        $subscription->percent = $validated['percent'] ?? null;
+        $subscription->alias = $validated['alias'] ?? null;
+        $subscription->description = $validated['description'] ?? null;
+        $subscription->is_custom = $validated['is_custom'] ?? $subscription->is_custom;
+        $subscription->show_reactions = $validated['show_reactions'] ?? $subscription->show_reactions;
+        $subscription->show_comments = $validated['show_comments'] ?? $subscription->show_comments;
 
-            // Handle image upload
-            if ($request->hasFile('imageFile')) {
-                // Delete old image if exists
-                if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {
-                    Storage::disk('public')->delete($subscription->image);
-                }
-
-                $imagePath = $request->file('imageFile')->store('subscriptions', 'public');
-                $subscription->image = $imagePath;
+        // Handle image upload
+        if ($request->hasFile('imageFile')) {
+            // Delete old image if exists
+            if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {
+                Storage::disk('public')->delete($subscription->image);
             }
 
-            $subscription->save();
+            $imagePath = $request->file('imageFile')->store('subscriptions', 'public');
+            $subscription->image = $imagePath;
+        }
 
-            return redirect()->route('subscription.index')
-                ->with('success', 'Subscription updated successfully.');
+        $subscription->save();
+
+        return redirect()->route('subscription.index')
+            ->with('success', 'Subscription updated successfully.');
     }
 
     /**
@@ -220,10 +166,10 @@ class SubscriptionController extends Controller
      */
     public function activate(Subscription $subscription): Response
     {
-            $subscription->update(['is_active' => true]);
+        $subscription->update(['is_active' => true]);
 
-            return redirect()->back()
-                ->with('success', 'Subscription activated successfully.');
+        return redirect()->back()
+            ->with('success', 'Subscription activated successfully.');
     }
 
     /**
@@ -231,10 +177,10 @@ class SubscriptionController extends Controller
      */
     public function deactivate(Subscription $subscription): Response
     {
-            $subscription->update(['is_active' => false]);
+        $subscription->update(['is_active' => false]);
 
-            return redirect()->back()
-                ->with('success', 'Subscription deactivated successfully.');
+        return redirect()->back()
+            ->with('success', 'Subscription deactivated successfully.');
     }
 
     /**
@@ -242,94 +188,35 @@ class SubscriptionController extends Controller
      */
     public function destroy(Subscription $subscription): Response
     {
-            // Delete image if exists
-            if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {
-                Storage::disk('public')->delete($subscription->image);
-            }
+        // Delete image if exists
+        if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {
+            Storage::disk('public')->delete($subscription->image);
+        }
 
-            $subscription->delete();
+        $subscription->delete();
 
-            return redirect()->route('subscription.index')
-                ->with('success', 'Subscription deleted successfully.');
+        return redirect()->route('subscription.index')
+            ->with('success', 'Subscription deleted successfully.');
     }
 
     /**
      * Export Subscriptions to CSV
      */
-    public function export(Request $request): Response
+    public function export(SubscriptionIndexRequest $request): StreamedResponse
     {
-            $query = Subscription::with(['influencerPage', 'influencer']);
+        $filters = $request->validated();
+        $csvData = $this->exportSubscriptionsToCsvAction->execute($filters);
+        $filename = 'subscriptions_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            $categoryId = $request->get('idCategory');
-            if ($categoryId) {
-                $query->where('id_subscription_category', $categoryId);
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%")
-                        ->orWhere('alias', 'like', "%{$search}%");
-                });
-            }
-
-            if ($request->filled('is_active')) {
-                $query->where('is_active', $request->get('is_active'));
-            }
-
-            if ($request->filled('is_custom')) {
-                $query->where('is_custom', $request->get('is_custom'));
-            }
-
-            if ($request->filled('show_reactions')) {
-                $query->where('show_reactions', $request->get('show_reactions'));
-            }
-
-            if ($request->filled('show_comments')) {
-                $query->where('show_comments', $request->get('show_comments'));
-            }
-
-            if ($request->filled('sended_at_from')) {
-                $query->whereDate('sended_at', '>=', $request->get('sended_at_from'));
-            }
-            if ($request->filled('sended_at_to')) {
-                $query->whereDate('sended_at', '<=', $request->get('sended_at_to'));
-            }
-
-            $subscriptions = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Category', 'Title', 'Description', 'Percent', 'Alias', 'Is Active', 'Is Custom', 'Show Reactions', 'Show Comments', 'Sended At'];
-
-            foreach ($subscriptions as $subscription) {
-                $csvData[] = [
-                    $subscription->id,
-                    $subscription->subscriptionCategory->name ?? '',
-                    $subscription->title,
-                    $subscription->description,
-                    $subscription->percent,
-                    $subscription->alias,
-                    $subscription->is_active ? 'Yes' : 'No',
-                    $subscription->is_custom ? 'Yes' : 'No',
-                    $subscription->show_reactions ? 'Yes' : 'No',
-                    $subscription->show_comments ? 'Yes' : 'No',
-                    $subscription->sended_at ? $subscription->sended_at->format('Y-m-d H:i:s') : '',
-                ];
-            }
-
-            $filename = 'subscriptions_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

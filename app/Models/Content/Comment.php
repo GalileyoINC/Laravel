@@ -54,7 +54,7 @@ class Comment extends Model
 
     public function comment()
     {
-        return $this->belongsTo(\App\Models\Content\Comment::class, 'id_parent');
+        return $this->belongsTo(self::class, 'id_parent');
     }
 
     public function sms_pool()
@@ -69,7 +69,7 @@ class Comment extends Model
 
     public function comments()
     {
-        return $this->hasMany(\App\Models\Content\Comment::class, 'id_parent');
+        return $this->hasMany(self::class, 'id_parent');
     }
 
     public function user_point_histories()

@@ -4,55 +4,30 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\ContractLine\ExportUnpaidContractLinesToCsvAction;
+use App\Domain\Actions\ContractLine\GetUnpaidContractLinesAction;
 use App\Http\Controllers\Controller;
-use App\Models\Finance\ContractLine;
+use App\Http\Requests\ContractLine\Web\UnpaidContractLinesRequest;
 use App\Models\Finance\Service;
 use App\Models\User\UserPlan;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ContractLineController extends Controller
 {
+    public function __construct(
+        private readonly GetUnpaidContractLinesAction $getUnpaidContractLinesAction,
+        private readonly ExportUnpaidContractLinesToCsvAction $exportUnpaidContractLinesToCsvAction,
+    ) {}
+
     /**
      * Display Unpaid Contract Lines
      */
-    public function unpaid(Request $request): View
+    public function unpaid(UnpaidContractLinesRequest $request): View
     {
-        $query = ContractLine::with(['user', 'service'])
-            ->whereHas('userPlan', function ($q) {
-                $q->where('end_at', '<', now());
-            });
-
-        // Filter by end_at date (days)
-        $expDateDays = $request->get('exp_date', 30);
-        if ($expDateDays) {
-            $query->where('end_at', '>=', now()->subDays($expDateDays));
-        }
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by service
-        if ($request->filled('id_service')) {
-            $query->where('id_service', $request->get('id_service'));
-        }
-
-        // Filter by pay interval
-        if ($request->filled('pay_interval')) {
-            $query->where('pay_interval', $request->get('pay_interval'));
-        }
-
-        $contractLines = $query->orderBy('end_at', 'asc')->paginate(20);
+        $filters = $request->validated();
+        $contractLines = $this->getUnpaidContractLinesAction->execute($filters, 20);
 
         // Get dropdown data
         $services = Service::whereIn('type', [Service::TYPE_SUBSCRIBE, Service::TYPE_DEVICE_PLAN])
@@ -64,73 +39,31 @@ class ContractLineController extends Controller
             'contractLines' => $contractLines,
             'services' => $services,
             'payIntervals' => $payIntervals,
-            'expDateDays' => $expDateDays,
+            'expDateDays' => $filters['exp_date'] ?? 30,
             'title' => 'Users who are overdue for their next payment',
-            'filters' => $request->only(['search', 'id_service', 'pay_interval', 'exp_date']),
+            'filters' => $filters,
         ]);
     }
 
     /**
      * Export Unpaid Contract Lines to CSV
      */
-    public function exportUnpaid(Request $request): Response
+    public function exportUnpaid(UnpaidContractLinesRequest $request): StreamedResponse
     {
-            $query = ContractLine::with(['user', 'service'])
-                ->whereHas('userPlan', function ($q) {
-                    $q->where('end_at', '<', now());
-                });
+        $filters = $request->validated();
+        $rows = $this->exportUnpaidContractLinesToCsvAction->execute($filters);
 
-            // Apply same filters as unpaid
-            $expDateDays = $request->get('exp_date', 30);
-            if ($expDateDays) {
-                $query->where('end_at', '>=', now()->subDays($expDateDays));
+        $filename = 'unpaid_contract_lines_'.now()->format('Y-m-d_H-i-s').'.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $file = fopen('php://output', 'w');
+            foreach ($rows as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
-                });
-            }
-
-            if ($request->filled('id_service')) {
-                $query->where('id_service', $request->get('id_service'));
-            }
-
-            if ($request->filled('pay_interval')) {
-                $query->where('pay_interval', $request->get('pay_interval'));
-            }
-
-            $contractLines = $query->orderBy('end_at', 'asc')->get();
-
-            $csvData = [];
-            $csvData[] = ['User ID', 'First Name', 'Last Name', 'Email', 'Service', 'Pay Interval', 'End At'];
-
-            foreach ($contractLines as $contractLine) {
-                $csvData[] = [
-                    $contractLine->id_user,
-                    $contractLine->first_name,
-                    $contractLine->last_name,
-                    $contractLine->email,
-                    $contractLine->service_name,
-                    $contractLine->pay_interval ? ($contractLine->pay_interval == 1 ? 'Monthly' : ($contractLine->pay_interval == 12 ? 'Annual' : (string)$contractLine->pay_interval)) : '',
-                    $contractLine->end_at ? $contractLine->end_at->format('Y-m-d') : '',
-                ];
-            }
-
-            $filename = 'unpaid_contract_lines_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

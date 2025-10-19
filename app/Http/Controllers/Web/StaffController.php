@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Staff\GetStaffListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\Web\StaffIndexRequest;
 use App\Http\Requests\User\Web\StaffRequest;
 use App\Models\System\Staff;
-use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -18,44 +18,21 @@ use Illuminate\View\View;
 
 class StaffController extends Controller
 {
+    public function __construct(
+        private readonly GetStaffListAction $getStaffListAction,
+    ) {}
+
     /**
      * Display a listing of staff
      */
-    public function index(Request $request): View
+    public function index(StaffIndexRequest $request): View
     {
-        $query = Staff::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by status (default to active)
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
-        } else {
-            $query->where('status', 1); // Default to active
-        }
-
-        // Filter by role
-        if ($request->filled('role')) {
-            $query->where('role', $request->get('role'));
-        }
-
-        // Filter by created date
-        if ($request->filled('created_at')) {
-            $query->whereDate('created_at', $request->get('created_at'));
-        }
-
-        $staff = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $staff = $this->getStaffListAction->execute($filters, 20);
 
         return ViewFacade::make('staff.index', [
             'staff' => $staff,
-            'filters' => $request->only(['search', 'status', 'role', 'created_at']),
+            'filters' => $filters,
         ]);
     }
 
@@ -72,25 +49,25 @@ class StaffController extends Controller
      */
     public function store(StaffRequest $request): RedirectResponse
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'username' => $validated['username'],
-                'email' => $validated['email'],
-                'password_hash' => Hash::make($validated['password']),
-                'role' => $validated['role'] ?? Staff::ROLE_ADMIN,
-                'status' => $validated['status'] ?? Staff::STATUS_ACTIVE,
-            ];
+        $data = [
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'password_hash' => Hash::make($validated['password']),
+            'role' => $validated['role'] ?? Staff::ROLE_ADMIN,
+            'status' => $validated['status'] ?? Staff::STATUS_ACTIVE,
+        ];
 
-            // Only super admin can set super login
-            if (Auth::user()->isSuper() && isset($validated['is_superlogin'])) {
-                $data['is_superlogin'] = $validated['is_superlogin'];
-            }
+        // Only super admin can set super login
+        if (Auth::user()->isSuper() && isset($validated['is_superlogin'])) {
+            $data['is_superlogin'] = $validated['is_superlogin'];
+        }
 
-            Staff::create($data);
+        Staff::create($data);
 
-            return Redirect::to(route('staff.index'))
-                ->with('success', 'Staff created successfully.');
+        return Redirect::to(route('staff.index'))
+            ->with('success', 'Staff created successfully.');
     }
 
     /**
@@ -118,35 +95,35 @@ class StaffController extends Controller
      */
     public function update(StaffRequest $request, Staff $staff): RedirectResponse
     {
-            // Check permissions
-            if (! $this->canChange($staff)) {
-                return Redirect::back()
-                    ->withErrors(['error' => 'You do not have permission to modify this staff member.']);
-            }
+        // Check permissions
+        if (! $this->canChange($staff)) {
+            return Redirect::back()
+                ->withErrors(['error' => 'You do not have permission to modify this staff member.']);
+        }
 
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'username' => $validated['username'],
-                'email' => $validated['email'],
-                'role' => $validated['role'] ?? $staff->role,
-                'status' => $validated['status'] ?? $staff->status,
-            ];
+        $data = [
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'role' => $validated['role'] ?? $staff->role,
+            'status' => $validated['status'] ?? $staff->status,
+        ];
 
-            // Handle password update
-            if (! empty($validated['password'])) {
-                $data['password_hash'] = Hash::make($validated['password']);
-            }
+        // Handle password update
+        if (! empty($validated['password'])) {
+            $data['password_hash'] = Hash::make($validated['password']);
+        }
 
-            // Only super admin can set super login
-            if (Auth::user()->isSuper() && isset($validated['is_superlogin'])) {
-                $data['is_superlogin'] = $validated['is_superlogin'];
-            }
+        // Only super admin can set super login
+        if (Auth::user()->isSuper() && isset($validated['is_superlogin'])) {
+            $data['is_superlogin'] = $validated['is_superlogin'];
+        }
 
-            $staff->update($data);
+        $staff->update($data);
 
-            return Redirect::to(route('staff.index'))
-                ->with('success', 'Staff updated successfully.');
+        return Redirect::to(route('staff.index'))
+            ->with('success', 'Staff updated successfully.');
     }
 
     /**
@@ -154,16 +131,16 @@ class StaffController extends Controller
      */
     public function destroy(Staff $staff): RedirectResponse
     {
-            // Check permissions
-            if (! $this->canChange($staff)) {
-                return Redirect::back()
-                    ->withErrors(['error' => 'You do not have permission to delete this staff member.']);
-            }
+        // Check permissions
+        if (! $this->canChange($staff)) {
+            return Redirect::back()
+                ->withErrors(['error' => 'You do not have permission to delete this staff member.']);
+        }
 
-            $staff->delete();
+        $staff->delete();
 
-            return Redirect::to(route('staff.index'))
-                ->with('success', 'Staff deleted successfully.');
+        return Redirect::to(route('staff.index'))
+            ->with('success', 'Staff deleted successfully.');
     }
 
     /**
@@ -171,19 +148,19 @@ class StaffController extends Controller
      */
     public function loginAs(Staff $staff): RedirectResponse
     {
-            // Only super admin can login as other staff
-            if (! Auth::user()->isSuper()) {
-                return Redirect::back()
-                    ->withErrors(['error' => 'Unauthorized action.']);
-            }
+        // Only super admin can login as other staff
+        if (! Auth::user()->isSuper()) {
+            return Redirect::back()
+                ->withErrors(['error' => 'Unauthorized action.']);
+        }
 
-            Auth::logout();
-            Auth::login($staff, true);
+        Auth::logout();
+        Auth::login($staff, true);
 
-            request()->session()->put('loginFromSuper', true);
+        request()->session()->put('loginFromSuper', true);
 
-            return Redirect::to(route('site.index'))
-                ->with('success', 'Logged in as: '.$staff->username);
+        return Redirect::to(route('site.index'))
+            ->with('success', 'Logged in as: '.$staff->username);
     }
 
     /**

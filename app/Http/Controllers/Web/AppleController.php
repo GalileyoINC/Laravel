@@ -4,62 +4,44 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Apple\ExportAppleAppTransactionsToCsvAction;
+use App\Domain\Actions\Apple\ExportAppleNotificationsToCsvAction;
+use App\Domain\Actions\Apple\GetAppleNotificationsListAction;
+use App\Domain\Actions\Apple\GetAppleTransactionsListAction;
+use App\Domain\Actions\Apple\ProcessAppleTransactionAction;
+use App\Domain\Actions\Apple\RetryAppleTransactionAction;
 use App\Http\Controllers\Controller;
-use App\Models\Order\AppleAppTransaction;
+use App\Http\Requests\Apple\Web\AppleNotificationsRequest;
+use App\Http\Requests\Apple\Web\AppleTransactionsRequest;
 use App\Models\Notification\AppleNotification;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\Order\AppleAppTransaction;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AppleController extends Controller
 {
+    public function __construct(
+        private readonly GetAppleTransactionsListAction $getAppleTransactionsListAction,
+        private readonly GetAppleNotificationsListAction $getAppleNotificationsListAction,
+        private readonly ExportAppleAppTransactionsToCsvAction $exportAppleAppTransactionsToCsvAction,
+        private readonly ExportAppleNotificationsToCsvAction $exportAppleNotificationsToCsvAction,
+        private readonly ProcessAppleTransactionAction $processAppleTransactionAction,
+        private readonly RetryAppleTransactionAction $retryAppleTransactionAction,
+    ) {}
+
     /**
      * Display Apple App Transactions
      */
-    public function appTransactions(Request $request): View
+    public function appTransactions(AppleTransactionsRequest $request): View
     {
-        $query = AppleAppTransaction::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('transaction_id', 'like', "%{$search}%")
-                    ->orWhere('status', 'like', "%{$search}%")
-                    ->orWhere('error', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
-        }
-
-        // Filter by process status
-        if ($request->filled('is_process')) {
-            $query->where('is_process', $request->get('is_process'));
-        }
-
-        // Filter by user ID
-        if ($request->filled('id_user')) {
-            $query->where('id_user', $request->get('id_user'));
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $transactions = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $transactions = $this->getAppleTransactionsListAction->execute($filters, 20);
 
         return ViewFacade::make('apple.app-transactions', [
             'transactions' => $transactions,
-            'filters' => $request->only(['search', 'status', 'is_process', 'id_user', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -76,43 +58,14 @@ class AppleController extends Controller
     /**
      * Display Apple Notifications
      */
-    public function notifications(Request $request): View
+    public function notifications(AppleNotificationsRequest $request): View
     {
-        $query = AppleNotification::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('notification_type', 'like', "%{$search}%")
-                    ->orWhere('subtype', 'like', "%{$search}%")
-                    ->orWhere('notification_uuid', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by notification type
-        if ($request->filled('notification_type')) {
-            $query->where('notification_type', $request->get('notification_type'));
-        }
-
-        // Filter by subtype
-        if ($request->filled('subtype')) {
-            $query->where('subtype', $request->get('subtype'));
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $notifications = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $notifications = $this->getAppleNotificationsListAction->execute($filters, 20);
 
         return ViewFacade::make('apple.notifications', [
             'notifications' => $notifications,
-            'filters' => $request->only(['search', 'notification_type', 'subtype', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -129,152 +82,66 @@ class AppleController extends Controller
     /**
      * Process Apple App Transaction
      */
-    public function processTransaction(Request $request, AppleAppTransaction $transaction): Response
+    public function processTransaction(AppleAppTransaction $transaction): RedirectResponse
     {
-            // Process transaction logic here
-            $transaction->update(['is_process' => true]);
+        $this->processAppleTransactionAction->execute($transaction->id);
 
-            return redirect()->back()
-                ->with('success', 'Transaction processed successfully.');
+        return redirect()->back()
+            ->with('success', 'Transaction processed successfully.');
     }
 
     /**
      * Retry Apple App Transaction
      */
-    public function retryTransaction(Request $request, AppleAppTransaction $transaction): Response
+    public function retryTransaction(AppleAppTransaction $transaction): RedirectResponse
     {
-            // Retry transaction logic here
-            $transaction->update(['is_process' => false]);
+        $this->retryAppleTransactionAction->execute($transaction->id);
 
-            return redirect()->back()
-                ->with('success', 'Transaction retry initiated successfully.');
+        return redirect()->back()
+            ->with('success', 'Transaction retry initiated successfully.');
     }
 
     /**
      * Export Apple App Transactions to CSV
      */
-    public function exportAppTransactions(Request $request): Response
+    public function exportAppTransactions(AppleTransactionsRequest $request): StreamedResponse
     {
-            $query = AppleAppTransaction::query();
+        $filters = $request->validated();
+        $rows = $this->exportAppleAppTransactionsToCsvAction->execute($filters);
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('transaction_id', 'like', "%{$search}%")
-                        ->orWhere('status', 'like', "%{$search}%")
-                        ->orWhere('error', 'like', "%{$search}%");
-                });
+        $filename = 'apple_app_transactions_'.now()->format('Y-m-d_H-i-s').'.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $file = fopen('php://output', 'w');
+            foreach ($rows as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('status')) {
-                $query->where('status', $request->get('status'));
-            }
-
-            if ($request->filled('is_process')) {
-                $query->where('is_process', $request->get('is_process'));
-            }
-
-            if ($request->filled('id_user')) {
-                $query->where('id_user', $request->get('id_user'));
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $transactions = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Transaction ID', 'Status', 'Error', 'User ID', 'Is Process', 'Created At'];
-
-            foreach ($transactions as $transaction) {
-                $csvData[] = [
-                    $transaction->id,
-                    $transaction->transaction_id,
-                    $transaction->status,
-                    $transaction->error,
-                    $transaction->id_user,
-                    $transaction->is_process ? 'Yes' : 'No',
-                    $transaction->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'apple_app_transactions_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 
     /**
      * Export Apple Notifications to CSV
      */
-    public function exportNotifications(Request $request): Response
+    public function exportNotifications(AppleNotificationsRequest $request): StreamedResponse
     {
-            $query = AppleNotification::query();
+        $filters = $request->validated();
+        $rows = $this->exportAppleNotificationsToCsvAction->execute($filters);
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('notification_type', 'like', "%{$search}%")
-                        ->orWhere('subtype', 'like', "%{$search}%")
-                        ->orWhere('notification_uuid', 'like', "%{$search}%");
-                });
+        $filename = 'apple_notifications_'.now()->format('Y-m-d_H-i-s').'.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $file = fopen('php://output', 'w');
+            foreach ($rows as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('notification_type')) {
-                $query->where('notification_type', $request->get('notification_type'));
-            }
-
-            if ($request->filled('subtype')) {
-                $query->where('subtype', $request->get('subtype'));
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $notifications = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Notification Type', 'Subtype', 'Notification UUID', 'Created At'];
-
-            foreach ($notifications as $notification) {
-                $csvData[] = [
-                    $notification->id,
-                    $notification->notification_type,
-                    $notification->subtype,
-                    $notification->notification_uuid,
-                    $notification->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'apple_notifications_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

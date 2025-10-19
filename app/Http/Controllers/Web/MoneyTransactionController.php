@@ -4,85 +4,38 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Finance\ExportMoneyTransactionsToCsvAction;
+use App\Domain\Actions\Finance\GetMoneyTransactionListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Finance\Web\MoneyTransactionIndexRequest;
 use App\Http\Requests\Finance\Web\RefundRequest;
 use App\Models\Finance\MoneyTransaction;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MoneyTransactionController extends Controller
 {
+    public function __construct(
+        private readonly GetMoneyTransactionListAction $getMoneyTransactionListAction,
+        private readonly ExportMoneyTransactionsToCsvAction $exportMoneyTransactionsToCsvAction,
+    ) {}
+
     /**
      * Display a listing of money transactions
      */
-    public function index(Request $request): View
+    public function index(MoneyTransactionIndexRequest $request): View
     {
-        $query = MoneyTransaction::with(['user', 'invoice', 'creditCard']);
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('transaction_id', 'like', "%{$search}%")
-                    ->orWhere('id', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        // Filter by transaction type
-        if ($request->filled('transaction_type')) {
-            $query->where('transaction_type', $request->get('transaction_type'));
-        }
-
-        // Filter by success status
-        if ($request->filled('is_success')) {
-            $query->where('is_success', $request->get('is_success'));
-        }
-
-        // Filter by void status
-        if ($request->filled('is_void')) {
-            $query->where('is_void', $request->get('is_void'));
-        }
-
-        // Filter by test status
-        if ($request->filled('is_test')) {
-            $query->where('is_test', $request->get('is_test'));
-        }
-
-        // Filter by date range
-        if ($request->filled('createTimeRange')) {
-            $dateRange = explode(' - ', (string) $request->get('createTimeRange'));
-            if (count($dateRange) === 2) {
-                $query->whereBetween('created_at', [
-                    \Carbon\Carbon::parse($dateRange[0])->startOfDay(),
-                    \Carbon\Carbon::parse($dateRange[1])->endOfDay(),
-                ]);
-            }
-        }
-
-        // Filter by total amount
-        if ($request->filled('total_min')) {
-            $query->where('total', '>=', $request->get('total_min'));
-        }
-        if ($request->filled('total_max')) {
-            $query->where('total', '<=', $request->get('total_max'));
-        }
-
-        $transactions = $query->orderBy('created_at', 'desc')->paginate(20);
-
-        // Calculate total sum
-        $totalSum = $query->sum('total');
+        $filters = $request->validated();
+        $result = $this->getMoneyTransactionListAction->execute($filters, 20);
+        $transactions = $result['transactions'];
+        $totalSum = $result['totalSum'];
 
         return ViewFacade::make('money-transaction.index', [
             'transactions' => $transactions,
-            'filters' => $request->only(['search', 'transaction_type', 'is_success', 'is_void', 'is_test', 'createTimeRange', 'total_min', 'total_max']),
+            'filters' => $filters,
             'totalSum' => $totalSum,
         ]);
     }
@@ -104,15 +57,15 @@ class MoneyTransactionController extends Controller
      */
     public function void(MoneyTransaction $moneyTransaction): Response
     {
-            if (! $moneyTransaction->canBeVoided()) {
-                return response()->json(['error' => 'Transaction cannot be voided'], 400);
-            }
+        if (! $moneyTransaction->canBeVoided()) {
+            return response()->json(['error' => 'Transaction cannot be voided'], 400);
+        }
 
-            if (! $moneyTransaction->void()) {
-                return response()->json(['error' => 'Failed to void transaction'], 500);
-            }
+        if (! $moneyTransaction->void()) {
+            return response()->json(['error' => 'Failed to void transaction'], 500);
+        }
 
-            return response()->json(['success' => 'Transaction voided successfully']);
+        return response()->json(['success' => 'Transaction voided successfully']);
     }
 
     /**
@@ -134,109 +87,37 @@ class MoneyTransactionController extends Controller
      */
     public function processRefund(RefundRequest $request, MoneyTransaction $moneyTransaction): Response
     {
-            if (! $moneyTransaction->canBeRefund()) {
-                return response()->json(['error' => 'Transaction cannot be refunded'], 400);
-            }
+        if (! $moneyTransaction->canBeRefund()) {
+            return response()->json(['error' => 'Transaction cannot be refunded'], 400);
+        }
 
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            // Process refund logic here
-            // This would typically call a payment gateway API
+        // Process refund logic here
+        // This would typically call a payment gateway API
 
-            return response()->json(['success' => 'Refund processed successfully']);
+        return response()->json(['success' => 'Refund processed successfully']);
     }
 
     /**
      * Export transactions to CSV
      */
-    public function toCsv(Request $request): Response
+    public function toCsv(MoneyTransactionIndexRequest $request): StreamedResponse
     {
-            $query = MoneyTransaction::with(['user', 'creditCard']);
+        $filters = $request->validated();
+        $csvData = $this->exportMoneyTransactionsToCsvAction->execute($filters);
+        $filename = 'money_transactions_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('transaction_id', 'like', "%{$search}%")
-                        ->orWhere('id', 'like', "%{$search}%")
-                        ->orWhereHas('user', function ($userQuery) use ($search) {
-                            $userQuery->where('first_name', 'like', "%{$search}%")
-                                ->orWhere('last_name', 'like', "%{$search}%")
-                                ->orWhere('email', 'like', "%{$search}%");
-                        });
-                });
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('transaction_type')) {
-                $query->where('transaction_type', $request->get('transaction_type'));
-            }
-
-            if ($request->filled('is_success')) {
-                $query->where('is_success', $request->get('is_success'));
-            }
-
-            if ($request->filled('is_void')) {
-                $query->where('is_void', $request->get('is_void'));
-            }
-
-            if ($request->filled('is_test')) {
-                $query->where('is_test', $request->get('is_test'));
-            }
-
-            if ($request->filled('createTimeRange')) {
-                $dateRange = explode(' - ', (string) $request->get('createTimeRange'));
-                if (count($dateRange) === 2) {
-                    $query->whereBetween('created_at', [
-                        \Carbon\Carbon::parse($dateRange[0])->startOfDay(),
-                        \Carbon\Carbon::parse($dateRange[1])->endOfDay(),
-                    ]);
-                }
-            }
-
-            $transactions = $query->orderBy('created_at', 'desc')->get();
-
-            $headers = [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="money_transactions.csv"',
-                'Pragma' => 'no-cache',
-                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-                'Expires' => '0',
-            ];
-
-            $callback = function () use ($transactions) {
-                $file = fopen('php://output', 'w');
-                fputcsv($file, [
-                    'ID', 'User', 'Invoice', 'Credit Card', 'Transaction ID',
-                    'Success', 'Void', 'Test', 'Total', 'Created At', 'Updated At',
-                ]);
-
-                foreach ($transactions as $transaction) {
-                    $card = null;
-                    if ($transaction->creditCard) {
-                        $card = ($transaction->creditCard->type ? $transaction->creditCard->type.' ' : '').
-                               $transaction->creditCard->num.' ('.
-                               $transaction->creditCard->expiration_year.'/'.
-                               $transaction->creditCard->expiration_month.')';
-                    }
-
-                    fputcsv($file, [
-                        $transaction->id,
-                        $transaction->user->first_name.' '.$transaction->user->last_name,
-                        $transaction->id_invoice,
-                        $card,
-                        $transaction->transaction_id,
-                        $transaction->is_success ? 'Yes' : 'No',
-                        $transaction->is_void ? 'Yes' : 'No',
-                        $transaction->is_test ? 'Yes' : 'No',
-                        number_format($transaction->total, 2, '.', ''),
-                        $transaction->created_at->toDateTimeString(),
-                        $transaction->updated_at ? $transaction->updated_at->toDateTimeString() : '',
-                    ]);
-                }
-                fclose($file);
-            };
-
-            return response()->stream($callback, 200, $headers);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 
     /**

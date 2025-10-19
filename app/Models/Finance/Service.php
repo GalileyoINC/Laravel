@@ -54,11 +54,14 @@ class Service extends Model
     use HasFactory;
 
     public const TYPE_SUBSCRIBE = 1;
+
     public const TYPE_DEVICE_PLAN = 2;
+
     public const TYPE_ALERT = 3;
 
     // Optional IDs for custom plans (used in some legacy blades)
     public const ID_CUSTOM_WITH_SATELLITE = 999001;
+
     public const ID_CUSTOM_WITHOUT_SATELLITE = 999002;
 
     protected $table = 'service';
@@ -105,6 +108,13 @@ class Service extends Model
         'special_datetime',
     ];
 
+    // ===== Helpers expected by controllers =====
+    public static function loadCustomParams(): array
+    {
+        // Placeholder: return empty params until customized
+        return [];
+    }
+
     public function bundle_items()
     {
         return $this->hasMany(BundleItem::class, 'id_item');
@@ -112,7 +122,7 @@ class Service extends Model
 
     public function contract_lines()
     {
-        return $this->hasMany(\App\Models\Finance\ContractLine::class, 'id_service');
+        return $this->hasMany(ContractLine::class, 'id_service');
     }
 
     public function device_plans()
@@ -122,7 +132,7 @@ class Service extends Model
 
     public function invoices()
     {
-        return $this->belongsToMany(\App\Models\Finance\Invoice::class, 'invoice_service', 'id_service', 'id_invoice');
+        return $this->belongsToMany(Invoice::class, 'invoice_service', 'id_service', 'id_invoice');
     }
 
     public function product_photos()
@@ -132,7 +142,7 @@ class Service extends Model
 
     public function sps_contracts()
     {
-        return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_service');
+        return $this->hasMany(SpsContract::class, 'id_service');
     }
 
     public function user_plans()
@@ -148,21 +158,6 @@ class Service extends Model
     public function users()
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'user_service', 'id_service', 'id_user');
-    }
-
-    /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory()
-    {
-        return ServiceFactory::new();
-    }
-
-    // ===== Helpers expected by controllers =====
-    public static function loadCustomParams(): array
-    {
-        // Placeholder: return empty params until customized
-        return [];
     }
 
     public function isCustom(): bool
@@ -186,9 +181,17 @@ class Service extends Model
             ?? null;
 
         if (is_array($value)) {
-            return implode(' - ', array_filter($value, fn($v) => $v !== null && $v !== ''));
+            return implode(' - ', array_filter($value, fn ($v) => $v !== null && $v !== ''));
         }
 
         return $value !== null ? (string) $value : null;
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return ServiceFactory::new();
     }
 }

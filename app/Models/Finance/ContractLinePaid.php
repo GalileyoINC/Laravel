@@ -57,12 +57,12 @@ class ContractLinePaid extends Model
 
     public function contract_line()
     {
-        return $this->belongsTo(\App\Models\Finance\ContractLine::class, 'id_contract_line');
+        return $this->belongsTo(ContractLine::class, 'id_contract_line');
     }
 
     public function invoice()
     {
-        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
+        return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
     public function invoice_line()

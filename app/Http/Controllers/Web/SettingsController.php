@@ -16,7 +16,6 @@ use App\Http\Requests\Settings\Web\SettingsPublicRequest;
 use App\Http\Requests\Settings\Web\SettingsSmsRequest;
 use App\Http\Requests\Users\Web\UserPointSettingsRequest;
 use App\Models\System\Settings;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;

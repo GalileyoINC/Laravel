@@ -4,64 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\EmailTemplate\ExportEmailTemplatesToCsvAction;
+use App\Domain\Actions\EmailTemplate\GetEmailTemplateListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Communication\Web\AdminSendEmailRequest;
 use App\Http\Requests\Communication\Web\EmailTemplateRequest;
+use App\Http\Requests\EmailTemplate\Web\EmailTemplateIndexRequest;
 use App\Models\Communication\EmailTemplate;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmailTemplateController extends Controller
 {
+    public function __construct(
+        private readonly GetEmailTemplateListAction $getEmailTemplateListAction,
+        private readonly ExportEmailTemplatesToCsvAction $exportEmailTemplatesToCsvAction,
+    ) {}
+
     /**
      * Display Email Templates
      */
-    public function index(Request $request): View
+    public function index(EmailTemplateIndexRequest $request): View
     {
-        $query = EmailTemplate::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('subject', 'like', "%{$search}%")
-                    ->orWhere('from', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by name
-        if ($request->filled('name')) {
-            $query->where('name', 'like', "%{$request->get('name')}%");
-        }
-
-        // Filter by subject
-        if ($request->filled('subject')) {
-            $query->where('subject', 'like', "%{$request->get('subject')}%");
-        }
-
-        // Filter by from
-        if ($request->filled('from')) {
-            $query->where('from', 'like', "%{$request->get('from')}%");
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $emailTemplates = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $emailTemplates = $this->getEmailTemplateListAction->execute($filters, 20);
 
         return ViewFacade::make('email-template.index', [
             'emailTemplates' => $emailTemplates,
             'templates' => $emailTemplates,
-            'filters' => $request->only(['search', 'name', 'subject', 'from', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -88,12 +61,12 @@ class EmailTemplateController extends Controller
     /**
      * Update Email Template
      */
-    public function update(EmailTemplateRequest $request, EmailTemplate $emailTemplate): Response
+    public function update(EmailTemplateRequest $request, EmailTemplate $emailTemplate): RedirectResponse
     {
-            $emailTemplate->update($request->validated());
+        $emailTemplate->update($request->validated());
 
-            return redirect()->route('email-template.show', $emailTemplate)
-                ->with('success', 'Email template updated successfully.');
+        return redirect()->route('email-template.show', $emailTemplate)
+            ->with('success', 'Email template updated successfully.');
     }
 
     /**
@@ -130,86 +103,42 @@ class EmailTemplateController extends Controller
     /**
      * Send Test Email
      */
-    public function sendTestEmail(AdminSendEmailRequest $request, EmailTemplate $emailTemplate): Response
+    public function sendTestEmail(AdminSendEmailRequest $request, EmailTemplate $emailTemplate): RedirectResponse
     {
-            // Here you would implement the actual email sending logic
-            // For now, we'll just simulate it
+        // Here you would implement the actual email sending logic
+        // For now, we'll just simulate it
 
-            $emailData = [
-                'to' => $request->get('email'),
-                'template' => $emailTemplate,
-                'params' => $emailTemplate->params ? array_map(fn ($param) => $param['example'] ?? '', $emailTemplate->params) : [],
-            ];
+        $emailData = [
+            'to' => $request->get('email'),
+            'template' => $emailTemplate,
+            'params' => $emailTemplate->params ? array_map(fn ($param) => $param['example'] ?? '', $emailTemplate->params) : [],
+        ];
 
-            // Simulate email sending
-            // Mail::send(new EmailTemplateMail($emailTemplate, $emailData));
+        // Simulate email sending
+        // Mail::send(new EmailTemplateMail($emailTemplate, $emailData));
 
-            return redirect()->route('email-pool.index')
-                ->with('success', 'Test email sent successfully.');
+        return redirect()->route('email-pool.index')
+            ->with('success', 'Test email sent successfully.');
     }
 
     /**
      * Export Email Templates to CSV
      */
-    public function export(Request $request): Response
+    public function export(EmailTemplateIndexRequest $request): StreamedResponse
     {
-            $query = EmailTemplate::query();
+        $filters = $request->validated();
+        $csvData = $this->exportEmailTemplatesToCsvAction->execute($filters);
+        $filename = 'email_templates_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('subject', 'like', "%{$search}%")
-                        ->orWhere('from', 'like', "%{$search}%");
-                });
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('name')) {
-                $query->where('name', 'like', "%{$request->get('name')}%");
-            }
-
-            if ($request->filled('subject')) {
-                $query->where('subject', 'like', "%{$request->get('subject')}%");
-            }
-
-            if ($request->filled('from')) {
-                $query->where('from', 'like', "%{$request->get('from')}%");
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $emailTemplates = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Name', 'Subject', 'From', 'Created At'];
-
-            foreach ($emailTemplates as $emailTemplate) {
-                $csvData[] = [
-                    $emailTemplate->id,
-                    $emailTemplate->name,
-                    $emailTemplate->subject,
-                    $emailTemplate->from,
-                    $emailTemplate->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'email_templates_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

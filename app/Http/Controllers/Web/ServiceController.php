@@ -4,62 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Service\ExportServicesToCsvAction;
+use App\Domain\Actions\Service\GetServiceListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Service\Web\ServiceIndexRequest;
 use App\Http\Requests\Service\Web\ServiceRequest;
 use App\Http\Requests\Service\Web\ServiceSettingsRequest;
 use App\Models\Finance\Service;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ServiceController extends Controller
 {
+    public function __construct(
+        private readonly GetServiceListAction $getServiceListAction,
+        private readonly ExportServicesToCsvAction $exportServicesToCsvAction,
+    ) {}
+
     /**
      * Display Services
      */
-    public function index(Request $request): View
+    public function index(ServiceIndexRequest $request): View
     {
-        $query = Service::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by name
-        if ($request->filled('name')) {
-            $query->where('name', 'like', "%{$request->get('name')}%");
-        }
-
-        // Filter by price
-        if ($request->filled('price_from')) {
-            $query->where('price', '>=', $request->get('price_from'));
-        }
-        if ($request->filled('price_to')) {
-            $query->where('price', '<=', $request->get('price_to'));
-        }
-
-        // Filter by is_active
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->get('is_active'));
-        }
-
-        // Filter by type
-        if ($request->filled('type')) {
-            $query->where('type', $request->get('type'));
-        }
-
-        $services = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $services = $this->getServiceListAction->execute($filters, 20);
 
         return ViewFacade::make('service.index', [
             'services' => $services,
-            'filters' => $request->only(['search', 'name', 'price_from', 'price_to', 'is_active', 'type']),
+            'filters' => $filters,
         ]);
     }
 
@@ -90,14 +65,14 @@ class ServiceController extends Controller
      */
     public function store(ServiceRequest $request): Response
     {
-            $data = $request->validated();
-            $data['type'] = $request->get('type', Service::TYPE_SUBSCRIBE);
-            $data['is_active'] = false;
+        $data = $request->validated();
+        $data['type'] = $request->get('type', Service::TYPE_SUBSCRIBE);
+        $data['is_active'] = false;
 
-            Service::create($data);
+        Service::create($data);
 
-            return redirect()->route('service.index')
-                ->with('success', 'Service created successfully.');
+        return redirect()->route('service.index')
+            ->with('success', 'Service created successfully.');
     }
 
     /**
@@ -115,10 +90,10 @@ class ServiceController extends Controller
      */
     public function update(ServiceRequest $request, Service $service): Response
     {
-            $service->update($request->validated());
+        $service->update($request->validated());
 
-            return redirect()->route('service.show', $service)
-                ->with('success', 'Service updated successfully.');
+        return redirect()->route('service.show', $service)
+            ->with('success', 'Service updated successfully.');
     }
 
     /**
@@ -134,16 +109,16 @@ class ServiceController extends Controller
      */
     public function settingsStore(ServiceSettingsRequest $request): Response
     {
-            // Here you would implement the actual settings saving logic
-            // For now, we'll just simulate it
+        // Here you would implement the actual settings saving logic
+        // For now, we'll just simulate it
 
-            $settings = $request->validated();
+        $settings = $request->validated();
 
-            // Simulate settings saving
-            // Settings::updateServiceSettings($settings);
+        // Simulate settings saving
+        // Settings::updateServiceSettings($settings);
 
-            return redirect()->route('service.index')
-                ->with('success', 'Service settings updated successfully.');
+        return redirect()->route('service.index')
+            ->with('success', 'Service settings updated successfully.');
     }
 
     /**
@@ -161,77 +136,30 @@ class ServiceController extends Controller
      */
     public function updateCustomStore(ServiceRequest $request, Service $service): Response
     {
-            $service->update($request->validated());
+        $service->update($request->validated());
 
-            return redirect()->route('service.index')
-                ->with('success', 'Custom service updated successfully.');
+        return redirect()->route('service.index')
+            ->with('success', 'Custom service updated successfully.');
     }
 
     /**
      * Export Services to CSV
      */
-    public function export(Request $request): Response
+    public function export(ServiceIndexRequest $request): StreamedResponse
     {
-            $query = Service::query();
+        $filters = $request->validated();
+        $csvData = $this->exportServicesToCsvAction->execute($filters);
+        $filename = 'services_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
-                });
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('name')) {
-                $query->where('name', 'like', "%{$request->get('name')}%");
-            }
-
-            if ($request->filled('price_from')) {
-                $query->where('price', '>=', $request->get('price_from'));
-            }
-            if ($request->filled('price_to')) {
-                $query->where('price', '<=', $request->get('price_to'));
-            }
-
-            if ($request->filled('is_active')) {
-                $query->where('is_active', $request->get('is_active'));
-            }
-
-            if ($request->filled('type')) {
-                $query->where('type', $request->get('type'));
-            }
-
-            $services = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Name', 'Description', 'Price', 'Bonus Point', 'Type', 'Is Active', 'Created At', 'Updated At'];
-
-            foreach ($services as $service) {
-                $csvData[] = [
-                    $service->id,
-                    $service->name,
-                    $service->description,
-                    $service->price,
-                    $service->bonus_point,
-                    $service->type,
-                    $service->is_active ? 'Yes' : 'No',
-                    $service->created_at->format('Y-m-d H:i:s'),
-                    $service->updated_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'services_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

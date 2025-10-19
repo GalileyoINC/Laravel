@@ -4,51 +4,35 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Podcast\ExportPodcastsToCsvAction;
+use App\Domain\Actions\Podcast\GetPodcastListAction;
 use App\Http\Controllers\Controller;
 use App\Models\Content\Podcast;
-use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PodcastController extends Controller
 {
+    public function __construct(
+        private readonly GetPodcastListAction $getPodcastListAction,
+        private readonly ExportPodcastsToCsvAction $exportPodcastsToCsvAction,
+    ) {}
+
     /**
      * Display Podcasts
      */
     public function index(Request $request): View
     {
-        $query = Podcast::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('url', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by type
-        if ($request->filled('type')) {
-            $query->where('type', $request->get('type'));
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $podcasts = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->only(['search', 'type', 'created_at_from', 'created_at_to']);
+        $podcasts = $this->getPodcastListAction->execute($filters, 20);
 
         return ViewFacade::make('podcast.index', [
             'podcasts' => $podcasts,
-            'filters' => $request->only(['search', 'type', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -63,7 +47,7 @@ class PodcastController extends Controller
     /**
      * Store new Podcast
      */
-    public function store(Request $request): Response
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -71,21 +55,21 @@ class PodcastController extends Controller
             'type' => 'required|string|in:audio,video',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-            $podcast = new Podcast();
-            $podcast->title = $request->get('title');
-            $podcast->url = $request->get('url');
-            $podcast->type = $request->get('type');
+        $podcast = new Podcast();
+        $podcast->title = $request->get('title');
+        $podcast->url = $request->get('url');
+        $podcast->type = $request->get('type');
 
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('podcasts', 'public');
-                $podcast->image = $imagePath;
-            }
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('podcasts', 'public');
+            $podcast->image = $imagePath;
+        }
 
-            $podcast->save();
+        $podcast->save();
 
-            return redirect()->route('podcast.index')
-                ->with('success', 'Podcast created successfully.');
+        return redirect()->route('podcast.index')
+            ->with('success', 'Podcast created successfully.');
     }
 
     /**
@@ -101,7 +85,7 @@ class PodcastController extends Controller
     /**
      * Update Podcast
      */
-    public function update(Request $request, Podcast $podcast): Response
+    public function update(Request $request, Podcast $podcast): RedirectResponse
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -109,97 +93,61 @@ class PodcastController extends Controller
             'type' => 'required|string|in:audio,video',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-            $podcast->title = $request->get('title');
-            $podcast->url = $request->get('url');
-            $podcast->type = $request->get('type');
+        $podcast->title = $request->get('title');
+        $podcast->url = $request->get('url');
+        $podcast->type = $request->get('type');
 
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                // Delete old image if exists
-                if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
-                    Storage::disk('public')->delete($podcast->image);
-                }
-
-                $imagePath = $request->file('image')->store('podcasts', 'public');
-                $podcast->image = $imagePath;
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
+                Storage::disk('public')->delete($podcast->image);
             }
 
-            $podcast->save();
+            $imagePath = $request->file('image')->store('podcasts', 'public');
+            $podcast->image = $imagePath;
+        }
 
-            return redirect()->route('podcast.index')
-                ->with('success', 'Podcast updated successfully.');
+        $podcast->save();
+
+        return redirect()->route('podcast.index')
+            ->with('success', 'Podcast updated successfully.');
     }
 
     /**
      * Delete Podcast
      */
-    public function destroy(Podcast $podcast): Response
+    public function destroy(Podcast $podcast): RedirectResponse
     {
-            // Delete image if exists
-            if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
-                Storage::disk('public')->delete($podcast->image);
-            }
+        // Delete image if exists
+        if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
+            Storage::disk('public')->delete($podcast->image);
+        }
 
-            $podcast->delete();
+        $podcast->delete();
 
-            return redirect()->route('podcast.index')
-                ->with('success', 'Podcast deleted successfully.');
+        return redirect()->route('podcast.index')
+            ->with('success', 'Podcast deleted successfully.');
     }
 
     /**
      * Export Podcasts to CSV
      */
-    public function export(Request $request): Response
+    public function export(Request $request): StreamedResponse
     {
-            $query = Podcast::query();
+        $filters = $request->only(['search', 'type', 'created_at_from', 'created_at_to']);
+        $rows = $this->exportPodcastsToCsvAction->execute($filters);
+        $filename = 'podcasts_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                        ->orWhere('url', 'like', "%{$search}%");
-                });
+        return response()->streamDownload(function () use ($rows) {
+            $file = fopen('php://output', 'w');
+            foreach ($rows as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('type')) {
-                $query->where('type', $request->get('type'));
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $podcasts = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Title', 'URL', 'Type', 'Image', 'Created At'];
-
-            foreach ($podcasts as $podcast) {
-                $csvData[] = [
-                    $podcast->id,
-                    $podcast->title,
-                    $podcast->url,
-                    ucfirst((string) $podcast->type),
-                    $podcast->image ?: '-',
-                    $podcast->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'podcasts_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

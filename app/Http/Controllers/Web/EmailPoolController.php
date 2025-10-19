@@ -4,59 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\EmailPool\ExportEmailPoolsToCsvAction;
+use App\Domain\Actions\EmailPool\GetEmailPoolListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EmailPool\Web\EmailPoolIndexRequest;
 use App\Models\Communication\EmailPool;
 use App\Models\Communication\EmailPoolArchive;
-use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmailPoolController extends Controller
 {
+    public function __construct(
+        private readonly GetEmailPoolListAction $getEmailPoolListAction,
+        private readonly ExportEmailPoolsToCsvAction $exportEmailPoolsToCsvAction,
+    ) {}
+
     /**
      * Display Email Pools
      */
-    public function index(Request $request): View
+    public function index(EmailPoolIndexRequest $request): View
     {
-        $query = EmailPool::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('from', 'like', "%{$search}%")
-                    ->orWhere('to', 'like', "%{$search}%")
-                    ->orWhere('reply', 'like', "%{$search}%")
-                    ->orWhere('bcc', 'like', "%{$search}%")
-                    ->orWhere('subject', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by type
-        if ($request->filled('type')) {
-            $query->where('type', $request->get('type'));
-        }
-
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $emailPools = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $emailPools = $this->getEmailPoolListAction->execute($filters, 20);
 
         return ViewFacade::make('email-pool.index', [
             'emailPools' => $emailPools,
-            'filters' => $request->only(['search', 'type', 'status', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -83,7 +61,7 @@ class EmailPoolController extends Controller
     /**
      * Resend Email Pool
      */
-    public function resend(Request $request, EmailPool $emailPool): Response
+    public function resend(Request $request, EmailPool $emailPool): RedirectResponse
     {
         // Resend logic here
         $emailPool->update(['status' => EmailPool::STATUS_PENDING]);
@@ -95,7 +73,7 @@ class EmailPoolController extends Controller
     /**
      * Delete Email Pool
      */
-    public function destroy(EmailPool $emailPool): Response
+    public function destroy(EmailPool $emailPool): RedirectResponse
     {
         $emailPool->delete();
 
@@ -119,13 +97,12 @@ class EmailPoolController extends Controller
     /**
      * Display Email Pool Archive
      */
-    public function archive(Request $request): View
+    public function archive(EmailPoolIndexRequest $request): View
     {
+        $filters = $request->validated();
         $query = EmailPoolArchive::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
+        if (! empty($filters['search'])) {
+            $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('from', 'like', "%{$search}%")
                     ->orWhere('to', 'like', "%{$search}%")
@@ -134,30 +111,23 @@ class EmailPoolController extends Controller
                     ->orWhere('subject', 'like', "%{$search}%");
             });
         }
-
-        // Filter by type
-        if ($request->filled('type')) {
-            $query->where('type', $request->get('type'));
+        if (! empty($filters['type'])) {
+            $query->where('type', $filters['type']);
         }
-
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
         }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
+        if (! empty($filters['created_at_from'])) {
+            $query->whereDate('created_at', '>=', $filters['created_at_from']);
         }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
+        if (! empty($filters['created_at_to'])) {
+            $query->whereDate('created_at', '<=', $filters['created_at_to']);
         }
-
         $emailPools = $query->orderBy('created_at', 'desc')->paginate(20);
 
         return ViewFacade::make('email-pool.archive', [
             'emailPools' => $emailPools,
-            'filters' => $request->only(['search', 'type', 'status', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -174,56 +144,10 @@ class EmailPoolController extends Controller
     /**
      * Export Email Pools to CSV
      */
-    public function export(Request $request): Response
+    public function export(EmailPoolIndexRequest $request): StreamedResponse
     {
-        $query = EmailPool::query();
-
-        // Apply same filters as index
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('from', 'like', "%{$search}%")
-                    ->orWhere('to', 'like', "%{$search}%")
-                    ->orWhere('reply', 'like', "%{$search}%")
-                    ->orWhere('bcc', 'like', "%{$search}%")
-                    ->orWhere('subject', 'like', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('type')) {
-            $query->where('type', $request->get('type'));
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
-        }
-
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $emailPools = $query->orderBy('created_at', 'desc')->get();
-
-        $csvData = [];
-        $csvData[] = ['ID', 'Type', 'Status', 'From', 'To', 'Reply', 'BCC', 'Subject', 'Created At'];
-
-        foreach ($emailPools as $emailPool) {
-            $csvData[] = [
-                $emailPool->id,
-                $emailPool->type,
-                $emailPool->status,
-                $emailPool->from,
-                $emailPool->to,
-                $emailPool->reply,
-                $emailPool->bcc,
-                $emailPool->subject,
-                $emailPool->created_at->format('Y-m-d H:i:s'),
-            ];
-        }
-
+        $filters = $request->validated();
+        $csvData = $this->exportEmailPoolsToCsvAction->execute($filters);
         $filename = 'email_pools_'.now()->format('Y-m-d_H-i-s').'.csv';
 
         return response()->streamDownload(function () use ($csvData) {

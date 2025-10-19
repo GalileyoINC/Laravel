@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Content\GetPageListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\Web\PageContentRequest;
+use App\Http\Requests\Content\Web\PageIndexRequest;
 use App\Http\Requests\Content\Web\PageRequest;
 use App\Models\Content\Page;
 use App\Models\Content\PageContent;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
@@ -18,44 +19,21 @@ use Str;
 
 class PageController extends Controller
 {
+    public function __construct(
+        private readonly GetPageListAction $getPageListAction,
+    ) {}
+
     /**
      * Display a listing of pages
      */
-    public function index(Request $request): View
+    public function index(PageIndexRequest $request): View
     {
-        $query = Page::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('slug', 'like', "%{$search}%")
-                    ->orWhere('title', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
-        }
-
-        // Filter by date range
-        if ($request->filled('createTimeRange')) {
-            $dateRange = explode(' - ', (string) $request->get('createTimeRange'));
-            if (count($dateRange) === 2) {
-                $query->whereBetween('created_at', [
-                    \Carbon\Carbon::parse($dateRange[0])->startOfDay(),
-                    \Carbon\Carbon::parse($dateRange[1])->endOfDay(),
-                ]);
-            }
-        }
-
-        $pages = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $pages = $this->getPageListAction->execute($filters, 20);
 
         return ViewFacade::make('page.index', [
             'pages' => $pages,
-            'filters' => $request->only(['search', 'status', 'createTimeRange']),
+            'filters' => $filters,
         ]);
     }
 
@@ -72,21 +50,21 @@ class PageController extends Controller
      */
     public function store(PageRequest $request): Response
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'title' => $validated['title'] ?? null,
-                'slug' => $validated['slug'] ?? Str::slug($validated['name']),
-                'meta_keywords' => $validated['meta_keywords'] ?? null,
-                'meta_description' => $validated['meta_description'] ?? null,
-                'status' => $validated['status'] ?? Page::STATUS_OFF,
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'title' => $validated['title'] ?? null,
+            'slug' => $validated['slug'] ?? Str::slug($validated['name']),
+            'meta_keywords' => $validated['meta_keywords'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
+            'status' => $validated['status'] ?? Page::STATUS_OFF,
+        ];
 
-            $page = Page::create($data);
+        $page = Page::create($data);
 
-            return redirect()->route('page.edit', $page)
-                ->with('success', 'Page created successfully.');
+        return redirect()->route('page.edit', $page)
+            ->with('success', 'Page created successfully.');
     }
 
     /**
@@ -118,21 +96,21 @@ class PageController extends Controller
      */
     public function update(PageRequest $request, Page $page): Response
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'title' => $validated['title'] ?? null,
-                'slug' => $validated['slug'] ?? Str::slug($validated['name']),
-                'meta_keywords' => $validated['meta_keywords'] ?? null,
-                'meta_description' => $validated['meta_description'] ?? null,
-                'status' => $validated['status'] ?? $page->status,
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'title' => $validated['title'] ?? null,
+            'slug' => $validated['slug'] ?? Str::slug($validated['name']),
+            'meta_keywords' => $validated['meta_keywords'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
+            'status' => $validated['status'] ?? $page->status,
+        ];
 
-            $page->update($data);
+        $page->update($data);
 
-            return redirect()->route('page.index')
-                ->with('success', 'Page updated successfully.');
+        return redirect()->route('page.index')
+            ->with('success', 'Page updated successfully.');
     }
 
     /**
@@ -151,18 +129,18 @@ class PageController extends Controller
      */
     public function storeContent(PageContentRequest $request, Page $page): Response
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'id_page' => $page->id,
-                'content' => $validated['content'],
-                'status' => $validated['status'] ?? PageContent::STATUS_DRAFT,
-            ];
+        $data = [
+            'id_page' => $page->id,
+            'content' => $validated['content'],
+            'status' => $validated['status'] ?? PageContent::STATUS_DRAFT,
+        ];
 
-            PageContent::create($data);
+        PageContent::create($data);
 
-            return redirect()->route('page.edit', $page)
-                ->with('success', 'Page content created successfully.');
+        return redirect()->route('page.edit', $page)
+            ->with('success', 'Page content created successfully.');
     }
 
     /**
@@ -170,17 +148,17 @@ class PageController extends Controller
      */
     public function updateContent(PageContentRequest $request, Page $page, PageContent $pageContent): Response
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'content' => $validated['content'],
-                'status' => $validated['status'] ?? $pageContent->status,
-            ];
+        $data = [
+            'content' => $validated['content'],
+            'status' => $validated['status'] ?? $pageContent->status,
+        ];
 
-            $pageContent->update($data);
+        $pageContent->update($data);
 
-            return redirect()->route('page.edit', $page)
-                ->with('success', 'Page content updated successfully.');
+        return redirect()->route('page.edit', $page)
+            ->with('success', 'Page content updated successfully.');
     }
 
     /**
@@ -188,15 +166,15 @@ class PageController extends Controller
      */
     public function upload(Request $request, Page $page): Response
     {
-            $request->validate([
-                'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-            $file = $request->file('file');
-            $path = $file->store('pages', 'public');
+        $file = $request->file('file');
+        $path = $file->store('pages', 'public');
 
-            return response()->json([
-                'location' => Storage::url($path),
-            ]);
+        return response()->json([
+            'location' => Storage::url($path),
+        ]);
     }
 }

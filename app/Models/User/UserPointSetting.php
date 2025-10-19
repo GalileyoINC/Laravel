@@ -40,6 +40,6 @@ class UserPointSetting extends Model
 
     public function user_point_histories()
     {
-        return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_user_point_settings');
+        return $this->hasMany(UserPointHistory::class, 'id_user_point_settings');
     }
 }

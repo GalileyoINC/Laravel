@@ -11,10 +11,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class GetAllSendOptionsAction
+readonly class GetAllSendOptionsAction
 {
     public function __construct(
-        private readonly AllSendFormServiceInterface $allSendFormService
+        private AllSendFormServiceInterface $allSendFormService
     ) {}
 
     public function execute(array $data): JsonResponse

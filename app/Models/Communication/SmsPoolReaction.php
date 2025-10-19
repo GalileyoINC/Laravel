@@ -56,7 +56,7 @@ class SmsPoolReaction extends Model
 
     public function sms_pool()
     {
-        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
+        return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
     public function user()

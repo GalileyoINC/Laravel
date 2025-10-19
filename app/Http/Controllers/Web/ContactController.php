@@ -6,14 +6,12 @@ namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\Contact\CreateContactAction;
 use App\Domain\Actions\Contact\DeleteContactAction;
-use App\Domain\Actions\Contact\GetContactAction;
 use App\Domain\Actions\Contact\GetContactListAction;
 use App\Domain\DTOs\Contact\ContactListRequestDTO;
 use App\Domain\DTOs\Contact\CreateContactDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\Web\ContactRequest;
 use App\Models\Communication\Contact;
-use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -25,7 +23,6 @@ class ContactController extends Controller
     public function __construct(
         private readonly CreateContactAction $createContactAction,
         private readonly GetContactListAction $getContactListAction,
-        private readonly GetContactAction $getContactAction,
         private readonly DeleteContactAction $deleteContactAction
     ) {}
 

@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Artisan;
 use DB;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
@@ -32,17 +31,17 @@ class MaintenanceController extends Controller
             'key' => 'required|string',
             'value' => 'nullable|string',
         ]);
-            $key = $request->get('key');
-            $value = $request->get('value');
+        $key = $request->get('key');
+        $value = $request->get('value');
 
-            if (empty($value)) {
-                session()->forget($key);
+        if (empty($value)) {
+            session()->forget($key);
 
-                return response()->json(['success' => true, 'message' => 'Session key removed']);
-            }
-            session([$key => $value]);
+            return response()->json(['success' => true, 'message' => 'Session key removed']);
+        }
+        session([$key => $value]);
 
-            return response()->json(['success' => true, 'message' => 'Session key set']);
+        return response()->json(['success' => true, 'message' => 'Session key set']);
     }
 
     /**
@@ -50,13 +49,13 @@ class MaintenanceController extends Controller
      */
     public function clearCache(): Response
     {
-            Artisan::call('cache:clear');
-            Artisan::call('config:clear');
-            Artisan::call('route:clear');
-            Artisan::call('view:clear');
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
 
-            return redirect()->back()
-                ->with('success', 'Cache cleared successfully.');
+        return redirect()->back()
+            ->with('success', 'Cache cleared successfully.');
     }
 
     /**
@@ -64,10 +63,10 @@ class MaintenanceController extends Controller
      */
     public function clearLogs(): Response
     {
-            Artisan::call('log:clear');
+        Artisan::call('log:clear');
 
-            return redirect()->back()
-                ->with('success', 'Logs cleared successfully.');
+        return redirect()->back()
+            ->with('success', 'Logs cleared successfully.');
     }
 
     /**
@@ -75,11 +74,11 @@ class MaintenanceController extends Controller
      */
     public function databaseMaintenance(): Response
     {
-            Artisan::call('migrate:status');
-            Artisan::call('db:seed --class=DatabaseSeeder');
+        Artisan::call('migrate:status');
+        Artisan::call('db:seed --class=DatabaseSeeder');
 
-            return redirect()->back()
-                ->with('success', 'Database maintenance completed successfully.');
+        return redirect()->back()
+            ->with('success', 'Database maintenance completed successfully.');
     }
 
     /**
@@ -112,16 +111,16 @@ class MaintenanceController extends Controller
      */
     public function queueStatus(): View
     {
-            $queueInfo = [
-                'driver' => config('queue.default'),
-                'connection' => config('queue.connections.'.config('queue.default')),
-                'failed_jobs_count' => DB::table('failed_jobs')->count(),
-                'jobs_count' => DB::table('jobs')->count(),
-            ];
+        $queueInfo = [
+            'driver' => config('queue.default'),
+            'connection' => config('queue.connections.'.config('queue.default')),
+            'failed_jobs_count' => DB::table('failed_jobs')->count(),
+            'jobs_count' => DB::table('jobs')->count(),
+        ];
 
-            return ViewFacade::make('maintenance.queue-status', [
-                'queueInfo' => $queueInfo,
-            ]);
+        return ViewFacade::make('maintenance.queue-status', [
+            'queueInfo' => $queueInfo,
+        ]);
     }
 
     /**
@@ -129,18 +128,18 @@ class MaintenanceController extends Controller
      */
     public function storageStatus(): View
     {
-            $storageInfo = [
-                'disk' => config('filesystems.default'),
-                'public_path' => public_path(),
-                'storage_path' => storage_path(),
-                'logs_path' => storage_path('logs'),
-                'cache_path' => storage_path('framework/cache'),
-                'sessions_path' => storage_path('framework/sessions'),
-                'views_path' => storage_path('framework/views'),
-            ];
+        $storageInfo = [
+            'disk' => config('filesystems.default'),
+            'public_path' => public_path(),
+            'storage_path' => storage_path(),
+            'logs_path' => storage_path('logs'),
+            'cache_path' => storage_path('framework/cache'),
+            'sessions_path' => storage_path('framework/sessions'),
+            'views_path' => storage_path('framework/views'),
+        ];
 
-            return ViewFacade::make('maintenance.storage-status', [
-                'storageInfo' => $storageInfo,
-            ]);
+        return ViewFacade::make('maintenance.storage-status', [
+            'storageInfo' => $storageInfo,
+        ]);
     }
 }

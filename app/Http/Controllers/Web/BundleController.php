@@ -11,9 +11,8 @@ use App\Domain\DTOs\Bundle\BundleListRequestDTO;
 use App\Domain\DTOs\Bundle\CreateBundleDTO;
 use App\Domain\DTOs\Bundle\UpdateBundleDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Bundle\Web\BundleIndexRequest;
 use App\Http\Requests\Bundle\Web\BundleRequest;
-use App\Models\Finance\Bundle;
-use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -31,27 +30,25 @@ class BundleController extends Controller
     /**
      * Display a listing of bundles
      */
-    public function index(Request $request): View
+    public function index(BundleIndexRequest $request): View
     {
-            $query = Bundle::query();
+        $validated = $request->validated();
+        $dto = new BundleListRequestDTO(
+            page: (int) ($validated['page'] ?? 1),
+            limit: 20,
+            search: $validated['search'] ?? null,
+            status: array_key_exists('status', $validated) ? (int) $validated['status'] : null,
+        );
 
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%");
-                });
-            }
+        $bundles = $this->getBundleListAction->execute($dto->toArray());
 
-            if ($request->filled('status')) {
-                $query->where('is_active', $request->get('status'));
-            }
-
-            $bundles = $query->orderBy('created_at', 'desc')->paginate(20);
-
-            return ViewFacade::make('bundle.index', [
-                'bundles' => $bundles,
-                'filters' => $request->only(['search', 'status']),
-            ]);
+        return ViewFacade::make('bundle.index', [
+            'bundles' => $bundles,
+            'filters' => [
+                'search' => $validated['search'] ?? null,
+                'status' => $validated['status'] ?? null,
+            ],
+        ]);
     }
 
     /**
@@ -67,26 +64,26 @@ class BundleController extends Controller
      */
     public function store(BundleRequest $request): RedirectResponse
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $dto = new CreateBundleDTO(
-                title: $validated['title'],
-                type: $validated['type'] ?? 1,
-                payInterval: $validated['pay_interval'] ?? 1,
-                isActive: $validated['is_active'] ?? true,
-                total: $validated['total']
-            );
+        $dto = new CreateBundleDTO(
+            title: $validated['title'],
+            type: $validated['type'] ?? 1,
+            payInterval: $validated['pay_interval'] ?? 1,
+            isActive: $validated['is_active'] ?? true,
+            total: $validated['total']
+        );
 
-            $result = $this->createBundleAction->execute($dto);
+        $result = $this->createBundleAction->execute($dto);
 
-            if ($result->getData()->success) {
-                return Redirect::to(route('bundle.index'))
-                    ->with('success', 'Bundle created successfully.');
-            }
+        if ($result->getData()->success) {
+            return Redirect::to(route('bundle.index'))
+                ->with('success', 'Bundle created successfully.');
+        }
 
-            return Redirect::back()
-                ->withErrors(['error' => $result->getData()->message ?? 'Failed to create bundle.'])
-                ->withInput();
+        return Redirect::back()
+            ->withErrors(['error' => $result->getData()->message ?? 'Failed to create bundle.'])
+            ->withInput();
     }
 
     /**
@@ -116,27 +113,27 @@ class BundleController extends Controller
      */
     public function update(BundleRequest $request, Bundle $bundle): RedirectResponse
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $dto = new UpdateBundleDTO(
-                id: $bundle->id,
-                title: $validated['title'],
-                type: $validated['type'] ?? $bundle->type,
-                payInterval: $validated['pay_interval'] ?? $bundle->pay_interval,
-                isActive: $validated['is_active'] ?? $bundle->is_active,
-                total: $validated['total']
-            );
+        $dto = new UpdateBundleDTO(
+            id: $bundle->id,
+            title: $validated['title'],
+            type: $validated['type'] ?? $bundle->type,
+            payInterval: $validated['pay_interval'] ?? $bundle->pay_interval,
+            isActive: $validated['is_active'] ?? $bundle->is_active,
+            total: $validated['total']
+        );
 
-            $result = $this->updateBundleAction->execute($dto);
+        $result = $this->updateBundleAction->execute($dto);
 
-            if ($result->getData()->success) {
-                return Redirect::to(route('bundle.index'))
-                    ->with('success', 'Bundle updated successfully.');
-            }
+        if ($result->getData()->success) {
+            return Redirect::to(route('bundle.index'))
+                ->with('success', 'Bundle updated successfully.');
+        }
 
-            return Redirect::back()
-                ->withErrors(['error' => $result->getData()->message ?? 'Failed to update bundle.'])
-                ->withInput();
+        return Redirect::back()
+            ->withErrors(['error' => $result->getData()->message ?? 'Failed to update bundle.'])
+            ->withInput();
     }
 
     /**
@@ -144,16 +141,16 @@ class BundleController extends Controller
      */
     public function destroy(Bundle $bundle): RedirectResponse
     {
-            // Check if bundle has associated items
-            if ($bundle->bundle_items()->count() > 0) {
-                return Redirect::back()
-                    ->withErrors(['error' => 'Cannot delete bundle with associated items.']);
-            }
+        // Check if bundle has associated items
+        if ($bundle->bundle_items()->count() > 0) {
+            return Redirect::back()
+                ->withErrors(['error' => 'Cannot delete bundle with associated items.']);
+        }
 
-            $bundle->delete();
+        $bundle->delete();
 
-            return Redirect::to(route('bundle.index'))
-                ->with('success', 'Bundle deleted successfully.');
+        return Redirect::to(route('bundle.index'))
+            ->with('success', 'Bundle deleted successfully.');
     }
 
     /**
@@ -161,14 +158,14 @@ class BundleController extends Controller
      */
     public function toggleStatus(Bundle $bundle): RedirectResponse
     {
-            $bundle->update([
-                'is_active' => ! $bundle->is_active,
-            ]);
+        $bundle->update([
+            'is_active' => ! $bundle->is_active,
+        ]);
 
-            $status = $bundle->is_active ? 'activated' : 'deactivated';
+        $status = $bundle->is_active ? 'activated' : 'deactivated';
 
-            return Redirect::back()
-                ->with('success', "Bundle {$status} successfully.");
+        return Redirect::back()
+            ->with('success', "Bundle {$status} successfully.");
     }
 
     /**
@@ -176,18 +173,18 @@ class BundleController extends Controller
      */
     public function getDeviceData(Request $request)
     {
-            $deviceId = $request->input('idDevice');
+        $deviceId = $request->input('idDevice');
 
-            $action = new \App\Domain\Actions\Bundle\GetBundleDeviceDataAction(
-                app(\App\Domain\Services\Bundle\BundleServiceInterface::class)
-            );
+        $action = new \App\Domain\Actions\Bundle\GetBundleDeviceDataAction(
+            app(\App\Domain\Services\Bundle\BundleServiceInterface::class)
+        );
 
-            $dto = new \App\Domain\DTOs\Bundle\BundleDeviceDataRequestDTO(
-                idDevice: $deviceId
-            );
+        $dto = new \App\Domain\DTOs\Bundle\BundleDeviceDataRequestDTO(
+            idDevice: $deviceId
+        );
 
-            $result = $action->execute($dto);
+        $result = $action->execute($dto);
 
-            return response()->json($result->getData());
+        return response()->json($result->getData());
     }
 }

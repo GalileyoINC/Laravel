@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\Web\LoginRequest;
 use App\Http\Requests\Authentication\Web\SelfRequest;
 use App\Models\System\Staff;
-use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,28 +42,28 @@ class SiteController extends Controller
         if (Auth::check()) {
             return Redirect::to(route('site.index'));
         }
-            $loginData = [
-                'email' => $request->validated()['username'],
-                'password' => $request->validated()['password'],
-                'device' => [],
-            ];
+        $loginData = [
+            'email' => $request->validated()['username'],
+            'password' => $request->validated()['password'],
+            'device' => [],
+        ];
 
-            $result = $this->loginAction->execute($loginData);
+        $result = $this->loginAction->execute($loginData);
 
-            if ($result->getData()->status === 'success') {
-                // Find user and login with Laravel Auth
-                $user = \App\Models\User\User::find($result->getData()->user_id);
-                if ($user) {
-                    Auth::login($user, false);
-                    $request->session()->regenerate();
+        if ($result->getData()->status === 'success') {
+            // Find user and login with Laravel Auth
+            $user = \App\Models\User\User::find($result->getData()->user_id);
+            if ($user) {
+                Auth::login($user, false);
+                $request->session()->regenerate();
 
-                    return Redirect::to(route('site.index'));
-                }
+                return Redirect::to(route('site.index'));
             }
+        }
 
-            return Redirect::back()
-                ->withErrors(['username' => $result->getData()->error ?? 'Login failed'])
-                ->withInput();
+        return Redirect::back()
+            ->withErrors(['username' => $result->getData()->error ?? 'Login failed'])
+            ->withInput();
     }
 
     /**
@@ -117,10 +116,10 @@ class SiteController extends Controller
             return Redirect::to(route('site.index'))
                 ->withErrors(['error' => 'Staff member not found.']);
         }
-            $staff->update($request->validated());
+        $staff->update($request->validated());
 
-            return Redirect::to(route('site.index'))
-                ->with('success', 'You have successfully updated your data.');
+        return Redirect::to(route('site.index'))
+            ->with('success', 'You have successfully updated your data.');
     }
 
     /**

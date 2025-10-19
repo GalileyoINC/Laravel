@@ -13,6 +13,7 @@ use Database\Factories\SmsPoolFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
 /**
  * Class SmsPool
@@ -73,6 +74,40 @@ class SmsPool extends Model
         'is_ban',
     ];
 
+    /**
+     * Return available purposes for dropdowns and labeling.
+     * Falls back to discovered purpose codes in DB with generic labels.
+     */
+    public static function getPurposes(): array
+    {
+        $defaults = [
+            0 => 'General',
+            1 => 'Subscription',
+            2 => 'Follower List',
+            3 => 'Alert',
+            4 => 'Marketing',
+        ];
+
+        try {
+            $codes = static::query()->select('purpose')->distinct()->pluck('purpose')->filter(function ($v) {
+                return $v !== null;
+            })->all();
+
+            $map = $defaults;
+            foreach ($codes as $code) {
+                if (! array_key_exists($code, $map)) {
+                    $map[$code] = 'Purpose '.$code;
+                }
+            }
+
+            ksort($map);
+
+            return $map;
+        } catch (Throwable) {
+            return $defaults;
+        }
+    }
+
     public function user()
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
@@ -117,7 +152,7 @@ class SmsPool extends Model
 
     public function sms_shedules()
     {
-        return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_sms_pool');
+        return $this->hasMany(SmsShedule::class, 'id_sms_pool');
     }
 
     public function user_point_histories()
@@ -128,39 +163,6 @@ class SmsPool extends Model
     public function subscription()
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
-    }
-
-    /**
-     * Return available purposes for dropdowns and labeling.
-     * Falls back to discovered purpose codes in DB with generic labels.
-     */
-    public static function getPurposes(): array
-    {
-        $defaults = [
-            0 => 'General',
-            1 => 'Subscription',
-            2 => 'Follower List',
-            3 => 'Alert',
-            4 => 'Marketing',
-        ];
-
-        try {
-            $codes = static::query()->select('purpose')->distinct()->pluck('purpose')->filter(function ($v) {
-                return $v !== null;
-            })->all();
-
-            $map = $defaults;
-            foreach ($codes as $code) {
-                if (!array_key_exists($code, $map)) {
-                    $map[$code] = 'Purpose '.$code;
-                }
-            }
-
-            ksort($map);
-            return $map;
-        } catch (\Throwable) {
-            return $defaults;
-        }
     }
 
     protected static function newFactory()

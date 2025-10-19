@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Report\GetSmsReportListAction;
+use App\Domain\Actions\Report\GetSoldDevicesListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Report\Web\SmsIndexRequest;
+use App\Http\Requests\Report\Web\SoldDevicesIndexRequest;
 use App\Models\Device\PhoneNumber;
 use App\Models\Finance\ContractLine;
 use App\Models\Finance\Service;
 use App\Models\User\User;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +22,11 @@ use Illuminate\View\View;
 
 class ReportController extends Controller
 {
+    public function __construct(
+        private readonly GetSoldDevicesListAction $getSoldDevicesListAction,
+        private readonly GetSmsReportListAction $getSmsReportListAction,
+    ) {}
+
     /**
      * Display login statistics
      */
@@ -42,28 +50,14 @@ class ReportController extends Controller
     /**
      * Display sold devices report
      */
-    public function soldDevices(Request $request): View
+    public function soldDevices(SoldDevicesIndexRequest $request): View
     {
-        $query = DB::table('invoice_line')
-            ->join('invoice', 'invoice_line.id_invoice', '=', 'invoice.id')
-            ->join('user', 'invoice.id_user', '=', 'user.id')
-            ->where('invoice_line.type', 'device')
-            ->select('invoice_line.*', 'user.first_name', 'user.last_name', 'invoice.created_at');
-
-        // Apply filters
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('user.first_name', 'like', "%{$search}%")
-                    ->orWhere('user.last_name', 'like', "%{$search}%");
-            });
-        }
-
-        $devices = $query->orderBy('invoice.created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $devices = $this->getSoldDevicesListAction->execute($filters, 20);
 
         return ViewFacade::make('report.sold-devices', [
             'devices' => $devices,
-            'filters' => $request->only(['search']),
+            'filters' => $filters,
         ]);
     }
 
@@ -272,7 +266,7 @@ class ReportController extends Controller
      */
     public function devicesPlans(Request $request, ?string $date = null): View
     {
-            $date = $date ? Carbon::parse($date) : Carbon::now();
+        $date = $date ? Carbon::parse($date) : Carbon::now();
         $query = DB::table('invoice_line')
             ->join('invoice', 'invoice_line.id_invoice', '=', 'invoice.id')
             ->join('user', 'invoice.id_user', '=', 'user.id')
@@ -292,27 +286,14 @@ class ReportController extends Controller
     /**
      * Display SMS report
      */
-    public function sms(Request $request): View
+    public function sms(SmsIndexRequest $request): View
     {
-        $query = DB::table('sms_pool')
-            ->join('user', 'sms_pool.id_user', '=', 'user.id')
-            ->select('sms_pool.*', 'user.first_name', 'user.last_name');
-
-        // Apply filters
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('user.first_name', 'like', "%{$search}%")
-                    ->orWhere('user.last_name', 'like', "%{$search}%")
-                    ->orWhere('sms_pool.body', 'like', "%{$search}%");
-            });
-        }
-
-        $sms = $query->orderBy('sms_pool.created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $sms = $this->getSmsReportListAction->execute($filters, 20);
 
         return ViewFacade::make('report.sms', [
             'sms' => $sms,
-            'filters' => $request->only(['search']),
+            'filters' => $filters,
         ]);
     }
 

@@ -46,7 +46,7 @@ class InfluencerPage extends Model
 
     public function subscription()
     {
-        return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
+        return $this->belongsTo(Subscription::class, 'id_subscription');
     }
 
     protected static function newFactory()

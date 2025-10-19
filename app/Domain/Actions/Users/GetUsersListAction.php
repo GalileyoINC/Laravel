@@ -27,6 +27,7 @@ class GetUsersListAction
             }
 
             $user = Auth::user();
+
             return $this->usersService->getUsersList($dto, $user);
 
         } catch (Exception $e) {

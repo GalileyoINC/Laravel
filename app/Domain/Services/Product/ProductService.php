@@ -35,7 +35,7 @@ class ProductService implements ProductServiceInterface
                     $search = $dto->filter['search'];
                     $query->where(function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%")
-                          ->orWhere('description', 'like', "%{$search}%");
+                            ->orWhere('description', 'like', "%{$search}%");
                     });
                 }
                 if (isset($dto->filter['is_active']) && $dto->filter['is_active'] !== '') {

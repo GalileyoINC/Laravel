@@ -73,23 +73,23 @@ class MoneyTransaction extends Model
 
     public function credit_card()
     {
-        return $this->belongsTo(\App\Models\Finance\CreditCard::class, 'id_credit_card');
+        return $this->belongsTo(CreditCard::class, 'id_credit_card');
     }
 
     // Alias used by controllers/views
     public function creditCard()
     {
-        return $this->belongsTo(\App\Models\Finance\CreditCard::class, 'id_credit_card');
+        return $this->belongsTo(CreditCard::class, 'id_credit_card');
     }
 
     public function invoice()
     {
-        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
+        return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
     public function money_transaction()
     {
-        return $this->belongsTo(\App\Models\Finance\MoneyTransaction::class, 'id_refund');
+        return $this->belongsTo(self::class, 'id_refund');
     }
 
     public function user()
@@ -104,7 +104,7 @@ class MoneyTransaction extends Model
 
     public function money_transactions()
     {
-        return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_refund');
+        return $this->hasMany(self::class, 'id_refund');
     }
 
     /**

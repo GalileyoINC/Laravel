@@ -26,13 +26,14 @@ class AdminMessageLog extends Model
 {
     use HasFactory;
 
+    // Object type constants (used for filtering/log view links)
+    public const TO_ALL = 1;
+
+    public const TO_STATE = 2;
+
     public $timestamps = false;
 
     protected $table = 'admin_message_log';
-
-    // Object type constants (used for filtering/log view links)
-    public const TO_ALL = 1;
-    public const TO_STATE = 2;
 
     protected $casts = [
         'id_staff' => 'int',

@@ -50,11 +50,11 @@ class SmsPoolPhoto extends Model
 
     public function sms_pool()
     {
-        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
+        return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
     public function sms_shedule()
     {
-        return $this->belongsTo(\App\Models\Communication\SmsShedule::class, 'id_sms_shedule');
+        return $this->belongsTo(SmsShedule::class, 'id_sms_shedule');
     }
 }

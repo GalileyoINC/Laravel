@@ -46,6 +46,6 @@ class Affiliate extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User\User::class, 'id_user_parent');
+        return $this->belongsTo(User::class, 'id_user_parent');
     }
 }

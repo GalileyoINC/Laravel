@@ -42,10 +42,10 @@ class PhoneNumber extends Model
 {
     use HasFactory;
 
-    protected $table = 'phone_number';
-
     // Phone type constants (extend as needed)
     public const TYPE_NONE = 0;
+
+    protected $table = 'phone_number';
 
     protected $casts = [
         'id_user' => 'int',

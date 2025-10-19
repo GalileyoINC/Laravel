@@ -51,7 +51,7 @@ class Follower extends Model
 
     public function follower_list()
     {
-        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
+        return $this->belongsTo(FollowerList::class, 'id_follower_list');
     }
 
     public function user()
@@ -62,7 +62,7 @@ class Follower extends Model
     // Added to align with controller usage
     public function followerList()
     {
-        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
+        return $this->belongsTo(FollowerList::class, 'id_follower_list');
     }
 
     public function userLeader()

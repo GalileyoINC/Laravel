@@ -79,7 +79,7 @@ class SpsContract extends Model
 
     public function service()
     {
-        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(Service::class, 'id_service');
     }
 
     public function user()
@@ -89,6 +89,6 @@ class SpsContract extends Model
 
     public function contract_lines()
     {
-        return $this->hasMany(\App\Models\Finance\ContractLine::class, 'id_sps_contract');
+        return $this->hasMany(ContractLine::class, 'id_sps_contract');
     }
 }

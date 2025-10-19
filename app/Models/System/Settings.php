@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
+use Throwable;
+
 class Settings
 {
     /**
@@ -24,9 +26,13 @@ class Settings
                 // differentiate int vs float
                 return str_contains((string) $value, '.') ? (float) $value : (int) $value;
             }
-            $lower = strtolower(trim((string) $value));
-            if ($lower === 'true') return true;
-            if ($lower === 'false') return false;
+            $lower = mb_strtolower(trim((string) $value));
+            if ($lower === 'true') {
+                return true;
+            }
+            if ($lower === 'false') {
+                return false;
+            }
 
             // Attempt JSON decode for arrays/objects
             $json = json_decode((string) $value, true);
@@ -35,7 +41,7 @@ class Settings
             }
 
             return $value;
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return $default;
         }
     }

@@ -13,6 +13,7 @@ use Database\Factories\SystemStaffFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
 /**
  * Class Staff
@@ -58,6 +59,21 @@ class Staff extends Model
         'is_superlogin',
     ];
 
+    public static function getForDropDown(): array
+    {
+        try {
+            return self::query()
+                ->orderBy('username')
+                ->get(['id', 'username'])
+                ->mapWithKeys(function ($s) {
+                    return [$s->id => (string) $s->username];
+                })
+                ->toArray();
+        } catch (Throwable $e) {
+            return [];
+        }
+    }
+
     public function sms_pools()
     {
         return $this->hasMany(\App\Models\Communication\SmsPool::class, 'id_staff');
@@ -74,20 +90,5 @@ class Staff extends Model
     protected static function newFactory()
     {
         return SystemStaffFactory::new();
-    }
-
-    public static function getForDropDown(): array
-    {
-        try {
-            return self::query()
-                ->orderBy('username')
-                ->get(['id', 'username'])
-                ->mapWithKeys(function ($s) {
-                    return [$s->id => (string) $s->username];
-                })
-                ->toArray();
-        } catch (\Throwable $e) {
-            return [];
-        }
     }
 }

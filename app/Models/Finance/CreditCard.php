@@ -82,7 +82,7 @@ class CreditCard extends Model
 
     public function money_transactions()
     {
-        return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_credit_card');
+        return $this->hasMany(MoneyTransaction::class, 'id_credit_card');
     }
 
     /**

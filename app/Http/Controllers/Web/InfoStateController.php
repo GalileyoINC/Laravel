@@ -4,63 +4,40 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\InfoState\ExportInfoStatesToCsvAction;
+use App\Domain\Actions\InfoState\GetInfoStateListAction;
 use App\Http\Controllers\Controller;
-use App\Models\Subscription\Subscription;
+use App\Http\Requests\InfoState\Web\InfoStateIndexRequest;
 use App\Models\Analytics\InfoState;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\Subscription\Subscription;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InfoStateController extends Controller
 {
+    public function __construct(
+        private readonly GetInfoStateListAction $getInfoStateListAction,
+        private readonly ExportInfoStatesToCsvAction $exportInfoStatesToCsvAction,
+    ) {}
+
     /**
      * Display Info States
      */
-    public function index(Request $request): View
+    public function index(InfoStateIndexRequest $request): View
     {
-        $query = InfoState::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('key', 'like', "%{$search}%")
-                    ->orWhere('value', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by key
-        if ($request->filled('key')) {
-            $query->where('key', 'like', "%{$request->get('key')}%");
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        if ($request->filled('updated_at_from')) {
-            $query->whereDate('updated_at', '>=', $request->get('updated_at_from'));
-        }
-        if ($request->filled('updated_at_to')) {
-            $query->whereDate('updated_at', '<=', $request->get('updated_at_to'));
-        }
-
-        $infoStates = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $infoStates = $this->getInfoStateListAction->execute($filters, 20);
 
         // Get subscription names for display
-        $subscriptionIds = $infoStates->pluck('key')->filter()->unique();
+        $subscriptionIds = $infoStates->getCollection()->pluck('key')->filter()->unique();
         $subscriptions = Subscription::whereIn('id', $subscriptionIds)->pluck('name', 'id')->toArray();
 
         return ViewFacade::make('info-state.index', [
             'infoStates' => $infoStates,
             'subscriptions' => $subscriptions,
-            'filters' => $request->only(['search', 'key', 'created_at_from', 'created_at_to', 'updated_at_from', 'updated_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -83,74 +60,32 @@ class InfoStateController extends Controller
     /**
      * Delete Info State
      */
-    public function destroy(InfoState $infoState): Response
+    public function destroy(InfoState $infoState): RedirectResponse
     {
-            $infoState->delete();
+        $infoState->delete();
 
-            return redirect()->route('info-state.index')
-                ->with('success', 'Info state deleted successfully.');
+        return redirect()->route('info-state.index')
+            ->with('success', 'Info state deleted successfully.');
     }
 
     /**
      * Export Info States to CSV
      */
-    public function export(Request $request): Response
+    public function export(InfoStateIndexRequest $request): StreamedResponse
     {
-            $query = InfoState::query();
+        $filters = $request->validated();
+        $csvData = $this->exportInfoStatesToCsvAction->execute($filters);
+        $filename = 'info_states_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('key', 'like', "%{$search}%")
-                        ->orWhere('value', 'like', "%{$search}%");
-                });
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('key')) {
-                $query->where('key', 'like', "%{$request->get('key')}%");
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            if ($request->filled('updated_at_from')) {
-                $query->whereDate('updated_at', '>=', $request->get('updated_at_from'));
-            }
-            if ($request->filled('updated_at_to')) {
-                $query->whereDate('updated_at', '<=', $request->get('updated_at_to'));
-            }
-
-            $infoStates = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Key', 'Value', 'Created At', 'Updated At'];
-
-            foreach ($infoStates as $infoState) {
-                $csvData[] = [
-                    $infoState->id,
-                    $infoState->key,
-                    is_array($infoState->value) ? json_encode($infoState->value) : $infoState->value,
-                    $infoState->created_at->format('Y-m-d H:i:s'),
-                    $infoState->updated_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'info_states_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

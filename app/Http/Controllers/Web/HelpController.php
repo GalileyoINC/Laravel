@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use const PHP_VERSION;
+
 use App\Http\Controllers\Controller;
 use App\Models\System\ApiLog;
 use App\Models\System\Settings;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+
+use function get_loaded_extensions;
 
 class HelpController extends Controller
 {
@@ -21,8 +24,8 @@ class HelpController extends Controller
      */
     public function index(): View
     {
-        $phpVersion = \PHP_VERSION;
-        $extensions = \get_loaded_extensions();
+        $phpVersion = PHP_VERSION;
+        $extensions = get_loaded_extensions();
         sort($extensions);
 
         return ViewFacade::make('help.index', [
@@ -36,11 +39,11 @@ class HelpController extends Controller
      */
     public function test(): Response
     {
-            // Test API functionality
-            $api = new \App\Services\BivyStickService();
-            $result = $api->update();
+        // Test API functionality
+        $api = new \App\Services\BivyStickService();
+        $result = $api->update();
 
-            return response()->json($result);
+        return response()->json($result);
     }
 
     /**
@@ -48,10 +51,10 @@ class HelpController extends Controller
      */
     public function checkSps(): Response
     {
-            $sps = new \App\Services\SpsApiService();
-            $result = $sps->checkIp();
+        $sps = new \App\Services\SpsApiService();
+        $result = $sps->checkIp();
 
-            return response()->json($result);
+        return response()->json($result);
     }
 
     /**
@@ -71,31 +74,31 @@ class HelpController extends Controller
      */
     public function download(Request $request): Response
     {
-            $alias = $request->get('alias');
+        $alias = $request->get('alias');
 
-            // Validate alias for security
-            $allowedPaths = [
-                storage_path('logs'),
-                base_path('storage/logs'),
-            ];
+        // Validate alias for security
+        $allowedPaths = [
+            storage_path('logs'),
+            base_path('storage/logs'),
+        ];
 
-            $isValid = false;
-            foreach ($allowedPaths as $path) {
-                if (str_contains((string) $alias, $path)) {
-                    $isValid = true;
-                    break;
-                }
+        $isValid = false;
+        foreach ($allowedPaths as $path) {
+            if (str_contains((string) $alias, $path)) {
+                $isValid = true;
+                break;
             }
+        }
 
-            if (! $isValid) {
-                abort(403, 'Access denied');
-            }
+        if (! $isValid) {
+            abort(403, 'Access denied');
+        }
 
-            if (! file_exists($alias)) {
-                abort(404, 'File not found');
-            }
+        if (! file_exists($alias)) {
+            abort(404, 'File not found');
+        }
 
-            return response()->download($alias);
+        return response()->download($alias);
     }
 
     /**
@@ -144,20 +147,20 @@ class HelpController extends Controller
      */
     public function testMail(): Response
     {
-            $sandboxEmail = Settings::get('mail__sandbox_email');
-            $adminEmail = Settings::get('mail__admin_email');
+        $sandboxEmail = Settings::get('mail__sandbox_email');
+        $adminEmail = Settings::get('mail__admin_email');
 
-            if (! $sandboxEmail || ! $adminEmail) {
-                return response()->json(['error' => 'Email settings not configured'], 400);
-            }
+        if (! $sandboxEmail || ! $adminEmail) {
+            return response()->json(['error' => 'Email settings not configured'], 400);
+        }
 
-            Mail::raw('Test Body', function ($message) use ($sandboxEmail, $adminEmail) {
-                $message->to($sandboxEmail)
-                    ->from($adminEmail)
-                    ->subject('Galileyo test letter');
-            });
+        Mail::raw('Test Body', function ($message) use ($sandboxEmail, $adminEmail) {
+            $message->to($sandboxEmail)
+                ->from($adminEmail)
+                ->subject('Galileyo test letter');
+        });
 
-            return response()->json(['success' => 'Mail sent successfully']);
+        return response()->json(['success' => 'Mail sent successfully']);
     }
 
     /**
@@ -165,23 +168,23 @@ class HelpController extends Controller
      */
     public function twilioLookup(Request $request): Response
     {
-            $number = $request->get('number');
+        $number = $request->get('number');
 
-            if (! $number) {
-                return response()->json(['error' => 'Phone number is required'], 400);
-            }
+        if (! $number) {
+            return response()->json(['error' => 'Phone number is required'], 400);
+        }
 
-            $twilioSid = Settings::get('sms__twilio_sid');
-            $twilioToken = Settings::get('sms__twilio_token');
+        $twilioSid = Settings::get('sms__twilio_sid');
+        $twilioToken = Settings::get('sms__twilio_token');
 
-            if (! $twilioSid || ! $twilioToken) {
-                return response()->json(['error' => 'Twilio credentials not configured'], 400);
-            }
+        if (! $twilioSid || ! $twilioToken) {
+            return response()->json(['error' => 'Twilio credentials not configured'], 400);
+        }
 
-            $twilio = new \Twilio\Rest\Client($twilioSid, $twilioToken);
-            $result = $twilio->lookups->v1->phoneNumbers($number)->fetch(['type' => ['carrier']]);
+        $twilio = new \Twilio\Rest\Client($twilioSid, $twilioToken);
+        $result = $twilio->lookups->v1->phoneNumbers($number)->fetch(['type' => ['carrier']]);
 
-            return response()->json($result->toArray());
+        return response()->json($result->toArray());
     }
 
     /**
@@ -189,28 +192,28 @@ class HelpController extends Controller
      */
     public function twilioSend(Request $request): Response
     {
-            $number = $request->get('number');
-            $text = $request->get('text');
+        $number = $request->get('number');
+        $text = $request->get('text');
 
-            if (! $number || ! $text) {
-                return response()->json(['error' => 'Phone number and text are required'], 400);
-            }
+        if (! $number || ! $text) {
+            return response()->json(['error' => 'Phone number and text are required'], 400);
+        }
 
-            $twilioSid = Settings::get('sms__twilio_sid');
-            $twilioToken = Settings::get('sms__twilio_token');
-            $twilioFrom = Settings::get('sms__twilio_from');
+        $twilioSid = Settings::get('sms__twilio_sid');
+        $twilioToken = Settings::get('sms__twilio_token');
+        $twilioFrom = Settings::get('sms__twilio_from');
 
-            if (! $twilioSid || ! $twilioToken || ! $twilioFrom) {
-                return response()->json(['error' => 'Twilio credentials not configured'], 400);
-            }
+        if (! $twilioSid || ! $twilioToken || ! $twilioFrom) {
+            return response()->json(['error' => 'Twilio credentials not configured'], 400);
+        }
 
-            $twilio = new \Twilio\Rest\Client($twilioSid, $twilioToken);
-            $message = $twilio->api->account->messages->create($number, [
-                'from' => $twilioFrom,
-                'body' => $text,
-            ]);
+        $twilio = new \Twilio\Rest\Client($twilioSid, $twilioToken);
+        $message = $twilio->api->account->messages->create($number, [
+            'from' => $twilioFrom,
+            'body' => $text,
+        ]);
 
-            return response()->json($message->toArray());
+        return response()->json($message->toArray());
     }
 
     /**
@@ -218,12 +221,12 @@ class HelpController extends Controller
      */
     public function iexTest(Request $request): Response
     {
-            $uri = $request->get('uri', 'stock/aapl/ohlc');
+        $uri = $request->get('uri', 'stock/aapl/ohlc');
 
-            $iexService = new \App\Services\IexCloudService();
-            $result = $iexService->get($uri);
+        $iexService = new \App\Services\IexCloudService();
+        $result = $iexService->get($uri);
 
-            return response()->json($result);
+        return response()->json($result);
     }
 
     /**
@@ -249,21 +252,21 @@ class HelpController extends Controller
      */
     public function sms(Request $request): Response
     {
-            $provider = $request->get('provider');
-            $number = $request->get('number');
-            $body = $request->get('body');
+        $provider = $request->get('provider');
+        $number = $request->get('number');
+        $body = $request->get('body');
 
-            if (! $provider || ! $number || ! $body) {
-                return response()->json(['error' => 'Provider, number and body are required'], 400);
-            }
+        if (! $provider || ! $number || ! $body) {
+            return response()->json(['error' => 'Provider, number and body are required'], 400);
+        }
 
-            $smsService = new \App\Services\SmsService($provider);
-            $result = $smsService->send($number, $body);
+        $smsService = new \App\Services\SmsService($provider);
+        $result = $smsService->send($number, $body);
 
-            return response()->json([
-                'success' => $result,
-                'response' => $smsService->getResponse(),
-            ]);
+        return response()->json([
+            'success' => $result,
+            'response' => $smsService->getResponse(),
+        ]);
     }
 
     /**
@@ -271,18 +274,18 @@ class HelpController extends Controller
      */
     public function testPush(Request $request): Response
     {
-            $token = $request->get('token');
-            $body = $request->get('body');
-            $isProd = $request->get('is_prod', false);
+        $token = $request->get('token');
+        $body = $request->get('body');
+        $isProd = $request->get('is_prod', false);
 
-            if (! $token || ! $body) {
-                return response()->json(['error' => 'Token and body are required'], 400);
-            }
+        if (! $token || ! $body) {
+            return response()->json(['error' => 'Token and body are required'], 400);
+        }
 
-            $pushService = new \App\Services\PushIosService();
-            $result = $pushService->send([$token], $body, '', $isProd);
+        $pushService = new \App\Services\PushIosService();
+        $result = $pushService->send([$token], $body, '', $isProd);
 
-            return response()->json(['success' => $result]);
+        return response()->json(['success' => $result]);
     }
 
     /**

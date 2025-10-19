@@ -4,50 +4,34 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\ApiLog\ExportApiLogsToCsvAction;
+use App\Domain\Actions\ApiLog\GetApiLogListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiLog\Web\ApiLogRequest;
 use App\Models\System\ApiLog;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApiLogController extends Controller
 {
+    public function __construct(
+        private readonly GetApiLogListAction $getApiLogListAction,
+        private readonly ExportApiLogsToCsvAction $exportApiLogsToCsvAction,
+    ) {}
+
     /**
      * Display API Logs
      */
-    public function index(Request $request): View
+    public function index(ApiLogRequest $request): View
     {
-        $query = ApiLog::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('key', 'like', "%{$search}%")
-                    ->orWhere('value', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by key
-        if ($request->filled('key')) {
-            $query->where('key', 'like', "%{$request->get('key')}%");
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $apiLogs = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $apiLogs = $this->getApiLogListAction->execute($filters, 20);
 
         return ViewFacade::make('api-log.index', [
             'apiLogs' => $apiLogs,
-            'filters' => $request->only(['search', 'key', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -64,67 +48,34 @@ class ApiLogController extends Controller
     /**
      * Delete API Logs by Key
      */
-    public function deleteByKey(ApiLog $apiLog): Response
+    public function deleteByKey(ApiLog $apiLog): RedirectResponse
     {
-            $key = $apiLog->key;
-            ApiLog::where('key', $key)->delete();
+        $key = $apiLog->key;
+        ApiLog::where('key', $key)->delete();
 
-            return redirect()->route('api-log.index')
-                ->with('success', "All API logs with key '{$key}' deleted successfully.");
+        return redirect()->route('api-log.index')
+            ->with('success', "All API logs with key '{$key}' deleted successfully.");
     }
 
     /**
      * Export API Logs to CSV
      */
-    public function export(Request $request): Response
+    public function export(ApiLogRequest $request): StreamedResponse
     {
-            $query = ApiLog::query();
+        $filters = $request->validated();
+        $rows = $this->exportApiLogsToCsvAction->execute($filters);
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('key', 'like', "%{$search}%")
-                        ->orWhere('value', 'like', "%{$search}%");
-                });
+        $filename = 'api_logs_'.now()->format('Y-m-d_H-i-s').'.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $file = fopen('php://output', 'w');
+            foreach ($rows as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('key')) {
-                $query->where('key', 'like', "%{$request->get('key')}%");
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $apiLogs = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Key', 'Value', 'Created At'];
-
-            foreach ($apiLogs as $apiLog) {
-                $csvData[] = [
-                    $apiLog->id,
-                    $apiLog->key,
-                    is_array($apiLog->value) ? json_encode($apiLog->value) : $apiLog->value,
-                    $apiLog->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'api_logs_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

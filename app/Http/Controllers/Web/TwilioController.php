@@ -4,53 +4,45 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Twilio\ExportTwilioCarriersToCsvAction;
+use App\Domain\Actions\Twilio\ExportTwilioIncomingToCsvAction;
+use App\Domain\Actions\Twilio\GetTwilioCarrierListAction;
+use App\Domain\Actions\Twilio\GetTwilioIncomingListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Twilio\Web\TwilioCarrierIndexRequest;
+use App\Http\Requests\Twilio\Web\TwilioCarrierUpdateRequest;
+use App\Http\Requests\Twilio\Web\TwilioIncomingIndexRequest;
+use App\Http\Requests\Twilio\Web\TwilioIncomingStoreRequest;
 use App\Models\System\Provider;
 use App\Models\System\TwilioCarrier;
 use App\Models\System\TwilioIncoming;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 
 class TwilioController extends Controller
 {
+    public function __construct(
+        private readonly GetTwilioCarrierListAction $getTwilioCarrierListAction,
+        private readonly GetTwilioIncomingListAction $getTwilioIncomingListAction,
+        private readonly ExportTwilioCarriersToCsvAction $exportTwilioCarriersToCsvAction,
+        private readonly ExportTwilioIncomingToCsvAction $exportTwilioIncomingToCsvAction,
+    ) {}
+
     /**
      * Display Twilio Carriers
      */
-    public function carriers(Request $request): View
+    public function carriers(TwilioCarrierIndexRequest $request): View
     {
-        $query = TwilioCarrier::with('provider');
+        $filters = $request->validated();
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by provider
-        if ($request->filled('provider_id')) {
-            $query->where('provider_id', $request->get('provider_id'));
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $carriers = $query->orderBy('created_at', 'desc')->paginate(20);
+        $carriers = $this->getTwilioCarrierListAction->execute($filters, 20);
         $providers = Provider::orderBy('name')->get();
 
         return ViewFacade::make('twilio.carriers', [
             'carriers' => $carriers,
             'providers' => $providers,
-            'filters' => $request->only(['search', 'provider_id', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -70,54 +62,30 @@ class TwilioController extends Controller
     /**
      * Update Twilio Carrier
      */
-    public function updateCarrier(Request $request, TwilioCarrier $carrier): Response
+    public function updateCarrier(TwilioCarrierUpdateRequest $request, TwilioCarrier $carrier): Response
     {
-            $request->validate([
-                'provider_id' => 'required|exists:providers,id',
-            ]);
+        $validated = $request->validated();
 
-            $carrier->update([
-                'provider_id' => $request->get('provider_id'),
-            ]);
+        $carrier->update([
+            'provider_id' => $validated['provider_id'],
+        ]);
 
-            return redirect()->route('twilio.carriers')
-                ->with('success', 'Twilio Carrier updated successfully.');
+        return redirect()->route('twilio.carriers')
+            ->with('success', 'Twilio Carrier updated successfully.');
     }
 
     /**
      * Display Twilio Incoming Messages
      */
-    public function incoming(Request $request): View
+    public function incoming(TwilioIncomingIndexRequest $request): View
     {
-        $query = TwilioIncoming::query();
+        $filters = $request->validated();
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('number', 'like', "%{$search}%")
-                    ->orWhere('body', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by number
-        if ($request->filled('number')) {
-            $query->where('number', 'like', "%{$request->get('number')}%");
-        }
-
-        // Filter by date range
-        if ($request->filled('created_at_from')) {
-            $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-        }
-        if ($request->filled('created_at_to')) {
-            $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-        }
-
-        $incoming = $query->orderBy('created_at', 'desc')->paginate(20);
+        $incoming = $this->getTwilioIncomingListAction->execute($filters, 20);
 
         return ViewFacade::make('twilio.incoming', [
             'incoming' => $incoming,
-            'filters' => $request->only(['search', 'number', 'created_at_from', 'created_at_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -142,130 +110,59 @@ class TwilioController extends Controller
     /**
      * Store Twilio Incoming Message
      */
-    public function storeIncoming(Request $request): Response
+    public function storeIncoming(TwilioIncomingStoreRequest $request): Response
     {
-            $request->validate([
-                'number' => 'required|string|max:20',
-                'body' => 'required|string|max:1600',
-            ]);
+        $validated = $request->validated();
 
-            TwilioIncoming::create([
-                'number' => $request->get('number'),
-                'body' => $request->get('body'),
-                'message' => $request->get('message', ''),
-            ]);
+        TwilioIncoming::create([
+            'number' => $validated['number'],
+            'body' => $validated['body'],
+            'message' => $validated['message'] ?? '',
+        ]);
 
-            return redirect()->route('twilio.incoming')
-                ->with('success', 'Twilio Incoming message created successfully.');
+        return redirect()->route('twilio.incoming')
+            ->with('success', 'Twilio Incoming message created successfully.');
     }
 
     /**
      * Export Twilio Carriers to CSV
      */
-    public function exportCarriers(Request $request): Response
+    public function exportCarriers(TwilioCarrierIndexRequest $request): Response
     {
-            $query = TwilioCarrier::with('provider');
+        $filters = $request->validated();
+        $csvData = $this->exportTwilioCarriersToCsvAction->execute($filters);
+        $filename = 'twilio_carriers_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                });
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('provider_id')) {
-                $query->where('provider_id', $request->get('provider_id'));
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $carriers = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Name', 'Provider', 'Created At'];
-
-            foreach ($carriers as $carrier) {
-                $csvData[] = [
-                    $carrier->id,
-                    $carrier->name,
-                    $carrier->provider->name ?? '',
-                    $carrier->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'twilio_carriers_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 
     /**
      * Export Twilio Incoming Messages to CSV
      */
-    public function exportIncoming(Request $request): Response
+    public function exportIncoming(TwilioIncomingIndexRequest $request): Response
     {
-            $query = TwilioIncoming::query();
+        $filters = $request->validated();
+        $csvData = $this->exportTwilioIncomingToCsvAction->execute($filters);
+        $filename = 'twilio_incoming_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('number', 'like', "%{$search}%")
-                        ->orWhere('body', 'like', "%{$search}%");
-                });
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('number')) {
-                $query->where('number', 'like', "%{$request->get('number')}%");
-            }
-
-            if ($request->filled('created_at_from')) {
-                $query->whereDate('created_at', '>=', $request->get('created_at_from'));
-            }
-            if ($request->filled('created_at_to')) {
-                $query->whereDate('created_at', '<=', $request->get('created_at_to'));
-            }
-
-            $incoming = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Number', 'Body', 'Message', 'Created At'];
-
-            foreach ($incoming as $message) {
-                $csvData[] = [
-                    $message->id,
-                    $message->number,
-                    $message->body,
-                    $message->message,
-                    $message->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'twilio_incoming_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

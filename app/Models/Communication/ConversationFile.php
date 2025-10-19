@@ -50,11 +50,11 @@ class ConversationFile extends Model
 
     public function conversation()
     {
-        return $this->belongsTo(\App\Models\Communication\Conversation::class, 'id_conversation');
+        return $this->belongsTo(Conversation::class, 'id_conversation');
     }
 
     public function conversation_message()
     {
-        return $this->belongsTo(\App\Models\Communication\ConversationMessage::class, 'id_conversation_message');
+        return $this->belongsTo(ConversationMessage::class, 'id_conversation_message');
     }
 }

@@ -57,6 +57,6 @@ class BundleItem extends Model
 
     public function service()
     {
-        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_item');
+        return $this->belongsTo(Service::class, 'id_item');
     }
 }

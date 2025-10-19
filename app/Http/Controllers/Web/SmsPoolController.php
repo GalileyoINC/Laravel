@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\SmsPool\GetSmsPoolListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Communication\Web\SendSmsRequest;
+use App\Http\Requests\SmsPool\Web\SmsPoolIndexRequest;
+use App\Http\Requests\SmsPool\Web\SmsPoolRecipientIndexRequest;
 use App\Models\Communication\SmsPool;
 use App\Models\Communication\SmsPoolPhoneNumber;
 use App\Models\Device\PhoneNumber;
@@ -14,52 +17,31 @@ use App\Models\Subscription\SubscriptionCategory;
 use App\Models\System\AdminMessageLog;
 use App\Models\System\Service;
 use App\Models\System\State;
-use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 
 class SmsPoolController extends Controller
 {
+    public function __construct(
+        private readonly GetSmsPoolListAction $getSmsPoolListAction,
+    ) {}
+
     /**
      * Display a listing of SMS pools
      */
-    public function index(Request $request): View
+    public function index(SmsPoolIndexRequest $request): View
     {
-        $query = SmsPool::with(['user', 'staff', 'subscription']);
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('body', 'like', "%{$search}%")
-                    ->orWhere('id', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by purpose
-        if ($request->filled('purpose')) {
-            $query->where('purpose', $request->get('purpose'));
-        }
-
-        // Filter by subscription
-        if ($request->filled('id_subscription')) {
-            $query->where('id_subscription', $request->get('id_subscription'));
-        }
-
-        // Filter by created date
-        if ($request->filled('created_at')) {
-            $query->whereDate('created_at', $request->get('created_at'));
-        }
-
-        $smsPools = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $smsPools = $this->getSmsPoolListAction->execute($filters, 20);
 
         $subscriptions = Subscription::getForDropDown();
 
         return ViewFacade::make('sms-pool.index', [
             'smsPools' => $smsPools,
-            'filters' => $request->only(['search', 'purpose', 'id_subscription', 'created_at']),
+            'filters' => $filters,
             'subscriptions' => $subscriptions,
         ]);
     }
@@ -202,25 +184,23 @@ class SmsPoolController extends Controller
     /**
      * Show recipients for SMS pool
      */
-    public function recipient(SmsPool $smsPool, Request $request): View
+    public function recipient(SmsPool $smsPool, SmsPoolRecipientIndexRequest $request): View
     {
+        $filters = $request->validated();
         $query = SmsPoolPhoneNumber::with(['phoneNumber', 'user'])
             ->where('id_sms_pool', $smsPool->id);
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
+        if (! empty($filters['search'])) {
+            $search = (string) $filters['search'];
             $query->whereHas('phoneNumber', function ($q) use ($search) {
                 $q->where('number', 'like', "%{$search}%");
             });
         }
-
         $recipients = $query->orderBy('created_at', 'desc')->paginate(20);
 
         return ViewFacade::make('sms-pool.recipient', [
             'smsPool' => $smsPool,
             'recipients' => $recipients,
-            'filters' => $request->only(['search']),
+            'filters' => $filters,
         ]);
     }
 

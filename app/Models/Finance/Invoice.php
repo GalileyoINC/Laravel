@@ -93,11 +93,11 @@ class Invoice extends Model
 
     public function services()
     {
-        return $this->belongsToMany(\App\Models\Finance\Service::class, 'invoice_service', 'id_invoice', 'id_service');
+        return $this->belongsToMany(Service::class, 'invoice_service', 'id_invoice', 'id_service');
     }
 
     public function money_transactions()
     {
-        return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_invoice');
+        return $this->hasMany(MoneyTransaction::class, 'id_invoice');
     }
 }

@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
 /**
  * Class SmsShedule
@@ -71,48 +72,6 @@ class SmsShedule extends Model
         'url',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
-    }
-
-    public function follower_list()
-    {
-        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
-    }
-
-    // Alias expected by controllers
-    public function followerList()
-    {
-        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
-    }
-
-    public function sms_pool()
-    {
-        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
-    }
-
-    // Alias expected by controllers
-    public function smsPool()
-    {
-        return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
-    }
-
-    public function staff()
-    {
-        return $this->belongsTo(\App\Models\System\Staff::class, 'id_staff');
-    }
-
-    public function subscription()
-    {
-        return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
-    }
-
-    public function sms_pool_photos()
-    {
-        return $this->hasMany(SmsPoolPhoto::class, 'id_sms_shedule');
-    }
-
     /**
      * Provide schedule statuses for filters and labeling.
      */
@@ -134,15 +93,58 @@ class SmsShedule extends Model
 
             $map = $defaults;
             foreach ($codes as $code) {
-                if (!array_key_exists($code, $map)) {
+                if (! array_key_exists($code, $map)) {
                     $map[$code] = 'Status '.$code;
                 }
             }
 
             ksort($map);
+
             return $map;
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return $defaults;
         }
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+    }
+
+    public function follower_list()
+    {
+        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
+    }
+
+    // Alias expected by controllers
+    public function followerList()
+    {
+        return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
+    }
+
+    public function sms_pool()
+    {
+        return $this->belongsTo(SmsPool::class, 'id_sms_pool');
+    }
+
+    // Alias expected by controllers
+    public function smsPool()
+    {
+        return $this->belongsTo(SmsPool::class, 'id_sms_pool');
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(\App\Models\System\Staff::class, 'id_staff');
+    }
+
+    public function subscription()
+    {
+        return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
+    }
+
+    public function sms_pool_photos()
+    {
+        return $this->hasMany(SmsPoolPhoto::class, 'id_sms_shedule');
     }
 }

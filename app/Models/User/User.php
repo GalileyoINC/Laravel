@@ -214,7 +214,7 @@ class User extends Authenticatable
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User\User::class, 'id_inviter');
+        return $this->belongsTo(self::class, 'id_inviter');
     }
 
     public function bookmarks()
@@ -224,22 +224,22 @@ class User extends Authenticatable
 
     public function addresses()
     {
-        return $this->hasMany(\App\Models\User\Address::class, 'id_user');
+        return $this->hasMany(Address::class, 'id_user');
     }
 
     public function admin_members()
     {
-        return $this->hasMany(\App\Models\User\AdminMember::class, 'id_member');
+        return $this->hasMany(AdminMember::class, 'id_member');
     }
 
     public function affiliates()
     {
-        return $this->hasMany(\App\Models\User\Affiliate::class, 'id_user_parent');
+        return $this->hasMany(Affiliate::class, 'id_user_parent');
     }
 
     public function affiliate_invites()
     {
-        return $this->hasMany(\App\Models\User\AffiliateApp\Models\User\Invite::class, 'id_user');
+        return $this->hasMany(AffiliateApp\Models\User\Invite::class, 'id_user');
     }
 
     public function bp_subscriptions()
@@ -304,7 +304,7 @@ class User extends Authenticatable
 
     public function invites()
     {
-        return $this->hasMany(\App\Models\User\Invite::class, 'id_user');
+        return $this->hasMany(Invite::class, 'id_user');
     }
 
     public function invite_affiliates()
@@ -329,12 +329,12 @@ class User extends Authenticatable
 
     public function member_requests()
     {
-        return $this->hasMany(\App\Models\User\MemberRequest::class, 'id_user_from');
+        return $this->hasMany(MemberRequest::class, 'id_user_from');
     }
 
     public function member_templates()
     {
-        return $this->hasMany(\App\Models\User\MemberTemplate::class, 'id_admin');
+        return $this->hasMany(MemberTemplate::class, 'id_admin');
     }
 
     public function money_transactions()
@@ -374,7 +374,7 @@ class User extends Authenticatable
 
     public function sps_add_user_requests()
     {
-        return $this->hasMany(\App\Models\User\SpsAddUserRequest::class, 'id_user');
+        return $this->hasMany(SpsAddUserRequest::class, 'id_user');
     }
 
     public function sps_contracts()
@@ -395,7 +395,7 @@ class User extends Authenticatable
 
     public function users()
     {
-        return $this->hasMany(\App\Models\User\User::class, 'id_inviter');
+        return $this->hasMany(self::class, 'id_inviter');
     }
 
     public function user_follower_alerts()
@@ -405,22 +405,22 @@ class User extends Authenticatable
 
     public function user_friends()
     {
-        return $this->hasMany(\App\Models\User\UserFriend::class, 'id_user');
+        return $this->hasMany(UserFriend::class, 'id_user');
     }
 
     public function user_plans()
     {
-        return $this->hasMany(\App\Models\User\UserPlan::class, 'id_user');
+        return $this->hasMany(UserPlan::class, 'id_user');
     }
 
     public function user_plan_shedules()
     {
-        return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_user');
+        return $this->hasMany(UserPlanShedule::class, 'id_user');
     }
 
     public function user_point_histories()
     {
-        return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_user');
+        return $this->hasMany(UserPointHistory::class, 'id_user');
     }
 
     public function services()

@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
-use App\Domain\Actions\Product\GetProductAlertsAction;
-use App\Domain\Actions\Product\GetProductListAction;
+use App\Domain\Actions\Product\GetAlertServiceListAction;
+use App\Domain\Actions\Product\GetDevicePlanListAction;
+use App\Domain\Actions\Product\GetProductDeviceListAction;
+use App\Domain\Actions\Product\GetSubscriptionServiceListAction;
 use App\Domain\Actions\Product\ProcessApplePurchaseAction;
-use App\Domain\DTOs\Product\ProductListRequestDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\Web\ProductAlertIndexRequest;
+use App\Http\Requests\Product\Web\ProductDeviceIndexRequest;
+use App\Http\Requests\Product\Web\ProductDevicePlanIndexRequest;
 use App\Http\Requests\Product\Web\ProductDevicePlanRequest;
 use App\Http\Requests\Product\Web\ProductDeviceRequest;
+use App\Http\Requests\Product\Web\ProductSubscriptionIndexRequest;
 use App\Http\Requests\Product\Web\ProductSubscriptionRequest;
 use App\Http\Requests\Service\Web\ServiceSettingsRequest;
 use App\Models\Device\Device;
 use App\Models\Device\DevicePlan;
 use App\Models\Finance\Service;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -26,44 +30,26 @@ use Illuminate\View\View;
 class ProductController extends Controller
 {
     public function __construct(
-        private readonly GetProductListAction $getProductListAction,
-        private readonly GetProductAlertsAction $getProductAlertsAction,
-        private readonly ProcessApplePurchaseAction $processApplePurchaseAction
+        private readonly GetSubscriptionServiceListAction $getSubscriptionServiceListAction,
+        private readonly GetAlertServiceListAction $getAlertServiceListAction,
+        private readonly GetProductDeviceListAction $getProductDeviceListAction,
+        private readonly GetDevicePlanListAction $getDevicePlanListAction,
+        private readonly ProcessApplePurchaseAction $processApplePurchaseAction,
     ) {}
 
     /**
      * Display subscription products
      */
-    public function subscription(Request $request): View
+    public function subscription(ProductSubscriptionIndexRequest $request): View
     {
-        $query = Service::where('type', Service::TYPE_SUBSCRIBE);
-
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('is_active')) {
-            $query->where('is_active', (bool) $request->get('is_active'));
-        }
-
-        if ($request->filled('price_min')) {
-            $query->where('price', '>=', $request->get('price_min'));
-        }
-        if ($request->filled('price_max')) {
-            $query->where('price', '<=', $request->get('price_max'));
-        }
-
-        $subscriptions = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $subscriptions = $this->getSubscriptionServiceListAction->execute($filters, 20);
 
         $customParams = Service::loadCustomParams();
 
         return ViewFacade::make('product.subscription', [
             'subscriptions' => $subscriptions,
-            'filters' => $request->only(['search', 'is_active', 'price_min', 'price_max']),
+            'filters' => $filters,
             'customParams' => $customParams,
         ]);
     }
@@ -127,29 +113,14 @@ class ProductController extends Controller
     /**
      * Display alert products
      */
-    public function alert(Request $request): View
+    public function alert(ProductAlertIndexRequest $request): View
     {
-        $query = Service::where('type', Service::TYPE_ALERT);
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by active status
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->get('is_active'));
-        }
-
-        $alerts = $query->orderBy('id')->paginate(20);
+        $filters = $request->validated();
+        $alerts = $this->getAlertServiceListAction->execute($filters, 20);
 
         return ViewFacade::make('product.alert', [
             'alerts' => $alerts,
-            'filters' => $request->only(['search', 'is_active']),
+            'filters' => $filters,
         ]);
     }
 
@@ -189,37 +160,14 @@ class ProductController extends Controller
     /**
      * Display devices
      */
-    public function device(Request $request): View
+    public function device(ProductDeviceIndexRequest $request): View
     {
-        $query = Device::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by active status
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->get('is_active'));
-        }
-
-        // Filter by price range
-        if ($request->filled('price_min')) {
-            $query->where('price', '>=', $request->get('price_min'));
-        }
-        if ($request->filled('price_max')) {
-            $query->where('price', '<=', $request->get('price_max'));
-        }
-
-        $devices = $query->orderBy('id')->paginate(20);
+        $filters = $request->validated();
+        $devices = $this->getProductDeviceListAction->execute($filters, 20);
 
         return ViewFacade::make('product.device', [
             'devices' => $devices,
-            'filters' => $request->only(['search', 'is_active', 'price_min', 'price_max']),
+            'filters' => $filters,
         ]);
     }
 
@@ -307,11 +255,11 @@ class ProductController extends Controller
      */
     public function deletePhoto(Request $request): Response
     {
-            $photoId = $request->get('id');
+        $photoId = $request->get('id');
 
-            // Delete photo logic here
+        // Delete photo logic here
 
-            return response()->json(['success' => 'Photo deleted successfully']);
+        return response()->json(['success' => 'Photo deleted successfully']);
     }
 
     /**
@@ -319,11 +267,11 @@ class ProductController extends Controller
      */
     public function setMainPhoto(Request $request): Response
     {
-            $photoId = $request->get('id');
+        $photoId = $request->get('id');
 
-            // Set main photo logic here
+        // Set main photo logic here
 
-            return response()->json(['success' => 'Main photo set successfully']);
+        return response()->json(['success' => 'Main photo set successfully']);
     }
 
     /**
@@ -331,50 +279,35 @@ class ProductController extends Controller
      */
     public function uploadPhoto(Request $request, Device $device): Response
     {
-            $request->validate([
-                'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-            $file = $request->file('file');
-            $path = $file->store('devices', 'public');
+        $file = $request->file('file');
+        $path = $file->store('devices', 'public');
 
-            return response()->json([
-                'initialPreview' => [Storage::url($path)],
-                'initialPreviewConfig' => [[
-                    'caption' => $file->getClientOriginalName(),
-                    'url' => route('product.delete-photo'),
-                    'key' => 'temp_key',
-                    'type' => 'image',
-                ]],
-            ]);
+        return response()->json([
+            'initialPreview' => [Storage::url($path)],
+            'initialPreviewConfig' => [[
+                'caption' => $file->getClientOriginalName(),
+                'url' => route('product.delete-photo'),
+                'key' => 'temp_key',
+                'type' => 'image',
+            ]],
+        ]);
     }
 
     /**
      * Display device plans
      */
-    public function plan(Request $request): View
+    public function plan(ProductDevicePlanIndexRequest $request): View
     {
-        $query = DevicePlan::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by active status
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->get('is_active'));
-        }
-
-        $plans = $query->orderBy('id')->paginate(20);
+        $filters = $request->validated();
+        $plans = $this->getDevicePlanListAction->execute($filters, 20);
 
         return ViewFacade::make('product.device-plan', [
             'plans' => $plans,
-            'filters' => $request->only(['search', 'is_active']),
+            'filters' => $filters,
         ]);
     }
 
@@ -391,19 +324,19 @@ class ProductController extends Controller
      */
     public function storePlan(ProductDevicePlanRequest $request): Response
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
-                'is_active' => $validated['is_active'] ?? true,
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'is_active' => $validated['is_active'] ?? true,
+        ];
 
-            $plan = DevicePlan::create($data);
+        $plan = DevicePlan::create($data);
 
-            return redirect()->route('product.plan')
-                ->with('success', 'Device plan created successfully.');
+        return redirect()->route('product.plan')
+            ->with('success', 'Device plan created successfully.');
     }
 
     /**
@@ -421,19 +354,19 @@ class ProductController extends Controller
      */
     public function updatePlan(ProductDevicePlanRequest $request, DevicePlan $plan): Response
     {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $data = [
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
-                'is_active' => $validated['is_active'] ?? $plan->is_active,
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'is_active' => $validated['is_active'] ?? $plan->is_active,
+        ];
 
-            $plan->update($data);
+        $plan->update($data);
 
-            return redirect()->route('product.plan')
-                ->with('success', 'Device plan updated successfully.');
+        return redirect()->route('product.plan')
+            ->with('success', 'Device plan updated successfully.');
     }
 
     /**
@@ -441,15 +374,15 @@ class ProductController extends Controller
      */
     public function attachPlan(Request $request, DevicePlan $plan, Device $device): Response
     {
-            $validated = $request->validate([
-                'price' => ['nullable', 'numeric', 'min:0'],
-                'is_default' => ['nullable', 'boolean'],
-            ]);
+        $validated = $request->validate([
+            'price' => ['nullable', 'numeric', 'min:0'],
+            'is_default' => ['nullable', 'boolean'],
+        ]);
 
-            // Attach plan logic here
+        // Attach plan logic here
 
-            return redirect()->route('product.edit-device', $device)
-                ->with('success', 'Plan attached successfully.');
+        return redirect()->route('product.edit-device', $device)
+            ->with('success', 'Plan attached successfully.');
     }
 
     /**
@@ -457,9 +390,9 @@ class ProductController extends Controller
      */
     public function detachPlan(DevicePlan $plan, Device $device): Response
     {
-            // Detach plan logic here
+        // Detach plan logic here
 
-            return redirect()->route('product.edit-device', $device)
-                ->with('success', 'Plan detached successfully.');
+        return redirect()->route('product.edit-device', $device)
+            ->with('success', 'Plan detached successfully.');
     }
 }

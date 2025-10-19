@@ -78,12 +78,12 @@ class ContractLine extends Model
 
     public function service()
     {
-        return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
+        return $this->belongsTo(Service::class, 'id_service');
     }
 
     public function sps_contract()
     {
-        return $this->belongsTo(\App\Models\Finance\SpsContract::class, 'id_sps_contract');
+        return $this->belongsTo(SpsContract::class, 'id_sps_contract');
     }
 
     public function user()

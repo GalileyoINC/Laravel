@@ -10,7 +10,6 @@ use App\Http\Controllers\Web\BundleController;
 use App\Http\Controllers\Web\ContactController;
 use App\Http\Controllers\Web\ContractLineController;
 use App\Http\Controllers\Web\CreditCardController;
-use App\Http\Controllers\Web\DemoController;
 use App\Http\Controllers\Web\DeviceController;
 use App\Http\Controllers\Web\EmailPoolArchiveController;
 use App\Http\Controllers\Web\EmailPoolController;
@@ -378,11 +377,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('maintenance/system-info', [MaintenanceController::class, 'systemInfo'])->name('maintenance.system-info');
     Route::get('maintenance/queue-status', [MaintenanceController::class, 'queueStatus'])->name('maintenance.queue-status');
     Route::get('maintenance/storage-status', [MaintenanceController::class, 'storageStatus'])->name('maintenance.storage-status');
-
-    // Demo Routes
-    Route::get('demo/bootstrap-wysiwyg', [DemoController::class, 'bootstrapWysiwyg'])->name('demo.bootstrap-wysiwyg');
-    Route::get('demo/grape', [DemoController::class, 'grape'])->name('demo.grape');
-    Route::get('demo/grape2', [DemoController::class, 'grape2'])->name('demo.grape2');
 
     // Device Routes
     Route::get('device', [DeviceController::class, 'index'])->name('device.index');

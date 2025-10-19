@@ -42,7 +42,7 @@ class InvoicePromocode extends Model
 
     public function invoice()
     {
-        return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
+        return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
     public function promocode()

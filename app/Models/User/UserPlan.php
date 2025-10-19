@@ -83,6 +83,17 @@ class UserPlan extends Model
         'is_not_receive_message',
     ];
 
+    /**
+     * Helper for controllers/views to render pay interval options.
+     */
+    public static function getPayIntervals(): array
+    {
+        return [
+            1 => 'Monthly',
+            12 => 'Annual',
+        ];
+    }
+
     public function invoice_line()
     {
         return $this->belongsTo(InvoiceLine::class, 'id_invoice_line');
@@ -95,28 +106,17 @@ class UserPlan extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
-    }
-
-    /**
-     * Helper for controllers/views to render pay interval options.
-     */
-    public static function getPayIntervals(): array
-    {
-        return [
-            1 => 'Monthly',
-            12 => 'Annual',
-        ];
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     public function admin_members()
     {
-        return $this->hasMany(\App\Models\User\AdminMember::class, 'id_plan');
+        return $this->hasMany(AdminMember::class, 'id_plan');
     }
 
     public function member_templates()
     {
-        return $this->hasMany(\App\Models\User\MemberTemplate::class, 'id_plan');
+        return $this->hasMany(MemberTemplate::class, 'id_plan');
     }
 
     public function sps_contracts()

@@ -4,62 +4,36 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Promocode\ExportPromocodesToCsvAction;
+use App\Domain\Actions\Promocode\GetPromocodeListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Promocode\Web\PromocodeIndexRequest;
+use App\Http\Requests\Promocode\Web\PromocodeStoreRequest;
+use App\Http\Requests\Promocode\Web\PromocodeUpdateRequest;
 use App\Models\Finance\Promocode;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PromocodeController extends Controller
 {
+    public function __construct(
+        private readonly GetPromocodeListAction $getPromocodeListAction,
+        private readonly ExportPromocodesToCsvAction $exportPromocodesToCsvAction,
+    ) {}
+
     /**
      * Display Promocodes
      */
-    public function index(Request $request): View
+    public function index(PromocodeIndexRequest $request): View
     {
-        $query = Promocode::query();
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('text', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by type
-        if ($request->filled('type')) {
-            $query->where('type', $request->get('type'));
-        }
-
-        // Filter by status
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->get('is_active'));
-        }
-
-        // Filter by date range
-        if ($request->filled('active_from_from')) {
-            $query->whereDate('active_from', '>=', $request->get('active_from_from'));
-        }
-        if ($request->filled('active_from_to')) {
-            $query->whereDate('active_from', '<=', $request->get('active_from_to'));
-        }
-
-        if ($request->filled('active_to_from')) {
-            $query->whereDate('active_to', '>=', $request->get('active_to_from'));
-        }
-        if ($request->filled('active_to_to')) {
-            $query->whereDate('active_to', '<=', $request->get('active_to_to'));
-        }
-
-        $promocodes = $query->orderBy('created_at', 'desc')->paginate(20);
+        $filters = $request->validated();
+        $promocodes = $this->getPromocodeListAction->execute($filters, 20);
 
         return ViewFacade::make('promocode.index', [
             'promocodes' => $promocodes,
-            'filters' => $request->only(['search', 'type', 'is_active', 'active_from_from', 'active_from_to', 'active_to_from', 'active_to_to']),
+            'filters' => $filters,
         ]);
     }
 
@@ -74,34 +48,24 @@ class PromocodeController extends Controller
     /**
      * Store new Promocode
      */
-    public function store(Request $request): Response
+    public function store(PromocodeStoreRequest $request): Response
     {
-        $request->validate([
-            'type' => 'required|string|in:discount,trial,influencer,test',
-            'text' => 'required|string|max:255',
-            'discount' => 'nullable|numeric|min:0|max:100',
-            'trial_period' => 'nullable|integer|min:0',
-            'active_from' => 'required|date',
-            'active_to' => 'required|date|after:active_from',
-            'is_active' => 'boolean',
-            'show_on_frontend' => 'boolean',
-            'description' => 'nullable|string',
-        ]);
-            $promocode = new Promocode();
-            $promocode->type = $request->get('type');
-            $promocode->text = $request->get('text');
-            $promocode->discount = $request->get('discount', 0);
-            $promocode->trial_period = $request->get('trial_period', 0);
-            $promocode->active_from = $request->get('active_from');
-            $promocode->active_to = $request->get('active_to');
-            $promocode->is_active = $request->boolean('is_active', true);
-            $promocode->show_on_frontend = $request->boolean('show_on_frontend', false);
-            $promocode->description = $request->get('description');
+        $validated = $request->validated();
+        $promocode = new Promocode();
+        $promocode->type = $validated['type'];
+        $promocode->text = $validated['text'];
+        $promocode->discount = $validated['discount'] ?? 0;
+        $promocode->trial_period = $validated['trial_period'] ?? 0;
+        $promocode->active_from = $validated['active_from'];
+        $promocode->active_to = $validated['active_to'];
+        $promocode->is_active = $validated['is_active'] ?? true;
+        $promocode->show_on_frontend = $validated['show_on_frontend'] ?? false;
+        $promocode->description = $validated['description'] ?? null;
 
-            $promocode->save();
+        $promocode->save();
 
-            return redirect()->route('promocode.index')
-                ->with('success', 'Promocode created successfully.');
+        return redirect()->route('promocode.index')
+            ->with('success', 'Promocode created successfully.');
     }
 
     /**
@@ -117,33 +81,23 @@ class PromocodeController extends Controller
     /**
      * Update Promocode
      */
-    public function update(Request $request, Promocode $promocode): Response
+    public function update(PromocodeUpdateRequest $request, Promocode $promocode): Response
     {
-        $request->validate([
-            'type' => 'required|string|in:discount,trial,influencer,test',
-            'text' => 'required|string|max:255',
-            'discount' => 'nullable|numeric|min:0|max:100',
-            'trial_period' => 'nullable|integer|min:0',
-            'active_from' => 'required|date',
-            'active_to' => 'required|date|after:active_from',
-            'is_active' => 'boolean',
-            'show_on_frontend' => 'boolean',
-            'description' => 'nullable|string',
-        ]);
-            $promocode->type = $request->get('type');
-            $promocode->text = $request->get('text');
-            $promocode->discount = $request->get('discount', 0);
-            $promocode->trial_period = $request->get('trial_period', 0);
-            $promocode->active_from = $request->get('active_from');
-            $promocode->active_to = $request->get('active_to');
-            $promocode->is_active = $request->boolean('is_active');
-            $promocode->show_on_frontend = $request->boolean('show_on_frontend');
-            $promocode->description = $request->get('description');
+        $validated = $request->validated();
+        $promocode->type = $validated['type'];
+        $promocode->text = $validated['text'];
+        $promocode->discount = $validated['discount'] ?? 0;
+        $promocode->trial_period = $validated['trial_period'] ?? 0;
+        $promocode->active_from = $validated['active_from'];
+        $promocode->active_to = $validated['active_to'];
+        $promocode->is_active = $validated['is_active'] ?? $promocode->is_active;
+        $promocode->show_on_frontend = $validated['show_on_frontend'] ?? $promocode->show_on_frontend;
+        $promocode->description = $validated['description'] ?? null;
 
-            $promocode->save();
+        $promocode->save();
 
-            return redirect()->route('promocode.index')
-                ->with('success', 'Promocode updated successfully.');
+        return redirect()->route('promocode.index')
+            ->with('success', 'Promocode updated successfully.');
     }
 
     /**
@@ -151,82 +105,30 @@ class PromocodeController extends Controller
      */
     public function destroy(Promocode $promocode): Response
     {
-            $promocode->delete();
+        $promocode->delete();
 
-            return redirect()->route('promocode.index')
-                ->with('success', 'Promocode deleted successfully.');
+        return redirect()->route('promocode.index')
+            ->with('success', 'Promocode deleted successfully.');
     }
 
     /**
      * Export Promocodes to CSV
      */
-    public function export(Request $request): Response
+    public function export(PromocodeIndexRequest $request): StreamedResponse
     {
-            $query = Promocode::query();
+        $filters = $request->validated();
+        $csvData = $this->exportPromocodesToCsvAction->execute($filters);
+        $filename = 'promocodes_'.now()->format('Y-m-d_H-i-s').'.csv';
 
-            // Apply same filters as index
-            if ($request->filled('search')) {
-                $search = $request->get('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('text', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
-                });
+        return response()->streamDownload(function () use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
             }
-
-            if ($request->filled('type')) {
-                $query->where('type', $request->get('type'));
-            }
-
-            if ($request->filled('is_active')) {
-                $query->where('is_active', $request->get('is_active'));
-            }
-
-            if ($request->filled('active_from_from')) {
-                $query->whereDate('active_from', '>=', $request->get('active_from_from'));
-            }
-            if ($request->filled('active_from_to')) {
-                $query->whereDate('active_from', '<=', $request->get('active_from_to'));
-            }
-
-            if ($request->filled('active_to_from')) {
-                $query->whereDate('active_to', '>=', $request->get('active_to_from'));
-            }
-            if ($request->filled('active_to_to')) {
-                $query->whereDate('active_to', '<=', $request->get('active_to_to'));
-            }
-
-            $promocodes = $query->orderBy('created_at', 'desc')->get();
-
-            $csvData = [];
-            $csvData[] = ['ID', 'Type', 'Text', 'Discount', 'Trial Period', 'Active From', 'Active To', 'Is Active', 'Show on Frontend', 'Description', 'Created At'];
-
-            foreach ($promocodes as $promocode) {
-                $csvData[] = [
-                    $promocode->id,
-                    ucfirst((string) $promocode->type),
-                    $promocode->text,
-                    $promocode->discount,
-                    $promocode->trial_period,
-                    $promocode->active_from->format('Y-m-d'),
-                    $promocode->active_to->format('Y-m-d'),
-                    $promocode->is_active ? 'Yes' : 'No',
-                    $promocode->show_on_frontend ? 'Yes' : 'No',
-                    $promocode->description,
-                    $promocode->created_at->format('Y-m-d H:i:s'),
-                ];
-            }
-
-            $filename = 'promocodes_'.now()->format('Y-m-d_H-i-s').'.csv';
-
-            return response()->streamDownload(function () use ($csvData) {
-                $file = fopen('php://output', 'w');
-                foreach ($csvData as $row) {
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-            }, $filename, [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-            ]);
+            fclose($file);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 }

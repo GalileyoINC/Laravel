@@ -8,15 +8,14 @@ declare(strict_types=1);
 
 namespace App\Models\Subscription;
 
+use App\Models\Communication\SmsShedule;
+use App\Models\User\Invite;
+use App\Models\User\User;
 use Carbon\Carbon;
 use Database\Factories\FollowerListFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User\User;
-use App\Models\Subscription\Follower;
-use App\Models\User\Invite;
-use App\Models\Communication\SmsShedule;
 
 /**
  * Class FollowerList
