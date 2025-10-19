@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,10 +17,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int|null $id_page
  * @property int $status
- * @property array|null $params
+ * @property array<array-key, mixed>|null $params
  * @property string|null $content
- * @property Carbon $created_at
- * @property Page|null $page
+ * @property string $created_at
+ * @property-read Page|null $page
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent whereIdPage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent whereParams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent whereStatus($value)
+ *
+ * @mixin \Eloquent
  */
 class PageContent extends Model
 {
@@ -33,6 +44,7 @@ class PageContent extends Model
 
     /** Backward compatible alias used in controllers */
     public const STATUS_DRAFT = self::STATUS_TEMP;
+
     /** Alias to match request references */
     public const STATUS_PUBLISHED = self::STATUS_PUBLISH;
 

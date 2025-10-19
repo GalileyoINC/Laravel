@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
  */
 class PayOrderDTO
 {
+    /**
+     * @param  array<string, mixed>  $paymentDetails
+     */
     public function __construct(
         public readonly int $idOrder,
         public readonly int $idCreditCard,
@@ -18,8 +21,11 @@ class PayOrderDTO
         public readonly ?array $paymentDetails = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             idOrder: (int) $data['id_order'],
             idCreditCard: (int) $data['id_credit_card'],
@@ -30,6 +36,7 @@ class PayOrderDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             idOrder: $request->input('id_order'),
             idCreditCard: $request->input('id_credit_card'),
@@ -38,6 +45,9 @@ class PayOrderDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

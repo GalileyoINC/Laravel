@@ -15,8 +15,11 @@ class PrivateFeedCreateRequestDTO
         public readonly ?UploadedFile $imageFile = null
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             title: $data['title'],
             description: $data['description'] ?? null,
@@ -26,6 +29,7 @@ class PrivateFeedCreateRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             title: $request->input('title'),
             description: $request->input('description'),
@@ -33,6 +37,9 @@ class PrivateFeedCreateRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

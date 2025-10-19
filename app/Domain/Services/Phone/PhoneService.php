@@ -7,7 +7,7 @@ namespace App\Domain\Services\Phone;
 use App\Domain\DTOs\Phone\PhoneUpdateRequestDTO;
 use App\Domain\DTOs\Phone\PhoneVerifyRequestDTO;
 use App\Domain\DTOs\Phone\PhoneVerifyResponseDTO;
-use App\Models\Device\Device\PhoneNumber;
+use App\Models\Device\PhoneNumber;
 use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +45,7 @@ class PhoneService implements PhoneServiceInterface
             // $this->sendSMS($phone->phone, $verificationCode);
 
             return PhoneVerifyResponseDTO::fromData(
-                'Verification code sent to '.$phone->phone,
+                'Verification code sent to '.$phone->phone_number,
                 'sent'
             );
 

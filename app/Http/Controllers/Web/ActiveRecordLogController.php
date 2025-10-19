@@ -8,8 +8,9 @@ use App\Domain\Actions\ActiveRecordLog\ExportActiveRecordLogsToCsvAction;
 use App\Domain\Actions\ActiveRecordLog\GetActiveRecordLogListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActiveRecordLog\Web\ActiveRecordLogRequest;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ActiveRecordLogController extends Controller
@@ -47,6 +48,9 @@ class ActiveRecordLogController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

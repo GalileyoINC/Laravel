@@ -16,8 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id_invoice
  * @property int $id_service
- * @property Invoice $invoice
- * @property Service $service
+ * @property-read Invoice $invoice
+ * @property-read Service $service
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceService newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceService newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceService query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceService whereIdInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceService whereIdService($value)
+ *
+ * @mixin \Eloquent
  */
 class InvoiceService extends Model
 {

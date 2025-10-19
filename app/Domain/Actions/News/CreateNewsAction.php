@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 
 class CreateNewsAction
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

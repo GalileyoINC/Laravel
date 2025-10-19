@@ -17,7 +17,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int|null $id_user
  * @property int|null $id_friend
- * @property User|null $user
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFriend newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFriend newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFriend query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFriend whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFriend whereIdFriend($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFriend whereIdUser($value)
+ *
+ * @mixin \Eloquent
  */
 class UserFriend extends Model
 {

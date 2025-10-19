@@ -13,11 +13,12 @@ use App\Domain\DTOs\Bundle\UpdateBundleDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Bundle\Web\BundleIndexRequest;
 use App\Http\Requests\Bundle\Web\BundleRequest;
+use App\Models\Finance\Bundle;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 
 class BundleController extends Controller
 {
@@ -76,7 +77,7 @@ class BundleController extends Controller
             total: $validated['total']
         );
 
-        $result = $this->createBundleAction->execute($dto);
+        $result = $this->createBundleAction->execute($dto->toArray());
 
         if ($result->getData()->success) {
             return Redirect::to(route('bundle.index'))
@@ -126,7 +127,7 @@ class BundleController extends Controller
             total: $validated['total']
         );
 
-        $result = $this->updateBundleAction->execute($dto);
+        $result = $this->updateBundleAction->execute($dto->toArray());
 
         if ($result->getData()->success) {
             return Redirect::to(route('bundle.index'))
@@ -173,7 +174,7 @@ class BundleController extends Controller
     /**
      * Get device data for bundle creation
      */
-    public function getDeviceData(Request $request)
+    public function getDeviceData(Request $request): \Illuminate\Http\JsonResponse
     {
         $deviceId = $request->input('idDevice');
 
@@ -185,7 +186,7 @@ class BundleController extends Controller
             idDevice: $deviceId
         );
 
-        $result = $action->execute($dto);
+        $result = $action->execute($dto->toArray());
 
         return response()->json($result->getData());
     }

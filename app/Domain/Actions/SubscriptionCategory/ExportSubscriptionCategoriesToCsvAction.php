@@ -8,6 +8,10 @@ use App\Models\Subscription\SubscriptionCategory;
 
 final class ExportSubscriptionCategoriesToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = SubscriptionCategory::query();

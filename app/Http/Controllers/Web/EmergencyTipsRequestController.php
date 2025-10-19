@@ -9,8 +9,9 @@ use App\Domain\Actions\EmergencyTipsRequest\GetEmergencyTipsRequestListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmergencyTipsRequest\Web\EmergencyTipsRequestIndexRequest;
 use App\Models\User\EmergencyTipsRequest;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmergencyTipsRequestController extends Controller
@@ -55,6 +56,9 @@ class EmergencyTipsRequestController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

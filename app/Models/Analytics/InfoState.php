@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Analytics;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,9 +16,20 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $key
- * @property array|null $value
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property array<array-key, mixed>|null $value
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState whereValue($value)
+ *
+ * @mixin \Eloquent
  */
 class InfoState extends Model
 {

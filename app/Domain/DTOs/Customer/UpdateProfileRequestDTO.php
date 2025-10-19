@@ -25,8 +25,11 @@ class UpdateProfileRequestDTO
         public readonly ?UploadedFile $imageFile = null
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             firstName: $data['first_name'] ?? null,
             lastName: $data['last_name'] ?? null,
@@ -46,6 +49,7 @@ class UpdateProfileRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             firstName: $request->input('first_name'),
             lastName: $request->input('last_name'),
@@ -62,6 +66,9 @@ class UpdateProfileRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

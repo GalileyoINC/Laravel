@@ -21,6 +21,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $phone_max
  * @property int $feed_min
  * @property int $feed_max
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom whereFeedMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom whereFeedMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom whereFeedPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom wherePhoneMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom wherePhoneMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceCustom wherePhonePrice($value)
+ *
+ * @mixin \Eloquent
  */
 class ServiceCustom extends Model
 {

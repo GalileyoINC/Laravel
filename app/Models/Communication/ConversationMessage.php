@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class ConversationMessage
@@ -20,14 +20,30 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_conversation
  * @property int|null $id_user
  * @property string|null $message
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $received_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $received_at
  * @property string|null $token
- * @property Conversation|null $conversation
- * @property User|null $user
- * @property Collection|ConversationFile[] $conversation_files
- * @property Collection|ConversationUnviewed[] $conversation_unvieweds
+ * @property-read Conversation|null $conversation
+ * @property-read Collection<int, ConversationFile> $conversation_files
+ * @property-read int|null $conversation_files_count
+ * @property-read Collection<int, ConversationUnviewed> $conversation_unvieweds
+ * @property-read int|null $conversation_unvieweds_count
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereIdConversation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereReceivedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class ConversationMessage extends Model
 {
@@ -58,7 +74,7 @@ class ConversationMessage extends Model
         return $this->belongsTo(Conversation::class, 'id_conversation');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

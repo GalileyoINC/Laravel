@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
-use Carbon\Carbon;
 use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,10 +21,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property string|null $image
  * @property int $status
- * @property array|null $params
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Collection|NewsContent[] $news_contents
+ * @property array<array-key, mixed>|null $params
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, NewsContent> $news_contents
+ * @property-read int|null $news_contents_count
+ *
+ * @method static \Database\Factories\NewsFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereParams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class News extends Model
 {

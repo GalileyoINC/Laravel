@@ -8,11 +8,13 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
+use App\Models\User\User;
 use Database\Factories\CreditCardFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class CreditCard
@@ -28,16 +30,43 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $expiration_month
  * @property bool $is_active
  * @property int $is_preferred
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $anet_customer_payment_profile_id
  * @property int $anet_profile_deleted
  * @property string|null $phone
  * @property string|null $zip
  * @property bool $is_agree_to_receive
- * @property array|null $billing_address
- * @property User|null $user
- * @property Collection|MoneyTransaction[] $money_transactions
+ * @property array<array-key, mixed>|null $billing_address
+ * @property-read Collection<int, MoneyTransaction> $money_transactions
+ * @property-read int|null $money_transactions_count
+ * @property-read User|null $user
+ *
+ * @method static \Database\Factories\CreditCardFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereAnetCustomerPaymentProfileId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereAnetProfileDeleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereBillingAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereCvv($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereExpirationMonth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereExpirationYear($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereIsAgreeToReceive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereIsPreferred($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereNum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CreditCard whereZip($value)
+ *
+ * @mixin \Eloquent
  */
 class CreditCard extends Model
 {
@@ -73,14 +102,18 @@ class CreditCard extends Model
         'zip',
         'is_agree_to_receive',
         'billing_address',
+        'card_number',
+        'cardholder_name',
+        'expiry_month',
+        'expiry_year',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function money_transactions()
+    public function money_transactions(): HasMany
     {
         return $this->hasMany(MoneyTransaction::class, 'id_credit_card');
     }

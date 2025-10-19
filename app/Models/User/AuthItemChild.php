@@ -16,7 +16,15 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string $parent
  * @property string $child
- * @property AuthItem $auth_item
+ * @property-read AuthItem $auth_item
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItemChild newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItemChild newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItemChild query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItemChild whereChild($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItemChild whereParent($value)
+ *
+ * @mixin \Eloquent
  */
 class AuthItemChild extends Model
 {

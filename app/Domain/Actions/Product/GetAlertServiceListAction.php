@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetAlertServiceListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Service>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = Service::where('type', Service::TYPE_ALERT);

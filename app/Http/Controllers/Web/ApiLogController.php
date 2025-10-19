@@ -9,9 +9,10 @@ use App\Domain\Actions\ApiLog\GetApiLogListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiLog\Web\ApiLogRequest;
 use App\Models\System\ApiLog;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApiLogController extends Controller
@@ -69,6 +70,9 @@ class ApiLogController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

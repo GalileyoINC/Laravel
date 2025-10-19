@@ -8,14 +8,20 @@ use Illuminate\Http\Request;
 
 class PrivateFeedListRequestDTO
 {
+    /**
+     * @param  array<string, mixed>  $filter
+     */
     public function __construct(
         public readonly ?int $limit = 20,
         public readonly ?int $offset = 0,
         public readonly ?array $filter = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             limit: isset($data['limit']) ? (int) $data['limit'] : 20,
             offset: isset($data['offset']) ? (int) $data['offset'] : 0,
@@ -25,6 +31,7 @@ class PrivateFeedListRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             limit: $request->input('limit', 20),
             offset: $request->input('offset', 0),
@@ -32,6 +39,9 @@ class PrivateFeedListRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

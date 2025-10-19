@@ -13,6 +13,9 @@ readonly class ContactListRequestDTO
         public int $status
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

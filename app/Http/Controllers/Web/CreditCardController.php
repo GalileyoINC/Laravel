@@ -9,8 +9,9 @@ use App\Domain\Actions\CreditCard\GetCreditCardListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreditCard\Web\CreditCardIndexRequest;
 use App\Models\Finance\CreditCard;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -37,7 +38,8 @@ class CreditCardController extends Controller
         $creditCards = $data['data'] ?? [];
 
         // Get years for filter dropdown
-        $years = array_combine(range(2021, date('Y') + 20), range(2021, date('Y') + 20));
+        $yearRange = range(2021, (int) date('Y') + 20);
+        $years = array_combine($yearRange, $yearRange);
 
         return ViewFacade::make('credit-card.index', [
             'creditCards' => $creditCards,
@@ -88,6 +90,10 @@ class CreditCardController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
+
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

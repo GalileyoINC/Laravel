@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Subscription;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,9 +16,19 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int|null $id_user
- * @property array|null $settings
- * @property Carbon $created_at
- * @property User|null $user
+ * @property array<array-key, mixed>|null $settings
+ * @property string $created_at
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionWizard newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionWizard newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionWizard query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionWizard whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionWizard whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionWizard whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionWizard whereSettings($value)
+ *
+ * @mixin \Eloquent
  */
 class SubscriptionWizard extends Model
 {

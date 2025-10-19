@@ -34,8 +34,8 @@ class CommentService implements CommentServiceInterface
             }
 
             $comments = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $comments;

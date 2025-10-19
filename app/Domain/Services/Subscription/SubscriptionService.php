@@ -73,8 +73,8 @@ class SubscriptionService implements SubscriptionServiceInterface
             }
 
             $subscriptions = $query->orderBy('name')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             // Add user subscription status if user is authenticated
@@ -138,8 +138,8 @@ class SubscriptionService implements SubscriptionServiceInterface
             }
 
             $subscriptions = $query->orderBy('name')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             // Add user subscription status if user is authenticated

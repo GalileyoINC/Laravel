@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetActiveRecordLogListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, ActiveRecordLog>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = ActiveRecordLog::with(['user', 'staff']);

@@ -8,8 +8,9 @@ use App\Domain\Actions\Follower\ExportFollowersToCsvAction;
 use App\Domain\Actions\Follower\GetFollowerListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Follower\Web\FollowerIndexRequest;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FollowerController extends Controller
@@ -44,6 +45,9 @@ class FollowerController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

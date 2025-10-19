@@ -9,6 +9,9 @@ use App\Models\Finance\ContractLine;
 
 class ContractLineService implements ContractLineServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getUnpaidContracts(ContractLineListRequestDTO $dto): array
     {
         $query = ContractLine::query()

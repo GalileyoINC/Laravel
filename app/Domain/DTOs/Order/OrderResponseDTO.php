@@ -9,6 +9,10 @@ namespace App\Domain\DTOs\Order;
  */
 class OrderResponseDTO
 {
+    /**
+     * @param  array<string, mixed>  $products
+     * @param  array<string, mixed>  $paymentDetails
+     */
     public function __construct(
         public readonly int $id,
         public readonly string $status,
@@ -20,8 +24,11 @@ class OrderResponseDTO
         public readonly ?array $paymentDetails = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             id: (int) $data['id'],
             status: $data['status'] ?? 'pending',
@@ -34,8 +41,9 @@ class OrderResponseDTO
         );
     }
 
-    public static function fromModel($order): static
+    public static function fromModel(mixed $order): static
     {
+        /** @var static */
         return new self(
             id: $order->id,
             status: $order->status ?? 'pending',
@@ -48,6 +56,9 @@ class OrderResponseDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

@@ -17,15 +17,24 @@ interface PublicFeedServiceInterface
     /**
      * Get public feed options
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getPublicFeedOptions(PublicFeedOptionsRequestDTO $dto, ?User $user): array;
 
     /**
      * Publish to public feeds
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function publishToPublicFeeds(PublicFeedPublishRequestDTO $dto, User $user): array;
 
     /**
      * Upload image for public feed
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function uploadImage(PublicFeedImageUploadRequestDTO $dto, User $user): array;
 }

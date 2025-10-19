@@ -5,20 +5,15 @@ declare(strict_types=1);
 namespace App\Domain\Actions\IEX;
 
 use App\Domain\DTOs\IEX\MarketstackIndexStoreDTO;
-use App\Models\System\MarketstackIndx;
+use App\Models\System\Setting;
 
 class CreateMarketstackIndexAction
 {
-    public function execute(MarketstackIndexStoreDTO $dto): MarketstackIndx
+    public function execute(MarketstackIndexStoreDTO $dto): Setting
     {
-        return MarketstackIndx::create([
+        return Setting::create([
             'name' => $dto->name,
-            'symbol' => $dto->symbol,
-            'country' => $dto->country,
-            'currency' => $dto->currency,
-            'has_intraday' => $dto->hasIntraday,
-            'has_eod' => $dto->hasEod,
-            'is_active' => $dto->isActive,
+            'value' => $dto->symbol,
         ]);
     }
 }

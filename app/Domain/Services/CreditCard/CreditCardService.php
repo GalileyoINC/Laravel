@@ -9,14 +9,18 @@ use App\Models\Finance\CreditCard;
 
 class CreditCardService implements CreditCardServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(CreditCardListRequestDTO $dto): array
     {
         $query = CreditCard::query()->with(['user']);
 
         if ($dto->search) {
             $query->where(function ($q) use ($dto) {
-                $q->where('card_number', 'like', '%'.$dto->search.'%')
-                    ->orWhere('cardholder_name', 'like', '%'.$dto->search.'%')
+                $q->where('num', 'like', '%'.$dto->search.'%')
+                    ->orWhere('first_name', 'like', '%'.$dto->search.'%')
+                    ->orWhere('last_name', 'like', '%'.$dto->search.'%')
                     ->orWhereHas('user', function ($userQuery) use ($dto) {
                         $userQuery->where('first_name', 'like', '%'.$dto->search.'%')
                             ->orWhere('last_name', 'like', '%'.$dto->search.'%')
@@ -52,6 +56,9 @@ class CreditCardService implements CreditCardServiceInterface
         return CreditCard::with(['user'])->findOrFail($id);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getGatewayProfile(int $id): array
     {
         $creditCard = CreditCard::with(['user'])->findOrFail($id);
@@ -60,17 +67,17 @@ class CreditCardService implements CreditCardServiceInterface
         return [
             'credit_card' => [
                 'id' => $creditCard->id,
-                'card_number' => $creditCard->card_number,
-                'cardholder_name' => $creditCard->cardholder_name,
-                'expiry_month' => $creditCard->expiry_month,
-                'expiry_year' => $creditCard->expiry_year,
+                'card_number' => $creditCard->num,
+                'cardholder_name' => $creditCard->first_name.' '.$creditCard->last_name,
+                'expiry_month' => $creditCard->expiration_month,
+                'expiry_year' => $creditCard->expiration_year,
                 'is_active' => $creditCard->is_active,
             ],
             'user' => [
-                'id' => $creditCard->user->id,
-                'first_name' => $creditCard->user->first_name,
-                'last_name' => $creditCard->user->last_name,
-                'email' => $creditCard->user->email,
+                'id' => $creditCard->user?->id,
+                'first_name' => $creditCard->user?->first_name,
+                'last_name' => $creditCard->user?->last_name,
+                'email' => $creditCard->user?->email,
             ],
             'gateway_profile' => [
                 'profile_id' => 'mock_profile_'.$creditCard->id,

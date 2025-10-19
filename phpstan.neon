@@ -1,5 +1,5 @@
 includes:
-    - vendor/nunomaduro/larastan/extension.neon
+    - vendor/larastan/larastan/extension.neon
 
 parameters:
     paths:
@@ -40,6 +40,12 @@ parameters:
           paths:
             - app/Http/Resources/*
             - app/Http/Requests/*
+        - message: '#no value type specified in iterable type array#'
+          paths:
+            - app/Http/Controllers/Web/ReportController.php
+        - message: '#Parameter \#1 \$user of static method Illuminate\\Support\\Facades\\Auth::login\(\) expects Illuminate\\Contracts\\Auth\\Authenticatable, .+ given#'
+          paths:
+            - app/Http/Controllers/Web/SiteController.php
         - message: '#Parameter \#1 \$user of static method Illuminate\\Support\\Facades\\Auth::login\(\) expects Illuminate\\Contracts\\Auth\\Authenticatable, .+ given#'
           paths:
             - app/Http/Controllers/Web/StaffController.php
@@ -49,5 +55,4 @@ parameters:
         - bootstrap/cache
         - database/factories
         - database/seeders
-        - app/Models
         - app/Providers/AppServiceProvider.php

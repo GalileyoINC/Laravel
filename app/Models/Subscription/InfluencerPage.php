@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Subscription;
 
-use Carbon\Carbon;
 use Database\Factories\InfluencerPageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,9 +21,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $alias
  * @property string $description
  * @property string|null $image
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Subscription $subscription
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Subscription $subscription
+ *
+ * @method static \Database\Factories\InfluencerPageFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereAlias($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereIdSubscription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InfluencerPage whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class InfluencerPage extends Model
 {

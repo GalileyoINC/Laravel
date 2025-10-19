@@ -18,8 +18,12 @@ class MarketstackSubscriptionDTO
         public readonly ?string $description = null
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             type: $data['type'] ?? '',
             symbol: $data['symbol'] ?? '',
@@ -30,6 +34,7 @@ class MarketstackSubscriptionDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             type: $request->input('type', ''),
             symbol: $request->input('symbol', ''),
@@ -38,6 +43,9 @@ class MarketstackSubscriptionDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

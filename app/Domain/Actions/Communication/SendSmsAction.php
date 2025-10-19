@@ -13,6 +13,8 @@ final class SendSmsAction
     /**
      * Send an SMS message to the given phone number.
      * This implementation currently simulates send and logs the intent.
+     *
+     * @return array<string, mixed>
      */
     public function execute(SendSmsRequestDTO $dto): array
     {

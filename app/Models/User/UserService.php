@@ -16,8 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int|null $id_user
  * @property int|null $id_service
- * @property Service|null $service
- * @property User|null $user
+ * @property-read \App\Models\Finance\Service|null $service
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserService newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserService newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserService query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserService whereIdService($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserService whereIdUser($value)
+ *
+ * @mixin \Eloquent
  */
 class UserService extends Model
 {

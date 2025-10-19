@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,15 +23,35 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $alert
  * @property int $max_phone_cnt
  * @property int $pay_interval
- * @property Carbon $begin_at
- * @property Carbon $ended_at
- * @property Carbon|null $terminated_at
+ * @property \Illuminate\Support\Carbon $begin_at
+ * @property \Illuminate\Support\Carbon $ended_at
+ * @property \Illuminate\Support\Carbon|null $terminated_at
  * @property int|null $is_secondary
- * @property array|null $user_plan_data
- * @property UserPlan|null $user_plan
- * @property Service $service
- * @property User $user
- * @property Collection|ContractLine[] $contract_lines
+ * @property array<array-key, mixed>|null $user_plan_data
+ * @property-read Collection<int, ContractLine> $contract_lines
+ * @property-read int|null $contract_lines_count
+ * @property-read Service $service
+ * @property-read \App\Models\User\User $user
+ * @property-read \App\Models\User\UserPlan|null $user_plan
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereAlert($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereBeginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereEndedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereIdContract($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereIdPlan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereIdService($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereIsSecondary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereMaxPhoneCnt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract wherePayInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereTerminatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsContract whereUserPlanData($value)
+ *
+ * @mixin \Eloquent
  */
 class SpsContract extends Model
 {

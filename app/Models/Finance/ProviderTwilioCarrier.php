@@ -16,8 +16,15 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id_provider
  * @property int $id_twilio_carrier
- * @property Provider $provider
- * @property TwilioCarrier $twilio_carrier
+ * @property-read Provider $provider
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProviderTwilioCarrier newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProviderTwilioCarrier newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProviderTwilioCarrier query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProviderTwilioCarrier whereIdProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProviderTwilioCarrier whereIdTwilioCarrier($value)
+ *
+ * @mixin \Eloquent
  */
 class ProviderTwilioCarrier extends Model
 {

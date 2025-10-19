@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\Settings\FlushSettingsAction;
-use App\Domain\Actions\Settings\GetSettingsAction;
 use App\Domain\Actions\Settings\UpdateSettingsAction;
 use App\Domain\DTOs\Settings\SettingsUpdateRequestDTO;
 use App\Http\Controllers\Controller;
@@ -16,17 +15,16 @@ use App\Http\Requests\Settings\Web\SettingsPublicRequest;
 use App\Http\Requests\Settings\Web\SettingsSmsRequest;
 use App\Http\Requests\Users\Web\UserPointSettingsRequest;
 use App\Models\System\Settings;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\Contracts\View\View;
 
 class SettingsController extends Controller
 {
     public function __construct(
         private readonly FlushSettingsAction $flushSettingsAction,
-        private readonly GetSettingsAction $getSettingsAction,
         private readonly UpdateSettingsAction $updateSettingsAction
     ) {}
 
@@ -98,7 +96,8 @@ class SettingsController extends Controller
      */
     public function updateSms(SettingsSmsRequest $request): RedirectResponse
     {
-        if (! auth()->user()->showSettingsRO()) {
+        $currentUser = auth()->user();
+        if ($currentUser && ! $currentUser->showSettingsRO()) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(
@@ -121,7 +120,8 @@ class SettingsController extends Controller
      */
     public function updateApi(SettingsApiRequest $request): RedirectResponse
     {
-        if (! auth()->user()->showSettingsRO()) {
+        $currentUser = auth()->user();
+        if ($currentUser && ! $currentUser->showSettingsRO()) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(
@@ -144,7 +144,8 @@ class SettingsController extends Controller
      */
     public function updateApp(SettingsAppRequest $request): RedirectResponse
     {
-        if (! auth()->user()->showSettingsRO()) {
+        $currentUser = auth()->user();
+        if ($currentUser && ! $currentUser->showSettingsRO()) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(

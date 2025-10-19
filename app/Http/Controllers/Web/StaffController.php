@@ -9,12 +9,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Web\StaffIndexRequest;
 use App\Http\Requests\User\Web\StaffRequest;
 use App\Models\System\Staff;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\Contracts\View\View;
 
 class StaffController extends Controller
 {
@@ -117,7 +117,8 @@ class StaffController extends Controller
         }
 
         // Only super admin can set super login
-        if (Auth::user()->isSuper() && isset($validated['is_superlogin'])) {
+        $currentUser = Auth::user();
+        if ($currentUser && $currentUser->isSuper() && isset($validated['is_superlogin'])) {
             $data['is_superlogin'] = $validated['is_superlogin'];
         }
 

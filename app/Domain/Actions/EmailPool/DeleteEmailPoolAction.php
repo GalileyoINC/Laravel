@@ -15,6 +15,9 @@ class DeleteEmailPoolAction
         private readonly EmailPoolServiceInterface $emailPoolService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

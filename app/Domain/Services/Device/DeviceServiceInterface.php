@@ -10,11 +10,17 @@ use App\Models\Device\Device;
 
 interface DeviceServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(DeviceListRequestDTO $dto): array;
 
     public function getById(int $id): Device;
 
     public function delete(int $id): void;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function sendPushNotification(DevicePushRequestDTO $dto): array;
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
-use App\Domain\Actions\News\GetLastNewsAction;
 use App\Domain\Actions\News\GetNewsListAction;
 use App\Domain\Actions\News\StoreNewsAction;
 use App\Domain\Actions\News\UpdateNewsAction;
@@ -14,16 +13,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\News\Web\NewsIndexRequest;
 use App\Http\Requests\News\Web\NewsRequest;
 use App\Models\Content\News;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 
 class NewsController extends Controller
 {
     public function __construct(
-        private readonly GetLastNewsAction $getLastNewsAction,
         private readonly GetNewsListAction $getNewsListAction,
         private readonly StoreNewsAction $storeNewsAction,
         private readonly UpdateNewsAction $updateNewsAction,

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Analytics;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,8 +17,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string|null $period
  * @property int $influencer_percent
- * @property array|null $data
- * @property Carbon $created_at
+ * @property array<array-key, mixed>|null $data
+ * @property string $created_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral whereInfluencerPercent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral wherePeriod($value)
+ *
+ * @mixin \Eloquent
  */
 class ReportReferral extends Model
 {

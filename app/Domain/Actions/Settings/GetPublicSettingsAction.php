@@ -15,6 +15,9 @@ class GetPublicSettingsAction
         private readonly SettingsServiceInterface $settingsService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

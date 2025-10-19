@@ -7,6 +7,16 @@ namespace App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read \App\Models\Subscription\Subscription|null $subscription
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mute newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mute newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mute query()
+ *
+ * @mixin \Eloquent
+ */
 class Mute extends Model
 {
     use HasFactory;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
-use App\Domain\Actions\Communication\AdminSendEmailAction;
 use App\Domain\Actions\Communication\SendTestEmailAction;
 use App\Domain\Actions\Communication\UpdateEmailTemplateAction;
 use App\Domain\Actions\EmailTemplate\ExportEmailTemplatesToCsvAction;
@@ -16,9 +15,10 @@ use App\Http\Requests\Communication\Web\AdminSendEmailRequest;
 use App\Http\Requests\Communication\Web\EmailTemplateRequest;
 use App\Http\Requests\EmailTemplate\Web\EmailTemplateIndexRequest;
 use App\Models\Communication\EmailTemplate;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmailTemplateController extends Controller
@@ -27,7 +27,6 @@ class EmailTemplateController extends Controller
         private readonly GetEmailTemplateListAction $getEmailTemplateListAction,
         private readonly ExportEmailTemplatesToCsvAction $exportEmailTemplatesToCsvAction,
         private readonly UpdateEmailTemplateAction $updateEmailTemplateAction,
-        private readonly AdminSendEmailAction $adminSendEmailAction,
         private readonly SendTestEmailAction $sendTestEmailAction,
     ) {}
 
@@ -155,6 +154,9 @@ class EmailTemplateController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

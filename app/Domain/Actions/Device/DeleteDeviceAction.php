@@ -14,6 +14,9 @@ class DeleteDeviceAction
         private readonly DeviceServiceInterface $deviceService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): bool
     {
         DB::beginTransaction();

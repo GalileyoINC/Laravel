@@ -8,6 +8,10 @@ use App\Models\User\UserPlan;
 
 final class ExportUnpaidUserPlansToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $expDate = isset($filters['exp_date']) ? (int) $filters['exp_date'] : 30;
@@ -37,6 +41,7 @@ final class ExportUnpaidUserPlansToCsvAction
 
         $rows = [];
         $rows[] = ['ID', 'First Name', 'Last Name', 'Email', 'Service', 'Pay Interval', 'Exp Date'];
+        /** @var UserPlan $userPlan */
         foreach ($items as $userPlan) {
             $rows[] = [
                 $userPlan->id,
@@ -45,7 +50,7 @@ final class ExportUnpaidUserPlansToCsvAction
                 $userPlan->user ? $userPlan->user->email : '',
                 $userPlan->service ? $userPlan->service->name : '',
                 $userPlan->pay_interval,
-                $userPlan->exp_date->format('Y-m-d'),
+                $userPlan->exp_date?->format('Y-m-d') ?? '',
             ];
         }
 

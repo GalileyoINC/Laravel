@@ -9,47 +9,31 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetFollowerListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Follower>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        $query = Follower::with(['followerList', 'userLeader', 'userFollower']);
+        $query = Follower::query();
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->whereHas('followerList', function ($followerListQuery) use ($search) {
-                    $followerListQuery->where('name', 'like', "%{$search}%");
-                })
-                    ->orWhereHas('userLeader', function ($userQuery) use ($search) {
-                        $userQuery->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('userFollower', function ($userQuery) use ($search) {
-                        $userQuery->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
+                $q->where('id', 'like', "%{$search}%");
             });
         }
         if (! empty($filters['followerListName'])) {
             $name = (string) $filters['followerListName'];
-            $query->whereHas('followerList', function ($followerListQuery) use ($name) {
-                $followerListQuery->where('name', 'like', "%{$name}%");
-            });
+            $query->where('id', 'like', "%{$name}%");
         }
         if (! empty($filters['userLeaderName'])) {
             $name = (string) $filters['userLeaderName'];
-            $query->whereHas('userLeader', function ($userQuery) use ($name) {
-                $userQuery->where('first_name', 'like', "%{$name}%")
-                    ->orWhere('last_name', 'like', "%{$name}%");
-            });
+            $query->where('id', 'like', "%{$name}%");
         }
         if (! empty($filters['userFollowerName'])) {
             $name = (string) $filters['userFollowerName'];
-            $query->whereHas('userFollower', function ($userQuery) use ($name) {
-                $userQuery->where('first_name', 'like', "%{$name}%")
-                    ->orWhere('last_name', 'like', "%{$name}%");
-            });
+            $query->where('id', 'like', "%{$name}%");
         }
         if (isset($filters['is_active'])) {
             $query->where('is_active', (int) $filters['is_active']);

@@ -20,6 +20,8 @@ class ProductService implements ProductServiceInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function getProductList(ProductListRequestDTO $dto, ?User $user): array
     {
@@ -50,8 +52,8 @@ class ProductService implements ProductServiceInterface
             }
 
             $products = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $products->toArray();
@@ -64,6 +66,8 @@ class ProductService implements ProductServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function getProductAlerts(ProductAlertsRequestDTO $dto, ?User $user): array
     {
@@ -81,8 +85,8 @@ class ProductService implements ProductServiceInterface
             }
 
             $alerts = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $alerts->toArray();
@@ -95,6 +99,8 @@ class ProductService implements ProductServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function processApplePurchase(ApplePurchaseRequestDTO $dto, User $user): array
     {
@@ -134,6 +140,8 @@ class ProductService implements ProductServiceInterface
 
     /**
      * Validate Apple receipt (simplified implementation)
+     *
+     * @return array<string, mixed>
      */
     private function validateAppleReceipt(string $receiptData): array
     {

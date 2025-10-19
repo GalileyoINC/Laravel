@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetProductDeviceListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Device>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = Device::query();

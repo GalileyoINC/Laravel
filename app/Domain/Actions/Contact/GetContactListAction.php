@@ -14,6 +14,10 @@ class GetContactListAction
         private readonly ContactServiceInterface $contactService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return LengthAwarePaginator<int, mixed>
+     */
     public function execute(array $data): LengthAwarePaginator
     {
         $dto = new ContactListRequestDTO(

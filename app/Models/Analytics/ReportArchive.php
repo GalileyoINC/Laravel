@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Analytics;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,8 +18,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $report_id
  * @property string $name
  * @property string $data
- * @property Carbon $created_at
+ * @property string $created_at
  * @property string|null $sort
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereReportId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereSort($value)
+ *
+ * @mixin \Eloquent
  */
 class ReportArchive extends Model
 {

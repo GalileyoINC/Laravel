@@ -8,6 +8,10 @@ use App\Models\Finance\Provider;
 
 final class ExportProvidersToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = Provider::query();
@@ -51,7 +55,7 @@ final class ExportProvidersToCsvAction
                 $provider->is_satellite ? 'Yes' : 'No',
                 $provider->country,
                 $provider->created_at->format('Y-m-d H:i:s'),
-                $provider->updated_at->format('Y-m-d H:i:s'),
+                $provider->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

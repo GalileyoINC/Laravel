@@ -10,10 +10,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EmailPool\Web\EmailPoolIndexRequest;
 use App\Models\Communication\EmailPool;
 use App\Models\Communication\EmailPoolArchive;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -91,7 +92,7 @@ class EmailPoolController extends Controller
     /**
      * Download Email Pool attachment
      */
-    public function attachment(Request $request, $attachmentId): Response
+    public function attachment(Request $request, int $attachmentId): Response
     {
         // Get attachment logic here
         // For now, return a placeholder response
@@ -159,6 +160,9 @@ class EmailPoolController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

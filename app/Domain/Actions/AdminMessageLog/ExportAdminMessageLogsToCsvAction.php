@@ -8,6 +8,10 @@ use App\Models\System\AdminMessageLog;
 
 final class ExportAdminMessageLogsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = AdminMessageLog::query();
@@ -33,6 +37,7 @@ final class ExportAdminMessageLogsToCsvAction
 
         $rows = [];
         $rows[] = ['ID', 'Object Type', 'Object ID', 'Message', 'Created At'];
+        /** @var AdminMessageLog $log */
         foreach ($logs as $log) {
             $rows[] = [
                 $log->id,

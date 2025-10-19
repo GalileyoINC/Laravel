@@ -18,7 +18,7 @@ final class SendTestEmailAction
         Mail::raw($template->body, function ($message) use ($dto, $template) {
             $message->to($dto->toEmail)
                 ->subject('[TEST] '.$template->subject)
-                ->from($template->fromEmail, $template->fromName);
+                ->from($template->from);
         });
 
         return true;

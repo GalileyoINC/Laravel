@@ -12,8 +12,7 @@ final class UpdateEmailTemplateAction
     public function execute(EmailTemplateUpdateDTO $dto): EmailTemplate
     {
         $template = EmailTemplate::findOrFail($dto->id);
-        $template->fromEmail = $dto->fromEmail;
-        $template->fromName = $dto->fromName;
+        $template->from = $dto->fromEmail;
         $template->subject = $dto->subject;
         $template->body = $dto->body;
         $template->bodyPlain = $dto->bodyPlain;

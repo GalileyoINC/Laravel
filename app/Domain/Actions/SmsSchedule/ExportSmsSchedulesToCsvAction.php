@@ -6,9 +6,16 @@ namespace App\Domain\Actions\SmsSchedule;
 
 use App\Models\Communication\SmsPool;
 use App\Models\Communication\SmsShedule as SmsSchedule;
+use App\Models\Subscription\Subscription;
+use App\Models\System\Staff;
+use App\Models\User\User;
 
 final class ExportSmsSchedulesToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = SmsSchedule::with(['user', 'staff', 'subscription', 'followerList', 'smsPool']);
@@ -66,24 +73,36 @@ final class ExportSmsSchedulesToCsvAction
         $rows = [];
         $rows[] = ['ID', 'Purpose', 'Sender', 'Subscription', 'Private Feed', 'Status', 'Body', 'Sended At', 'Created At', 'Updated At'];
         foreach ($items as $smsSchedule) {
+            /** @var SmsSchedule $smsSchedule */
             $sender = '';
             if ($smsSchedule->user) {
-                $sender = 'User: '.$smsSchedule->user->first_name.' '.$smsSchedule->user->last_name;
+                /** @var User $user */
+                $user = $smsSchedule->user;
+                $sender = 'User: '.$user->first_name.' '.$user->last_name;
             } elseif ($smsSchedule->staff) {
-                $sender = 'Staff: '.$smsSchedule->staff->username;
+                /** @var Staff $staff */
+                $staff = $smsSchedule->staff;
+                $sender = 'Staff: '.$staff->username;
+            }
+
+            $subscriptionName = '';
+            if ($smsSchedule->subscription) {
+                /** @var Subscription $subscription */
+                $subscription = $smsSchedule->subscription;
+                $subscriptionName = $subscription->name ?? '';
             }
 
             $rows[] = [
                 $smsSchedule->id,
                 SmsPool::getPurposes()[$smsSchedule->purpose] ?? $smsSchedule->purpose,
                 $sender,
-                $smsSchedule->subscription ? $smsSchedule->subscription->name : '',
-                $smsSchedule->followerList ? $smsSchedule->followerList->name : '',
+                $subscriptionName,
+                $smsSchedule->followerList ? ($smsSchedule->followerList->name ?? '') : '',
                 SmsSchedule::getStatuses()[$smsSchedule->status] ?? $smsSchedule->status,
                 $smsSchedule->body,
                 $smsSchedule->sended_at ? $smsSchedule->sended_at->format('Y-m-d H:i:s') : '',
                 $smsSchedule->created_at->format('Y-m-d H:i:s'),
-                $smsSchedule->updated_at->format('Y-m-d H:i:s'),
+                $smsSchedule->updated_at ? $smsSchedule->updated_at->format('Y-m-d H:i:s') : '',
             ];
         }
 

@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Logs;
 
 use App\Models\System\ActiveRecordLog;
+use App\Models\System\Staff;
+use App\Models\User\User;
 
 final class ExportActiveRecordLogsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = ActiveRecordLog::with(['user', 'staff']);
@@ -50,12 +56,26 @@ final class ExportActiveRecordLogsToCsvAction
 
         $rows = [];
         $rows[] = ['ID', 'Created At', 'User', 'Staff', 'Action Type', 'Model', 'ID Model', 'Field', 'Changes'];
+        /** @var ActiveRecordLog $log */
         foreach ($logs as $log) {
+            /** @var ActiveRecordLog $log */
+            $userName = '';
+            if ($log->user) {
+                /** @var User $user */
+                $user = $log->user;
+                $userName = trim($user->first_name.' '.$user->last_name)." ({$user->id})";
+            }
+            $staffName = '';
+            if ($log->staff) {
+                /** @var Staff $staff */
+                $staff = $log->staff;
+                $staffName = $staff->username." ({$staff->id})";
+            }
             $rows[] = [
                 $log->id,
                 $log->created_at->format('Y-m-d H:i:s'),
-                $log->user ? $log->user->getFullName()." ({$log->user->id})" : '',
-                $log->staff ? "{$log->staff->username} ({$log->staff->id})" : '',
+                $userName,
+                $staffName,
                 $log->action_type,
                 $log->model,
                 $log->id_model,

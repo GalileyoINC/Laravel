@@ -15,11 +15,15 @@ class FeedOptionsDTO
         public readonly ?string $category = null,
         public readonly ?int $limit = 20,
         public readonly ?int $offset = 0,
+        /** @var array<string, mixed> */
         public readonly ?array $filters = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             category: $data['category'] ?? null,
             limit: isset($data['limit']) ? (int) $data['limit'] : 20,
@@ -30,6 +34,7 @@ class FeedOptionsDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             category: $request->input('category'),
             limit: $request->input('limit', 20),
@@ -38,6 +43,9 @@ class FeedOptionsDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

@@ -158,7 +158,7 @@ class SubscriptionController extends Controller
     /**
      * Get image from SMS pool photo (GET /api/v1/feed/get-image)
      */
-    public function getImage(Request $request)
+    public function getImage(Request $request): \Illuminate\Http\Response|JsonResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
     {
         $id = $request->query('id');
         $type = $request->query('type', 'normal');

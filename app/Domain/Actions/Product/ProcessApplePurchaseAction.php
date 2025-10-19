@@ -17,6 +17,9 @@ class ProcessApplePurchaseAction
         private readonly ProductServiceInterface $productService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

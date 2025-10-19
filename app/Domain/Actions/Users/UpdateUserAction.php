@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UpdateUserAction
 {
-    public function execute(UpdateUserDTO $dto): User
+    public function execute(UpdateUserDTO $dto): ?User
     {
         $user = User::findOrFail($dto->userId);
 

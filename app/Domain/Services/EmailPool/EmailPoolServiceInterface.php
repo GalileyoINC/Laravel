@@ -10,12 +10,18 @@ use App\Models\Communication\EmailPoolAttachment;
 
 interface EmailPoolServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(EmailPoolListRequestDTO $dto): array;
 
     public function getById(int $id): EmailPool;
 
     public function delete(int $id): void;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function resend(int $id): array;
 
     public function getAttachment(int $id): EmailPoolAttachment;

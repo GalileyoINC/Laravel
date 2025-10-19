@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,9 +19,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_invited
  * @property int $id_invite_invoice
  * @property int|null $id_reward_invoice
- * @property Carbon $created_at
- * @property Invoice|null $invoice
- * @property User $user
+ * @property string $created_at
+ * @property-read \App\Models\Finance\Invoice|null $invoice
+ * @property-read User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate whereIdInviteInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate whereIdInvited($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate whereIdInviter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InviteAffiliate whereIdRewardInvoice($value)
+ *
+ * @mixin \Eloquent
  */
 class InviteAffiliate extends Model
 {

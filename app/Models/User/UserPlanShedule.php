@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,15 +17,30 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int|null $id_user
  * @property int|null $id_service
- * @property array|null $settings
- * @property Carbon|null $begin_at
- * @property Carbon|null $end_at
+ * @property array<array-key, mixed>|null $settings
+ * @property \Illuminate\Support\Carbon|null $begin_at
+ * @property \Illuminate\Support\Carbon|null $end_at
  * @property bool $is_complete
  * @property bool $is_new_custom
  * @property int|null $id_contract_line
- * @property ContractLine|null $contract_line
- * @property Service|null $service
- * @property User|null $user
+ * @property-read \App\Models\Finance\ContractLine|null $contract_line
+ * @property-read \App\Models\Finance\Service|null $service
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereBeginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereIdContractLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereIdService($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereIsComplete($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereIsNewCustom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlanShedule whereSettings($value)
+ *
+ * @mixin \Eloquent
  */
 class UserPlanShedule extends Model
 {

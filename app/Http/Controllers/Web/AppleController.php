@@ -15,9 +15,10 @@ use App\Http\Requests\Apple\Web\AppleNotificationsRequest;
 use App\Http\Requests\Apple\Web\AppleTransactionsRequest;
 use App\Models\Notification\AppleNotification;
 use App\Models\Order\AppleAppTransaction;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AppleController extends Controller
@@ -113,6 +114,9 @@ class AppleController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }
@@ -135,6 +139,9 @@ class AppleController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

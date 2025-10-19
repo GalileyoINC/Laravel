@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,9 +18,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string|null $title
  * @property int $price
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Collection|UserPointHistory[] $user_point_histories
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, UserPointHistory> $user_point_histories
+ * @property-read int|null $user_point_histories_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointSetting whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class UserPointSetting extends Model
 {

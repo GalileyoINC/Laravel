@@ -16,8 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id_user
  * @property int $id_subscription
- * @property Subscription $subscription
- * @property User $user
+ * @property-read \App\Models\Subscription\Subscription $subscription
+ * @property-read User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSatelliteSubscription newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSatelliteSubscription newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSatelliteSubscription query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSatelliteSubscription whereIdSubscription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSatelliteSubscription whereIdUser($value)
+ *
+ * @mixin \Eloquent
  */
 class UserSatelliteSubscription extends Model
 {

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,7 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $api_id
- * @property Carbon $created_at
+ * @property string $created_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WeatherGovProcess newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WeatherGovProcess newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WeatherGovProcess query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WeatherGovProcess whereApiId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WeatherGovProcess whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WeatherGovProcess whereId($value)
+ *
+ * @mixin \Eloquent
  */
 class WeatherGovProcess extends Model
 {

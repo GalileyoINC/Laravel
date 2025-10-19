@@ -17,6 +17,9 @@ class GetInfluencerFeedListAction
         private readonly InfluencerServiceInterface $influencerService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

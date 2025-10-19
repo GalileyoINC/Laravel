@@ -16,8 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id_conversation
  * @property int $id_user
- * @property Conversation $conversation
- * @property User $user
+ * @property-read Conversation $conversation
+ * @property-read \App\Models\User\User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUser whereIdConversation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUser whereIdUser($value)
+ *
+ * @mixin \Eloquent
  */
 class ConversationUser extends Model
 {

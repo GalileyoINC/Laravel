@@ -17,8 +17,17 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id_user
  * @property int $id_subscription
- * @property Subscription $subscription
- * @property User $user
+ * @property-read \App\Models\Subscription\Subscription $subscription
+ * @property-read User $user
+ *
+ * @method static \Database\Factories\UserSubscriptionFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscription newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscription newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscription query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscription whereIdSubscription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscription whereIdUser($value)
+ *
+ * @mixin \Eloquent
  */
 class UserSubscription extends Model
 {

@@ -8,10 +8,12 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Invoice
@@ -22,17 +24,40 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $paid_status
  * @property float $total
  * @property string|null $description
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property User $user
- * @property BpSubscription|null $bp_subscription
- * @property Collection|Address[] $addresses
- * @property Collection|ContractLinePaid[] $contract_line_paids
- * @property Collection|InviteAffiliate[] $invite_affiliates
- * @property Collection|InvoiceLine[] $invoice_lines
- * @property Collection|Promocode[] $promocodes
- * @property Collection|Service[] $services
- * @property Collection|MoneyTransaction[] $money_transactions
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, \App\Models\User\Address> $addresses
+ * @property-read int|null $addresses_count
+ * @property-read \App\Models\Subscription\BpSubscription|null $bp_subscription
+ * @property-read Collection<int, ContractLinePaid> $contract_line_paids
+ * @property-read int|null $contract_line_paids_count
+ * @property-read Collection<int, \App\Models\User\Affiliate> $invite_affiliates
+ * @property-read int|null $invite_affiliates_count
+ * @property-read Collection<int, InvoiceLine> $invoiceLines
+ * @property-read int|null $invoice_lines_count
+ * @property-read Collection<int, InvoiceLine> $invoice_lines
+ * @property-read Collection<int, MoneyTransaction> $moneyTransactions
+ * @property-read int|null $money_transactions_count
+ * @property-read Collection<int, MoneyTransaction> $money_transactions
+ * @property-read Collection<int, Promocode> $promocodes
+ * @property-read int|null $promocodes_count
+ * @property-read Collection<int, Service> $services
+ * @property-read int|null $services_count
+ * @property-read \App\Models\User\User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereIdBpSubscribe($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePaidStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Invoice extends Model
 {
@@ -63,49 +88,65 @@ class Invoice extends Model
         'description',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function bp_subscription()
+    public function bp_subscription(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Subscription\BpApp\Models\Subscription\Subscription::class, 'id_bp_subscribe');
+        return $this->belongsTo(\App\Models\Subscription\BpSubscription::class, 'id_bp_subscribe');
     }
 
-    public function addresses()
+    public function addresses(): HasMany
     {
         return $this->hasMany(\App\Models\User\Address::class, 'id_invoice');
     }
 
-    public function contract_line_paids()
+    public function contract_line_paids(): HasMany
     {
         return $this->hasMany(ContractLinePaid::class, 'id_invoice');
     }
 
-    public function invite_affiliates()
+    public function invite_affiliates(): HasMany
     {
-        return $this->hasMany(InviteApp\Models\User\Affiliate::class, 'id_reward_invoice');
+        return $this->hasMany(\App\Models\User\Affiliate::class, 'id_reward_invoice');
     }
 
-    public function invoice_lines()
+    public function invoice_lines(): HasMany
     {
         return $this->hasMany(InvoiceLine::class, 'id_invoice');
     }
 
-    public function promocodes()
+    public function promocodes(): BelongsToMany
     {
         return $this->belongsToMany(Promocode::class, 'invoice_promocode', 'id_invoice', 'id_promo')
             ->withPivot('id');
     }
 
-    public function services()
+    public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'invoice_service', 'id_invoice', 'id_service');
     }
 
-    public function money_transactions()
+    public function money_transactions(): HasMany
     {
         return $this->hasMany(MoneyTransaction::class, 'id_invoice');
+    }
+
+    /**
+     * Get money transactions (camelCase alias)
+     */
+    public function moneyTransactions(): HasMany
+    {
+        return $this->money_transactions();
+    }
+
+    /**
+     * Get invoice lines (camelCase alias)
+     */
+    public function invoiceLines(): HasMany
+    {
+        return $this->invoice_lines();
     }
 }

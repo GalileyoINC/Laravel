@@ -13,6 +13,8 @@ interface UsersServiceInterface
 {
     /**
      * Get list of users
+     *
+     * @return LengthAwarePaginator<int, User>
      */
     public function getUsersList(UsersListRequestDTO $dto, ?User $user): LengthAwarePaginator;
 

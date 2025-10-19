@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Subscription;
 
-use Carbon\Carbon;
 use Database\Factories\FollowerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,11 +20,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_user_leader
  * @property int $id_user_follower
  * @property bool|null $is_active
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property array|null $invite_settings
- * @property FollowerList $follower_list
- * @property User $user
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property array<array-key, mixed>|null $invite_settings
+ * @property-read FollowerList $followerList
+ * @property-read FollowerList $follower_list
+ * @property-read \App\Models\User\User $user
+ * @property-read \App\Models\User\User $userFollower
+ * @property-read \App\Models\User\User $userLeader
+ *
+ * @method static \Database\Factories\FollowerFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereIdFollowerList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereIdUserFollower($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereIdUserLeader($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereInviteSettings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Follower whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Follower extends Model
 {

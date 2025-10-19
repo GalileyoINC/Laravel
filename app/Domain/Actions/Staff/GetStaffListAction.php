@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetStaffListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Staff>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = Staff::query();

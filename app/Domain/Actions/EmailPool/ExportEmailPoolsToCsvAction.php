@@ -8,6 +8,10 @@ use App\Models\Communication\EmailPool;
 
 final class ExportEmailPoolsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = EmailPool::query();

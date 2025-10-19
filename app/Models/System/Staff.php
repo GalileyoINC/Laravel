@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Carbon\Carbon;
 use Database\Factories\SystemStaffFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,10 +26,30 @@ use Throwable;
  * @property int $role
  * @property int $status
  * @property int|null $is_superlogin
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Collection|SmsPool[] $sms_pools
- * @property Collection|SmsShedule[] $sms_shedules
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, \App\Models\Communication\SmsPool> $sms_pools
+ * @property-read int|null $sms_pools_count
+ * @property-read Collection<int, \App\Models\Communication\SmsShedule> $sms_shedules
+ * @property-read int|null $sms_shedules_count
+ *
+ * @method static \Database\Factories\SystemStaffFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereAuthKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereIsSuperlogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff wherePasswordHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff wherePasswordResetToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereUsername($value)
+ *
+ * @mixin \Eloquent
  */
 class Staff extends Model
 {
@@ -65,16 +84,6 @@ class Staff extends Model
         'is_superlogin',
     ];
 
-    public function isSuper(): bool
-    {
-        return (int) ($this->is_superlogin ?? 0) === 1;
-    }
-
-    public function isAdmin(): bool
-    {
-        return (int) ($this->role ?? 0) === self::ROLE_ADMIN;
-    }
-
     public static function getForDropDown(): array
     {
         try {
@@ -86,6 +95,16 @@ class Staff extends Model
         } catch (Throwable) {
             return [];
         }
+    }
+
+    public function isSuper(): bool
+    {
+        return (int) ($this->is_superlogin ?? 0) === 1;
+    }
+
+    public function isAdmin(): bool
+    {
+        return (int) ($this->role ?? 0) === self::ROLE_ADMIN;
     }
 
     public function sms_pools()

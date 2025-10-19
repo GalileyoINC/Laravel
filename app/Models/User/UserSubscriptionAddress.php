@@ -18,8 +18,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_user
  * @property int $id_subscription
  * @property string|null $zip
- * @property Subscription $subscription
- * @property User $user
+ * @property-read \App\Models\Subscription\Subscription $subscription
+ * @property-read User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscriptionAddress newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscriptionAddress newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscriptionAddress query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscriptionAddress whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscriptionAddress whereIdSubscription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscriptionAddress whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSubscriptionAddress whereZip($value)
+ *
+ * @mixin \Eloquent
  */
 class UserSubscriptionAddress extends Model
 {

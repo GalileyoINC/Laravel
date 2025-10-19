@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Domain\Actions\EmailPoolArchive;
 
 use App\Models\Communication\EmailPool;
-use App\Models\Communication\EmailPoolArchive;
 
 final class ExportEmailPoolArchiveToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
-        $query = EmailPoolArchive::with(['attachments']);
+        $query = EmailPool::query();
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
@@ -57,13 +60,13 @@ final class ExportEmailPoolArchiveToCsvAction
         foreach ($items as $emailPoolArchive) {
             $rows[] = [
                 $emailPoolArchive->id,
-                EmailPool::getSendingTypes()[$emailPoolArchive->type] ?? $emailPoolArchive->type,
-                EmailPool::getStatuses()[$emailPoolArchive->status] ?? $emailPoolArchive->status,
+                $emailPoolArchive->type,
+                $emailPoolArchive->status,
                 $emailPoolArchive->from,
                 $emailPoolArchive->to,
                 $emailPoolArchive->subject,
                 $emailPoolArchive->created_at->format('Y-m-d H:i:s'),
-                $emailPoolArchive->updated_at->format('Y-m-d H:i:s'),
+                $emailPoolArchive->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

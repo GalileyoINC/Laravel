@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,9 +21,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_plan
  * @property string|null $email
  * @property string|null $member_key
- * @property Carbon|null $expired_at
- * @property UserPlan|null $user_plan
- * @property User|null $user
+ * @property \Illuminate\Support\Carbon|null $expired_at
+ * @property-read User|null $user
+ * @property-read UserPlan|null $user_plan
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereExpiredAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereIdAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereIdPlan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberTemplate whereMemberKey($value)
+ *
+ * @mixin \Eloquent
  */
 class MemberTemplate extends Model
 {

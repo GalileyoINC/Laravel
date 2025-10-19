@@ -20,6 +20,9 @@ class PublicFeedService implements PublicFeedServiceInterface
     /**
      * {@inheritdoc}
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getPublicFeedOptions(PublicFeedOptionsRequestDTO $dto, ?User $user): array
     {
         try {
@@ -47,6 +50,9 @@ class PublicFeedService implements PublicFeedServiceInterface
 
     /**
      * {@inheritdoc}
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function publishToPublicFeeds(PublicFeedPublishRequestDTO $dto, User $user): array
     {
@@ -101,6 +107,9 @@ class PublicFeedService implements PublicFeedServiceInterface
 
     /**
      * {@inheritdoc}
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function uploadImage(PublicFeedImageUploadRequestDTO $dto, User $user): array
     {

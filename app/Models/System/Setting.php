@@ -18,6 +18,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $prod
  * @property string $dev
+ *
+ * @method static \Database\Factories\SystemSettingFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereDev($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereProd($value)
+ *
+ * @mixin \Eloquent
  */
 class Setting extends Model
 {

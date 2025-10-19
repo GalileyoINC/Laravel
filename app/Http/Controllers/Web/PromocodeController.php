@@ -11,9 +11,9 @@ use App\Http\Requests\Promocode\Web\PromocodeIndexRequest;
 use App\Http\Requests\Promocode\Web\PromocodeStoreRequest;
 use App\Http\Requests\Promocode\Web\PromocodeUpdateRequest;
 use App\Models\Finance\Promocode;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PromocodeController extends Controller
@@ -122,6 +122,9 @@ class PromocodeController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

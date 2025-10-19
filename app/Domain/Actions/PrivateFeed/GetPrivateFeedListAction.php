@@ -17,6 +17,9 @@ class GetPrivateFeedListAction
         private readonly PrivateFeedServiceInterface $privateFeedService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

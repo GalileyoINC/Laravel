@@ -12,11 +12,11 @@ use App\Domain\DTOs\Contact\CreateContactDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\Web\ContactRequest;
 use App\Models\Communication\Contact;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 
 class ContactController extends Controller
 {

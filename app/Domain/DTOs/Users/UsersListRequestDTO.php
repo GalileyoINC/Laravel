@@ -19,8 +19,12 @@ class UsersListRequestDTO
         public readonly ?bool $validEmailOnly = true
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             page: isset($data['page']) ? (int) $data['page'] : 1,
             pageSize: isset($data['page_size']) ? (int) $data['page_size'] : 50,
@@ -32,6 +36,7 @@ class UsersListRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             page: $request->input('page', 1),
             pageSize: $request->input('page_size', 50),
@@ -41,6 +46,9 @@ class UsersListRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

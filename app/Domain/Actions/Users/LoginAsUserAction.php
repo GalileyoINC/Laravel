@@ -9,6 +9,9 @@ use RuntimeException;
 
 class LoginAsUserAction
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(int $adminId, int $targetUserId): array
     {
         $admin = User::findOrFail($adminId);
@@ -17,7 +20,7 @@ class LoginAsUserAction
         }
 
         $user = User::findOrFail($targetUserId);
-        $user->admin_token = User::generatePasswordResetToken();
+        $user->admin_token = \Illuminate\Support\Str::random(60);
         $user->save();
 
         return [

@@ -6,6 +6,9 @@ namespace App\Domain\DTOs\Bundle;
 
 readonly class BundleUpdateRequestDTO
 {
+    /**
+     * @param  array<int, mixed>  $services
+     */
     public function __construct(
         public int $id,
         public ?string $name,

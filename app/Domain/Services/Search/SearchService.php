@@ -17,8 +17,10 @@ class SearchService implements SearchServiceInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
-    public function search(SearchRequestDTO $dto, ?User $user)
+    public function search(SearchRequestDTO $dto, ?User $user): array
     {
         try {
             $query = SmsPool::with(['user', 'reactions', 'photos']);
@@ -49,7 +51,7 @@ class SearchService implements SearchServiceInterface
             $offset = ($dto->page - 1) * $dto->pageSize;
 
             $results = $query->orderBy('created_at', 'desc')
-                ->limit($dto->pageSize)
+                ->limit($dto->pageSize ?? 10)
                 ->offset($offset)
                 ->get();
 
@@ -58,37 +60,37 @@ class SearchService implements SearchServiceInterface
             // Transform each result to match frontend expectations
             $results->each(function ($item) use ($user) {
                 // Add images field
-                $item->images = $item->photos->map(fn ($photo) => [
+                $item->setAttribute('images', $item->photos->map(fn ($photo) => [
                     'id' => $photo->id,
                     'url' => $photo->url,
                     'thumbnail' => $photo->thumbnail_url ?? $photo->url,
-                ])->toArray();
+                ])->toArray());
 
                 // Add reactions
-                $item->reactions = $item->reactions->map(fn ($reaction) => [
+                $item->setAttribute('reactions', $item->reactions->map(fn ($reaction) => [
                     'id' => $reaction->id,
                     'type' => $reaction->type,
                     'count' => $reaction->count,
                     'is_user_reacted' => $reaction->is_user_reacted ?? false,
-                ])->toArray();
+                ])->toArray());
 
                 // Add user info
-                $item->user_info = [
-                    'id' => $item->user->id,
-                    'first_name' => $item->user->first_name,
-                    'last_name' => $item->user->last_name,
-                    'avatar' => $item->user->avatar,
-                ];
+                $item->setAttribute('user_info', [
+                    'id' => $item->user?->id,
+                    'first_name' => $item->user?->first_name,
+                    'last_name' => $item->user?->last_name,
+                    'avatar' => $item->user?->avatar,
+                ]);
 
                 // Add bookmark status
-                $item->is_bookmarked = false;
+                $item->setAttribute('is_bookmarked', false);
                 if ($user) {
                     // TODO: Check if user has bookmarked this post
                     // $item->is_bookmarked = $user->bookmarks()->where('post_id', $item->id)->exists();
                 }
 
                 // Add like status
-                $item->is_liked = false;
+                $item->setAttribute('is_liked', false);
                 if ($user) {
                     // TODO: Check if user has liked this post
                     // $item->is_liked = $user->reactions()->where('post_id', $item->id)->exists();

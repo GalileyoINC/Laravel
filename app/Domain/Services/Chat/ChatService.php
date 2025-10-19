@@ -36,8 +36,8 @@ class ChatService implements ChatServiceInterface
                 $q->latest()->limit(1);
             }])
                 ->orderBy('updated_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $conversations;
@@ -65,8 +65,8 @@ class ChatService implements ChatServiceInterface
             $messages = ConversationMessage::where('id_conversation', $dto->conversationId)
                 ->with(['user'])
                 ->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $messages;

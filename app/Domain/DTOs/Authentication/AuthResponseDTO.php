@@ -9,6 +9,9 @@ namespace App\Domain\DTOs\Authentication;
  */
 class AuthResponseDTO
 {
+    /**
+     * @param  array<string, mixed>  $user_profile
+     */
     public function __construct(
         public readonly int $user_id,
         public readonly string $access_token,
@@ -17,7 +20,10 @@ class AuthResponseDTO
         public readonly array $user_profile = []
     ) {}
 
-    public static function fromArray(array $data): static
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public static function fromArray(array $data): self
     {
         return new self(
             user_id: $data['user_id'] ?? 0,
@@ -28,6 +34,9 @@ class AuthResponseDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

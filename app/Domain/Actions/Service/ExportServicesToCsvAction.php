@@ -8,6 +8,10 @@ use App\Models\Finance\Service;
 
 final class ExportServicesToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = Service::query();
@@ -49,7 +53,7 @@ final class ExportServicesToCsvAction
                 $service->type,
                 $service->is_active ? 'Yes' : 'No',
                 $service->created_at->format('Y-m-d H:i:s'),
-                $service->updated_at->format('Y-m-d H:i:s'),
+                $service->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

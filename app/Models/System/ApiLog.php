@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +17,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $key
  * @property string|null $value
- * @property Carbon $created_at
+ * @property \Illuminate\Support\Carbon $created_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiLog whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiLog whereValue($value)
+ *
+ * @mixin \Eloquent
  */
 class ApiLog extends Model
 {
@@ -27,6 +36,10 @@ class ApiLog extends Model
     public $timestamps = false;
 
     protected $table = 'api_log';
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 
     protected $fillable = [
         'key',

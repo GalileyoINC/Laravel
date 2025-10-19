@@ -31,8 +31,8 @@ class InfluencerService implements InfluencerServiceInterface
             }
 
             $feeds = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $feeds;

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +17,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string|null $first_name
  * @property string|null $email
- * @property Carbon $created_at
+ * @property \Illuminate\Support\Carbon $created_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmergencyTipsRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmergencyTipsRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmergencyTipsRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmergencyTipsRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmergencyTipsRequest whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmergencyTipsRequest whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmergencyTipsRequest whereId($value)
+ *
+ * @mixin \Eloquent
  */
 class EmergencyTipsRequest extends Model
 {
@@ -27,6 +36,10 @@ class EmergencyTipsRequest extends Model
     public $timestamps = false;
 
     protected $table = 'emergency_tips_request';
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 
     protected $fillable = [
         'first_name',

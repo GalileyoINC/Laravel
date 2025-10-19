@@ -8,6 +8,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon $expiresAt
+ * @property string $token
+ * @property \Illuminate\Support\Carbon $createdAt
+ * @property \Illuminate\Support\Carbon $updatedAt
+ * @property string|null $ipAddress
+ * @property string|null $userAgent
+ * @property int $userId
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereUserAgent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Session whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class Session extends Model
 {
     use HasFactory;

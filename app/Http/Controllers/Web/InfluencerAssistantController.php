@@ -11,10 +11,11 @@ use App\Http\Requests\Content\Web\InfluencerAssistantRequest;
 use App\Http\Requests\InfluencerAssistant\Web\InfluencerAssistantIndexRequest;
 use App\Models\Subscription\InfluencerAssistant;
 use App\Models\User\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InfluencerAssistantController extends Controller
@@ -94,6 +95,9 @@ class InfluencerAssistantController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

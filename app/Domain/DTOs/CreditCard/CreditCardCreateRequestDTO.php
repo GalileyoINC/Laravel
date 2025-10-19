@@ -20,8 +20,11 @@ class CreditCardCreateRequestDTO
         public readonly bool $isAgreeToReceive = false
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             firstName: $data['first_name'],
             lastName: $data['last_name'],
@@ -37,6 +40,7 @@ class CreditCardCreateRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             firstName: $request->input('first_name'),
             lastName: $request->input('last_name'),
@@ -50,6 +54,9 @@ class CreditCardCreateRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

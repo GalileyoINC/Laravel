@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,10 +17,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int|null $id_news
  * @property int $status
- * @property array|null $params
+ * @property array<array-key, mixed>|null $params
  * @property string|null $content
- * @property Carbon $created_at
- * @property News|null $news
+ * @property string $created_at
+ * @property-read News|null $news
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent whereIdNews($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent whereParams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NewsContent whereStatus($value)
+ *
+ * @mixin \Eloquent
  */
 class NewsContent extends Model
 {

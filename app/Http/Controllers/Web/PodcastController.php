@@ -12,11 +12,12 @@ use App\Domain\DTOs\Podcast\PodcastCreateDTO;
 use App\Domain\DTOs\Podcast\PodcastUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Content\Podcast;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PodcastController extends Controller
@@ -136,6 +137,9 @@ class PodcastController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

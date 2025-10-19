@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\DB;
 
 class ApplyUserCreditAction
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(ApplyUserCreditDTO $dto): array
     {
         $user = User::findOrFail($dto->userId);
 
         DB::transaction(function () use ($user, $dto) {
-            $user->bonus_point = ($user->bonus_point ?? 0) + $dto->amount;
+            $user->bonus_point = ($user->bonus_point ?? 0) + (int) $dto->amount;
             $user->save();
 
             DB::table('user_point_history')->insert([

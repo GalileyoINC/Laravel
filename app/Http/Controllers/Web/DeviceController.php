@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\Device\DeleteDeviceAction;
 use App\Domain\Actions\Device\ExportDevicesToCsvAction;
-use App\Domain\Actions\Device\GetDeviceAction;
 use App\Domain\Actions\Device\GetDeviceListAction;
 use App\Domain\Actions\Device\SendPushNotificationAction;
 use App\Domain\DTOs\Device\DeviceListRequestDTO;
@@ -15,15 +14,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\Web\DeviceIndexRequest;
 use App\Http\Requests\Device\Web\PushRequest;
 use App\Models\Device\Device;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 
 class DeviceController extends Controller
 {
     public function __construct(
         private readonly GetDeviceListAction $getDeviceListAction,
-        private readonly GetDeviceAction $getDeviceAction,
         private readonly DeleteDeviceAction $deleteDeviceAction,
         private readonly SendPushNotificationAction $sendPushNotificationAction,
         private readonly ExportDevicesToCsvAction $exportDevicesToCsvAction,
@@ -122,6 +121,9 @@ class DeviceController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

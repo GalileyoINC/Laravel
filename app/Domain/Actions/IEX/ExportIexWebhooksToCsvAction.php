@@ -8,6 +8,10 @@ use App\Models\System\IexWebhook;
 
 final class ExportIexWebhooksToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = IexWebhook::query();
@@ -46,7 +50,7 @@ final class ExportIexWebhooksToCsvAction
                 $webhook->set,
                 $webhook->name,
                 $webhook->created_at->format('Y-m-d H:i:s'),
-                $webhook->updated_at->format('Y-m-d H:i:s'),
+                $webhook->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

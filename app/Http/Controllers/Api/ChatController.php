@@ -79,10 +79,10 @@ class ChatController extends Controller
      * Get chat file (GET /api/v1/chat/get-file/{id}/{type})
      * This endpoint serves files for download
      */
-    public function getFile($id, $type = 'original'): Response
+    public function getFile(int $id, string $type = 'original'): Response
     {
         $fileId = (int) $id;
-        $fileType = $type ?? 'original';
+        $fileType = $type;
 
         $conversationFile = ConversationFile::find($fileId);
         if (! $conversationFile || empty($conversationFile->sizes[$fileType]['name'])) {

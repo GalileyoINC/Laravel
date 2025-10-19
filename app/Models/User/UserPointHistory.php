@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,11 +20,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_sms_pool
  * @property int|null $id_comment
  * @property int $quantity
- * @property Carbon $created_at
- * @property Comment|null $comment
- * @property SmsPool|null $sms_pool
- * @property User $user
- * @property UserPointSetting $user_point_setting
+ * @property string $created_at
+ * @property-read \App\Models\Content\Comment|null $comment
+ * @property-read \App\Models\Communication\SmsPool|null $sms_pool
+ * @property-read User $user
+ * @property-read UserPointSetting $user_point_setting
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory whereIdComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory whereIdSmsPool($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory whereIdUserPointSettings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPointHistory whereQuantity($value)
+ *
+ * @mixin \Eloquent
  */
 class UserPointHistory extends Model
 {

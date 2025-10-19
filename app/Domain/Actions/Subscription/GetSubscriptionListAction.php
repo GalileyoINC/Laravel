@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetSubscriptionListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, mixed>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = Subscription::query();

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Bookmark;
 
-use App\Actions\Bookmark\Log;
 use App\Domain\DTOs\Bookmark\BookmarkRequestDTO;
 use App\Domain\Services\Bookmark\BookmarkServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DeleteBookmarkAction
 {
@@ -17,6 +17,9 @@ class DeleteBookmarkAction
         private readonly BookmarkServiceInterface $bookmarkService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

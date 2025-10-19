@@ -8,6 +8,10 @@ use App\Models\Subscription\FollowerList;
 
 final class ExportFollowerListsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = FollowerList::with(['user']);
@@ -60,7 +64,7 @@ final class ExportFollowerListsToCsvAction
                 $followerList->user ? $followerList->user->first_name.' '.$followerList->user->last_name : '',
                 $followerList->is_active ? 'Yes' : 'No',
                 $followerList->created_at->format('Y-m-d H:i:s'),
-                $followerList->updated_at->format('Y-m-d H:i:s'),
+                $followerList->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

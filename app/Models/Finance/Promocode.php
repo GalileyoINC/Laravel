@@ -8,11 +8,10 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
+use App\Models\Subscription\PromocodeInfluencer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Subscription\PromocodeInfluencer;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -23,13 +22,31 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $text
  * @property int $discount
  * @property int $is_active
- * @property Carbon $active_from
- * @property Carbon $active_to
+ * @property \Illuminate\Support\Carbon $active_from
+ * @property \Illuminate\Support\Carbon $active_to
  * @property int|null $trial_period
  * @property bool $show_on_frontend
  * @property string|null $description
- * @property Collection|Invoice[] $invoices
- * @property PromocodeInfluencer|null $promocode_influencer
+ * @property-read PromocodeInfluencer|null $influencer
+ * @property-read Collection<int, Invoice> $invoices
+ * @property-read int|null $invoices_count
+ * @property-read PromocodeInfluencer|null $promocode_influencer
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereActiveFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereActiveTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereShowOnFrontend($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereTrialPeriod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereType($value)
+ *
+ * @mixin \Eloquent
  */
 class Promocode extends Model
 {

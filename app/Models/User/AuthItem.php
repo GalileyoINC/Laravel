@@ -20,11 +20,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $description
  * @property string|null $rule_name
  * @property string|null $data
- * @property int|null $created_at
- * @property int|null $updated_at
- * @property AuthRule|null $auth_rule
- * @property Collection|AuthAssignment[] $auth_assignments
- * @property Collection|AuthItemChild[] $auth_item_children
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, AuthAssignment> $auth_assignments
+ * @property-read int|null $auth_assignments_count
+ * @property-read Collection<int, AuthItemChild> $auth_item_children
+ * @property-read int|null $auth_item_children_count
+ * @property-read AuthRule|null $auth_rule
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem whereRuleName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthItem whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class AuthItem extends Model
 {

@@ -7,6 +7,16 @@ namespace App\Models\Analytics;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read \App\Models\Communication\SmsPool|null $news
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Report newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Report newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Report query()
+ *
+ * @mixin \Eloquent
+ */
 class Report extends Model
 {
     use HasFactory;

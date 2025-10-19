@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetFollowerListsAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, FollowerList>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = FollowerList::with(['user']);

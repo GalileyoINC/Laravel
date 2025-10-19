@@ -29,6 +29,8 @@ interface OrderServiceInterface
 
     /**
      * Get test order data
+     *
+     * @return array<string, mixed>
      */
     public function getTestOrder(): array;
 }

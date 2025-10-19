@@ -13,12 +13,16 @@ class PhoneVerifyResponseDTO
 
     public static function fromData(string $message, string $status = 'sent'): static
     {
+        /** @var static */
         return new self(
             message: $message,
             status: $status
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

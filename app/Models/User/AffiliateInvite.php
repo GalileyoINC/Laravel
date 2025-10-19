@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,10 +19,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email
  * @property string|null $phone_number
  * @property string|null $token
- * @property array|null $params
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property User $user
+ * @property array<array-key, mixed>|null $params
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite whereParams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AffiliateInvite whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class AffiliateInvite extends Model
 {

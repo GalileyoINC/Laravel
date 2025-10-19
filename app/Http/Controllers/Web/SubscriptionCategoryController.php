@@ -9,10 +9,10 @@ use App\Domain\Actions\SubscriptionCategory\GetSubscriptionCategoryListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Subscription\Web\SubscriptionCategoryRequest;
 use App\Models\Subscription\SubscriptionCategory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubscriptionCategoryController extends Controller

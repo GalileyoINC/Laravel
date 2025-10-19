@@ -12,16 +12,22 @@ interface BookmarkServiceInterface
 {
     /**
      * Get bookmarks list
+     *
+     * @return array<string, mixed>
      */
-    public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user);
+    public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user): array;
 
     /**
      * Create bookmark
+     *
+     * @return array<string, mixed>
      */
-    public function createBookmark(BookmarkRequestDTO $dto, ?User $user);
+    public function createBookmark(BookmarkRequestDTO $dto, ?User $user): array;
 
     /**
      * Delete bookmark
+     *
+     * @return array<string, mixed>
      */
-    public function deleteBookmark(BookmarkRequestDTO $dto, ?User $user);
+    public function deleteBookmark(BookmarkRequestDTO $dto, ?User $user): array;
 }

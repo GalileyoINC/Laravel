@@ -6,6 +6,9 @@ namespace App\Domain\DTOs\Device;
 
 readonly class DevicePushRequestDTO
 {
+    /**
+     * @param  array<string, mixed>|null  $data
+     */
     public function __construct(
         public int $deviceId,
         public string $title,
@@ -15,6 +18,9 @@ readonly class DevicePushRequestDTO
         public ?int $badge = null
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

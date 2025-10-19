@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,9 +17,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $id_promo
  * @property int $id_invoice
- * @property Carbon|null $created_at
- * @property Invoice $invoice
- * @property Promocode $promocode
+ * @property string|null $created_at
+ * @property-read Invoice $invoice
+ * @property-read Promocode $promocode
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoicePromocode newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoicePromocode newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoicePromocode query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoicePromocode whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoicePromocode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoicePromocode whereIdInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoicePromocode whereIdPromo($value)
+ *
+ * @mixin \Eloquent
  */
 class InvoicePromocode extends Model
 {

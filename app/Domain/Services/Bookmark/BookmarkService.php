@@ -18,8 +18,10 @@ class BookmarkService implements BookmarkServiceInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
-    public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user)
+    public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user): array
     {
         try {
             if (! $user) {
@@ -45,46 +47,44 @@ class BookmarkService implements BookmarkServiceInterface
             $offset = ($dto->page - 1) * $dto->pageSize;
 
             $results = $query->orderBy('created_at', 'desc')
-                ->limit($dto->pageSize)
+                ->limit($dto->pageSize ?? 20)
                 ->offset($offset)
                 ->get();
 
             $totalCount = $query->count();
 
             // Transform each result to match frontend expectations
-            $results->each(function ($item) use ($user) {
+            $results->each(function ($item) {
                 // Add images field
-                $item->images = $item->photos->map(fn ($photo) => [
+                $item->setAttribute('images', $item->photos->map(fn ($photo) => [
                     'id' => $photo->id,
                     'url' => $photo->url,
                     'thumbnail' => $photo->thumbnail_url ?? $photo->url,
-                ])->toArray();
+                ])->toArray());
 
                 // Add reactions
-                $item->reactions = $item->reactions->map(fn ($reaction) => [
+                $item->setAttribute('reactions', $item->reactions->map(fn ($reaction) => [
                     'id' => $reaction->id,
                     'type' => $reaction->type,
                     'count' => $reaction->count,
                     'is_user_reacted' => $reaction->is_user_reacted ?? false,
-                ])->toArray();
+                ])->toArray());
 
                 // Add user info
-                $item->user_info = [
-                    'id' => $item->user->id,
-                    'first_name' => $item->user->first_name,
-                    'last_name' => $item->user->last_name,
-                    'avatar' => $item->user->avatar,
-                ];
+                $item->setAttribute('user_info', [
+                    'id' => $item->user?->id,
+                    'first_name' => $item->user?->first_name,
+                    'last_name' => $item->user?->last_name,
+                    'avatar' => $item->user?->avatar,
+                ]);
 
                 // Add bookmark status
-                $item->is_bookmarked = true; // Already bookmarked since we're filtering by bookmarks
+                $item->setAttribute('is_bookmarked', true); // Already bookmarked since we're filtering by bookmarks
 
                 // Add like status
-                $item->is_liked = false;
-                if ($user) {
-                    // TODO: Check if user has liked this post
-                    // $item->is_liked = $user->reactions()->where('post_id', $item->id)->exists();
-                }
+                $item->setAttribute('is_liked', false);
+                // TODO: Check if user has liked this post
+                // $item->setAttribute('is_liked', $user->reactions()->where('post_id', $item->id)->exists());
             });
 
             return [
@@ -103,8 +103,10 @@ class BookmarkService implements BookmarkServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
-    public function createBookmark(BookmarkRequestDTO $dto, ?User $user)
+    public function createBookmark(BookmarkRequestDTO $dto, ?User $user): array
     {
         try {
             if (! $user) {
@@ -144,8 +146,10 @@ class BookmarkService implements BookmarkServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
-    public function deleteBookmark(BookmarkRequestDTO $dto, ?User $user)
+    public function deleteBookmark(BookmarkRequestDTO $dto, ?User $user): array
     {
         try {
             if (! $user) {

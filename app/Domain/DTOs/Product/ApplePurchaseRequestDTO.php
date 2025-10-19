@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 class ApplePurchaseRequestDTO
 {
+    /**
+     * @param  array<string, mixed>  $additionalData
+     */
     public function __construct(
         public readonly string $receiptData,
         public readonly string $productId,
@@ -15,8 +18,11 @@ class ApplePurchaseRequestDTO
         public readonly ?array $additionalData = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             receiptData: $data['receipt_data'],
             productId: $data['product_id'],
@@ -27,6 +33,7 @@ class ApplePurchaseRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             receiptData: $request->input('receipt_data'),
             productId: $request->input('product_id'),
@@ -35,6 +42,9 @@ class ApplePurchaseRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

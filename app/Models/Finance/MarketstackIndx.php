@@ -22,7 +22,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool|null $has_intraday
  * @property bool|null $has_eod
  * @property bool|null $is_active
- * @property array|null $full
+ * @property array<array-key, mixed>|null $full
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereFull($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereHasEod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereHasIntraday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MarketstackIndx whereSymbol($value)
+ *
+ * @mixin \Eloquent
  */
 class MarketstackIndx extends Model
 {

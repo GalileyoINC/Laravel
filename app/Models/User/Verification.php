@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,9 +17,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $identifier
  * @property string $value
- * @property Carbon $expiresAt
- * @property Carbon|null $createdAt
- * @property Carbon|null $updatedAt
+ * @property \Illuminate\Support\Carbon $expiresAt
+ * @property \Illuminate\Support\Carbon|null $createdAt
+ * @property \Illuminate\Support\Carbon|null $updatedAt
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification whereIdentifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Verification whereValue($value)
+ *
+ * @mixin \Eloquent
  */
 class Verification extends Model
 {

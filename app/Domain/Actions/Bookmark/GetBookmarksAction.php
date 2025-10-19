@@ -17,6 +17,9 @@ class GetBookmarksAction
         private readonly BookmarkServiceInterface $bookmarkService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

@@ -16,11 +16,15 @@ class SearchRequestDTO
         public readonly ?int $page = 1,
         public readonly ?int $pageSize = 10,
         public readonly ?string $type = null,
+        /** @var array<string, mixed> */
         public readonly ?array $filters = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             phrase: $data['phrase'] ?? '',
             page: isset($data['page']) ? (int) $data['page'] : 1,
@@ -32,6 +36,7 @@ class SearchRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             phrase: $request->input('phrase', ''),
             page: $request->input('page', 1),
@@ -41,6 +46,9 @@ class SearchRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

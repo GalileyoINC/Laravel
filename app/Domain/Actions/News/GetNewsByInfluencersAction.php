@@ -17,6 +17,9 @@ class GetNewsByInfluencersAction
         private readonly NewsServiceInterface $newsService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

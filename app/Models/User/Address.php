@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,10 +29,33 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $address1
  * @property string|null $address2
  * @property int|null $address_type
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Invoice|null $invoice
- * @property User|null $user
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Finance\Invoice|null $invoice
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereAddress1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereAddress2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereAddressType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereCompany($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereIdInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereZip($value)
+ *
+ * @mixin \Eloquent
  */
 class Address extends Model
 {

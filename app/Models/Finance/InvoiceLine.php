@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,19 +20,39 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $id_invoice
  * @property int $type
  * @property float|null $total
- * @property array|null $settings
+ * @property array<array-key, mixed>|null $settings
  * @property int|null $id_service
  * @property int|null $pay_interval
  * @property int|null $quantity
  * @property int|null $id_contract_line
- * @property Carbon|null $begin_at
- * @property Carbon|null $end_at
+ * @property \Illuminate\Support\Carbon|null $begin_at
+ * @property \Illuminate\Support\Carbon|null $end_at
  * @property int|null $id_bundle
- * @property Bundle|null $bundle
- * @property ContractLine|null $contract_line
- * @property Invoice|null $invoice
- * @property Collection|ContractLinePaid[] $contract_line_paids
- * @property Collection|UserPlan[] $user_plans
+ * @property-read Bundle|null $bundle
+ * @property-read ContractLine|null $contract_line
+ * @property-read Collection<int, ContractLinePaid> $contract_line_paids
+ * @property-read int|null $contract_line_paids_count
+ * @property-read Invoice|null $invoice
+ * @property-read Collection<int, \App\Models\User\UserPlan> $user_plans
+ * @property-read int|null $user_plans_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereBeginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereIdBundle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereIdContractLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereIdInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereIdService($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine wherePayInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereSettings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceLine whereType($value)
+ *
+ * @mixin \Eloquent
  */
 class InvoiceLine extends Model
 {

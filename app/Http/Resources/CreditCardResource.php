@@ -24,7 +24,7 @@ class CreditCardResource extends JsonResource
                 'email' => data_get($this, 'user.email'),
             ]),
             'card_number' => $this->getAttribute('num'),
-            'cardholder_name' => trim((string)($this->getAttribute('first_name') ?? '') . ' ' . (string)($this->getAttribute('last_name') ?? '')),
+            'cardholder_name' => trim((string) ($this->getAttribute('first_name') ?? '').' '.(string) ($this->getAttribute('last_name') ?? '')),
             'expiry_month' => $this->getAttribute('expiration_month'),
             'expiry_year' => $this->getAttribute('expiration_year'),
             'is_active' => $this->getAttribute('is_active'),

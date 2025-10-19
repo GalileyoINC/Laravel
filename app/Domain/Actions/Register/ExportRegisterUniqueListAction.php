@@ -8,6 +8,10 @@ use App\Models\User\Register;
 
 final class ExportRegisterUniqueListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = Register::query();
@@ -36,11 +40,11 @@ final class ExportRegisterUniqueListAction
         $rows[] = ['ID', 'Email', 'First Name', 'Last Name', 'Created At'];
         foreach ($registers as $register) {
             $rows[] = [
-                $register->min_id,
+                $register->min_id ?? '',
                 $register->email,
                 $register->first_name,
                 $register->last_name,
-                $register->min_created_at,
+                $register->min_created_at ?? '',
             ];
         }
 

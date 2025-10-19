@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetEmergencyTipsRequestListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, EmergencyTipsRequest>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = EmergencyTipsRequest::query();

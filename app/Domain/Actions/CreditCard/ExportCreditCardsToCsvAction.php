@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Actions\CreditCard;
 
 use App\Models\Finance\CreditCard;
+use App\Models\User\User;
 
 final class ExportCreditCardsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = CreditCard::with('user');
@@ -52,11 +57,21 @@ final class ExportCreditCardsToCsvAction
         $rows = [];
         $rows[] = ['ID', 'User ID', 'First Name', 'Last Name', 'Card Number', 'Phone', 'Type', 'Expiration', 'Is Active', 'Gateway Profile ID', 'Created At', 'Updated At'];
         foreach ($creditCards as $card) {
+            /** @var CreditCard $card */
+            $userName = '';
+            $userLastName = '';
+            if ($card->user) {
+                /** @var User $user */
+                $user = $card->user;
+                $userName = $user->first_name ?? '';
+                $userLastName = $user->last_name ?? '';
+            }
+
             $rows[] = [
                 $card->id,
                 $card->id_user,
-                $card->user->first_name ?? '',
-                $card->user->last_name ?? '',
+                $userName,
+                $userLastName,
                 $card->num,
                 $card->phone,
                 $card->type,
@@ -64,7 +79,7 @@ final class ExportCreditCardsToCsvAction
                 $card->is_active ? 'Yes' : 'No',
                 $card->anet_customer_payment_profile_id,
                 $card->created_at->format('Y-m-d H:i:s'),
-                $card->updated_at->format('Y-m-d H:i:s'),
+                $card->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

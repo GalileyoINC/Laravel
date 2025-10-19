@@ -18,6 +18,9 @@ class UpdateProfileAction
         private readonly CustomerServiceInterface $customerService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

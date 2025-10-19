@@ -14,6 +14,9 @@ class GetGatewayProfileAction
         private readonly CreditCardServiceInterface $creditCardService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

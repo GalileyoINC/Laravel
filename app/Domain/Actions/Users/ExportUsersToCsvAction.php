@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Users;
 
 use App\Domain\DTOs\Users\ExportUsersRequestDTO;
+use App\Models\Device\PhoneNumber;
+use App\Models\Finance\ContractLine;
 use App\Models\User\User;
 
 class ExportUsersToCsvAction
 {
+    /**
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(ExportUsersRequestDTO $dto): array
     {
         $query = User::with(['phoneNumbers', 'contract_lines']);
@@ -32,6 +37,7 @@ class ExportUsersToCsvAction
         $rows[] = ['Id', 'First Name', 'Last Name', 'Contact', 'Email', 'Phone', 'Type', 'Valid', 'Status', 'Influencer', 'Test', 'Active Plan', 'Plan Type', 'Refer', 'Created At', 'SPS', 'State', 'Country', 'Zip'];
 
         foreach ($users as $user) {
+            /** @var PhoneNumber|null $phone */
             $phone = $user->phoneNumbers->first();
             $phoneNumber = $phone ? $phone->number : '';
             $phoneType = $phone ? $phone->getFullTypeName() : '';
@@ -51,6 +57,7 @@ class ExportUsersToCsvAction
             $planType = '';
             if ($activeLines->isNotEmpty()) {
                 $planType = $activeLines->map(function ($line) {
+                    /** @var ContractLine $line */
                     $interval = (int) ($line->pay_interval ?? 0);
 
                     return match ($interval) {

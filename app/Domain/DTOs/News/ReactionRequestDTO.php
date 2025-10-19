@@ -17,8 +17,11 @@ class ReactionRequestDTO
         public readonly ?string $message = null
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             idNews: (int) $data['id_news'],
             reactionType: $data['reaction_type'] ?? 'like',
@@ -28,6 +31,7 @@ class ReactionRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             idNews: $request->input('id_news'),
             reactionType: $request->input('reaction_type', 'like'),
@@ -35,6 +39,9 @@ class ReactionRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

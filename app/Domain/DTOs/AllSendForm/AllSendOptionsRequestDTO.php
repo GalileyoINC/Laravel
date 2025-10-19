@@ -10,16 +10,22 @@ class AllSendOptionsRequestDTO
 {
     public function __construct() {}
 
-    public static function fromArray(array $data): static
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public static function fromArray(array $data): self
     {
         return new self;
     }
 
-    public static function fromRequest(Request $request): static
+    public static function fromRequest(Request $request): self
     {
         return new self;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [];

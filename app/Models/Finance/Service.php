@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,11 +22,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $description
  * @property float|null $price
  * @property int $bonus_point
- * @property array|null $settings
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property array<array-key, mixed>|null $settings
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool|null $is_active
- * @property array|null $compensation
+ * @property array<array-key, mixed>|null $compensation
  * @property float|null $fee
  * @property float|null $fee_annual
  * @property float|null $termination_fee
@@ -38,16 +37,54 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $is_special_fee
  * @property float|null $special_fee_annual
  * @property bool $is_special_fee_annual
- * @property Carbon|null $special_datetime
- * @property Collection|BundleItem[] $bundle_items
- * @property Collection|ContractLine[] $contract_lines
- * @property Collection|DevicePlan[] $device_plans
- * @property Collection|Invoice[] $invoices
- * @property Collection|ProductPhoto[] $product_photos
- * @property Collection|SpsContract[] $sps_contracts
- * @property Collection|UserPlan[] $user_plans
- * @property Collection|UserPlanShedule[] $user_plan_shedules
- * @property Collection|User[] $users
+ * @property \Illuminate\Support\Carbon|null $special_datetime
+ * @property-read Collection<int, BundleItem> $bundle_items
+ * @property-read int|null $bundle_items_count
+ * @property-read Collection<int, ContractLine> $contract_lines
+ * @property-read int|null $contract_lines_count
+ * @property-read Collection<int, \App\Models\Device\DevicePlan> $device_plans
+ * @property-read int|null $device_plans_count
+ * @property-read Collection<int, Invoice> $invoices
+ * @property-read int|null $invoices_count
+ * @property-read Collection<int, \App\Models\Content\ProductPhoto> $product_photos
+ * @property-read int|null $product_photos_count
+ * @property-read Collection<int, SpsContract> $sps_contracts
+ * @property-read int|null $sps_contracts_count
+ * @property-read Collection<int, \App\Models\User\UserPlanShedule> $user_plan_shedules
+ * @property-read int|null $user_plan_shedules_count
+ * @property-read Collection<int, \App\Models\User\UserPlan> $user_plans
+ * @property-read int|null $user_plans_count
+ * @property-read Collection<int, \App\Models\User\User> $users
+ * @property-read int|null $users_count
+ *
+ * @method static \Database\Factories\ServiceFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereBonusPoint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereCompensation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereFeeAnnual($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereIsSpecialFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereIsSpecialFeeAnnual($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereIsSpecialPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereSettings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereSpecialDatetime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereSpecialFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereSpecialFeeAnnual($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereSpecialPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereTerminationFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereTerminationPeriod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Service extends Model
 {
@@ -127,7 +164,7 @@ class Service extends Model
 
     public function device_plans()
     {
-        return $this->hasMany(DevicePlan::class, 'id_plan');
+        return $this->hasMany(\App\Models\Device\DevicePlan::class, 'id_plan');
     }
 
     public function invoices()
@@ -137,7 +174,7 @@ class Service extends Model
 
     public function product_photos()
     {
-        return $this->hasMany(ProductPhoto::class, 'id_service');
+        return $this->hasMany(\App\Models\Content\ProductPhoto::class, 'id_service');
     }
 
     public function sps_contracts()

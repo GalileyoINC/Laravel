@@ -14,8 +14,12 @@ class CommentCreateRequestDTO
         public readonly string $message
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             newsId: isset($data['id_news']) ? (int) $data['id_news'] : null,
             parentId: isset($data['id_parent']) ? (int) $data['id_parent'] : null,
@@ -25,6 +29,7 @@ class CommentCreateRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             newsId: $request->input('id_news'),
             parentId: $request->input('id_parent'),
@@ -32,6 +37,9 @@ class CommentCreateRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

@@ -10,9 +10,9 @@ use App\Domain\DTOs\News\NewsBySubscriptionDTO;
 use App\Domain\DTOs\News\NewsListRequestDTO;
 use App\Domain\DTOs\News\ReactionRequestDTO;
 use App\Domain\DTOs\News\ReportNewsRequestDTO;
+use App\Models\Analytics\Report;
 use App\Models\Communication\SmsPool;
 use App\Models\Communication\SmsPoolReaction;
-use App\Models\Content\Report;
 use App\Models\User\Mute;
 use App\Models\User\User;
 use Exception;
@@ -44,15 +44,15 @@ class NewsService implements NewsServiceInterface
             }
 
             $news = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             // Transform each news item to match frontend expectations
             $news->each(function ($item) {
                 // Add images field
-                $item->images = $item->photos->map(function ($photo) {
-                    $sizes = $photo->sizes ? json_decode((string) $photo->sizes, true) : [];
+                $item->setAttribute('images', $item->photos->map(function ($photo) {
+                    $sizes = $photo->sizes ?? [];
 
                     // Transform sizes to match frontend expectations
                     $transformedSizes = [];
@@ -70,10 +70,10 @@ class NewsService implements NewsServiceInterface
                         'id' => $photo->id,
                         'sizes' => $transformedSizes,
                     ];
-                })->toArray();
+                })->toArray());
 
                 // Add required fields for frontend
-                $item->type = $this->getFeedItemType($item->purpose);
+                $item->setAttribute('type', $this->getFeedItemType($item->purpose ?? 0));
                 $item->title = $item->short_body ?? '';
                 $item->subtitle = '';
                 $item->body ??= '';
@@ -95,12 +95,12 @@ class NewsService implements NewsServiceInterface
                         $number = str_replace(',', '', $matches[1]);
                         $afterDot = mb_strlen(explode('.', $number)[1] ?? '');
 
-                        $item->percent = $matches[2];
-                        $item->price = number_format($number, $afterDot);
+                        $item->setAttribute('percent', (float) $matches[2]);
+                        $item->setAttribute('price', (float) $number);
                     } else {
                         // No financial data found, don't add fake data
-                        $item->percent = null;
-                        $item->price = null;
+                        $item->setAttribute('percent', null);
+                        $item->setAttribute('price', null);
                     }
                 }
 
@@ -117,7 +117,7 @@ class NewsService implements NewsServiceInterface
                     }
                     $reactionsGrouped[$reactionId]['cnt']++;
                 }
-                $item->reactions = array_values($reactionsGrouped);
+                $item->setAttribute('reactions', array_values($reactionsGrouped));
             });
 
             return $news;
@@ -146,15 +146,15 @@ class NewsService implements NewsServiceInterface
             }
 
             $news = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             // Transform each news item to match frontend expectations
             $news->each(function ($item) {
                 // Add images field
-                $item->images = $item->photos->map(function ($photo) {
-                    $sizes = $photo->sizes ? json_decode((string) $photo->sizes, true) : [];
+                $item->setAttribute('images', $item->photos->map(function ($photo) {
+                    $sizes = $photo->sizes ?? [];
 
                     // Transform sizes to match frontend expectations
                     $transformedSizes = [];
@@ -172,10 +172,10 @@ class NewsService implements NewsServiceInterface
                         'id' => $photo->id,
                         'sizes' => $transformedSizes,
                     ];
-                })->toArray();
+                })->toArray());
 
                 // Add required fields for frontend
-                $item->type = $this->getFeedItemType($item->purpose);
+                $item->setAttribute('type', $this->getFeedItemType($item->purpose ?? 0));
                 $item->title = $item->short_body ?? '';
                 $item->subtitle = '';
                 $item->body ??= '';
@@ -197,12 +197,12 @@ class NewsService implements NewsServiceInterface
                         $number = str_replace(',', '', $matches[1]);
                         $afterDot = mb_strlen(explode('.', $number)[1] ?? '');
 
-                        $item->percent = $matches[2];
-                        $item->price = number_format($number, $afterDot);
+                        $item->setAttribute('percent', (float) $matches[2]);
+                        $item->setAttribute('price', (float) $number);
                     } else {
                         // No financial data found, don't add fake data
-                        $item->percent = null;
-                        $item->price = null;
+                        $item->setAttribute('percent', null);
+                        $item->setAttribute('price', null);
                     }
                 }
 
@@ -219,7 +219,7 @@ class NewsService implements NewsServiceInterface
                     }
                     $reactionsGrouped[$reactionId]['cnt']++;
                 }
-                $item->reactions = array_values($reactionsGrouped);
+                $item->setAttribute('reactions', array_values($reactionsGrouped));
             });
 
             return $news;
@@ -253,8 +253,8 @@ class NewsService implements NewsServiceInterface
             }
 
             $news = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $news;

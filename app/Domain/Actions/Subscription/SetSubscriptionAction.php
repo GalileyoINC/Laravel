@@ -17,6 +17,9 @@ class SetSubscriptionAction
         private readonly SubscriptionServiceInterface $subscriptionService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

@@ -83,6 +83,9 @@ class BundleService implements BundleServiceInterface
         return $bundle->load('services');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getDeviceData(BundleDeviceDataRequestDTO $dto): array
     {
         $device = Service::findOrFail($dto->idDevice);

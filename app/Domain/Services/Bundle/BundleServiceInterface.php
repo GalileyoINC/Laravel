@@ -12,11 +12,17 @@ use App\Models\Finance\Bundle;
 
 interface BundleServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(BundleListRequestDTO $dto): array;
 
     public function create(BundleCreateRequestDTO $dto): Bundle;
 
     public function update(BundleUpdateRequestDTO $dto): Bundle;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getDeviceData(BundleDeviceDataRequestDTO $dto): array;
 }

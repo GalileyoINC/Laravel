@@ -15,6 +15,10 @@ class UpdateSettingsAction
         private readonly SettingsServiceInterface $settingsService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function execute(array $data): array
     {
         DB::beginTransaction();

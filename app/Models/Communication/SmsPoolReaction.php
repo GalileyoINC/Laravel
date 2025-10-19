@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
-use Carbon\Carbon;
 use Database\Factories\SmsPoolReactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,10 +18,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_sms_pool
  * @property int $id_user
  * @property int|null $id_reaction
- * @property Carbon $created_at
- * @property Reaction|null $reaction
- * @property SmsPool $sms_pool
- * @property User $user
+ * @property string $created_at
+ * @property-read SmsPool $sms_pool
+ * @property-read \App\Models\User\User $user
+ *
+ * @method static \Database\Factories\SmsPoolReactionFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction whereIdReaction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction whereIdSmsPool($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction whereIdUser($value)
+ *
+ * @mixin \Eloquent
  */
 class SmsPoolReaction extends Model
 {

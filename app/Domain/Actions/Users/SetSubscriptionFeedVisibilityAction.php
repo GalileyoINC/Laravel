@@ -9,6 +9,9 @@ use App\Models\Subscription\Subscription;
 
 class SetSubscriptionFeedVisibilityAction
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(SetFeedVisibilityDTO $dto): array
     {
         $updated = Subscription::where('id', $dto->subscriptionId)

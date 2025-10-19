@@ -16,21 +16,29 @@ interface AllSendFormServiceInterface
 {
     /**
      * Get all send options
+     *
+     * @return array<string, mixed>
      */
     public function getAllSendOptions(AllSendOptionsRequestDTO $dto, ?User $user): array;
 
     /**
      * Send broadcast message
+     *
+     * @return array<string, mixed>
      */
     public function sendBroadcast(AllSendBroadcastRequestDTO $dto, User $user): array;
 
     /**
      * Upload image for broadcast
+     *
+     * @return array<string, mixed>
      */
     public function uploadImage(AllSendImageUploadRequestDTO $dto, User $user): array;
 
     /**
      * Delete image
+     *
+     * @return array<string, mixed>
      */
     public function deleteImage(int $imageId, User $user): array;
 }

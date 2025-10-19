@@ -36,11 +36,11 @@ class ContactService implements ContactServiceInterface
     public function create(CreateContactDTO $dto): Contact
     {
         return Contact::create([
-            'id_user' => $dto->userId,
+            'id_user' => $dto->idUser,
             'name' => $dto->name,
             'email' => $dto->email,
             'subject' => $dto->subject,
-            'body' => $dto->message,
+            'body' => $dto->body,
             'status' => 1,
         ]);
     }

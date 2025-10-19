@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
  */
 class NewsListRequestDTO
 {
+    /**
+     * @param  array<string, mixed>  $filter
+     */
     public function __construct(
         public readonly ?string $type = null,
         public readonly ?int $limit = 20,
@@ -19,8 +22,11 @@ class NewsListRequestDTO
         public readonly ?array $filter = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             type: $data['type'] ?? null,
             limit: isset($data['limit']) ? (int) $data['limit'] : 20,
@@ -32,6 +38,7 @@ class NewsListRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             type: $request->input('type'),
             limit: $request->input('limit', 20),
@@ -41,6 +48,9 @@ class NewsListRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

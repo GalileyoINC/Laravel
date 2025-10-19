@@ -8,6 +8,10 @@ use App\Models\Analytics\InfoState;
 
 final class ExportInfoStatesToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = InfoState::query();
@@ -45,7 +49,7 @@ final class ExportInfoStatesToCsvAction
                 $infoState->key,
                 is_array($infoState->value) ? json_encode($infoState->value) : $infoState->value,
                 $infoState->created_at->format('Y-m-d H:i:s'),
-                $infoState->updated_at->format('Y-m-d H:i:s'),
+                $infoState->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

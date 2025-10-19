@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetPageListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Page>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = Page::query();

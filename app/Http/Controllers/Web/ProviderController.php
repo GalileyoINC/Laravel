@@ -13,10 +13,10 @@ use App\Domain\DTOs\Provider\ProviderUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Provider\Web\ProviderRequest;
 use App\Models\Finance\Provider;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProviderController extends Controller
@@ -131,6 +131,9 @@ class ProviderController extends Controller
 
         return response()->streamDownload(function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

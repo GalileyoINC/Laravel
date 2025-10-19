@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\EmailPoolArchive;
 
-use App\Models\Communication\EmailPoolArchive;
+use App\Models\Communication\EmailPool;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetEmailPoolArchiveListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, EmailPool>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        $query = EmailPoolArchive::with(['attachments']);
+        $query = EmailPool::query();
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];

@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
+use App\Models\Finance\Provider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Finance\Provider;
 
 /**
  * Class SmsPoolPhoneNumber
@@ -27,10 +27,29 @@ use App\Models\Finance\Provider;
  * @property string|null $error
  * @property int|null $id_provider
  * @property int|null $type
- * @property PhoneNumber|null $phone_number
- * @property Provider|null $provider
- * @property SmsPool|null $sms_pool
- * @property User|null $user
+ * @property-read \App\Models\Device\PhoneNumber|null $phoneNumber
+ * @property-read \App\Models\Device\PhoneNumber|null $phone_number
+ * @property-read Provider|null $provider
+ * @property-read SmsPool|null $smsPool
+ * @property-read SmsPool|null $sms_pool
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereError($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereIdPhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereIdProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereIdSmsPool($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereIsSatellite($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereSid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolPhoneNumber whereType($value)
+ *
+ * @mixin \Eloquent
  */
 class SmsPoolPhoneNumber extends Model
 {
@@ -67,6 +86,7 @@ class SmsPoolPhoneNumber extends Model
     {
         return $this->belongsTo(\App\Models\Device\PhoneNumber::class, 'id_phone_number');
     }
+
     /** Alias to satisfy controllers using ->with(['phoneNumber']) */
     public function phoneNumber(): BelongsTo
     {
@@ -82,6 +102,7 @@ class SmsPoolPhoneNumber extends Model
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
+
     /** Alias for consistency */
     public function smsPool(): BelongsTo
     {

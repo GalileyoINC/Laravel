@@ -9,9 +9,15 @@ use App\Models\Finance\CreditCard;
 
 interface CreditCardServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(CreditCardListRequestDTO $dto): array;
 
     public function getById(int $id): CreditCard;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getGatewayProfile(int $id): array;
 }

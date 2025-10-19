@@ -17,7 +17,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $item_name
  * @property string $user_id
  * @property int|null $created_at
- * @property AuthItem $auth_item
+ * @property-read AuthItem $auth_item
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthAssignment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthAssignment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthAssignment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthAssignment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthAssignment whereItemName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuthAssignment whereUserId($value)
+ *
+ * @mixin \Eloquent
  */
 class AuthAssignment extends Model
 {

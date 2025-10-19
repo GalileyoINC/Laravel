@@ -19,7 +19,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property int|null $id_parent
  * @property int $position_no
- * @property Collection|Subscription[] $subscriptions
+ * @property-read Collection<int, Subscription> $subscriptions
+ * @property-read int|null $subscriptions_count
+ *
+ * @method static \Database\Factories\Subscription\SubscriptionCategoryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionCategory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionCategory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionCategory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionCategory whereIdParent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SubscriptionCategory wherePositionNo($value)
+ *
+ * @mixin \Eloquent
  */
 class SubscriptionCategory extends Model
 {

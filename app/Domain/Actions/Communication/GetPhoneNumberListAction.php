@@ -9,9 +9,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetPhoneNumberListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, PhoneNumber>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        $query = PhoneNumber::with(['user', 'provider']);
+        $query = PhoneNumber::with(['user']);
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];

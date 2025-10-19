@@ -6,9 +6,15 @@ namespace App\Domain\Actions\SmsPoolArchive;
 
 use App\Models\Communication\SmsPool;
 use App\Models\Communication\SmsPoolArchive;
+use App\Models\System\Staff;
+use App\Models\User\User;
 
 final class ExportSmsPoolArchiveToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = SmsPoolArchive::with(['user', 'staff', 'subscription', 'followerList']);
@@ -57,11 +63,16 @@ final class ExportSmsPoolArchiveToCsvAction
         $rows = [];
         $rows[] = ['ID', 'Purpose', 'Subscription', 'Private Feed', 'Sender', 'Body', 'Created At', 'Updated At'];
         foreach ($items as $smsPoolArchive) {
+            /** @var SmsPoolArchive $smsPoolArchive */
             $sender = '';
             if ($smsPoolArchive->user) {
-                $sender = 'User: '.$smsPoolArchive->user->first_name.' '.$smsPoolArchive->user->last_name;
+                /** @var User $user */
+                $user = $smsPoolArchive->user;
+                $sender = 'User: '.$user->first_name.' '.$user->last_name;
             } elseif ($smsPoolArchive->staff) {
-                $sender = 'Staff: '.$smsPoolArchive->staff->username;
+                /** @var Staff $staff */
+                $staff = $smsPoolArchive->staff;
+                $sender = 'Staff: '.$staff->username;
             }
 
             $rows[] = [
@@ -71,8 +82,8 @@ final class ExportSmsPoolArchiveToCsvAction
                 $smsPoolArchive->followerList ? $smsPoolArchive->followerList->name : '',
                 $sender,
                 $smsPoolArchive->body,
-                $smsPoolArchive->created_at->format('Y-m-d H:i:s'),
-                $smsPoolArchive->updated_at->format('Y-m-d H:i:s'),
+                $smsPoolArchive->created_at,
+                $smsPoolArchive->updated_at ?? '',
             ];
         }
 

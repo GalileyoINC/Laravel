@@ -18,8 +18,12 @@ class SubscriptionRequestDTO
         public readonly ?string $subType = 'regular' // 'regular' or 'satellite'
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             idSubscription: (int) $data['id'],
             checked: (bool) $data['checked'],
@@ -30,6 +34,7 @@ class SubscriptionRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             idSubscription: $request->input('id'),
             checked: $request->boolean('checked'),
@@ -38,6 +43,9 @@ class SubscriptionRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

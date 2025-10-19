@@ -9,8 +9,9 @@ use App\Domain\Actions\FollowerList\GetFollowerListsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FollowerList\Web\FollowerListIndexRequest;
 use App\Models\Subscription\FollowerList;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FollowerListController extends Controller
@@ -57,6 +58,9 @@ class FollowerListController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

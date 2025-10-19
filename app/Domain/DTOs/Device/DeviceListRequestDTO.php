@@ -19,6 +19,9 @@ readonly class DeviceListRequestDTO
         public ?string $updatedAtTo = null
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

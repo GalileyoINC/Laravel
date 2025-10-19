@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 final class GetSmsReportListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, mixed>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = DB::table('sms_pool')

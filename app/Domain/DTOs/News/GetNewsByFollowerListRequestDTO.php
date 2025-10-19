@@ -12,8 +12,11 @@ class GetNewsByFollowerListRequestDTO
         public int $page_size = 20
     ) {}
 
-    public static function fromArray(array $data): self
+    /**
+     * @param array<string, mixed> $data     */
+    public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             id_follower_list: $data['id_follower_list'] ?? '',
             page: (int) ($data['page'] ?? 1),

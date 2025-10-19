@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
-use Carbon\Carbon;
 use Database\Factories\CommunicationContactFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,14 +21,39 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email
  * @property string|null $subject
  * @property string $body
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $status
- * @property User|null $user
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Database\Factories\CommunicationContactFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereSubject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Contact extends Model
 {
     use HasFactory;
+
+    /**
+     * Status constants
+     */
+    public const STATUS_PENDING = 0;
+
+    public const STATUS_REPLIED = 1;
+
+    public const STATUS_DELETED = 2;
 
     protected $table = 'contact';
 
@@ -47,7 +71,7 @@ class Contact extends Model
         'status',
     ];
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

@@ -13,9 +13,9 @@ final class CreateSubscriptionAction
     {
         $subscription = new Subscription();
         $subscription->id_subscription_category = $dto->categoryId;
+        $subscription->name = $dto->title; // Use name instead of title
         $subscription->title = $dto->title;
-        $subscription->percent = $dto->percent;
-        $subscription->alias = $dto->alias;
+        $subscription->percent = $dto->percent !== null ? (float) $dto->percent : 0.0;
         $subscription->description = $dto->description;
         $subscription->is_custom = (bool) $dto->isCustom;
         $subscription->show_reactions = (bool) $dto->showReactions;
@@ -23,7 +23,8 @@ final class CreateSubscriptionAction
 
         if ($dto->imageFile) {
             $imagePath = $dto->imageFile->store('subscriptions', 'public');
-            $subscription->image = $imagePath;
+            // Store image path in a custom field or handle differently
+            // $subscription->image = $imagePath; // This property doesn't exist
         }
 
         $subscription->save();

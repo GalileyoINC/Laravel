@@ -15,6 +15,9 @@ class GetReferralReportAction
         private readonly ReportServiceInterface $reportService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

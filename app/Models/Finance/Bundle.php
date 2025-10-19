@@ -8,11 +8,11 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Database\Factories\FinanceBundleFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Bundle
@@ -23,10 +23,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $pay_interval
  * @property bool $is_active
  * @property float $total
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Collection|BundleItem[] $bundle_items
- * @property Collection|InvoiceLine[] $invoice_lines
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, BundleItem> $bundle_items
+ * @property-read int|null $bundle_items_count
+ * @property-read Collection<int, InvoiceLine> $invoice_lines
+ * @property-read int|null $invoice_lines_count
+ * @property-read Collection<int, Service> $services
+ * @property-read int|null $services_count
+ *
+ * @method static \Database\Factories\FinanceBundleFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle wherePayInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Bundle extends Model
 {
@@ -48,6 +67,14 @@ class Bundle extends Model
         'is_active',
         'total',
     ];
+
+    /**
+     * @return BelongsToMany<Service, static, BundleItem, int, int>
+     */
+    public function services(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class, 'bundle_items', 'id_bundle', 'id_service');
+    }
 
     public function bundle_items()
     {

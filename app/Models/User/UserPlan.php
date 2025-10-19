@@ -8,10 +8,11 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class UserPlan
@@ -26,18 +27,43 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $pay_interval
  * @property float|null $price_before_prorate
  * @property float|null $price_after_prorate
- * @property array|null $settings
- * @property Carbon $begin_at
- * @property Carbon|null $end_at
+ * @property array<array-key, mixed>|null $settings
+ * @property \Illuminate\Support\Carbon $begin_at
+ * @property \Illuminate\Support\Carbon|null $end_at
  * @property int $devices
  * @property bool $is_new_custom
  * @property bool $is_not_receive_message
- * @property InvoiceLine|null $invoice_line
- * @property Service|null $service
- * @property User|null $user
- * @property Collection|AdminMember[] $admin_members
- * @property Collection|MemberTemplate[] $member_templates
- * @property Collection|SpsContract[] $sps_contracts
+ * @property-read Collection<int, AdminMember> $admin_members
+ * @property-read int|null $admin_members_count
+ * @property-read \App\Models\Finance\InvoiceLine|null $invoice_line
+ * @property-read Collection<int, MemberTemplate> $member_templates
+ * @property-read int|null $member_templates_count
+ * @property-read \App\Models\Finance\Service|null $service
+ * @property-read Collection<int, \App\Models\Finance\SpsContract> $sps_contracts
+ * @property-read int|null $sps_contracts_count
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereAlert($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereBeginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereDevices($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereIdInvoiceLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereIdService($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereIsNewCustom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereIsNotReceiveMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereIsPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereMaxPhoneCnt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan wherePayInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan wherePriceAfterProrate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan wherePriceBeforeProrate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserPlan whereSettings($value)
+ *
+ * @mixin \Eloquent
  */
 class UserPlan extends Model
 {
@@ -94,32 +120,40 @@ class UserPlan extends Model
         ];
     }
 
-    public function invoice_line()
+    /**
+     * Get the expiration date attribute (alias for end_at)
+     */
+    public function getExpDateAttribute(): ?\Illuminate\Support\Carbon
     {
-        return $this->belongsTo(InvoiceLine::class, 'id_invoice_line');
+        return $this->end_at;
     }
 
-    public function service()
+    public function invoice_line(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Finance\InvoiceLine::class, 'id_invoice_line');
+    }
+
+    public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function admin_members()
+    public function admin_members(): HasMany
     {
         return $this->hasMany(AdminMember::class, 'id_plan');
     }
 
-    public function member_templates()
+    public function member_templates(): HasMany
     {
         return $this->hasMany(MemberTemplate::class, 'id_plan');
     }
 
-    public function sps_contracts()
+    public function sps_contracts(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_plan');
     }

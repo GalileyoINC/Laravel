@@ -8,6 +8,10 @@ use App\Models\System\TwilioCarrier;
 
 final class ExportTwilioCarriersToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = TwilioCarrier::with('provider');
@@ -32,6 +36,7 @@ final class ExportTwilioCarriersToCsvAction
 
         $rows = [];
         $rows[] = ['ID', 'Name', 'Provider', 'Created At'];
+        /** @var TwilioCarrier $carrier */
         foreach ($items as $carrier) {
             $rows[] = [
                 $carrier->id,

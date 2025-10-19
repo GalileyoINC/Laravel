@@ -16,11 +16,24 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $zip
- * @property point $geopoint
+ * @property mixed $geopoint
  * @property string|null $city
  * @property string|null $state
  * @property string|null $timezone
  * @property string|null $daylight_savings_time_flag
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU whereDaylightSavingsTimeFlag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU whereGeopoint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU whereTimezone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ZipU whereZip($value)
+ *
+ * @mixin \Eloquent
  */
 class ZipU extends Model
 {

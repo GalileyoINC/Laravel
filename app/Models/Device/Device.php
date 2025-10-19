@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace App\Models\Device;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Device
@@ -21,11 +21,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $os
  * @property string|null $push_token
  * @property string|null $access_token
- * @property array|null $params
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property array<array-key, mixed>|null $params
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $push_turn_on
- * @property User $user
+ * @property-read \App\Models\User\User $user
+ *
+ * @method static \Database\Factories\Device\DeviceFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereAccessToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereOs($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereParams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device wherePushToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device wherePushTurnOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Device whereUuid($value)
+ *
+ * @mixin \Eloquent
  */
 class Device extends Model
 {
@@ -54,7 +71,7 @@ class Device extends Model
         'push_turn_on',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

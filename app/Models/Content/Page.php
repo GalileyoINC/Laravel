@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
-use Carbon\Carbon;
 use Database\Factories\ContentPageFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,10 +20,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $slug
  * @property int $status
- * @property array|null $params
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Collection|PageContent[] $page_contents
+ * @property array<array-key, mixed>|null $params
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, PageContent> $page_contents
+ * @property-read int|null $page_contents_count
+ *
+ * @method static \Database\Factories\ContentPageFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereParams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Page extends Model
 {

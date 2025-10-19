@@ -8,9 +8,10 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -24,24 +25,25 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string|null $password_reset_token
  * @property int $role
  * @property int $status
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $first_name
  * @property string|null $last_name
  * @property string|null $phone_profile
  * @property string|null $country
  * @property string|null $state
  * @property bool|null $is_influencer
+ * @property \Illuminate\Support\Carbon|null $influencer_verified_at
  * @property string|null $zip
  * @property string|null $anet_customer_profile_id
  * @property string|null $anet_customer_shipping_address_id
  * @property int $bonus_point
- * @property string|null $image
+ * @property string|null $avatar
  * @property string|null $timezone
  * @property string|null $verification_token
  * @property bool $is_valid_email
  * @property string|null $refer_custom
- * @property Carbon|null $pay_at
+ * @property \Illuminate\Support\Carbon|null $pay_at
  * @property int|null $refer_type
  * @property string|null $name_as_referral
  * @property string|null $affiliate_token
@@ -51,12 +53,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $is_test
  * @property string|null $admin_token
  * @property bool $is_assistant
- * @property Carbon|null $cancel_at
+ * @property \Illuminate\Support\Carbon|null $cancel_at
  * @property int|null $tour
  * @property int|null $id_sps
- * @property array|null $sps_data
+ * @property array<array-key, mixed>|null $sps_data
  * @property bool|null $is_sps_active
- * @property Carbon|null $sps_terminated_at
+ * @property \Illuminate\Support\Carbon|null $sps_terminated_at
  * @property int|null $general_visibility
  * @property int|null $phone_visibility
  * @property int|null $address_visibility
@@ -65,53 +67,161 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool|null $is_bad_email
  * @property string|null $promocode
  * @property int|null $test_message_qnt
- * @property Carbon|null $test_message_at
+ * @property \Illuminate\Support\Carbon|null $test_message_at
  * @property string|null $city
  * @property int|null $id_inviter
  * @property int|null $source
  * @property string|null $about
  * @property string|null $header_image
  * @property string|null $name_search
- * @property User|null $user
- * @property Collection|Address[] $addresses
- * @property Collection|AdminMember[] $admin_members
- * @property Collection|Affiliate[] $affiliates
- * @property Collection|AffiliateInvite[] $affiliate_invites
- * @property Collection|BpSubscription[] $bp_subscriptions
- * @property Collection|Comment[] $comments
- * @property Collection|Contact[] $contacts
- * @property Collection|ContractLine[] $contract_lines
- * @property Collection|ConversationMessage[] $conversation_messages
- * @property Collection|Conversation[] $conversations
- * @property Collection|CreditCard[] $credit_cards
- * @property Collection|Device[] $devices
- * @property Collection|Follower[] $followers
- * @property Collection|FollowerList[] $follower_lists
- * @property Collection|InfluencerAssistant[] $influencer_assistants
- * @property Collection|Invite[] $invites
- * @property Collection|InviteAffiliate[] $invite_affiliates
- * @property Collection|Invoice[] $invoices
- * @property Collection|LogAuthorize[] $log_authorizes
- * @property Collection|LoginStatistic[] $login_statistics
- * @property Collection|MemberRequest[] $member_requests
- * @property Collection|MemberTemplate[] $member_templates
- * @property Collection|MoneyTransaction[] $money_transactions
- * @property Collection|PhoneNumber[] $phone_numbers
- * @property Collection|SmsPool[] $sms_pools
- * @property Collection|SmsPoolPhoneNumber[] $sms_pool_phone_numbers
- * @property Collection|SmsPoolReaction[] $sms_pool_reactions
- * @property Collection|SmsShedule[] $sms_shedules
- * @property Collection|SpsAddUserRequest[] $sps_add_user_requests
- * @property Collection|SpsContract[] $sps_contracts
- * @property Collection|Subscription[] $subscriptions
- * @property Collection|SubscriptionWizard[] $subscription_wizards
- * @property Collection|User[] $users
- * @property Collection|UserFollowerAlert[] $user_follower_alerts
- * @property Collection|UserFriend[] $user_friends
- * @property Collection|UserPlan[] $user_plans
- * @property Collection|UserPlanShedule[] $user_plan_shedules
- * @property Collection|UserPointHistory[] $user_point_histories
- * @property Collection|Service[] $services
+ * @property-read Collection<int, Address> $addresses
+ * @property-read int|null $addresses_count
+ * @property-read Collection<int, AdminMember> $admin_members
+ * @property-read int|null $admin_members_count
+ * @property-read Collection<int, Invite> $affiliate_invites
+ * @property-read int|null $affiliate_invites_count
+ * @property-read Collection<int, Affiliate> $affiliates
+ * @property-read int|null $affiliates_count
+ * @property-read Collection<int, \App\Models\Bookmark> $bookmarks
+ * @property-read int|null $bookmarks_count
+ * @property-read Collection<int, \App\Models\Subscription\BpSubscription> $bp_subscriptions
+ * @property-read int|null $bp_subscriptions_count
+ * @property-read Collection<int, \App\Models\Content\Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read Collection<int, \App\Models\Communication\Contact> $contacts
+ * @property-read int|null $contacts_count
+ * @property-read Collection<int, \App\Models\Finance\ContractLine> $contractLines
+ * @property-read int|null $contract_lines_count
+ * @property-read Collection<int, \App\Models\Finance\ContractLine> $contract_lines
+ * @property-read Collection<int, \App\Models\Communication\ConversationMessage> $conversation_messages
+ * @property-read int|null $conversation_messages_count
+ * @property-read Collection<int, \App\Models\Communication\Conversation> $conversations
+ * @property-read int|null $conversations_count
+ * @property-read Collection<int, \App\Models\Finance\CreditCard> $creditCards
+ * @property-read int|null $credit_cards_count
+ * @property-read Collection<int, \App\Models\Finance\CreditCard> $credit_cards
+ * @property-read Collection<int, \App\Models\Device\Device> $devices
+ * @property-read int|null $devices_count
+ * @property-read Collection<int, \App\Models\Subscription\FollowerList> $follower_lists
+ * @property-read int|null $follower_lists_count
+ * @property-read Collection<int, \App\Models\Subscription\Follower> $followers
+ * @property-read int|null $followers_count
+ * @property-read Collection<int, \App\Models\Subscription\InfluencerAssistant> $influencer_assistants
+ * @property-read int|null $influencer_assistants_count
+ * @property-read Collection<int, Affiliate> $invite_affiliates
+ * @property-read int|null $invite_affiliates_count
+ * @property-read Collection<int, Invite> $invites
+ * @property-read int|null $invites_count
+ * @property-read Collection<int, \App\Models\Finance\Invoice> $invoices
+ * @property-read int|null $invoices_count
+ * @property-read Collection<int, \App\Models\Analytics\LogAuthorize> $log_authorizes
+ * @property-read int|null $log_authorizes_count
+ * @property-read Collection<int, \App\Models\Analytics\LoginStatistic> $login_statistics
+ * @property-read int|null $login_statistics_count
+ * @property-read Collection<int, MemberRequest> $member_requests
+ * @property-read int|null $member_requests_count
+ * @property-read Collection<int, MemberTemplate> $member_templates
+ * @property-read int|null $member_templates_count
+ * @property-read Collection<int, \App\Models\Finance\MoneyTransaction> $money_transactions
+ * @property-read int|null $money_transactions_count
+ * @property-read Collection<int, \App\Models\Device\PhoneNumber> $phoneNumbers
+ * @property-read int|null $phone_numbers_count
+ * @property-read Collection<int, \App\Models\Device\PhoneNumber> $phone_numbers
+ * @property-read Collection<int, \App\Models\Finance\Service> $services
+ * @property-read int|null $services_count
+ * @property-read Collection<int, \App\Models\Communication\SmsPoolPhoneNumber> $sms_pool_phone_numbers
+ * @property-read int|null $sms_pool_phone_numbers_count
+ * @property-read Collection<int, \App\Models\Communication\SmsPoolReaction> $sms_pool_reactions
+ * @property-read int|null $sms_pool_reactions_count
+ * @property-read Collection<int, \App\Models\Communication\SmsPool> $sms_pools
+ * @property-read int|null $sms_pools_count
+ * @property-read Collection<int, \App\Models\Communication\SmsShedule> $sms_shedules
+ * @property-read int|null $sms_shedules_count
+ * @property-read Collection<int, SpsAddUserRequest> $sps_add_user_requests
+ * @property-read int|null $sps_add_user_requests_count
+ * @property-read Collection<int, \App\Models\Finance\SpsContract> $sps_contracts
+ * @property-read int|null $sps_contracts_count
+ * @property-read Collection<int, \App\Models\Subscription\SubscriptionWizard> $subscription_wizards
+ * @property-read int|null $subscription_wizards_count
+ * @property-read Collection<int, \App\Models\Subscription\Subscription> $subscriptions
+ * @property-read int|null $subscriptions_count
+ * @property-read Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @property-read User|null $user
+ * @property-read Collection<int, \App\Models\Notification\UserFollowerAlert> $user_follower_alerts
+ * @property-read int|null $user_follower_alerts_count
+ * @property-read Collection<int, UserFriend> $user_friends
+ * @property-read int|null $user_friends_count
+ * @property-read Collection<int, UserPlanShedule> $user_plan_shedules
+ * @property-read int|null $user_plan_shedules_count
+ * @property-read Collection<int, UserPlan> $user_plans
+ * @property-read int|null $user_plans_count
+ * @property-read Collection<int, UserPointHistory> $user_point_histories
+ * @property-read int|null $user_point_histories_count
+ * @property-read Collection<int, User> $users
+ * @property-read int|null $users_count
+ *
+ * @method static \Database\Factories\User\UserFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAbout($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAddressVisibility($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAdminToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAffiliateToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAnetCustomerProfileId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAnetCustomerShippingAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAuthKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereBonusPoint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCancelAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCredit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereGeneralVisibility($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereHeaderImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIdInviter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIdSps($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsAssistant($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsBadEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsInfluencer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsReceiveList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsReceiveSubscribe($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsSpsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsTest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsValidEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereNameAsReferral($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereNameSearch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePasswordHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePasswordResetToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePayAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePayDay($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePhoneProfile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePhoneVisibility($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePromocode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereReferCustom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereReferType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereSpsData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereSpsTerminatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTestMessageAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTestMessageQnt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTimezone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTour($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereVerificationToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereZip($value)
+ *
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {
@@ -131,6 +241,7 @@ class User extends Authenticatable
         'role' => 'int',
         'status' => 'int',
         'is_influencer' => 'bool',
+        'influencer_verified_at' => 'datetime',
         'bonus_point' => 'int',
         'is_valid_email' => 'bool',
         'pay_at' => 'datetime',
@@ -178,6 +289,7 @@ class User extends Authenticatable
         'country',
         'state',
         'is_influencer',
+        'influencer_verified_at',
         'zip',
         'anet_customer_profile_id',
         'anet_customer_shipping_address_id',
@@ -247,12 +359,12 @@ class User extends Authenticatable
 
     public function affiliate_invites()
     {
-        return $this->hasMany(AffiliateApp\Models\User\Invite::class, 'id_user');
+        return $this->hasMany(Invite::class, 'id_user');
     }
 
     public function bp_subscriptions()
     {
-        return $this->hasMany(\App\Models\Subscription\BpApp\Models\Subscription\Subscription::class, 'id_user');
+        return $this->hasMany(\App\Models\Subscription\BpSubscription::class, 'id_user');
     }
 
     public function comments()
@@ -265,9 +377,9 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Communication\Contact::class, 'id_user');
     }
 
-    public function contract_lines()
+    public function contractLines(): HasMany
     {
-        return $this->hasMany(\App\Models\Finance\ContractLine::class, 'id_user');
+        return $this->contract_lines();
     }
 
     public function conversation_messages()
@@ -285,7 +397,10 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
 
-    public function creditCards()
+    /**
+     * @return HasMany<\App\Models\Finance\CreditCard, static>
+     */
+    public function creditCards(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
@@ -317,7 +432,7 @@ class User extends Authenticatable
 
     public function invite_affiliates()
     {
-        return $this->hasMany(InviteApp\Models\User\Affiliate::class, 'id_inviter');
+        return $this->hasMany(Affiliate::class, 'id_inviter');
     }
 
     public function invoices()
@@ -355,7 +470,7 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_user');
     }
 
-    public function phoneNumbers()
+    public function phoneNumbers(): HasMany
     {
         return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_user');
     }
@@ -367,7 +482,7 @@ class User extends Authenticatable
 
     public function sms_pool_phone_numbers()
     {
-        return $this->hasMany(SmsPoolApp\Models\Device\PhoneNumber::class, 'id_user');
+        return $this->hasMany(\App\Models\Communication\SmsPoolPhoneNumber::class, 'id_user');
     }
 
     public function sms_pool_reactions()
@@ -390,7 +505,10 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_user');
     }
 
-    public function subscriptions()
+    /**
+     * @return BelongsToMany<\App\Models\Subscription\Subscription, static, \App\Models\Subscription\UserSubscriptionAddress, int, int>
+     */
+    public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Subscription\Subscription::class, 'user_subscription_address', 'id_user', 'id_subscription')
             ->withPivot('id', 'zip');

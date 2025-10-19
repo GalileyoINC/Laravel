@@ -8,20 +8,19 @@ use App\Models\Finance\MoneyTransaction;
 
 final class ExportMoneyTransactionsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
-        $query = MoneyTransaction::with(['user', 'creditCard']);
+        $query = MoneyTransaction::query();
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('transaction_id', 'like', "%{$search}%")
-                    ->orWhere('id', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
+                    ->orWhere('id', 'like', "%{$search}%");
             });
         }
         if (! empty($filters['transaction_type'])) {
@@ -51,20 +50,11 @@ final class ExportMoneyTransactionsToCsvAction
         $transactions = $query->orderBy('created_at', 'desc')->get();
 
         $rows = [];
-        $rows[] = ['ID', 'User', 'Invoice', 'Credit Card', 'Transaction ID', 'Success', 'Void', 'Test', 'Total', 'Created At', 'Updated At'];
+        $rows[] = ['ID', 'Invoice', 'Transaction ID', 'Success', 'Void', 'Test', 'Total', 'Created At', 'Updated At'];
         foreach ($transactions as $transaction) {
-            $card = null;
-            if ($transaction->creditCard) {
-                $card = ($transaction->creditCard->type ? $transaction->creditCard->type.' ' : '').
-                        $transaction->creditCard->num.' ('.
-                        $transaction->creditCard->expiration_year.'/'.
-                        $transaction->creditCard->expiration_month.')';
-            }
             $rows[] = [
                 $transaction->id,
-                $transaction->user ? $transaction->user->first_name.' '.$transaction->user->last_name : '',
                 $transaction->id_invoice,
-                $card,
                 $transaction->transaction_id,
                 $transaction->is_success ? 'Yes' : 'No',
                 $transaction->is_void ? 'Yes' : 'No',

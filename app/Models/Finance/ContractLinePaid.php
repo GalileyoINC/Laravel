@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,14 +19,30 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_invoice
  * @property int|null $id_invoice_line
  * @property float $total
- * @property Carbon|null $begin_at
- * @property Carbon|null $end_at
+ * @property \Illuminate\Support\Carbon|null $begin_at
+ * @property \Illuminate\Support\Carbon|null $end_at
  * @property int|null $days
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property ContractLine|null $contract_line
- * @property Invoice|null $invoice
- * @property InvoiceLine|null $invoice_line
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read ContractLine|null $contract_line
+ * @property-read Invoice|null $invoice
+ * @property-read InvoiceLine|null $invoice_line
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereBeginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereIdContractLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereIdInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereIdInvoiceLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLinePaid whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class ContractLinePaid extends Model
 {

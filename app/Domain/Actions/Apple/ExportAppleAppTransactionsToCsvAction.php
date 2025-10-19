@@ -8,6 +8,10 @@ use App\Models\Order\AppleAppTransaction;
 
 final class ExportAppleAppTransactionsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = AppleAppTransaction::query();
@@ -40,6 +44,7 @@ final class ExportAppleAppTransactionsToCsvAction
 
         $rows = [];
         $rows[] = ['ID', 'Transaction ID', 'Status', 'Error', 'User ID', 'Is Process', 'Created At'];
+        /** @var AppleAppTransaction $transaction */
         foreach ($transactions as $transaction) {
             $rows[] = [
                 $transaction->id,

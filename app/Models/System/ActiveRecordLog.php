@@ -8,9 +8,10 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Carbon\Carbon;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Throwable;
 
 /**
@@ -23,8 +24,25 @@ use Throwable;
  * @property string|null $model
  * @property string|null $id_model
  * @property string|null $field
- * @property array|null $changes
- * @property Carbon $created_at
+ * @property array<array-key, mixed>|null $changes
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property-read Staff|null $staff
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereActionType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereChanges($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereIdModel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereIdStaff($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ActiveRecordLog whereModel($value)
+ *
+ * @mixin \Eloquent
  */
 class ActiveRecordLog extends Model
 {
@@ -39,6 +57,7 @@ class ActiveRecordLog extends Model
         'id_staff' => 'int',
         'action_type' => 'int',
         'changes' => 'json',
+        'created_at' => 'datetime',
     ];
 
     protected $fillable = [
@@ -78,12 +97,12 @@ class ActiveRecordLog extends Model
     }
 
     // Relationships
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function staff()
+    public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class, 'id_staff');
     }

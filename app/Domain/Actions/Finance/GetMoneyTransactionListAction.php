@@ -8,20 +8,19 @@ use App\Models\Finance\MoneyTransaction;
 
 final class GetMoneyTransactionListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<string, mixed>
+     */
     public function execute(array $filters, int $perPage = 20): array
     {
-        $query = MoneyTransaction::with(['user', 'invoice', 'creditCard']);
+        $query = MoneyTransaction::query();
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('transaction_id', 'like', "%{$search}%")
-                    ->orWhere('id', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
+                    ->orWhere('id', 'like', "%{$search}%");
             });
         }
         if (! empty($filters['transaction_type'])) {

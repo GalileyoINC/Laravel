@@ -10,10 +10,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\Web\MoneyTransactionIndexRequest;
 use App\Http\Requests\Finance\Web\RefundRequest;
 use App\Models\Finance\MoneyTransaction;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MoneyTransactionController extends Controller
@@ -110,6 +111,9 @@ class MoneyTransactionController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

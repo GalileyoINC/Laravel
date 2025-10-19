@@ -19,9 +19,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_user_from
  * @property int|null $type
  * @property string|null $text
- * @property array|null $params
+ * @property array<array-key, mixed>|null $params
  * @property int $is_active
- * @property User|null $user
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest whereIdUserFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest whereParams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest whereText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MemberRequest whereType($value)
+ *
+ * @mixin \Eloquent
  */
 class MemberRequest extends Model
 {

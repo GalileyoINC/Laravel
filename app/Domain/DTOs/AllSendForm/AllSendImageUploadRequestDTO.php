@@ -14,7 +14,7 @@ class AllSendImageUploadRequestDTO
         public readonly UploadedFile $file
     ) {}
 
-    public static function fromData(string $uuid, UploadedFile $file): static
+    public static function fromData(string $uuid, UploadedFile $file): self
     {
         return new self(
             uuid: $uuid,
@@ -22,7 +22,7 @@ class AllSendImageUploadRequestDTO
         );
     }
 
-    public static function fromRequest(Request $request): static
+    public static function fromRequest(Request $request): self
     {
         return new self(
             uuid: $request->input('uuid'),
@@ -30,6 +30,9 @@ class AllSendImageUploadRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [
@@ -40,6 +43,6 @@ class AllSendImageUploadRequestDTO
 
     public function validate(): bool
     {
-        return ! empty($this->uuid) && $this->file !== null;
+        return ! empty($this->uuid);
     }
 }

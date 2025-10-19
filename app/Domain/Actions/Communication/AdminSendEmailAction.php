@@ -19,7 +19,7 @@ final class AdminSendEmailAction
         Mail::raw($template->body, function ($message) use ($dto, $template) {
             $message->to($dto->toEmail)
                 ->subject($template->subject)
-                ->from($template->fromEmail, $template->fromName);
+                ->from($template->from);
         });
 
         return true;

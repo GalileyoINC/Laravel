@@ -8,6 +8,10 @@ use App\Models\Content\Podcast;
 
 final class ExportPodcastsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = Podcast::query();

@@ -79,7 +79,7 @@ class EmailTemplateService implements EmailTemplateServiceInterface
         $template = EmailTemplate::findOrFail($id);
 
         // Mock body rendering - replace with actual template rendering
-        $params = $template->params ? json_decode((string) $template->params, true) : [];
+        $params = $template->params ?? [];
         $exampleParams = array_map(fn ($param) => $param['example'] ?? 'Example Value', $params);
 
         return [
@@ -117,6 +117,9 @@ class EmailTemplateService implements EmailTemplateServiceInterface
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $params
+     */
     private function renderTemplate(string $body, array $params): string
     {
         foreach ($params as $key => $value) {

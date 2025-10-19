@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Actions\ContractLine;
 
 use App\Models\Finance\ContractLine;
+use App\Models\User\User;
 
 final class ExportUnpaidContractLinesToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = ContractLine::with(['user', 'service'])
@@ -39,14 +44,23 @@ final class ExportUnpaidContractLinesToCsvAction
         $rows = [];
         $rows[] = ['User ID', 'First Name', 'Last Name', 'Email', 'Service', 'Pay Interval', 'End At'];
         foreach ($contractLines as $contractLine) {
+            /** @var ContractLine $contractLine */
+            $userName = '';
+            $userEmail = '';
+            if ($contractLine->user) {
+                /** @var User $user */
+                $user = $contractLine->user;
+                $userName = $user->first_name.' '.$user->last_name;
+                $userEmail = $user->email ?? '';
+            }
+
             $rows[] = [
                 $contractLine->id_user,
-                $contractLine->first_name,
-                $contractLine->last_name,
-                $contractLine->email,
-                $contractLine->service_name,
+                $userName,
+                $userEmail,
+                $contractLine->service->name ?? '',
                 $contractLine->pay_interval ? ($contractLine->pay_interval === 1 ? 'Monthly' : ($contractLine->pay_interval === 12 ? 'Annual' : (string) $contractLine->pay_interval)) : '',
-                $contractLine->end_at ? $contractLine->end_at->format('Y-m-d') : '',
+                $contractLine->end_at?->format('Y-m-d') ?? '',
             ];
         }
 

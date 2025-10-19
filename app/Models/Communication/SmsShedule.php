@@ -8,10 +8,11 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Throwable;
 
 /**
@@ -26,18 +27,42 @@ use Throwable;
  * @property int|null $purpose
  * @property int|null $status
  * @property string $body
- * @property Carbon $sended_at
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $sended_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $id_assistant
  * @property string|null $short_body
  * @property string|null $url
- * @property User|null $user
- * @property FollowerList|null $follower_list
- * @property SmsPool|null $sms_pool
- * @property Staff|null $staff
- * @property Subscription|null $subscription
- * @property Collection|SmsPoolPhoto[] $sms_pool_photos
+ * @property-read \App\Models\Subscription\FollowerList|null $followerList
+ * @property-read \App\Models\Subscription\FollowerList|null $follower_list
+ * @property-read SmsPool|null $smsPool
+ * @property-read SmsPool|null $sms_pool
+ * @property-read Collection<int, SmsPoolPhoto> $sms_pool_photos
+ * @property-read int|null $sms_pool_photos_count
+ * @property-read \App\Models\System\Staff|null $staff
+ * @property-read \App\Models\Subscription\Subscription|null $subscription
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereIdAssistant($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereIdFollowerList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereIdSmsPool($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereIdStaff($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereIdSubscription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule wherePurpose($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereSendedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereShortBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsShedule whereUrl($value)
+ *
+ * @mixin \Eloquent
  */
 class SmsShedule extends Model
 {
@@ -104,44 +129,44 @@ class SmsShedule extends Model
         }
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function follower_list()
+    public function follower_list(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
     // Alias expected by controllers
-    public function followerList()
+    public function followerList(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
-    public function sms_pool()
+    public function sms_pool(): BelongsTo
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
     // Alias expected by controllers
-    public function smsPool()
+    public function smsPool(): BelongsTo
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
-    public function staff()
+    public function staff(): BelongsTo
     {
         return $this->belongsTo(\App\Models\System\Staff::class, 'id_staff');
     }
 
-    public function subscription()
+    public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
-    public function sms_pool_photos()
+    public function sms_pool_photos(): HasMany
     {
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_shedule');
     }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Invoice\GetInvoiceAction;
-use App\Actions\Invoice\GetInvoiceListAction;
+use App\Domain\Actions\Invoice\GetInvoiceAction;
+use App\Domain\Actions\Invoice\GetInvoiceListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Invoice\InvoiceListRequest;
 use App\Http\Resources\InvoiceResource;
@@ -22,7 +22,7 @@ class InvoiceController extends Controller
 
     public function view(int $id, GetInvoiceAction $action): JsonResponse
     {
-        $result = $action->execute(['id' => $id]);
+        $result = $action->execute($id);
 
         return InvoiceResource::make($result)->response();
     }

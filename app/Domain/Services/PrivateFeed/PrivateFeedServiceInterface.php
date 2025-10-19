@@ -15,6 +15,8 @@ interface PrivateFeedServiceInterface
 {
     /**
      * Get private feed list
+     *
+     * @return array<string, mixed>
      */
     public function getPrivateFeedList(PrivateFeedListRequestDTO $dto, User $user): array;
 

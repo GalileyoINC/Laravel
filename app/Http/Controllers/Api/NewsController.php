@@ -12,7 +12,6 @@ use App\Domain\Actions\News\MuteSubscriptionAction;
 use App\Domain\Actions\News\RemoveReactionAction;
 use App\Domain\Actions\News\ReportNewsAction;
 use App\Domain\Actions\News\SetReactionAction;
-use App\Domain\Actions\News\UnmuteSubscriptionAction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +28,6 @@ class NewsController extends Controller
         private readonly RemoveReactionAction $removeReactionAction,
         private readonly ReportNewsAction $reportNewsAction,
         private readonly MuteSubscriptionAction $muteSubscriptionAction,
-        private readonly UnmuteSubscriptionAction $unmuteSubscriptionAction,
         private readonly GetNewsByFollowerListAction $getNewsByFollowerListAction,
         private readonly CreateNewsAction $createNewsAction
     ) {}

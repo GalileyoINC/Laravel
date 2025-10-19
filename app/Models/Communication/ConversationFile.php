@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,11 +20,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $folder_name
  * @property string|null $web_name
  * @property string|null $file_name
- * @property array|null $sizes
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Conversation|null $conversation
- * @property ConversationMessage|null $conversation_message
+ * @property array<array-key, mixed>|null $sizes
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Conversation|null $conversation
+ * @property-read ConversationMessage|null $conversation_message
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereFolderName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereIdConversation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereIdConversationMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereSizes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationFile whereWebName($value)
+ *
+ * @mixin \Eloquent
  */
 class ConversationFile extends Model
 {

@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetTwilioCarrierListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, TwilioCarrier>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = TwilioCarrier::with('provider');

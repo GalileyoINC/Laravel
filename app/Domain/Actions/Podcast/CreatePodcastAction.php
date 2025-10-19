@@ -14,11 +14,11 @@ final class CreatePodcastAction
         $podcast = new Podcast();
         $podcast->title = $dto->title;
         $podcast->url = $dto->url;
-        $podcast->type = $dto->type;
+        $podcast->type = (int) $dto->type;
 
         if ($dto->image) {
             $imagePath = $dto->image->store('podcasts', 'public');
-            $podcast->image = $imagePath;
+            $podcast->image = $imagePath ?: null;
         }
 
         $podcast->save();

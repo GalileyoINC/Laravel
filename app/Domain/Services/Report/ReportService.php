@@ -7,12 +7,15 @@ namespace App\Domain\Services\Report;
 use App\Domain\DTOs\Report\ReportCsvRequestDTO;
 use App\Domain\DTOs\Report\ReportStatisticRequestDTO;
 use App\Models\Communication\SmsPool;
-use App\Models\Device\Device\PhoneNumber;
+use App\Models\Device\PhoneNumber;
 use App\Models\Finance\ContractLine;
 use App\Models\User\User;
 
 class ReportService implements ReportServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getLoginStatistic(ReportStatisticRequestDTO $dto): array
     {
         $query = User::query();
@@ -40,6 +43,9 @@ class ReportService implements ReportServiceInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getSoldDevices(ReportStatisticRequestDTO $dto): array
     {
         $query = ContractLine::query()
@@ -64,6 +70,9 @@ class ReportService implements ReportServiceInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getInfluencerTotal(ReportCsvRequestDTO $dto): array
     {
         $query = User::query()
@@ -92,6 +101,9 @@ class ReportService implements ReportServiceInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getReferralReport(ReportCsvRequestDTO $dto): array
     {
         $query = User::query()
@@ -120,6 +132,9 @@ class ReportService implements ReportServiceInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getStatistic(ReportStatisticRequestDTO $dto): array
     {
         $date = $dto->date ? \Carbon\Carbon::parse($dto->date) : now();
@@ -150,6 +165,9 @@ class ReportService implements ReportServiceInterface
         return $stats;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getSmsReport(ReportStatisticRequestDTO $dto): array
     {
         $query = SmsPool::query()

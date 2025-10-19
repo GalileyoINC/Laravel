@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Device;
 
 use App\Models\Device\Device;
+use App\Models\User\User;
 
 final class ExportDevicesToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = Device::with(['user']);
@@ -54,16 +59,26 @@ final class ExportDevicesToCsvAction
         $rows = [];
         $rows[] = ['ID', 'User Email', 'User ID', 'Push Turn On', 'UUID', 'OS', 'Push Token', 'Access Token', 'Updated At'];
         foreach ($devices as $device) {
+            /** @var Device $device */
+            $userEmail = '';
+            $userId = '';
+            if ($device->user) {
+                /** @var User $user */
+                $user = $device->user;
+                $userEmail = $user->email ?? '';
+                $userId = (string) $user->id;
+            }
+
             $rows[] = [
                 $device->id,
-                $device->user->email ?? '',
-                $device->user->id ?? '',
+                $userEmail,
+                $userId,
                 $device->push_turn_on ? 'Yes' : 'No',
                 $device->uuid,
                 $device->os,
                 $device->push_token,
                 $device->access_token,
-                $device->updated_at->format('Y-m-d H:i:s'),
+                $device->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

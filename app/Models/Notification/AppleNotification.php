@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Notification;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,10 +20,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $renewal_info
  * @property string|null $payload
  * @property string|null $data
- * @property Carbon $created_at
+ * @property \Illuminate\Support\Carbon $created_at
  * @property string|null $transaction_id
  * @property string|null $original_transaction_id
  * @property bool|null $is_process
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereIsProcess($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereNotificationType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereOriginalTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification wherePayload($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereRenewalInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppleNotification whereTransactionInfo($value)
+ *
+ * @mixin \Eloquent
  */
 class AppleNotification extends Model
 {
@@ -35,6 +50,7 @@ class AppleNotification extends Model
     protected $table = 'apple_notification';
 
     protected $casts = [
+        'created_at' => 'datetime',
         'is_process' => 'bool',
     ];
 

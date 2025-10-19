@@ -10,6 +10,12 @@ class GetUserDetailAction
 {
     public function execute(int $userId): User
     {
-        return User::with(['phoneNumbers', 'creditCards', 'subscriptions'])->findOrFail($userId);
+        /** @var User $user */
+        $user = User::with(['phoneNumbers', 'creditCards', 'subscriptions'])->findOrFail($userId);
+
+        // Ensure relations are loaded
+        $user->load(['creditCards', 'subscriptions']);
+
+        return $user;
     }
 }

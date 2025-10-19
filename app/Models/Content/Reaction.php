@@ -18,7 +18,20 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $emoji
- * @property Collection|SmsPool[] $sms_pools
+ * @property string|null $type
+ * @property int|null $count
+ * @property bool|null $is_user_reacted
+ * @property-read Collection<int, \App\Models\Communication\SmsPool> $sms_pools
+ * @property-read int|null $sms_pools_count
+ *
+ * @method static \Database\Factories\ReactionFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Reaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Reaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Reaction query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Reaction whereEmoji($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Reaction whereId($value)
+ *
+ * @mixin \Eloquent
  */
 class Reaction extends Model
 {
@@ -30,6 +43,9 @@ class Reaction extends Model
 
     protected $fillable = [
         'emoji',
+        'type',
+        'count',
+        'is_user_reacted',
     ];
 
     public function sms_pools()

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Analytics;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,9 +20,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $type
  * @property string|null $ip
  * @property string|null $user_agent
- * @property array|null $data
- * @property Carbon $created_at
- * @property User $user
+ * @property array<array-key, mixed>|null $data
+ * @property string $created_at
+ * @property-read \App\Models\User\User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereIdDevice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereUserAgent($value)
+ *
+ * @mixin \Eloquent
  */
 class LoginStatistic extends Model
 {

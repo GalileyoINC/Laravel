@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
-use Carbon\Carbon;
 use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,15 +20,34 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_sms_pool
  * @property int|null $id_user
  * @property string $message
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $id_parent
  * @property bool $is_deleted
- * @property Comment|null $comment
- * @property SmsPool|null $sms_pool
- * @property User|null $user
- * @property Collection|Comment[] $comments
- * @property Collection|UserPointHistory[] $user_point_histories
+ * @property-read Comment|null $comment
+ * @property-read Collection<int, Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read Collection<int, Comment> $replies
+ * @property-read int|null $replies_count
+ * @property-read \App\Models\Communication\SmsPool|null $sms_pool
+ * @property-read \App\Models\User\User|null $user
+ * @property-read Collection<int, \App\Models\User\UserPointHistory> $user_point_histories
+ * @property-read int|null $user_point_histories_count
+ *
+ * @method static \Database\Factories\CommentFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereIdParent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereIdSmsPool($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereIsDeleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Comment extends Model
 {
@@ -52,27 +70,32 @@ class Comment extends Model
         'is_deleted',
     ];
 
-    public function comment()
+    public function comment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(self::class, 'id_parent');
     }
 
-    public function sms_pool()
+    public function sms_pool(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function comments()
+    public function replies(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(self::class, 'id_parent');
     }
 
-    public function user_point_histories()
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(self::class, 'id_parent');
+    }
+
+    public function user_point_histories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_comment');
     }

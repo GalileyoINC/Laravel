@@ -17,7 +17,10 @@ class BookmarkListRequestDTO
         public readonly ?string $type = null
     ) {}
 
-    public static function fromArray(array $data): static
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public static function fromArray(array $data): self
     {
         return new self(
             page: isset($data['page']) ? (int) $data['page'] : 1,
@@ -26,7 +29,7 @@ class BookmarkListRequestDTO
         );
     }
 
-    public static function fromRequest(Request $request): static
+    public static function fromRequest(Request $request): self
     {
         return new self(
             page: $request->input('page', 1),
@@ -35,6 +38,9 @@ class BookmarkListRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

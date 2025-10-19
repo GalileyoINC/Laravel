@@ -14,8 +14,11 @@ class PhoneUpdateRequestDTO
         public readonly bool $isEmergencyOnly
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             id: (int) $data['id'],
             isSend: (bool) $data['is_send'],
@@ -25,6 +28,7 @@ class PhoneUpdateRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             id: $request->input('id'),
             isSend: $request->boolean('is_send'),
@@ -32,6 +36,9 @@ class PhoneUpdateRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

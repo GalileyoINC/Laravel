@@ -7,6 +7,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $post_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Communication\SmsPool|null $post
+ * @property-read User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark wherePostId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Bookmark whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class Bookmark extends Model
 {
     protected $fillable = [

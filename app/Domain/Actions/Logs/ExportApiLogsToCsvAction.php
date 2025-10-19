@@ -8,6 +8,10 @@ use App\Models\System\ApiLog;
 
 final class ExportApiLogsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = ApiLog::query();
@@ -33,6 +37,7 @@ final class ExportApiLogsToCsvAction
 
         $rows = [];
         $rows[] = ['ID', 'Key', 'Value', 'Created At'];
+        /** @var ApiLog $log */
         foreach ($logs as $log) {
             $rows[] = [
                 $log->id,

@@ -115,6 +115,8 @@ class OrderService implements OrderServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function getTestOrder(): array
     {
@@ -133,7 +135,6 @@ class OrderService implements OrderServiceInterface
                         'begin_at' => '2024-03-11 14:48:30',
                         'end_at' => '2025-03-07 15:40:20',
                         'name' => 'Family',
-                        'type' => 'subscribe',
                     ],
                     [
                         'type' => 'alerts',

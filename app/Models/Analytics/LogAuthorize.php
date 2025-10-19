@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Analytics;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,13 +18,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_user
  * @property int|null $id_money_transaction
  * @property string|null $name
- * @property array|null $request
- * @property array|null $response
+ * @property array<array-key, mixed>|null $request
+ * @property array<array-key, mixed>|null $response
  * @property int|null $status
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property MoneyTransaction|null $money_transaction
- * @property User|null $user
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Finance\MoneyTransaction|null $money_transaction
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereIdMoneyTransaction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereRequest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereResponse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class LogAuthorize extends Model
 {

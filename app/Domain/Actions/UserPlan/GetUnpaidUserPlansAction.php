@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetUnpaidUserPlansAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, UserPlan>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $expDate = isset($filters['exp_date']) ? (int) $filters['exp_date'] : 30;

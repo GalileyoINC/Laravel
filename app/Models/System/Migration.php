@@ -16,6 +16,14 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string $version
  * @property int|null $apply_time
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Migration newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Migration newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Migration query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Migration whereApplyTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Migration whereVersion($value)
+ *
+ * @mixin \Eloquent
  */
 class Migration extends Model
 {

@@ -6,6 +6,9 @@ namespace App\Domain\DTOs\EmailTemplate;
 
 readonly class EmailTemplateUpdateRequestDTO
 {
+    /**
+     * @param  array<string, mixed>  $params
+     */
     public function __construct(
         public int $id,
         public ?string $name,

@@ -8,6 +8,9 @@ use App\Models\User\User;
 
 class VerifyInfluencerAction
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(int $userId): array
     {
         $user = User::findOrFail($userId);

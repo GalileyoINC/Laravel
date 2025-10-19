@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,8 +23,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $deviceType
  * @property bool $backedUp
  * @property string $transports
- * @property Carbon $createdAt
+ * @property \Illuminate\Support\Carbon $createdAt
  * @property string|null $aaguid
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereAaguid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereBackedUp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereCounter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereCredentialID($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereDeviceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey wherePublicKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereTransports($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Passkey whereUserId($value)
+ *
+ * @mixin \Eloquent
  */
 class Passkey extends Model
 {

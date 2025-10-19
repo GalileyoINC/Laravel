@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Staff\CreateStaffAction;
-use App\Actions\Staff\DeleteStaffAction;
-use App\Actions\Staff\GetStaffAction;
-use App\Actions\Staff\GetStaffListAction;
-use App\Actions\Staff\UpdateStaffAction;
+use App\Domain\Actions\Staff\CreateStaffAction;
+use App\Domain\Actions\Staff\DeleteStaffAction;
+use App\Domain\Actions\Staff\GetStaffAction;
+use App\Domain\Actions\Staff\GetStaffListAction;
+use App\Domain\Actions\Staff\UpdateStaffAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StaffCreateRequest;
 use App\Http\Requests\Staff\StaffListRequest;

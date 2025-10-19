@@ -11,13 +11,19 @@ use Illuminate\Http\Request;
  */
 class LoginRequestDTO
 {
+    /**
+     * @param  array<string, mixed>  $device
+     */
     public function __construct(
         public readonly string $email,
         public readonly string $password,
         public readonly array $device
     ) {}
 
-    public static function fromArray(array $data): static
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public static function fromArray(array $data): self
     {
         return new self(
             email: $data['email'] ?? '',
@@ -26,7 +32,7 @@ class LoginRequestDTO
         );
     }
 
-    public static function fromRequest(Request $request): static
+    public static function fromRequest(Request $request): self
     {
         return new self(
             email: $request->input('email', ''),
@@ -35,6 +41,9 @@ class LoginRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

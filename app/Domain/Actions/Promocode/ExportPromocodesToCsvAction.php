@@ -8,6 +8,10 @@ use App\Models\Finance\Promocode;
 
 final class ExportPromocodesToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = Promocode::query();
@@ -38,10 +42,10 @@ final class ExportPromocodesToCsvAction
             $query->whereDate('active_to', '<=', $filters['active_to_to']);
         }
 
-        $items = $query->orderBy('created_at', 'desc')->get();
+        $items = $query->orderBy('id', 'desc')->get();
 
         $rows = [];
-        $rows[] = ['ID', 'Type', 'Text', 'Discount', 'Trial Period', 'Active From', 'Active To', 'Is Active', 'Show on Frontend', 'Description', 'Created At'];
+        $rows[] = ['ID', 'Type', 'Text', 'Discount', 'Trial Period', 'Active From', 'Active To', 'Is Active', 'Show on Frontend', 'Description'];
         foreach ($items as $promocode) {
             $rows[] = [
                 $promocode->id,
@@ -54,7 +58,6 @@ final class ExportPromocodesToCsvAction
                 $promocode->is_active ? 'Yes' : 'No',
                 $promocode->show_on_frontend ? 'Yes' : 'No',
                 $promocode->description,
-                $promocode->created_at->format('Y-m-d H:i:s'),
             ];
         }
 

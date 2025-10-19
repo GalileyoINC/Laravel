@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Notification;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,9 +18,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_user
  * @property int|null $total
  * @property int|null $used
- * @property Carbon $begin_at
- * @property Carbon|null $end_at
- * @property User|null $user
+ * @property \Illuminate\Support\Carbon $begin_at
+ * @property \Illuminate\Support\Carbon|null $end_at
+ * @property-read \App\Models\User\User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert whereBeginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert whereEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert whereUsed($value)
+ *
+ * @mixin \Eloquent
  */
 class UserFollowerAlert extends Model
 {

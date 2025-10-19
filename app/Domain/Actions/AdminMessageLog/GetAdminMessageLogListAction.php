@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetAdminMessageLogListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, AdminMessageLog>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = AdminMessageLog::query();

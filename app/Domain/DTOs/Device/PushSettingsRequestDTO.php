@@ -14,8 +14,11 @@ class PushSettingsRequestDTO
         public readonly bool $isEmergencyOnly
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             pushTurnOn: (bool) $data['push_turn_on'],
             isSend: (bool) $data['is_send'],
@@ -25,6 +28,7 @@ class PushSettingsRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             pushTurnOn: $request->boolean('push_turn_on'),
             isSend: $request->boolean('is_send'),
@@ -32,6 +36,9 @@ class PushSettingsRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

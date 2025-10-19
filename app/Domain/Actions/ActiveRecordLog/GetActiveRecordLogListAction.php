@@ -13,7 +13,8 @@ final class GetActiveRecordLogListAction
     /**
      * Returns paginated logs and supporting dropdown data.
      *
-     * @return array{logs: LengthAwarePaginator, actionTypes: array<int,string>, staffList: array<int,string>}
+     * @param  array<string, mixed>  $filters
+     * @return array{logs: LengthAwarePaginator<int, ActiveRecordLog>, actionTypes: array<int,string>, staffList: array<int,string>}
      */
     public function execute(array $filters, int $perPage = 20): array
     {

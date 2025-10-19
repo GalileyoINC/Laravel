@@ -13,7 +13,6 @@ use App\Domain\Actions\Product\GetAlertServiceListAction;
 use App\Domain\Actions\Product\GetDevicePlanListAction;
 use App\Domain\Actions\Product\GetProductDeviceListAction;
 use App\Domain\Actions\Product\GetSubscriptionServiceListAction;
-use App\Domain\Actions\Product\ProcessApplePurchaseAction;
 use App\Domain\Actions\Product\SetMainDevicePhotoAction;
 use App\Domain\Actions\Product\UpdateDeviceAction;
 use App\Domain\Actions\Product\UpdateDevicePlanAction;
@@ -41,12 +40,11 @@ use App\Http\Requests\Service\Web\ServiceSettingsRequest;
 use App\Models\Device\Device;
 use App\Models\Device\DevicePlan;
 use App\Models\Finance\Service;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 
 class ProductController extends Controller
 {
@@ -55,7 +53,6 @@ class ProductController extends Controller
         private readonly GetAlertServiceListAction $getAlertServiceListAction,
         private readonly GetProductDeviceListAction $getProductDeviceListAction,
         private readonly GetDevicePlanListAction $getDevicePlanListAction,
-        private readonly ProcessApplePurchaseAction $processApplePurchaseAction,
         private readonly CreateDeviceAction $createDeviceAction,
         private readonly UpdateDeviceAction $updateDeviceAction,
         private readonly CreateDevicePlanAction $createDevicePlanAction,
@@ -88,7 +85,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing subscription
      */
-    public function editSubscription(Service $service): View
+    public function editSubscription(Service $service): View|RedirectResponse
     {
         if ($service->isCustom()) {
             return redirect()->route('product.edit-custom-subscription', $service);
@@ -133,7 +130,7 @@ class ProductController extends Controller
     /**
      * Update service settings
      */
-    public function updateSettings(ServiceSettingsRequest $request): Response
+    public function updateSettings(ServiceSettingsRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -259,7 +256,7 @@ class ProductController extends Controller
             price: (float) $validated['price'],
             specialPrice: isset($validated['special_price']) ? (float) $validated['special_price'] : null,
             isSpecialPrice: (bool) ($validated['is_special_price'] ?? false),
-            isActive: (bool) ($validated['is_active'] ?? $device->is_active),
+            isActive: (bool) ($validated['is_active'] ?? (bool) $device->getAttribute('is_active')),
         );
 
         $this->updateDeviceAction->execute($dto);
@@ -287,7 +284,7 @@ class ProductController extends Controller
     {
         $photoId = (string) $request->get('id');
         $dto = new DevicePhotoDeleteDTO(photoId: $photoId);
-        $this->deleteDevicePhotoAction->execute($dto);
+        $_ = $this->deleteDevicePhotoAction->execute($dto);
 
         return response()->json(['success' => 'Photo deleted successfully']);
     }
@@ -299,7 +296,7 @@ class ProductController extends Controller
     {
         $photoId = (string) $request->get('id');
         $dto = new DevicePhotoSetMainDTO(photoId: $photoId);
-        $this->setMainDevicePhotoAction->execute($dto);
+        $_ = $this->setMainDevicePhotoAction->execute($dto);
 
         return response()->json(['success' => 'Main photo set successfully']);
     }
@@ -389,7 +386,7 @@ class ProductController extends Controller
             name: $validated['name'],
             description: $validated['description'] ?? null,
             price: (float) $validated['price'],
-            isActive: (bool) ($validated['is_active'] ?? $plan->is_active),
+            isActive: (bool) ($validated['is_active'] ?? (bool) $plan->getAttribute('is_active')),
         );
 
         $this->updateDevicePlanAction->execute($dto);
@@ -414,7 +411,7 @@ class ProductController extends Controller
             price: isset($validated['price']) ? (float) $validated['price'] : null,
             isDefault: isset($validated['is_default']) ? (bool) $validated['is_default'] : null,
         );
-        $this->attachPlanToDeviceAction->execute($dto);
+        $_ = $this->attachPlanToDeviceAction->execute($dto);
 
         return redirect()->route('product.edit-device', $device)
             ->with('success', 'Plan attached successfully.');
@@ -426,7 +423,7 @@ class ProductController extends Controller
     public function detachPlan(DevicePlan $plan, Device $device): RedirectResponse
     {
         $dto = new DetachPlanFromDeviceDTO(deviceId: $device->id, planId: $plan->id);
-        $this->detachPlanFromDeviceAction->execute($dto);
+        $_ = $this->detachPlanFromDeviceAction->execute($dto);
 
         return redirect()->route('product.edit-device', $device)
             ->with('success', 'Plan detached successfully.');

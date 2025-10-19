@@ -14,6 +14,9 @@ class GetContactAction
         private readonly ContactServiceInterface $contactService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

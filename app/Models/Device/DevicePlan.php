@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Device;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,9 +19,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_plan
  * @property bool $is_default
  * @property float|null $price
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property Service|null $service
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Finance\Service|null $service
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan whereIdDevice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan whereIdPlan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DevicePlan whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class DevicePlan extends Model
 {

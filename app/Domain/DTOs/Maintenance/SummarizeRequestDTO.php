@@ -15,23 +15,19 @@ class SummarizeRequestDTO
     ) {}
 
     /**
-     * Create DTO from array
-     *
-     * @param  array<string, mixed>  $data
-     */
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             size: (int) $data['size'],
             text: (string) $data['text']
         );
     }
 
-    /**
-     * Create DTO from request
-     */
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             size: (int) $request->input('size'),
             text: (string) $request->input('text')

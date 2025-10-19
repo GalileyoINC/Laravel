@@ -20,9 +20,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $type
  * @property float $price
  * @property int|null $quantity
- * @property array|null $custom_data
- * @property Bundle|null $bundle
- * @property Service|null $service
+ * @property array<array-key, mixed>|null $custom_data
+ * @property-read Bundle|null $bundle
+ * @property-read Service|null $service
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem whereCustomData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem whereIdBundle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem whereIdItem($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BundleItem whereType($value)
+ *
+ * @mixin \Eloquent
  */
 class BundleItem extends Model
 {

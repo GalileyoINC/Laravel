@@ -16,6 +16,14 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string $name
  * @property string $value
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SettingsSafe newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SettingsSafe newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SettingsSafe query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SettingsSafe whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SettingsSafe whereValue($value)
+ *
+ * @mixin \Eloquent
  */
 class SettingsSafe extends Model
 {

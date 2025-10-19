@@ -18,8 +18,12 @@ class ChatMessagesRequestDTO
         public readonly ?int $count = null
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             conversationId: (int) $data['id'],
             limit: isset($data['limit']) ? (int) $data['limit'] : 20,
@@ -33,6 +37,7 @@ class ChatMessagesRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             conversationId: $request->input('id'),
             limit: $request->input('limit', 20),
@@ -44,6 +49,9 @@ class ChatMessagesRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

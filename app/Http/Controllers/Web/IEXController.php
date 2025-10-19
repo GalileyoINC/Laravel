@@ -17,11 +17,12 @@ use App\Http\Requests\IEX\Web\IexWebhookIndexRequest;
 use App\Http\Requests\IEX\Web\MarketstackIndexRequest;
 use App\Http\Requests\IEX\Web\MarketstackStoreRequest;
 use App\Http\Requests\IEX\Web\MarketstackUpdateRequest;
+use App\Models\Finance\MarketstackIndx;
 use App\Models\System\IexWebhook;
-use App\Models\System\MarketstackIndx;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class IEXController extends Controller
@@ -155,6 +156,9 @@ class IEXController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }
@@ -176,6 +180,9 @@ class IEXController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

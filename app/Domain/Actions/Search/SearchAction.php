@@ -17,6 +17,9 @@ class SearchAction
         private readonly SearchServiceInterface $searchService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

@@ -18,8 +18,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_user
  * @property int|null $id_conversation
  * @property int|null $id_conversation_message
- * @property Conversation|null $conversation
- * @property ConversationMessage|null $conversation_message
+ * @property-read Conversation|null $conversation
+ * @property-read ConversationMessage|null $conversation_message
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUnviewed newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUnviewed newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUnviewed query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUnviewed whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUnviewed whereIdConversation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUnviewed whereIdConversationMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationUnviewed whereIdUser($value)
+ *
+ * @mixin \Eloquent
  */
 class ConversationUnviewed extends Model
 {

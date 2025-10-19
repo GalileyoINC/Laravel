@@ -18,6 +18,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_user
  * @property string|null $phrase
  * @property int|null $id_search_user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecentSearch newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecentSearch newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecentSearch query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecentSearch whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecentSearch whereIdSearchUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecentSearch whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecentSearch wherePhrase($value)
+ *
+ * @mixin \Eloquent
  */
 class RecentSearch extends Model
 {

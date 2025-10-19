@@ -24,7 +24,7 @@ class LoginAction
     /**
      * Execute login action
      *
-     * @param  array  $data  Login data (email, password, device)
+     * @param  array<string, mixed>  $data  Login data (email, password, device)
      */
     public function execute(array $data): JsonResponse
     {

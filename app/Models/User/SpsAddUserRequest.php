@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,10 +17,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int|null $id_user
  * @property string|null $token
- * @property array|null $post_data
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property User|null $user
+ * @property array<array-key, mixed>|null $post_data
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest wherePostData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpsAddUserRequest whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class SpsAddUserRequest extends Model
 {

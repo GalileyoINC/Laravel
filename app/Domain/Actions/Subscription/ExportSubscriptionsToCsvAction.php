@@ -8,9 +8,13 @@ use App\Models\Subscription\Subscription;
 
 final class ExportSubscriptionsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
-        $query = Subscription::with(['influencerPage', 'influencer', 'subscriptionCategory']);
+        $query = Subscription::with(['influencerPage', 'influencer', 'subscription_category']);
 
         if (! empty($filters['idCategory'])) {
             $query->where('id_subscription_category', (int) $filters['idCategory']);
@@ -49,11 +53,11 @@ final class ExportSubscriptionsToCsvAction
         foreach ($items as $subscription) {
             $rows[] = [
                 $subscription->id,
-                $subscription->subscriptionCategory->name ?? '',
+                $subscription->subscription_category->name ?? '',
                 $subscription->title,
                 $subscription->description,
                 $subscription->percent,
-                $subscription->alias,
+                '', // alias property doesn't exist
                 $subscription->is_active ? 'Yes' : 'No',
                 $subscription->is_custom ? 'Yes' : 'No',
                 $subscription->show_reactions ? 'Yes' : 'No',

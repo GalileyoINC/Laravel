@@ -10,9 +10,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\InfoState\Web\InfoStateIndexRequest;
 use App\Models\Analytics\InfoState;
 use App\Models\Subscription\Subscription;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InfoStateController extends Controller
@@ -31,7 +32,7 @@ class InfoStateController extends Controller
         $infoStates = $this->getInfoStateListAction->execute($filters, 20);
 
         // Get subscription names for display
-        $subscriptionIds = $infoStates->getCollection()->pluck('key')->filter()->unique();
+        $subscriptionIds = collect($infoStates->items())->pluck('key')->filter()->unique();
         $subscriptions = Subscription::whereIn('id', $subscriptionIds)->pluck('name', 'id')->toArray();
 
         return ViewFacade::make('info-state.index', [
@@ -79,6 +80,9 @@ class InfoStateController extends Controller
 
         return response()->streamDownload(function () use ($csvData) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new RuntimeException('Failed to open output stream');
+            }
             foreach ($csvData as $row) {
                 fputcsv($file, $row);
             }

@@ -9,12 +9,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\Web\LoginRequest;
 use App\Http\Requests\Authentication\Web\SelfRequest;
 use App\Models\System\Staff;
+use App\Models\User\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\Contracts\View\View;
 
 class SiteController extends Controller
 {
@@ -52,8 +53,10 @@ class SiteController extends Controller
 
         if ($result->getData()->status === 'success') {
             // Find user and login with Laravel Auth
-            $user = \App\Models\User\User::find($result->getData()->user_id);
+            $userId = (int) $result->getData()->user_id;
+            $user = User::find($userId);
             if ($user) {
+                /** @var User $user */
                 Auth::login($user, false);
                 $request->session()->regenerate();
 

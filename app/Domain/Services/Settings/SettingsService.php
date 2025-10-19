@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Services\Settings;
 
 use App\Domain\DTOs\Settings\SettingsPublicRequestDTO;
-use App\DTOs\Settings\SettingsUpdateRequestDTO;
+use App\Domain\DTOs\Settings\SettingsUpdateRequestDTO;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 

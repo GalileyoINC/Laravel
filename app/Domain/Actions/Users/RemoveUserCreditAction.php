@@ -8,7 +8,7 @@ use App\Models\User\User;
 
 class RemoveUserCreditAction
 {
-    public function execute(int $userId): User
+    public function execute(int $userId): ?User
     {
         $user = User::findOrFail($userId);
         $user->bonus_point = 0;

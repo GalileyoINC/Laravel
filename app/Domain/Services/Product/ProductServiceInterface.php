@@ -16,16 +16,22 @@ interface ProductServiceInterface
 {
     /**
      * Get product list
+     *
+     * @return array<string, mixed>
      */
     public function getProductList(ProductListRequestDTO $dto, ?User $user): array;
 
     /**
      * Get product alerts
+     *
+     * @return array<string, mixed>
      */
     public function getProductAlerts(ProductAlertsRequestDTO $dto, ?User $user): array;
 
     /**
      * Process Apple purchase
+     *
+     * @return array<string, mixed>
      */
     public function processApplePurchase(ApplePurchaseRequestDTO $dto, User $user): array;
 }

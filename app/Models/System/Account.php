@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,12 +21,31 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $accessToken
  * @property string|null $refreshToken
  * @property string|null $idToken
- * @property Carbon|null $accessTokenExpiresAt
- * @property Carbon|null $refreshTokenExpiresAt
+ * @property \Illuminate\Support\Carbon|null $accessTokenExpiresAt
+ * @property \Illuminate\Support\Carbon|null $refreshTokenExpiresAt
  * @property string|null $scope
  * @property string|null $password
- * @property Carbon $createdAt
- * @property Carbon $updatedAt
+ * @property \Illuminate\Support\Carbon $createdAt
+ * @property \Illuminate\Support\Carbon $updatedAt
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereAccessToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereAccessTokenExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereIdToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereProviderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereRefreshToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereRefreshTokenExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereScope($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Account whereUserId($value)
+ *
+ * @mixin \Eloquent
  */
 class Account extends Model
 {

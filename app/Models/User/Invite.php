@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,10 +21,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $name
  * @property string|null $phone_number
  * @property string|null $token
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property FollowerList $follower_list
- * @property User $user
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Subscription\FollowerList $follower_list
+ * @property-read User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereIdFollowerList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invite whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Invite extends Model
 {

@@ -14,8 +14,11 @@ class ChangePasswordRequestDTO
         public readonly string $confirmPassword
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             currentPassword: $data['current_password'] ?? '',
             newPassword: $data['new_password'] ?? '',
@@ -25,6 +28,7 @@ class ChangePasswordRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             currentPassword: $request->input('current_password', ''),
             newPassword: $request->input('new_password', ''),
@@ -32,6 +36,9 @@ class ChangePasswordRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

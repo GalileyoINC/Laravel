@@ -21,6 +21,8 @@ class CustomerService implements CustomerServiceInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function getProfile(GetProfileRequestDTO $dto, User $user): array
     {
@@ -64,6 +66,8 @@ class CustomerService implements CustomerServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function updateProfile(UpdateProfileRequestDTO $dto, User $user): array
     {

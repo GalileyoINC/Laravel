@@ -17,6 +17,9 @@ class VerifyPhoneAction
         private readonly PhoneServiceInterface $phoneService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

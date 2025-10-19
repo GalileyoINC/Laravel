@@ -9,12 +9,14 @@ use const PHP_VERSION;
 use App\Http\Controllers\Controller;
 use App\Models\System\ApiLog;
 use App\Models\System\Settings;
+use Exception;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Twilio\Rest\Client;
 
 use function get_loaded_extensions;
 
@@ -182,10 +184,16 @@ class HelpController extends Controller
             return response()->json(['error' => 'Twilio credentials not configured'], 400);
         }
 
-        $twilio = new \Twilio\Rest\Client($twilioSid, $twilioToken);
-        $result = $twilio->lookups->v1->phoneNumbers($number)->fetch(['type' => ['carrier']]);
+        try {
+            /** @phpstan-ignore-next-line */
+            $twilio = new Client($twilioSid, $twilioToken);
+            /** @phpstan-ignore-next-line */
+            $result = $twilio->lookups->v1->phoneNumbers($number)->fetch(['type' => ['carrier']]);
 
-        return response()->json($result->toArray());
+            return response()->json($result->toArray());
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Twilio service not available: '.$e->getMessage()], 500);
+        }
     }
 
     /**
@@ -208,13 +216,19 @@ class HelpController extends Controller
             return response()->json(['error' => 'Twilio credentials not configured'], 400);
         }
 
-        $twilio = new \Twilio\Rest\Client($twilioSid, $twilioToken);
-        $message = $twilio->api->account->messages->create($number, [
-            'from' => $twilioFrom,
-            'body' => $text,
-        ]);
+        try {
+            /** @phpstan-ignore-next-line */
+            $twilio = new Client($twilioSid, $twilioToken);
+            /** @phpstan-ignore-next-line */
+            $message = $twilio->api->account->messages->create($number, [
+                'from' => $twilioFrom,
+                'body' => $text,
+            ]);
 
-        return response()->json($message->toArray());
+            return response()->json($message->toArray());
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Twilio service not available: '.$e->getMessage()], 500);
+        }
     }
 
     /**
@@ -303,14 +317,18 @@ class HelpController extends Controller
         ]);
     }
 
-    // Helper methods
+    /**
+     * Get log files
+     *
+     * @return list<array<string, mixed>>
+     */
     private function getLogFiles(): array
     {
         $logFiles = [];
         $logPath = storage_path('logs');
 
         if (is_dir($logPath)) {
-            $files = glob($logPath.'/*.log');
+            $files = glob($logPath.'/*.log') ?: [];
             foreach ($files as $file) {
                 $logFiles[] = [
                     'path' => $file,

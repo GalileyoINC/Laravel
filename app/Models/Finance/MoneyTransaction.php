@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,19 +23,43 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $transaction_id
  * @property bool|null $is_success
  * @property float $total
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool $is_void
  * @property int|null $id_refund
  * @property bool $is_test
  * @property string|null $error
  * @property string|null $note
- * @property CreditCard|null $credit_card
- * @property Invoice|null $invoice
- * @property MoneyTransaction|null $money_transaction
- * @property User $user
- * @property Collection|LogAuthorize[] $log_authorizes
- * @property Collection|MoneyTransaction[] $money_transactions
+ * @property-read CreditCard|null $creditCard
+ * @property-read CreditCard|null $credit_card
+ * @property-read Invoice|null $invoice
+ * @property-read Collection<int, \App\Models\Analytics\LogAuthorize> $log_authorizes
+ * @property-read int|null $log_authorizes_count
+ * @property-read MoneyTransaction|null $money_transaction
+ * @property-read Collection<int, MoneyTransaction> $money_transactions
+ * @property-read int|null $money_transactions_count
+ * @property-read \App\Models\User\User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereError($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereIdCreditCard($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereIdInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereIdRefund($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereIsSuccess($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereIsTest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereIsVoid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereTransactionType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MoneyTransaction whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class MoneyTransaction extends Model
 {
@@ -123,5 +146,19 @@ class MoneyTransaction extends Model
     public function canBeVoided(): bool
     {
         return (bool) ($this->is_success && ! $this->is_void);
+    }
+
+    /**
+     * Void the transaction
+     */
+    public function void(): bool
+    {
+        if (! $this->canBeVoided()) {
+            return false;
+        }
+
+        $this->is_void = true;
+
+        return $this->save();
     }
 }

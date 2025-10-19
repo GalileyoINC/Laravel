@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,7 +19,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $obj_type
  * @property string|null $obj_id
  * @property string|null $body
- * @property Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon $created_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog whereIdStaff($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog whereObjId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMessageLog whereObjType($value)
+ *
+ * @mixin \Eloquent
  */
 class AdminMessageLog extends Model
 {
@@ -38,6 +49,7 @@ class AdminMessageLog extends Model
     protected $casts = [
         'id_staff' => 'int',
         'obj_type' => 'int',
+        'created_at' => 'datetime',
     ];
 
     protected $fillable = [

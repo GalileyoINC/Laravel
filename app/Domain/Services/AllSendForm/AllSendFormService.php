@@ -21,6 +21,8 @@ class AllSendFormService implements AllSendFormServiceInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function getAllSendOptions(AllSendOptionsRequestDTO $dto, ?User $user): array
     {
@@ -63,6 +65,8 @@ class AllSendFormService implements AllSendFormServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function sendBroadcast(AllSendBroadcastRequestDTO $dto, User $user): array
     {
@@ -89,8 +93,9 @@ class AllSendFormService implements AllSendFormServiceInterface
             // Send to subscriptions
             if ($dto->subscriptions) {
                 foreach ($dto->subscriptions as $subscriptionId) {
+                    /** @var Subscription|null $subscription */
                     $subscription = Subscription::find($subscriptionId);
-                    if ($subscription && $subscription->is_active && $subscription->is_public) {
+                    if ($subscription && (bool) $subscription->is_active && $subscription->is_public) {
                         $results[] = [
                             'type' => 'subscription',
                             'id' => $subscriptionId,
@@ -145,6 +150,8 @@ class AllSendFormService implements AllSendFormServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function uploadImage(AllSendImageUploadRequestDTO $dto, User $user): array
     {
@@ -187,35 +194,31 @@ class AllSendFormService implements AllSendFormServiceInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function deleteImage(int $imageId, User $user): array
     {
-        try {
-            // In real application, find and delete the image record
-            // $image = SmsPoolPhoto::where('id', $imageId)
-            //     ->where('id_user', $user->id)
-            //     ->first();
+        // In real application, find and delete the image record
+        // $image = SmsPoolPhoto::where('id', $imageId)
+        //     ->where('id_user', $user->id)
+        //     ->first();
 
-            // if (!$image) {
-            //     throw new \Exception('Image not found or unauthorized');
-            // }
+        // if (!$image) {
+        //     throw new \Exception('Image not found or unauthorized');
+        // }
 
-            // // Delete file from storage
-            // if ($image->path) {
-            //     Storage::disk('public')->delete($image->path);
-            // }
+        // // Delete file from storage
+        // if ($image->path) {
+        //     Storage::disk('public')->delete($image->path);
+        // }
 
-            // $image->delete();
+        // $image->delete();
 
-            // For now, return success (mock implementation)
-            return [
-                'success' => true,
-                'message' => 'Image deleted successfully',
-            ];
-
-        } catch (Exception $e) {
-            Log::error('AllSendFormService deleteImage error: '.$e->getMessage());
-            throw $e;
-        }
+        // For now, return success (mock implementation)
+        return [
+            'success' => true,
+            'message' => 'Image deleted successfully',
+        ];
     }
 }

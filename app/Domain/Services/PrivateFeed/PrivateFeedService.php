@@ -19,6 +19,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, mixed>
      */
     public function getPrivateFeedList(PrivateFeedListRequestDTO $dto, User $user): array
     {
@@ -34,8 +36,8 @@ class PrivateFeedService implements PrivateFeedServiceInterface
             }
 
             $privateFeeds = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit)
-                ->offset($dto->offset)
+                ->limit($dto->limit ?? 20)
+                ->offset($dto->offset ?? 0)
                 ->get();
 
             return $privateFeeds->toArray();
@@ -62,7 +64,7 @@ class PrivateFeedService implements PrivateFeedServiceInterface
             // Handle image upload
             if ($dto->imageFile) {
                 $imagePath = $dto->imageFile->store('private-feeds', 'public');
-                $followerList->image_path = $imagePath;
+                $followerList->image_path = $imagePath ?: null;
             }
 
             $followerList->save();
@@ -101,7 +103,7 @@ class PrivateFeedService implements PrivateFeedServiceInterface
                 }
 
                 $imagePath = $dto->imageFile->store('private-feeds', 'public');
-                $followerList->image_path = $imagePath;
+                $followerList->image_path = $imagePath ?: null;
             }
 
             $followerList->save();
@@ -133,7 +135,7 @@ class PrivateFeedService implements PrivateFeedServiceInterface
                 Storage::disk('public')->delete($followerList->image_path);
             }
 
-            return $followerList->delete();
+            return (bool) $followerList->delete();
 
         } catch (Exception $e) {
             Log::error('PrivateFeedService deletePrivateFeed error: '.$e->getMessage());

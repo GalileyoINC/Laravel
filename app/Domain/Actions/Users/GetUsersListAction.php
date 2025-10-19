@@ -17,6 +17,10 @@ class GetUsersListAction
         private readonly UsersServiceInterface $usersService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return LengthAwarePaginator<int, \App\Models\User\User>
+     */
     public function execute(array $data): LengthAwarePaginator
     {
         try {

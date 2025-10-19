@@ -21,12 +21,12 @@ use App\Http\Requests\Content\Web\PageIndexRequest;
 use App\Http\Requests\Content\Web\PageRequest;
 use App\Models\Content\Page;
 use App\Models\Content\PageContent;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\Support\Str;
-use Illuminate\View\View;
 
 class PageController extends Controller
 {

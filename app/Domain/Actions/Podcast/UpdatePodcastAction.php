@@ -15,14 +15,14 @@ final class UpdatePodcastAction
         $podcast = Podcast::findOrFail($dto->id);
         $podcast->title = $dto->title;
         $podcast->url = $dto->url;
-        $podcast->type = $dto->type;
+        $podcast->type = (int) $dto->type;
 
         if ($dto->image) {
             if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
                 Storage::disk('public')->delete($podcast->image);
             }
             $imagePath = $dto->image->store('podcasts', 'public');
-            $podcast->image = $imagePath;
+            $podcast->image = $imagePath ?: null;
         }
 
         $podcast->save();

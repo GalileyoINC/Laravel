@@ -11,10 +11,10 @@ use App\Http\Requests\Service\Web\ServiceIndexRequest;
 use App\Http\Requests\Service\Web\ServiceRequest;
 use App\Http\Requests\Service\Web\ServiceSettingsRequest;
 use App\Models\Finance\Service;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ServiceController extends Controller

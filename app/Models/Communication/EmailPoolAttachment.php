@@ -19,7 +19,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $body
  * @property string $file_name
  * @property string|null $content_type
- * @property EmailPool $email_pool
+ * @property-read EmailPool $email_pool
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment whereContentType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|EmailPoolAttachment whereIdEmailPool($value)
+ *
+ * @mixin \Eloquent
  */
 class EmailPoolAttachment extends Model
 {

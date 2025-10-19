@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetPromocodeListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, Promocode>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = Promocode::query();
@@ -39,6 +43,6 @@ final class GetPromocodeListAction
             $query->whereDate('active_to', '<=', $filters['active_to_to']);
         }
 
-        return $query->orderBy('created_at', 'desc')->paginate($perPage);
+        return $query->orderBy('id', 'desc')->paginate($perPage);
     }
 }

@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class GetTwilioIncomingListAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, TwilioIncoming>
+     */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
         $query = TwilioIncoming::query();

@@ -37,6 +37,7 @@ interface ChatServiceInterface
     /**
      * Upload files to conversation
      *
+     * @param  array<int, mixed>  $files
      * @return mixed
      */
     public function uploadFiles(array $files, int $conversationId, User $user);
@@ -44,6 +45,7 @@ interface ChatServiceInterface
     /**
      * Create group chat
      *
+     * @param  array<string, mixed>  $data
      * @return mixed
      */
     public function createGroupChat(array $data, User $user);

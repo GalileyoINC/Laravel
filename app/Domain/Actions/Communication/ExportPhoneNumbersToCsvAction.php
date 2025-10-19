@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Communication;
 
 use App\Models\Device\PhoneNumber;
+use App\Models\User\User;
 
 final class ExportPhoneNumbersToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
-        $query = PhoneNumber::with(['user', 'provider']);
+        $query = PhoneNumber::with(['user']);
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
@@ -59,18 +64,28 @@ final class ExportPhoneNumbersToCsvAction
         $rows = [];
         $rows[] = ['ID', 'User', 'Email', 'Number', 'Valid', 'Type', 'Provider', 'Primary', 'Send', 'Created At', 'Updated At'];
         foreach ($items as $phoneNumber) {
+            /** @var PhoneNumber $phoneNumber */
+            $userName = '';
+            $userEmail = '';
+            if ($phoneNumber->user) {
+                /** @var User $user */
+                $user = $phoneNumber->user;
+                $userName = $user->first_name.' '.$user->last_name;
+                $userEmail = $user->email ?? '';
+            }
+
             $rows[] = [
                 $phoneNumber->id,
-                $phoneNumber->user ? $phoneNumber->user->first_name.' '.$phoneNumber->user->last_name : '',
-                $phoneNumber->user ? $phoneNumber->user->email : '',
+                $userName,
+                $userEmail,
                 $phoneNumber->number,
                 $phoneNumber->is_valid ? 'Yes' : 'No',
-                $phoneNumber->getTypeFilter()[$phoneNumber->type] ?? '',
-                $phoneNumber->provider ? $phoneNumber->provider->name : '',
+                $phoneNumber->type ?? '',
+                '',
                 $phoneNumber->is_primary ? 'Yes' : 'No',
                 $phoneNumber->is_send ? 'Yes' : 'No',
-                $phoneNumber->created_at->format('Y-m-d H:i:s'),
-                $phoneNumber->updated_at->format('Y-m-d H:i:s'),
+                $phoneNumber->created_at?->format('Y-m-d H:i:s') ?? '',
+                $phoneNumber->updated_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

@@ -8,6 +8,10 @@ use App\Models\User\EmergencyTipsRequest;
 
 final class ExportEmergencyTipsRequestsToCsvAction
 {
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<int, mixed>>
+     */
     public function execute(array $filters): array
     {
         $query = EmergencyTipsRequest::query();
@@ -36,6 +40,7 @@ final class ExportEmergencyTipsRequestsToCsvAction
 
         $rows = [];
         $rows[] = ['ID', 'First Name', 'Email', 'Created At'];
+        /** @var EmergencyTipsRequest $emergencyTipsRequest */
         foreach ($items as $emergencyTipsRequest) {
             $rows[] = [
                 $emergencyTipsRequest->id,

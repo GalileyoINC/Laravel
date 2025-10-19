@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\News;
 
+use App\Domain\DTOs\News\ReactionRequestDTO;
 use App\Domain\Services\News\NewsServiceInterface;
-use App\DTOs\News\SetReactionRequestDTO;
 use App\Http\Resources\NewsResource;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -18,10 +18,13 @@ class RemoveReactionAction
         private readonly NewsServiceInterface $newsService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = SetReactionRequestDTO::fromArray($data);
+            $dto = ReactionRequestDTO::fromArray($data);
             $user = Auth::user();
 
             if (! $user) {

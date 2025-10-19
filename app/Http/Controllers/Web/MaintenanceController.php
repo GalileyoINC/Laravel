@@ -7,11 +7,11 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Artisan;
 use DB;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 
 class MaintenanceController extends Controller
 {

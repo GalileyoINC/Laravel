@@ -12,8 +12,11 @@ class ReportNewsRequestDTO
         public ?string $additional_text = null
     ) {}
 
-    public static function fromArray(array $data): self
+    /**
+     * @param array<string, mixed> $data     */
+    public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             id_news: $data['id_news'] ?? '',
             reason: $data['reason'] ?? '',

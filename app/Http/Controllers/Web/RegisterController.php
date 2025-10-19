@@ -9,9 +9,9 @@ use App\Domain\Actions\Register\ExportRegisterUniqueListAction;
 use App\Domain\Actions\Register\GetRegisterListAction;
 use App\Domain\Actions\Register\GetRegisterUniqueListAction;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RegisterController extends Controller
@@ -86,6 +86,9 @@ class RegisterController extends Controller
 
         $callback = function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }
@@ -113,6 +116,9 @@ class RegisterController extends Controller
 
         $callback = function () use ($rows) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
             foreach ($rows as $row) {
                 fputcsv($file, $row);
             }

@@ -15,6 +15,9 @@ class GetUnpaidContractsAction
         private readonly ContractLineServiceInterface $contractLineService
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): JsonResponse
     {
         try {

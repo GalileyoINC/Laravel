@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 class CommentListRequestDTO
 {
+    /**
+     * @param  array<string, mixed>  $filter
+     */
     public function __construct(
         public readonly int $newsId,
         public readonly ?int $limit = 20,
@@ -15,8 +18,11 @@ class CommentListRequestDTO
         public readonly ?array $filter = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             newsId: (int) $data['id_news'],
             limit: isset($data['limit']) ? (int) $data['limit'] : 20,
@@ -27,6 +33,7 @@ class CommentListRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             newsId: $request->input('id_news'),
             limit: $request->input('limit', 20),
@@ -35,6 +42,9 @@ class CommentListRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

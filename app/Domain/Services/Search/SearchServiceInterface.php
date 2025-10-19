@@ -11,6 +11,8 @@ interface SearchServiceInterface
 {
     /**
      * Search for content
+     *
+     * @return array<string, mixed>
      */
-    public function search(SearchRequestDTO $dto, ?User $user);
+    public function search(SearchRequestDTO $dto, ?User $user): array;
 }

@@ -11,6 +11,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface ContactServiceInterface
 {
+    /**
+     * @return LengthAwarePaginator<int, Contact>
+     */
     public function getList(ContactListRequestDTO $dto): LengthAwarePaginator;
 
     public function getById(int $id): Contact;

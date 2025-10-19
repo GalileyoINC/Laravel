@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
  */
 class CreateOrderDTO
 {
+    /**
+     * @param  array<string, mixed>  $productDetails
+     */
     public function __construct(
         public readonly int $productId,
         public readonly int $quantity,
@@ -20,8 +23,12 @@ class CreateOrderDTO
         public readonly ?array $productDetails = []
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             productId: (int) $data['product_id'],
             quantity: (int) $data['quantity'],
@@ -34,6 +41,7 @@ class CreateOrderDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             productId: $request->input('product_id'),
             quantity: $request->input('quantity'),
@@ -44,6 +52,9 @@ class CreateOrderDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

@@ -18,8 +18,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $id_admin
  * @property int|null $id_member
  * @property int|null $id_plan
- * @property User|null $user
- * @property UserPlan|null $user_plan
+ * @property-read User|null $user
+ * @property-read UserPlan|null $user_plan
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMember newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMember newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMember query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMember whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMember whereIdAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMember whereIdMember($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminMember whereIdPlan($value)
+ *
+ * @mixin \Eloquent
  */
 class AdminMember extends Model
 {

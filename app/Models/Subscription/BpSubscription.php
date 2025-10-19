@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Subscription;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,10 +21,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $id_bill
  * @property int $status
  * @property string $email
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
- * @property User $user
- * @property Collection|Invoice[] $invoices
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, \App\Models\Finance\Invoice> $invoices
+ * @property-read int|null $invoices_count
+ * @property-read \App\Models\User\User $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereIdBill($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereIdSubscription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BpSubscription whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class BpSubscription extends Model
 {

@@ -13,7 +13,7 @@ class TerminateContractAction
     public function execute(TerminateContractDTO $dto): JsonResponse
     {
         $contractLine = ContractLine::findOrFail($dto->contractLineId);
-        $contractLine->terminated_at = $dto->terminatedAt;
+        $contractLine->terminated_at = \Illuminate\Support\Carbon::parse($dto->terminatedAt);
         $contractLine->save();
 
         return response()->json([

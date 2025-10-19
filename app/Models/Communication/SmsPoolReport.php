@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,7 +27,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property float|null $api_median
  * @property int|null $api_total
  * @property int|null $api_users
- * @property Carbon $day
+ * @property \Illuminate\Support\Carbon $day
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereApiAvg($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereApiMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereApiMedian($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereApiMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereApiTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereApiUsers($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereDay($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereInfluencerAvg($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereInfluencerMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereInfluencerMedian($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereInfluencerMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereInfluencerTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReport whereInfluencerUsers($value)
+ *
+ * @mixin \Eloquent
  */
 class SmsPoolReport extends Model
 {

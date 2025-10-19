@@ -16,6 +16,7 @@ class PublicFeedImageUploadRequestDTO
 
     public static function fromData(string $uuid, UploadedFile $file): static
     {
+        /** @var static */
         return new self(
             uuid: $uuid,
             file: $file
@@ -24,12 +25,16 @@ class PublicFeedImageUploadRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             uuid: $request->input('uuid'),
             file: $request->file('file')
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [
@@ -40,6 +45,6 @@ class PublicFeedImageUploadRequestDTO
 
     public function validate(): bool
     {
-        return ! empty($this->uuid) && $this->file !== null;
+        return ! empty($this->uuid);
     }
 }

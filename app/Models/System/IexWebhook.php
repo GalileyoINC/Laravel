@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,9 +19,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $event
  * @property string|null $set
  * @property string|null $name
- * @property array|null $data
- * @property Carbon $created_at
- * @property Carbon|null $updated_at
+ * @property array<array-key, mixed>|null $data
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereEvent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereIexId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereSet($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IexWebhook whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class IexWebhook extends Model
 {

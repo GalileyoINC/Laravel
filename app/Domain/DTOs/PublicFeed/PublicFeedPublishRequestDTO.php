@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class PublicFeedPublishRequestDTO
 {
+    /**
+     * @param  array<int, mixed>  $files
+     * @param  array<int, mixed>  $subscriptions
+     */
     public function __construct(
         public readonly string $uuid,
         public readonly string $text,
@@ -18,8 +22,11 @@ class PublicFeedPublishRequestDTO
         public readonly ?array $files = null
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             uuid: $data['uuid'],
             text: $data['text'],
@@ -33,6 +40,7 @@ class PublicFeedPublishRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             uuid: $request->input('uuid'),
             text: $request->input('text'),
@@ -44,6 +52,9 @@ class PublicFeedPublishRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [

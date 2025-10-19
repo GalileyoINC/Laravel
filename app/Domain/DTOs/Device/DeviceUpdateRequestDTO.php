@@ -8,14 +8,20 @@ use Illuminate\Http\Request;
 
 class DeviceUpdateRequestDTO
 {
+    /**
+     * @param  array<string, mixed>|null  $info
+     */
     public function __construct(
         public readonly ?string $os = null,
         public readonly ?string $pushToken = null,
         public readonly ?array $info = []
     ) {}
 
+    /**
+     * @param array<string, mixed> $data     */
     public static function fromArray(array $data): static
     {
+        /** @var static */
         return new self(
             os: $data['os'] ?? null,
             pushToken: $data['push_token'] ?? null,
@@ -25,6 +31,7 @@ class DeviceUpdateRequestDTO
 
     public static function fromRequest(Request $request): static
     {
+        /** @var static */
         return new self(
             os: $request->input('os'),
             pushToken: $request->input('push_token'),
@@ -32,6 +39,9 @@ class DeviceUpdateRequestDTO
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [
