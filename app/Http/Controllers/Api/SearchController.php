@@ -27,20 +27,10 @@ class SearchController extends Controller
      */
     public function index(SearchRequest $request): JsonResponse
     {
-        try {
-            // Request validation is handled automatically by SearchRequest
-            $result = $this->searchAction->execute($request->validated());
+        // Request validation is handled automatically by SearchRequest
+        $result = $this->searchAction->execute($request->validated());
 
-            // Return the result directly since SearchAction already returns JsonResponse
-            return $result;
-
-        } catch (Exception $e) {
-            // Use ErrorResource for consistent error format
-            return response()->json(new ErrorResource([
-                'message' => $e->getMessage(),
-                'code' => 500,
-                'trace_id' => uniqid(),
-            ]), 500);
-        }
+        // Return the result directly since SearchAction already returns JsonResponse
+        return $result;
     }
 }

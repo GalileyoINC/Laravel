@@ -21,23 +21,13 @@ class MaintenanceController extends Controller
      */
     public function summarize(SummarizeRequest $request): JsonResponse
     {
-        try {
-            $result = $this->summarizeAction->execute($request->validated());
+        $result = $this->summarizeAction->execute($request->validated());
 
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'summarized' => $result['summarized'],
-                ],
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-                'code' => 500,
-                'trace_id' => uniqid(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'summarized' => $result['summarized'],
+            ],
+        ]);
     }
 }

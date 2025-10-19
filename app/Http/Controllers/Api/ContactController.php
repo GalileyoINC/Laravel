@@ -18,37 +18,25 @@ class ContactController extends Controller
 {
     public function index(ContactListRequest $request, GetContactListAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute($request->validated());
+        $result = $action->execute($request->validated());
 
-            return ContactResource::collection($result)->response();
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return ContactResource::collection($result)->response();
     }
 
     public function view(int $id, GetContactAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return ContactResource::make($result)->response();
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return ContactResource::make($result)->response();
     }
 
     public function delete(int $id, DeleteContactAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Contact marked as deleted successfully',
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Contact marked as deleted successfully',
+        ]);
     }
 }

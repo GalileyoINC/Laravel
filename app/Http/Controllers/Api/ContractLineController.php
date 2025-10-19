@@ -16,12 +16,8 @@ class ContractLineController extends Controller
 {
     public function unpaid(ContractLineListRequest $request, GetUnpaidContractsAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute($request->validated());
+        $result = $action->execute($request->validated());
 
-            return ContractLineResource::collection($result)->response();
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return ContractLineResource::collection($result)->response();
     }
 }

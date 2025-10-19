@@ -20,66 +20,46 @@ class EmailPoolController extends Controller
 {
     public function index(EmailPoolListRequest $request, GetEmailPoolListAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute($request->validated());
+        $result = $action->execute($request->validated());
 
-            return EmailPoolResource::collection($result)->response();
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return EmailPoolResource::collection($result)->response();
     }
 
     public function view(int $id, GetEmailPoolAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return EmailPoolResource::make($result)->response();
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return EmailPoolResource::make($result)->response();
     }
 
     public function delete(int $id, DeleteEmailPoolAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Email deleted successfully',
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Email deleted successfully',
+        ]);
     }
 
     public function resend(int $id, ResendEmailAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Email resent successfully',
-                'data' => $result,
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Email resent successfully',
+            'data' => $result,
+        ]);
     }
 
     public function attachment(int $id, GetEmailAttachmentAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute(['id' => $id]);
+        $result = $action->execute(['id' => $id]);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 }

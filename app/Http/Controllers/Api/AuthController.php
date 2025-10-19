@@ -31,21 +31,7 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        try {
-            // Request validation is handled automatically by LoginRequest
-            $result = $this->loginAction->execute($request->validated());
-
-            // Return the result directly since LoginAction already returns JsonResponse
-            return $result;
-
-        } catch (Exception $e) {
-            // Use ErrorResource for consistent error format
-            return response()->json(new ErrorResource([
-                'message' => $e->getMessage(),
-                'code' => 500,
-                'trace_id' => uniqid(),
-            ]), 500);
-        }
+        return $this->loginAction->execute($request->validated());
     }
 
     /**

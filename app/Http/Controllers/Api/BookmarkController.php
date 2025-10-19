@@ -32,21 +32,11 @@ class BookmarkController extends Controller
      */
     public function list(BookmarkListRequest $request): JsonResponse
     {
-        try {
-            // Request validation is handled automatically by BookmarkListRequest
-            $result = $this->getBookmarksAction->execute($request->validated());
+        // Request validation is handled automatically by BookmarkListRequest
+        $result = $this->getBookmarksAction->execute($request->validated());
 
-            // Return the result directly since GetBookmarksAction already returns JsonResponse
-            return $result;
-
-        } catch (Exception $e) {
-            // Use ErrorResource for consistent error format
-            return response()->json(new ErrorResource([
-                'message' => $e->getMessage(),
-                'code' => 500,
-                'trace_id' => uniqid(),
-            ]), 500);
-        }
+        // Return the result directly since GetBookmarksAction already returns JsonResponse
+        return $result;
     }
 
     /**
@@ -66,21 +56,11 @@ class BookmarkController extends Controller
      */
     public function create(BookmarkRequest $request): JsonResponse
     {
-        try {
-            // Request validation is handled automatically by BookmarkRequest
-            $result = $this->createBookmarkAction->execute($request->validated());
+        // Request validation is handled automatically by BookmarkRequest
+        $result = $this->createBookmarkAction->execute($request->validated());
 
-            // Return the result directly since CreateBookmarkAction already returns JsonResponse
-            return $result;
-
-        } catch (Exception $e) {
-            // Use ErrorResource for consistent error format
-            return response()->json(new ErrorResource([
-                'message' => $e->getMessage(),
-                'code' => 500,
-                'trace_id' => uniqid(),
-            ]), 500);
-        }
+        // Return the result directly since CreateBookmarkAction already returns JsonResponse
+        return $result;
     }
 
     /**
@@ -90,20 +70,10 @@ class BookmarkController extends Controller
      */
     public function delete(BookmarkRequest $request): JsonResponse
     {
-        try {
-            // Request validation is handled automatically by BookmarkRequest
-            $result = $this->deleteBookmarkAction->execute($request->validated());
+        // Request validation is handled automatically by BookmarkRequest
+        $result = $this->deleteBookmarkAction->execute($request->validated());
 
-            // Return the result directly since DeleteBookmarkAction already returns JsonResponse
-            return $result;
-
-        } catch (Exception $e) {
-            // Use ErrorResource for consistent error format
-            return response()->json(new ErrorResource([
-                'message' => $e->getMessage(),
-                'code' => 500,
-                'trace_id' => uniqid(),
-            ]), 500);
-        }
+        // Return the result directly since DeleteBookmarkAction already returns JsonResponse
+        return $result;
     }
 }

@@ -38,35 +38,25 @@ class PrivateFeedController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $dto = PrivateFeedCreateRequestDTO::fromRequest($request);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid private feed creation request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $privateFeed = $this->privateFeedService->createPrivateFeed($dto, $user);
-
-            return response()->json($privateFeed->toArray());
-
-        } catch (Exception $e) {
-            Log::error('PrivateFeedController create error: '.$e->getMessage());
-
+        $user = Auth::user();
+        if (! $user) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $dto = PrivateFeedCreateRequestDTO::fromRequest($request);
+        if (! $dto->validate()) {
+            return response()->json([
+                'errors' => ['Invalid private feed creation request'],
+                'message' => 'Invalid request parameters',
+            ], 400);
+        }
+
+        $privateFeed = $this->privateFeedService->createPrivateFeed($dto, $user);
+
+        return response()->json($privateFeed->toArray());
     }
 
     /**
@@ -74,43 +64,33 @@ class PrivateFeedController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $id = $request->input('id');
-            if (! $id) {
-                return response()->json([
-                    'errors' => ['ID is required'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $dto = PrivateFeedCreateRequestDTO::fromRequest($request);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid private feed update request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $privateFeed = $this->privateFeedService->updatePrivateFeed($id, $dto, $user);
-
-            return response()->json($privateFeed->toArray());
-
-        } catch (Exception $e) {
-            Log::error('PrivateFeedController update error: '.$e->getMessage());
-
+        $user = Auth::user();
+        if (! $user) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $id = $request->input('id');
+        if (! $id) {
+            return response()->json([
+                'errors' => ['ID is required'],
+                'message' => 'Invalid request parameters',
+            ], 400);
+        }
+
+        $dto = PrivateFeedCreateRequestDTO::fromRequest($request);
+        if (! $dto->validate()) {
+            return response()->json([
+                'errors' => ['Invalid private feed update request'],
+                'message' => 'Invalid request parameters',
+            ], 400);
+        }
+
+        $privateFeed = $this->privateFeedService->updatePrivateFeed($id, $dto, $user);
+
+        return response()->json($privateFeed->toArray());
     }
 
     /**
@@ -118,41 +98,31 @@ class PrivateFeedController extends Controller
      */
     public function delete(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $id = $request->input('id');
-            if (! $id) {
-                return response()->json([
-                    'errors' => ['ID is required'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $success = $this->privateFeedService->deletePrivateFeed($id, $user);
-
-            if ($success) {
-                return response()->json(['success' => true]);
-            }
-
+        $user = Auth::user();
+        if (! $user) {
             return response()->json([
-                'error' => 'Failed to delete private feed',
-                'code' => 400,
-            ], 400);
-
-        } catch (Exception $e) {
-            Log::error('PrivateFeedController delete error: '.$e->getMessage());
-
-            return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $id = $request->input('id');
+        if (! $id) {
+            return response()->json([
+                'errors' => ['ID is required'],
+                'message' => 'Invalid request parameters',
+            ], 400);
+        }
+
+        $success = $this->privateFeedService->deletePrivateFeed($id, $user);
+
+        if ($success) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json([
+            'error' => 'Failed to delete private feed',
+            'code' => 400,
+        ], 400);
     }
 }

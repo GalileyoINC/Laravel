@@ -39,35 +39,25 @@ class PublicFeedController extends Controller
      */
     public function send(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $dto = PublicFeedPublishRequestDTO::fromRequest($request);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid public feed publish request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $result = $this->publicFeedService->publishToPublicFeeds($dto, $user);
-
-            return response()->json($result);
-
-        } catch (Exception $e) {
-            Log::error('PublicFeedController send error: '.$e->getMessage());
-
+        $user = Auth::user();
+        if (! $user) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $dto = PublicFeedPublishRequestDTO::fromRequest($request);
+        if (! $dto->validate()) {
+            return response()->json([
+                'errors' => ['Invalid public feed publish request'],
+                'message' => 'Invalid request parameters',
+            ], 400);
+        }
+
+        $result = $this->publicFeedService->publishToPublicFeeds($dto, $user);
+
+        return response()->json($result);
     }
 
     /**
@@ -75,34 +65,24 @@ class PublicFeedController extends Controller
      */
     public function imageUpload(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $dto = PublicFeedImageUploadRequestDTO::fromRequest($request);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid image upload request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $result = $this->publicFeedService->uploadImage($dto, $user);
-
-            return response()->json($result);
-
-        } catch (Exception $e) {
-            Log::error('PublicFeedController imageUpload error: '.$e->getMessage());
-
+        $user = Auth::user();
+        if (! $user) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $dto = PublicFeedImageUploadRequestDTO::fromRequest($request);
+        if (! $dto->validate()) {
+            return response()->json([
+                'errors' => ['Invalid image upload request'],
+                'message' => 'Invalid request parameters',
+            ], 400);
+        }
+
+        $result = $this->publicFeedService->uploadImage($dto, $user);
+
+        return response()->json($result);
     }
 }

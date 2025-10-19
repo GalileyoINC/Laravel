@@ -20,72 +20,52 @@ class SettingsController extends Controller
 {
     public function index(GetSettingsAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute([]);
+        $result = $action->execute([]);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 
     public function update(SettingsUpdateRequest $request, UpdateSettingsAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute($request->validated());
+        $result = $action->execute($request->validated());
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Settings updated successfully',
-                'data' => $result,
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Settings updated successfully',
+            'data' => $result,
+        ]);
     }
 
     public function flush(FlushSettingsAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute([]);
+        $result = $action->execute([]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Settings flushed successfully',
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Settings flushed successfully',
+        ]);
     }
 
     public function public(SettingsPublicRequest $request, GetPublicSettingsAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute($request->validated());
+        $result = $action->execute($request->validated());
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 
     public function bitpayGeneration(GenerateBitpayConfigAction $action): JsonResponse
     {
-        try {
-            $result = $action->execute([]);
+        $result = $action->execute([]);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-        } catch (Exception $e) {
-            return ErrorResource::make($e->getMessage())->response()->setStatusCode(500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 }
