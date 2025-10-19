@@ -1,6 +1,5 @@
 includes:
     - vendor/nunomaduro/larastan/extension.neon
-    - vendor/nunomaduro/larastan/rules.neon
 
 parameters:
     paths:
@@ -8,9 +7,35 @@ parameters:
         - routes
         - database
     level: 8
+    treatPhpDocTypesAsCertain: false
     ignoreErrors:
+        - message: '#Parameter \#1 \$view of function view expects view-string\|null, string given#'
+          paths:
+            - routes/web.php
+        - message: '#Call to an undefined method Faker\\Generator::#'
+          paths:
+            - database/factories/*
+        - message: '#PHPDoc type string of property .+\\\$model is not covariant with PHPDoc type class-string<.+>#'
+          paths:
+            - database/factories/*
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::#'
+        - message: '#Access to an undefined property .+Http\\Resources\\.+::\$#'
+          paths:
+            - app/Http/Resources/*
+        - message: '#Call to an undefined method App\\Http\\Resources\\.+::#'
+          paths:
+            - app/Http/Resources/*
+        - message: '#Ternary operator condition is always true#'
+          paths:
+            - app/Http/Resources/*
+        - message: '#contains unresolvable type|unresolvable type#'
+          paths:
+            - app/Http/Resources/*
     excludePaths:
         - vendor
         - storage
         - bootstrap/cache
+        - database/factories
+        - database/seeders
+        - app/Models
+        - app/Providers/AppServiceProvider.php

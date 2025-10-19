@@ -7,8 +7,14 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Models\Communication\EmailTemplate
+ */
 class EmailTemplateResource extends JsonResource
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [
@@ -16,8 +22,8 @@ class EmailTemplateResource extends JsonResource
             'name' => $this->name,
             'subject' => $this->subject,
             'body' => $this->body,
-            'params' => $this->params ? json_decode($this->params, true) : [],
-            'status' => $this->status,
+            'params' => $this->params ? (is_array($this->params) ? $this->params : (json_decode((string) $this->params, true) ?: [])) : [],
+            'status' => $this->getAttribute('status'),
             'status_text' => $this->getStatusText(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
@@ -26,7 +32,7 @@ class EmailTemplateResource extends JsonResource
 
     private function getStatusText(): string
     {
-        return match ($this->status) {
+        return match ((int) ($this->getAttribute('status') ?? -1)) {
             1 => 'Active',
             0 => 'Inactive',
             default => 'Unknown'

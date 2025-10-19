@@ -6,6 +6,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserCollection extends ResourceCollection
 {
@@ -16,9 +17,7 @@ class UserCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return [
-            'status' => 'success',
-            'data' => $this->collection->map(fn ($user) => [
+        $data = $this->collection->map(fn ($user) => [
                 'id' => $user['id'] ?? null,
                 'email' => $user['email'] ?? null,
                 'first_name' => $user['first_name'] ?? null,
@@ -32,14 +31,31 @@ class UserCollection extends ResourceCollection
                 'timezone' => $user['timezone'] ?? null,
                 'created_at' => $user['created_at'] ?? null,
                 'updated_at' => $user['updated_at'] ?? null,
-            ]),
-            'pagination' => [
-                'total' => $this->total(),
-                'count' => $this->count(),
-                'per_page' => $this->perPage(),
-                'current_page' => $this->currentPage(),
-                'total_pages' => $this->lastPage(),
-            ],
+            ]);
+
+        $pagination = [
+            'total' => null,
+            'count' => $this->count(),
+            'per_page' => null,
+            'current_page' => null,
+            'total_pages' => null,
+        ];
+
+        $resource = $this->resource;
+        if ($resource instanceof LengthAwarePaginator) {
+            $pagination = [
+                'total' => $resource->total(),
+                'count' => $resource->count(),
+                'per_page' => $resource->perPage(),
+                'current_page' => $resource->currentPage(),
+                'total_pages' => $resource->lastPage(),
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'data' => $data,
+            'pagination' => $pagination,
         ];
     }
 
