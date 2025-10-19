@@ -11,7 +11,7 @@ class ExportUsersToCsvAction
 {
     public function execute(ExportUsersRequestDTO $dto): array
     {
-        $query = User::with(['phoneNumbers', 'subscriptionContractLines', 'preAdmin']);
+        $query = User::with(['phoneNumbers', 'contract_lines']);
 
         if (! empty($dto->search)) {
             $search = $dto->search;
@@ -43,16 +43,21 @@ class ExportUsersToCsvAction
             $spsActive = $user->is_sps_active ? 'Yes' : 'No';
 
             $activePlan = '';
-            if ($user->preAdmin) {
-                $activePlan = 'Subaccount';
-            } elseif ($user->subscriptionContractLines->isNotEmpty()) {
-                $activePlan = $user->subscriptionContractLines->pluck('title')->join('/');
+            $activeLines = $user->contract_lines->whereNull('terminated_at');
+            if ($activeLines->isNotEmpty()) {
+                $activePlan = $activeLines->pluck('title')->filter()->join('/');
             }
 
             $planType = '';
-            if ($user->subscriptionContractLines->isNotEmpty()) {
-                $planType = $user->subscriptionContractLines->map(function ($line) {
-                    return $line->getPayIntervalString();
+            if ($activeLines->isNotEmpty()) {
+                $planType = $activeLines->map(function ($line) {
+                    $interval = (int) ($line->pay_interval ?? 0);
+                    return match ($interval) {
+                        1 => 'Monthly',
+                        2 => 'Quarterly',
+                        3 => 'Yearly',
+                        default => (string) $interval,
+                    };
                 })->join('/');
             }
 
