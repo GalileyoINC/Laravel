@@ -6,34 +6,31 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UsersListRequest;
+use App\Domain\Actions\Users\GetUsersListAction;
 use Exception;
+use App\Domain\Actions\Users\GetUserDetailAction;
 use Illuminate\Http\JsonResponse;
 
 class UsersController extends Controller
 {
+    public function __construct(
+        private readonly GetUsersListAction $getUsersListAction,
+    ) {}
+
     public function index(UsersListRequest $request): JsonResponse
     {
         try {
-            $usersQuery = \App\Models\User\User::query();
-
-            if ($request->has('search')) {
-                $usersQuery->where(function ($q) use ($request) {
-                    $q->where('first_name', 'like', '%'.$request->search.'%')
-                        ->orWhere('last_name', 'like', '%'.$request->search.'%')
-                        ->orWhere('email', 'like', '%'.$request->search.'%');
-                });
-            }
-
-            $users = $usersQuery->paginate($request->limit ?? 20);
+            // Delegate fetching/pagination to Action layer while preserving response shape
+            $paginator = $this->getUsersListAction->execute($request->all());
 
             return response()->json([
                 'status' => 'success',
-                'data' => $users->items(),
+                'data' => $paginator->items(),
                 'pagination' => [
-                    'current_page' => $users->currentPage(),
-                    'last_page' => $users->lastPage(),
-                    'per_page' => $users->perPage(),
-                    'total' => $users->total(),
+                    'current_page' => $paginator->currentPage(),
+                    'last_page' => $paginator->lastPage(),
+                    'per_page' => $paginator->perPage(),
+                    'total' => $paginator->total(),
                 ],
             ]);
         } catch (Exception $e) {
@@ -44,10 +41,10 @@ class UsersController extends Controller
         }
     }
 
-    public function view(int $id): JsonResponse
+    public function view(int $id, GetUserDetailAction $action): JsonResponse
     {
         try {
-            $user = \App\Models\User\User::findOrFail($id);
+            $user = $action->execute($id);
 
             return response()->json([
                 'status' => 'success',
