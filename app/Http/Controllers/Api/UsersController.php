@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Domain\Actions\Users\GetUserDetailAction;
+use App\Domain\Actions\Users\GetUsersListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UsersListRequest;
-use App\Domain\Actions\Users\GetUsersListAction;
-use Exception;
-use App\Domain\Actions\Users\GetUserDetailAction;
 use Illuminate\Http\JsonResponse;
 
 class UsersController extends Controller

@@ -1,3 +1,15 @@
+/* Sidebar typography tweaks (smaller font) */
+.sidebar,
+.sidebar-menu,
+.sidebar-menu > li > a,
+.sidebar-menu > li > button,
+.sidebar-menu .child_menu a,
+.sidebar-menu .child_menu button {
+    font-size: 13px;
+}
+
+/* Ensure dropdown shows via 'active' class (admin.js toggles 'active') */
+.sidebar-menu li.active > .child_menu { display: block; }
 html,
 body {
     height: 100%;

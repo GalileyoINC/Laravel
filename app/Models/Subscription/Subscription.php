@@ -135,12 +135,10 @@ class Subscription extends Model
         return self::query()
             ->orderBy('id')
             ->get(['id', 'title', 'name'])
-            ->map(function ($s) {
-                return [
-                    'id' => $s->id,
-                    'name' => $s->title ?? $s->name ?? ('Subscription #'.$s->id),
-                ];
-            })
+            ->map(fn ($s) => [
+                'id' => $s->id,
+                'name' => $s->title ?? $s->name ?? ('Subscription #'.$s->id),
+            ])
             ->toArray();
     }
 
@@ -160,13 +158,11 @@ class Subscription extends Model
                 ->groupBy('user_subscription_address.id_subscription')
                 ->get();
 
-            return $rows->map(function ($r) {
-                return [
-                    'id_subscription' => (int) $r->id_subscription,
-                    'cnt' => (int) $r->cnt,
-                ];
-            })->toArray();
-        } catch (Throwable $e) {
+            return $rows->map(fn ($r) => [
+                'id_subscription' => (int) $r->id_subscription,
+                'cnt' => (int) $r->cnt,
+            ])->toArray();
+        } catch (Throwable) {
             return [];
         }
     }

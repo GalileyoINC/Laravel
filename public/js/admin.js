@@ -5,19 +5,41 @@
 (function($) {
     'use strict';
 
+    // Sidebar state persistence
+    var MENU_STATE_KEY = 'sidebar_open_item_v2';
+    function getBtnKey($btn) {
+        var $span = $btn.find('> span').first();
+        var txt = ($span.text() || $btn.text() || '').trim();
+        return txt;
+    }
+    function openLi($li) {
+        $li.addClass('active');
+        var $child = $li.children('.child_menu');
+        if ($child.length) {
+            $child.show();
+        }
+    }
+
     // Sidebar Toggle
     $(document).on('click', '.JS__sidebar_toggler', function(e) {
         e.preventDefault();
         
         var $sidebar = $('.sidebar');
         var $wrapper = $('.wrapper');
-        
+
+        // Mobile: slide-in/out sidebar
+        if (window.innerWidth <= 767) {
+            $wrapper.toggleClass('sidebar-open');
+            return;
+        }
+
+        // Desktop: mini/expand behavior
         if ($sidebar.hasClass('sidebar-mini')) {
             $sidebar.removeClass('sidebar-mini');
             $wrapper.removeClass('wrapper-sidebar_mini');
             // Save state
-            $.post('/maintenance/set-session', { 
-                key: 'sidebar_mini', 
+            $.post('/maintenance/set-session', {
+                key: 'sidebar_mini',
                 value: '0',
                 _token: $('meta[name="csrf-token"]').attr('content')
             });
@@ -25,8 +47,8 @@
             $sidebar.addClass('sidebar-mini');
             $wrapper.addClass('wrapper-sidebar_mini');
             // Save state
-            $.post('/maintenance/set-session', { 
-                key: 'sidebar_mini', 
+            $.post('/maintenance/set-session', {
+                key: 'sidebar_mini',
                 value: '1',
                 _token: $('meta[name="csrf-token"]').attr('content')
             });
@@ -36,19 +58,23 @@
     // Sidebar Menu Toggle
     $(document).on('click', '.sidebar-menu > li > button', function(e) {
         e.preventDefault();
-        
+
         var $li = $(this).parent();
         var $childMenu = $li.find('> .child_menu');
-        
+
         if ($li.hasClass('active')) {
             $li.removeClass('active');
             $childMenu.slideUp(300);
+            // clear persisted key
+            try { localStorage.removeItem(MENU_STATE_KEY); } catch (e) {}
         } else {
             // Close other menus
             $('.sidebar-menu > li.active').removeClass('active').find('.child_menu').slideUp(300);
             // Open this menu
             $li.addClass('active');
             $childMenu.slideDown(300);
+            // persist opened key
+            try { localStorage.setItem(MENU_STATE_KEY, getBtnKey($(this))); } catch (e) {}
         }
     });
 
@@ -193,6 +219,42 @@
     // Page load complete
     $(window).on('load', function() {
         $('#loader').fadeOut(300);
+    });
+
+    // On ready: restore open state and open parents of current link
+    $(function() {
+        // 1) Restore saved open top-level item
+        try {
+            var savedKey = localStorage.getItem(MENU_STATE_KEY);
+            if (savedKey) {
+                $('.sidebar-menu > li > button').each(function() {
+                    var $btn = $(this);
+                    if (getBtnKey($btn) === savedKey) {
+                        openLi($btn.parent());
+                        return false; // break
+                    }
+                });
+            }
+        } catch (e) {}
+
+        // 2) Ensure current page's parent menus are open
+        var currentPath = window.location.pathname.replace(/\/$/, '');
+        $('.sidebar-menu a[href]').each(function() {
+            var href = $(this).attr('href');
+            try {
+                var linkPath = new URL(href, window.location.origin).pathname.replace(/\/$/, '');
+                if (linkPath === currentPath) {
+                    var $li = $(this).closest('li');
+                    openLi($li);
+                    // Walk up to open ancestors that contain child_menu
+                    var $parent = $li.parent().closest('li');
+                    while ($parent.length) {
+                        openLi($parent);
+                        $parent = $parent.parent().closest('li');
+                    }
+                }
+            } catch (e) {}
+        });
     });
 
 })(jQuery);

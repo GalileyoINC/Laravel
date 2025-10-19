@@ -65,11 +65,9 @@ class Staff extends Model
             return self::query()
                 ->orderBy('username')
                 ->get(['id', 'username'])
-                ->mapWithKeys(function ($s) {
-                    return [$s->id => (string) $s->username];
-                })
+                ->mapWithKeys(fn ($s) => [$s->id => (string) $s->username])
                 ->toArray();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return [];
         }
     }

@@ -13,9 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StaffCreateRequest;
 use App\Http\Requests\Staff\StaffListRequest;
 use App\Http\Requests\Staff\StaffUpdateRequest;
-use App\Http\Resources\ErrorResource;
 use App\Http\Resources\StaffResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class StaffController extends Controller

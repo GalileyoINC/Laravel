@@ -89,9 +89,7 @@ class SmsPool extends Model
         ];
 
         try {
-            $codes = static::query()->select('purpose')->distinct()->pluck('purpose')->filter(function ($v) {
-                return $v !== null;
-            })->all();
+            $codes = static::query()->select('purpose')->distinct()->pluck('purpose')->filter(fn ($v) => $v !== null)->all();
 
             $map = $defaults;
             foreach ($codes as $code) {

@@ -92,7 +92,7 @@
                                     </td>
                                     <td>
                                         <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('email-pool.index') }}" class="btn btn-default ml-2">Clear</a>
+                                        <a href="{{ route('email-pool.index') }}" class="btn btn-secondary ml-2">Clear</a>
                                     </td>
                                 </tr>
                             </thead>
@@ -115,15 +115,15 @@
                                         <td>
                                             @php $status = is_array($emailPool) ? ($emailPool['status'] ?? '') : ($emailPool->status ?? ''); @endphp
                                             @if($status === 'sent')
-                                                <span class="label label-success">Sent</span>
+                                                <span class="badge badge-success">Sent</span>
                                             @elseif($status === 'pending')
-                                                <span class="label label-warning">Pending</span>
+                                                <span class="badge badge-warning">Pending</span>
                                             @elseif($status === 'failed')
-                                                <span class="label label-danger">Failed</span>
+                                                <span class="badge badge-danger">Failed</span>
                                             @elseif($status === 'cancelled')
-                                                <span class="label label-default">Cancelled</span>
+                                                <span class="badge badge-secondary">Cancelled</span>
                                             @else
-                                                <span class="label label-info">{{ ucfirst($status) }}</span>
+                                                <span class="badge badge-info">{{ ucfirst($status) }}</span>
                                             @endif
                                         </td>
                                         <td>{{ is_array($emailPool) ? ($emailPool['from'] ?? '') : ($emailPool->from ?? '') }}</td>

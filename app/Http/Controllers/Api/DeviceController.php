@@ -12,8 +12,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\DeviceListRequest;
 use App\Http\Requests\Device\DevicePushRequest;
 use App\Http\Resources\DeviceResource;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class DeviceController extends Controller

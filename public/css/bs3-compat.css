@@ -1,0 +1,45 @@
+/* Bootstrap 3 compatibility layer for Bootstrap 4 migration
+   Goal: keep existing BS3-like visuals without changing markup
+*/
+
+/* Panels -> Cards mimic */
+.panel { border: 1px solid #ddd; border-radius: 4px; background-color: #fff; margin-bottom: 20px; }
+.panel-heading { padding: 10px 15px; border-bottom: 1px solid #ddd; border-top-left-radius: 3px; border-top-right-radius: 3px; background-color: #f5f5f5; }
+.panel-title { margin: 0; font-size: 16px; }
+.panel-body { padding: 15px; }
+.panel-footer { padding: 10px 15px; background-color: #f5f5f5; border-top: 1px solid #ddd; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; }
+.panel-default { border-color: #ddd; }
+
+/* Labels -> Badges mimic */
+.label { display: inline-block; padding: .25em .6em; font-size: 75%; font-weight: 700; line-height: 1; color: #fff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: .25rem; }
+.label-success { background-color: #28a745; }
+.label-warning { background-color: #ffc107; color: #212529; }
+.label-danger { background-color: #dc3545; }
+.label-info { background-color: #17a2b8; }
+.label-default { background-color: #6c757d; }
+
+/* btn-default alias */
+.btn-default { color: #333; background-color: #fff; border-color: #ccc; }
+.btn-default:hover { color: #333; background-color: #e6e6e6; border-color: #adadad; }
+
+/* Tables spacing similar to BS3 */
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td { vertical-align: top; }
+
+/* Utility aliases (minimal) */
+.text-right { text-align: right !important; }
+.pull-right { float: right !important; }
+.pull-left { float: left !important; }
+
+/* Panel in .box wrapper mimic (if used) */
+.box { border: 1px solid #ddd; border-radius: 4px; background-color: #fff; margin-bottom: 20px; }
+.box-header { padding: 10px 15px; border-bottom: 1px solid #ddd; background-color: #f5f5f5; }
+.box-title { margin: 0; font-size: 16px; }
+.box-body { padding: 15px; }
+
+/* Badges sizing to resemble labels in tables */
+.badge { padding: .35em .6em; font-weight: 700; }

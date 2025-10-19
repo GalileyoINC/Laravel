@@ -12,8 +12,6 @@ use App\Domain\Actions\Settings\UpdateSettingsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\SettingsPublicRequest;
 use App\Http\Requests\Settings\SettingsUpdateRequest;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class SettingsController extends Controller

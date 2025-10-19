@@ -504,7 +504,3 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('news/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
     Route::get('news/export/csv', [NewsController::class, 'export'])->name('news.export');
 });
-
-// ========================================
-// API ROUTES (Keep existing)
-// ========================================

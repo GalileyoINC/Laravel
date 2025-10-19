@@ -13,9 +13,7 @@ use App\Domain\Actions\Report\GetStatisticAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Report\ReportCsvRequest;
 use App\Http\Requests\Report\ReportStatisticRequest;
-use App\Http\Resources\ErrorResource;
 use App\Http\Resources\ReportResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ReportController extends Controller

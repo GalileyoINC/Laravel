@@ -52,6 +52,7 @@ class ExportUsersToCsvAction
             if ($activeLines->isNotEmpty()) {
                 $planType = $activeLines->map(function ($line) {
                     $interval = (int) ($line->pay_interval ?? 0);
+
                     return match ($interval) {
                         1 => 'Monthly',
                         2 => 'Quarterly',

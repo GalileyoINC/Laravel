@@ -8,11 +8,9 @@ use App\Domain\Actions\PrivateFeed\GetPrivateFeedListAction;
 use App\Domain\DTOs\PrivateFeed\PrivateFeedCreateRequestDTO;
 use App\Domain\Services\PrivateFeed\PrivateFeedServiceInterface;
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Refactored PrivateFeed Controller using DDD Actions

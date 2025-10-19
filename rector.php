@@ -12,7 +12,7 @@ return RectorConfig::configure()
         __DIR__.'/routes',
     ])
     ->withSets([
-        LevelSetList::UP_TO_PHP_83,
+        LevelSetList::UP_TO_PHP_84,
     ])
     ->withSkip([
         __DIR__.'/vendor',

@@ -1,9 +1,13 @@
+includes:
+    - vendor/nunomaduro/larastan/extension.neon
+    - vendor/nunomaduro/larastan/rules.neon
+
 parameters:
     paths:
         - app
         - routes
         - database
-    level: 5
+    level: 8
     ignoreErrors:
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::#'
     excludePaths:

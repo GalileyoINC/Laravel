@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Api;
 use App\Domain\Actions\Maintenance\SummarizeAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Maintenance\SummarizeRequest;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class MaintenanceController extends Controller

@@ -87,9 +87,7 @@ class SmsShedule extends Model
         ];
 
         try {
-            $codes = static::query()->select('status')->distinct()->pluck('status')->filter(function ($v) {
-                return $v !== null;
-            })->all();
+            $codes = static::query()->select('status')->distinct()->pluck('status')->filter(fn ($v) => $v !== null)->all();
 
             $map = $defaults;
             foreach ($codes as $code) {

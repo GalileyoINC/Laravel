@@ -28,7 +28,7 @@ class CreditCardController extends Controller
     {
         $filters = $request->validated();
         $payload = array_merge($filters, [
-            'page' => (int)($filters['page'] ?? 1),
+            'page' => (int) ($filters['page'] ?? 1),
             'limit' => 20,
         ]);
 

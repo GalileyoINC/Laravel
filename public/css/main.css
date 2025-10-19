@@ -56,6 +56,14 @@ html, body {
 .header .btn {
     padding: 14px 12px;
 }
+/* Mobile header ordering: hamburger first on the far left */
+@media (max-width: 767px) {
+    .header { position: fixed; z-index: 1100; }
+    .header .pull-left { position: absolute; left: 0; top: 0; }
+    .header .pull-left .btn { z-index: 1110; position: relative; }
+    .header .pull-right { position: absolute; right: 0; top: 0; z-index: 1110; }
+    .header .logo { margin-left: 50px; }
+}
 .header .breadcrumb {
     padding: 14px 12px;
     margin: 0;
@@ -100,6 +108,23 @@ html, body {
         -ms-transform: translate(-230px, 0);
         -o-transform: translate(-230px, 0);
         transform: translate(-230px, 0);
+    }
+}
+/* Mobile sidebar open state */
+@media (max-width: 767px) {
+    .wrapper.sidebar-open .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        -o-transform: translate(0, 0);
+        transform: translate(0, 0);
+        z-index: 1000;
+    }
+    .wrapper.sidebar-open .content_wrapper {
+        overflow: hidden;
     }
 }
 .sidebar ul {
@@ -148,7 +173,7 @@ html, body {
     background-color: #0d4d61;
 }
 .sidebar ul.child_menu li {
-    padding-left: 36px;
+    padding-left: 24px; /* was 36px; pulled left for alignment */
 }
 .sidebar .active > ul.child_menu {
     display: block;
@@ -449,11 +474,20 @@ html, body {
 }
 .sidebar-menu > li > ul > li > a {
     position: relative;
-    display: block;
-    padding: 10px 15px 10px 35px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px 10px 12px; /* reduced further for alignment with RBAC/Logs */
     color: #fff;
     text-decoration: none;
     font-size: 14px;
+}
+/* Ensure icon sits to the left of the label in child links */
+.sidebar-menu > li > ul > li > a > svg:first-child {
+    position: static;
+    margin-right: 10px;
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
 }
 .sidebar-menu > li > ul > li > a:hover {
     background-color: rgba(255, 255, 255, 0.1);

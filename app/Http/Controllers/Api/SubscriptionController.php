@@ -10,11 +10,9 @@ use App\Domain\DTOs\Subscription\MarketstackSubscriptionDTO;
 use App\Domain\Services\Subscription\SubscriptionServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Models\Communication\SmsPoolPhoto;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**

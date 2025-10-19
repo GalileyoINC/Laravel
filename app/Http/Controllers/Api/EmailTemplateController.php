@@ -14,8 +14,6 @@ use App\Http\Requests\EmailTemplate\EmailTemplateListRequest;
 use App\Http\Requests\EmailTemplate\EmailTemplateSendRequest;
 use App\Http\Requests\EmailTemplate\EmailTemplateUpdateRequest;
 use App\Http\Resources\EmailTemplateResource;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class EmailTemplateController extends Controller

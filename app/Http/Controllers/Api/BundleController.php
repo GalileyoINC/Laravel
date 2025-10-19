@@ -14,8 +14,6 @@ use App\Http\Requests\Bundle\BundleDeviceDataRequest;
 use App\Http\Requests\Bundle\BundleListRequest;
 use App\Http\Requests\Bundle\BundleUpdateRequest;
 use App\Http\Resources\BundleResource;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class BundleController extends Controller

@@ -7,8 +7,6 @@ namespace App\Http\Controllers\Api;
 use App\Domain\Actions\Search\SearchAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Search\SearchRequest;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 /**

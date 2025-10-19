@@ -10,8 +10,6 @@ use App\Domain\Actions\CreditCard\GetGatewayProfileAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreditCard\CreditCardListRequest;
 use App\Http\Resources\CreditCardResource;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class CreditCardController extends Controller

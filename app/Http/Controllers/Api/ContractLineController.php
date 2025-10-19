@@ -8,8 +8,6 @@ use App\Domain\Actions\ContractLine\GetUnpaidContractsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContractLine\ContractLineListRequest;
 use App\Http\Resources\ContractLineResource;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ContractLineController extends Controller

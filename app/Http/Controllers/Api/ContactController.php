@@ -10,8 +10,6 @@ use App\Domain\Actions\Contact\GetContactListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\ContactListRequest;
 use App\Http\Resources\ContactResource;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ContactController extends Controller

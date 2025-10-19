@@ -12,8 +12,6 @@ use App\Domain\Actions\EmailPool\ResendEmailAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmailPool\EmailPoolListRequest;
 use App\Http\Resources\EmailPoolResource;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class EmailPoolController extends Controller

@@ -9,11 +9,9 @@ use App\Domain\DTOs\PublicFeed\PublicFeedImageUploadRequestDTO;
 use App\Domain\DTOs\PublicFeed\PublicFeedPublishRequestDTO;
 use App\Domain\Services\PublicFeed\PublicFeedServiceInterface;
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Refactored PublicFeed Controller using DDD Actions

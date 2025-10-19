@@ -10,8 +10,6 @@ use App\Domain\Actions\Bookmark\GetBookmarksAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Bookmark\BookmarkListRequest;
 use App\Http\Requests\Bookmark\BookmarkRequest;
-use App\Http\Resources\ErrorResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 /**

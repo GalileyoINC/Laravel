@@ -61,9 +61,7 @@ class ActiveRecordLog extends Model
         ];
 
         try {
-            $codes = static::query()->select('action_type')->distinct()->pluck('action_type')->filter(function ($v) {
-                return $v !== null;
-            })->all();
+            $codes = static::query()->select('action_type')->distinct()->pluck('action_type')->filter(fn ($v) => $v !== null)->all();
 
             $map = $defaults;
             foreach ($codes as $code) {
