@@ -30,6 +30,10 @@ class Page extends Model
 {
     use HasFactory;
 
+    public const STATUS_OFF = 0;
+
+    public const STATUS_ON = 1;
+
     protected $table = 'page';
 
     protected $casts = [

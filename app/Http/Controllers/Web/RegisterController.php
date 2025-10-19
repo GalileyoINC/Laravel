@@ -10,9 +10,9 @@ use App\Domain\Actions\Register\GetRegisterListAction;
 use App\Domain\Actions\Register\GetRegisterUniqueListAction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RegisterController extends Controller
 {
@@ -70,7 +70,7 @@ class RegisterController extends Controller
     /**
      * Export registers to CSV
      */
-    public function toCsv(Request $request): Response
+    public function toCsv(Request $request): StreamedResponse
     {
         $filters = $request->only(['search', 'is_unfinished_signup', 'created_at']);
 
@@ -98,7 +98,7 @@ class RegisterController extends Controller
     /**
      * Export unique registers to CSV
      */
-    public function toCsvUnique(Request $request): Response
+    public function toCsvUnique(Request $request): StreamedResponse
     {
         $filters = $request->only(['search', 'is_unfinished_signup', 'created_at']);
         $rows = $this->exportRegisterUniqueListAction->execute($filters);

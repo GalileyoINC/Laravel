@@ -9,11 +9,12 @@ use const PHP_VERSION;
 use App\Http\Controllers\Controller;
 use App\Models\System\ApiLog;
 use App\Models\System\Settings;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 use function get_loaded_extensions;
 
@@ -37,7 +38,7 @@ class HelpController extends Controller
     /**
      * Test action
      */
-    public function test(): Response
+    public function test(): JsonResponse
     {
         // Test API functionality
         $api = new \App\Services\BivyStickService();
@@ -49,7 +50,7 @@ class HelpController extends Controller
     /**
      * Check SPS
      */
-    public function checkSps(): Response
+    public function checkSps(): JsonResponse
     {
         $sps = new \App\Services\SpsApiService();
         $result = $sps->checkIp();
@@ -72,7 +73,7 @@ class HelpController extends Controller
     /**
      * Download log file
      */
-    public function download(Request $request): Response
+    public function download(Request $request): BinaryFileResponse
     {
         $alias = $request->get('alias');
 
@@ -131,7 +132,7 @@ class HelpController extends Controller
     /**
      * Test alert
      */
-    public function testAlert(Request $request): Response
+    public function testAlert(Request $request): JsonResponse
     {
         $type = $request->get('type', 'info');
         $message = 'Test alert';
@@ -145,7 +146,7 @@ class HelpController extends Controller
     /**
      * Test mail
      */
-    public function testMail(): Response
+    public function testMail(): JsonResponse
     {
         $sandboxEmail = Settings::get('mail__sandbox_email');
         $adminEmail = Settings::get('mail__admin_email');
@@ -166,7 +167,7 @@ class HelpController extends Controller
     /**
      * Twilio lookup
      */
-    public function twilioLookup(Request $request): Response
+    public function twilioLookup(Request $request): JsonResponse
     {
         $number = $request->get('number');
 
@@ -190,7 +191,7 @@ class HelpController extends Controller
     /**
      * Twilio send SMS
      */
-    public function twilioSend(Request $request): Response
+    public function twilioSend(Request $request): JsonResponse
     {
         $number = $request->get('number');
         $text = $request->get('text');
@@ -219,7 +220,7 @@ class HelpController extends Controller
     /**
      * IEX test
      */
-    public function iexTest(Request $request): Response
+    public function iexTest(Request $request): JsonResponse
     {
         $uri = $request->get('uri', 'stock/aapl/ohlc');
 
@@ -250,7 +251,7 @@ class HelpController extends Controller
     /**
      * SMS test
      */
-    public function sms(Request $request): Response
+    public function sms(Request $request): JsonResponse
     {
         $provider = $request->get('provider');
         $number = $request->get('number');
@@ -272,7 +273,7 @@ class HelpController extends Controller
     /**
      * Test push notification
      */
-    public function testPush(Request $request): Response
+    public function testPush(Request $request): JsonResponse
     {
         $token = $request->get('token');
         $body = $request->get('body');

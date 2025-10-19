@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Communication\AdminSendEmailAction;
+use App\Domain\Actions\Communication\SendTestEmailAction;
+use App\Domain\Actions\Communication\UpdateEmailTemplateAction;
 use App\Domain\Actions\EmailTemplate\ExportEmailTemplatesToCsvAction;
 use App\Domain\Actions\EmailTemplate\GetEmailTemplateListAction;
+use App\Domain\DTOs\Communication\AdminSendEmailDTO;
+use App\Domain\DTOs\Communication\EmailTemplateUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Communication\Web\AdminSendEmailRequest;
 use App\Http\Requests\Communication\Web\EmailTemplateRequest;
@@ -21,6 +26,9 @@ class EmailTemplateController extends Controller
     public function __construct(
         private readonly GetEmailTemplateListAction $getEmailTemplateListAction,
         private readonly ExportEmailTemplatesToCsvAction $exportEmailTemplatesToCsvAction,
+        private readonly UpdateEmailTemplateAction $updateEmailTemplateAction,
+        private readonly AdminSendEmailAction $adminSendEmailAction,
+        private readonly SendTestEmailAction $sendTestEmailAction,
     ) {}
 
     /**
@@ -63,7 +71,17 @@ class EmailTemplateController extends Controller
      */
     public function update(EmailTemplateRequest $request, EmailTemplate $emailTemplate): RedirectResponse
     {
-        $emailTemplate->update($request->validated());
+        $validated = $request->validated();
+        $dto = new EmailTemplateUpdateDTO(
+            id: $emailTemplate->id,
+            fromEmail: $validated['fromEmail'],
+            fromName: $validated['fromName'],
+            subject: $validated['subject'],
+            body: $validated['body'],
+            bodyPlain: $validated['bodyPlain'] ?? null,
+        );
+
+        $this->updateEmailTemplateAction->execute($dto);
 
         return redirect()->route('email-template.show', $emailTemplate)
             ->with('success', 'Email template updated successfully.');
@@ -105,17 +123,16 @@ class EmailTemplateController extends Controller
      */
     public function sendTestEmail(AdminSendEmailRequest $request, EmailTemplate $emailTemplate): RedirectResponse
     {
-        // Here you would implement the actual email sending logic
-        // For now, we'll just simulate it
+        $toEmail = (string) $request->input('email');
+        $params = $emailTemplate->params ? array_map(fn ($param) => $param['example'] ?? '', $emailTemplate->params) : [];
 
-        $emailData = [
-            'to' => $request->get('email'),
-            'template' => $emailTemplate,
-            'params' => $emailTemplate->params ? array_map(fn ($param) => $param['example'] ?? '', $emailTemplate->params) : [],
-        ];
+        $dto = new AdminSendEmailDTO(
+            emailTemplateId: $emailTemplate->id,
+            toEmail: $toEmail,
+            params: $params,
+        );
 
-        // Simulate email sending
-        // Mail::send(new EmailTemplateMail($emailTemplate, $emailData));
+        $this->sendTestEmailAction->execute($dto);
 
         return redirect()->route('email-pool.index')
             ->with('success', 'Test email sent successfully.');

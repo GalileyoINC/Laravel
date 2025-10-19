@@ -11,8 +11,8 @@ use App\Http\Requests\Service\Web\ServiceIndexRequest;
 use App\Http\Requests\Service\Web\ServiceRequest;
 use App\Http\Requests\Service\Web\ServiceSettingsRequest;
 use App\Models\Finance\Service;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -63,7 +63,7 @@ class ServiceController extends Controller
     /**
      * Store Service
      */
-    public function store(ServiceRequest $request): Response
+    public function store(ServiceRequest $request): RedirectResponse
     {
         $data = $request->validated();
         $data['type'] = $request->get('type', Service::TYPE_SUBSCRIBE);
@@ -88,7 +88,7 @@ class ServiceController extends Controller
     /**
      * Update Service
      */
-    public function update(ServiceRequest $request, Service $service): Response
+    public function update(ServiceRequest $request, Service $service): RedirectResponse
     {
         $service->update($request->validated());
 
@@ -107,7 +107,7 @@ class ServiceController extends Controller
     /**
      * Update Service Settings
      */
-    public function settingsStore(ServiceSettingsRequest $request): Response
+    public function settingsStore(ServiceSettingsRequest $request): RedirectResponse
     {
         // Here you would implement the actual settings saving logic
         // For now, we'll just simulate it
@@ -134,7 +134,7 @@ class ServiceController extends Controller
     /**
      * Update Custom Service
      */
-    public function updateCustomStore(ServiceRequest $request, Service $service): Response
+    public function updateCustomStore(ServiceRequest $request, Service $service): RedirectResponse
     {
         $service->update($request->validated());
 

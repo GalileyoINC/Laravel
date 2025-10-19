@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Podcast\CreatePodcastAction;
 use App\Domain\Actions\Podcast\ExportPodcastsToCsvAction;
 use App\Domain\Actions\Podcast\GetPodcastListAction;
+use App\Domain\Actions\Podcast\UpdatePodcastAction;
+use App\Domain\DTOs\Podcast\PodcastCreateDTO;
+use App\Domain\DTOs\Podcast\PodcastUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Content\Podcast;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +24,8 @@ class PodcastController extends Controller
     public function __construct(
         private readonly GetPodcastListAction $getPodcastListAction,
         private readonly ExportPodcastsToCsvAction $exportPodcastsToCsvAction,
+        private readonly CreatePodcastAction $createPodcastAction,
+        private readonly UpdatePodcastAction $updatePodcastAction,
     ) {}
 
     /**
@@ -55,18 +61,14 @@ class PodcastController extends Controller
             'type' => 'required|string|in:audio,video',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $podcast = new Podcast();
-        $podcast->title = $request->get('title');
-        $podcast->url = $request->get('url');
-        $podcast->type = $request->get('type');
+        $dto = new PodcastCreateDTO(
+            title: (string) $request->input('title'),
+            url: (string) $request->input('url'),
+            type: (string) $request->input('type'),
+            image: $request->file('image'),
+        );
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('podcasts', 'public');
-            $podcast->image = $imagePath;
-        }
-
-        $podcast->save();
+        $this->createPodcastAction->execute($dto);
 
         return redirect()->route('podcast.index')
             ->with('success', 'Podcast created successfully.');
@@ -93,22 +95,15 @@ class PodcastController extends Controller
             'type' => 'required|string|in:audio,video',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $podcast->title = $request->get('title');
-        $podcast->url = $request->get('url');
-        $podcast->type = $request->get('type');
+        $dto = new PodcastUpdateDTO(
+            id: $podcast->id,
+            title: (string) $request->input('title'),
+            url: (string) $request->input('url'),
+            type: (string) $request->input('type'),
+            image: $request->file('image'),
+        );
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
-                Storage::disk('public')->delete($podcast->image);
-            }
-
-            $imagePath = $request->file('image')->store('podcasts', 'public');
-            $podcast->image = $imagePath;
-        }
-
-        $podcast->save();
+        $this->updatePodcastAction->execute($dto);
 
         return redirect()->route('podcast.index')
             ->with('success', 'Podcast updated successfully.');

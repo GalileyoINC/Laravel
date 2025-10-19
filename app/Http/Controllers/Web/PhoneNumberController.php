@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\Communication\ExportPhoneNumbersToCsvAction;
 use App\Domain\Actions\Communication\GetPhoneNumberListAction;
+use App\Domain\Actions\Communication\SendSmsAction;
+use App\Domain\DTOs\Communication\SendSmsRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Communication\Web\PhoneNumberIndexRequest;
 use App\Http\Requests\Communication\Web\PhoneNumberRequest;
@@ -13,7 +15,8 @@ use App\Http\Requests\Communication\Web\PhoneNumberSuperRequest;
 use App\Http\Requests\Communication\Web\SmsPhoneNumberRequest;
 use App\Models\Device\PhoneNumber;
 use App\Models\User\User;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -23,6 +26,7 @@ class PhoneNumberController extends Controller
     public function __construct(
         private readonly GetPhoneNumberListAction $getPhoneNumberListAction,
         private readonly ExportPhoneNumbersToCsvAction $exportPhoneNumbersToCsvAction,
+        private readonly SendSmsAction $sendSmsAction,
     ) {}
 
     /**
@@ -62,11 +66,11 @@ class PhoneNumberController extends Controller
     /**
      * Update Phone Number
      */
-    public function update(PhoneNumberRequest $request, PhoneNumber $phoneNumber): Response
+    public function update(PhoneNumberRequest $request, PhoneNumber $phoneNumber): RedirectResponse
     {
         $phoneNumber->update($request->validated());
 
-        $redirectRoute = $request->get('referer') === 'user' ? 'user.index' : 'web.phone-number.index';
+        $redirectRoute = $request->input('referer') === 'user' ? 'user.index' : 'web.phone-number.index';
 
         return redirect()->route($redirectRoute)
             ->with('success', 'Phone number updated successfully.');
@@ -78,7 +82,7 @@ class PhoneNumberController extends Controller
     public function superUpdate(PhoneNumber $phoneNumber): View
     {
         // Check if user is super admin
-        if (! auth()->user()->isSuper()) {
+        if (! Auth::user()?->isSuper()) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -90,10 +94,10 @@ class PhoneNumberController extends Controller
     /**
      * Super Update Phone Number (for super admin)
      */
-    public function superUpdateStore(PhoneNumberSuperRequest $request, PhoneNumber $phoneNumber): Response
+    public function superUpdateStore(PhoneNumberSuperRequest $request, PhoneNumber $phoneNumber): RedirectResponse
     {
         // Check if user is super admin
-        if (! auth()->user()->isSuper()) {
+        if (! Auth::user()?->isSuper()) {
             abort(403, 'Unauthorized access.');
         }
         $phoneNumber->update($request->validated());
@@ -105,7 +109,7 @@ class PhoneNumberController extends Controller
     /**
      * Delete Phone Number (soft delete)
      */
-    public function destroy(PhoneNumber $phoneNumber): Response
+    public function destroy(PhoneNumber $phoneNumber): RedirectResponse
     {
         $phoneNumber->update(['is_active' => false]);
 
@@ -119,7 +123,7 @@ class PhoneNumberController extends Controller
     public function sendSms(PhoneNumber $phoneNumber): View
     {
         // Check if user is super admin
-        if (! auth()->user()->isSuper()) {
+        if (! Auth::user()?->isSuper()) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -131,22 +135,20 @@ class PhoneNumberController extends Controller
     /**
      * Send SMS to Phone Number (for super admin)
      */
-    public function sendSmsStore(SmsPhoneNumberRequest $request, PhoneNumber $phoneNumber): Response
+    public function sendSmsStore(SmsPhoneNumberRequest $request, PhoneNumber $phoneNumber): RedirectResponse
     {
         // Check if user is super admin
-        if (! auth()->user()->isSuper()) {
+        if (! Auth::user()?->isSuper()) {
             abort(403, 'Unauthorized access.');
         }
-        // Here you would implement the actual SMS sending logic
-        // For now, we'll just simulate it
+        $validated = $request->validated();
 
-        $smsData = [
-            'phone_number' => $phoneNumber,
-            'message' => $request->get('message'),
-        ];
+        $dto = new SendSmsRequestDTO(
+            phoneNumberId: $phoneNumber->id,
+            message: $validated['message'],
+        );
 
-        // Simulate SMS sending
-        // SmsHelper::sendSms($smsData);
+        $this->sendSmsAction->execute($dto);
 
         return redirect()->route('phone-number.index')
             ->with('success', 'SMS sent successfully.');
@@ -177,7 +179,7 @@ class PhoneNumberController extends Controller
     /**
      * Store Phone Number for User
      */
-    public function store(PhoneNumberRequest $request, User $user): Response
+    public function store(PhoneNumberRequest $request, User $user): RedirectResponse
     {
         $phoneNumber = PhoneNumber::where('id_user', $user->id)->first();
 

@@ -117,6 +117,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory;
 
+    public const STATUS_ACTIVE = 1;
+
+    public const STATUS_CANCEL = 2;
+
+    public const STATUS_DELETED = 3;
+
+    public const STATUS_TO_VERIFY = 4;
+
     protected $table = 'user';
 
     protected $casts = [

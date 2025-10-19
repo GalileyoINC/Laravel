@@ -29,13 +29,14 @@ use App\Models\Finance\Invoice;
 use App\Models\Finance\InvoiceLine;
 use App\Models\Finance\Promocode;
 use App\Models\User\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
 class UserController extends Controller
@@ -212,7 +213,7 @@ class UserController extends Controller
     /**
      * Export users to CSV
      */
-    public function toCsv(Request $request): Response
+    public function toCsv(Request $request): StreamedResponse
     {
         $dto = new ExportUsersRequestDTO(
             search: $request->get('search'),
@@ -239,7 +240,7 @@ class UserController extends Controller
     /**
      * Set feed visibility (AJAX)
      */
-    public function setFeedVisibility(Request $request): Response
+    public function setFeedVisibility(Request $request): JsonResponse
     {
         if ($request->ajax()) {
             $subscriptionId = (int) $request->input('id');
@@ -257,7 +258,7 @@ class UserController extends Controller
     /**
      * Get transaction list for user
      */
-    public function getTransactionList(User $user): Response
+    public function getTransactionList(User $user): JsonResponse
     {
         $transactions = [];
 
@@ -270,7 +271,7 @@ class UserController extends Controller
     /**
      * Get gateway profile for user
      */
-    public function getGatewayProfile(User $user): Response
+    public function getGatewayProfile(User $user): JsonResponse
     {
         $profile = [];
 

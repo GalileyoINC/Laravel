@@ -4,23 +4,39 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Content\CreatePageAction;
+use App\Domain\Actions\Content\CreatePageContentAction;
 use App\Domain\Actions\Content\GetPageListAction;
+use App\Domain\Actions\Content\UpdatePageAction;
+use App\Domain\Actions\Content\UpdatePageContentAction;
+use App\Domain\Actions\Content\UploadPageImageAction;
+use App\Domain\DTOs\Content\PageContentCreateDTO;
+use App\Domain\DTOs\Content\PageContentUpdateDTO;
+use App\Domain\DTOs\Content\PageCreateDTO;
+use App\Domain\DTOs\Content\PageImageUploadDTO;
+use App\Domain\DTOs\Content\PageUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\Web\PageContentRequest;
 use App\Http\Requests\Content\Web\PageIndexRequest;
 use App\Http\Requests\Content\Web\PageRequest;
 use App\Models\Content\Page;
 use App\Models\Content\PageContent;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Str;
 
 class PageController extends Controller
 {
     public function __construct(
         private readonly GetPageListAction $getPageListAction,
+        private readonly CreatePageAction $createPageAction,
+        private readonly UpdatePageAction $updatePageAction,
+        private readonly CreatePageContentAction $createPageContentAction,
+        private readonly UpdatePageContentAction $updatePageContentAction,
+        private readonly UploadPageImageAction $uploadPageImageAction,
     ) {}
 
     /**
@@ -48,20 +64,20 @@ class PageController extends Controller
     /**
      * Store a newly created page
      */
-    public function store(PageRequest $request): Response
+    public function store(PageRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
-        $data = [
-            'name' => $validated['name'],
-            'title' => $validated['title'] ?? null,
-            'slug' => $validated['slug'] ?? Str::slug($validated['name']),
-            'meta_keywords' => $validated['meta_keywords'] ?? null,
-            'meta_description' => $validated['meta_description'] ?? null,
-            'status' => $validated['status'] ?? Page::STATUS_OFF,
-        ];
+        $dto = new PageCreateDTO(
+            name: $validated['name'],
+            title: $validated['title'] ?? null,
+            slug: $validated['slug'] ?? Str::slug($validated['name']),
+            metaKeywords: $validated['meta_keywords'] ?? null,
+            metaDescription: $validated['meta_description'] ?? null,
+            status: (int) ($validated['status'] ?? Page::STATUS_OFF),
+        );
 
-        $page = Page::create($data);
+        $page = $this->createPageAction->execute($dto);
 
         return redirect()->route('page.edit', $page)
             ->with('success', 'Page created successfully.');
@@ -94,20 +110,21 @@ class PageController extends Controller
     /**
      * Update the specified page
      */
-    public function update(PageRequest $request, Page $page): Response
+    public function update(PageRequest $request, Page $page): RedirectResponse
     {
         $validated = $request->validated();
 
-        $data = [
-            'name' => $validated['name'],
-            'title' => $validated['title'] ?? null,
-            'slug' => $validated['slug'] ?? Str::slug($validated['name']),
-            'meta_keywords' => $validated['meta_keywords'] ?? null,
-            'meta_description' => $validated['meta_description'] ?? null,
-            'status' => $validated['status'] ?? $page->status,
-        ];
+        $dto = new PageUpdateDTO(
+            id: $page->id,
+            name: $validated['name'],
+            title: $validated['title'] ?? null,
+            slug: $validated['slug'] ?? Str::slug($validated['name']),
+            metaKeywords: $validated['meta_keywords'] ?? null,
+            metaDescription: $validated['meta_description'] ?? null,
+            status: (int) ($validated['status'] ?? $page->status),
+        );
 
-        $page->update($data);
+        $this->updatePageAction->execute($dto);
 
         return redirect()->route('page.index')
             ->with('success', 'Page updated successfully.');
@@ -127,17 +144,17 @@ class PageController extends Controller
     /**
      * Store page content
      */
-    public function storeContent(PageContentRequest $request, Page $page): Response
+    public function storeContent(PageContentRequest $request, Page $page): RedirectResponse
     {
         $validated = $request->validated();
 
-        $data = [
-            'id_page' => $page->id,
-            'content' => $validated['content'],
-            'status' => $validated['status'] ?? PageContent::STATUS_DRAFT,
-        ];
+        $dto = new PageContentCreateDTO(
+            pageId: $page->id,
+            content: $validated['content'],
+            status: (int) ($validated['status'] ?? PageContent::STATUS_DRAFT),
+        );
 
-        PageContent::create($data);
+        $this->createPageContentAction->execute($dto);
 
         return redirect()->route('page.edit', $page)
             ->with('success', 'Page content created successfully.');
@@ -146,16 +163,17 @@ class PageController extends Controller
     /**
      * Update page content
      */
-    public function updateContent(PageContentRequest $request, Page $page, PageContent $pageContent): Response
+    public function updateContent(PageContentRequest $request, Page $page, PageContent $pageContent): RedirectResponse
     {
         $validated = $request->validated();
 
-        $data = [
-            'content' => $validated['content'],
-            'status' => $validated['status'] ?? $pageContent->status,
-        ];
+        $dto = new PageContentUpdateDTO(
+            id: $pageContent->id,
+            content: $validated['content'],
+            status: (int) ($validated['status'] ?? $pageContent->status),
+        );
 
-        $pageContent->update($data);
+        $this->updatePageContentAction->execute($dto);
 
         return redirect()->route('page.edit', $page)
             ->with('success', 'Page content updated successfully.');
@@ -164,17 +182,17 @@ class PageController extends Controller
     /**
      * Upload image for page
      */
-    public function upload(Request $request, Page $page): Response
+    public function upload(Request $request, Page $page): JsonResponse
     {
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
         $file = $request->file('file');
-        $path = $file->store('pages', 'public');
+        $dto = new PageImageUploadDTO(pageId: $page->id, file: $file);
+        $result = $this->uploadPageImageAction->execute($dto);
 
         return response()->json([
-            'location' => Storage::url($path),
+            'location' => $result['location'],
         ]);
     }
 }

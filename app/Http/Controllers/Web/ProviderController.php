@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Provider\CreateProviderAction;
 use App\Domain\Actions\Provider\ExportProvidersToCsvAction;
 use App\Domain\Actions\Provider\GetProviderListAction;
+use App\Domain\Actions\Provider\UpdateProviderAction;
+use App\Domain\DTOs\Provider\ProviderCreateDTO;
+use App\Domain\DTOs\Provider\ProviderUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Provider\Web\ProviderRequest;
 use App\Models\Finance\Provider;
@@ -20,6 +24,8 @@ class ProviderController extends Controller
     public function __construct(
         private readonly GetProviderListAction $getProviderListAction,
         private readonly ExportProvidersToCsvAction $exportProvidersToCsvAction,
+        private readonly CreateProviderAction $createProviderAction,
+        private readonly UpdateProviderAction $updateProviderAction,
     ) {}
 
     /**
@@ -59,7 +65,15 @@ class ProviderController extends Controller
      */
     public function store(ProviderRequest $request): RedirectResponse
     {
-        Provider::create($request->validated());
+        $validated = $request->validated();
+        $dto = new ProviderCreateDTO(
+            name: $validated['name'],
+            email: $validated['email'] ?? null,
+            country: $validated['country'] ?? null,
+            isSatellite: isset($validated['is_satellite']) ? (bool) $validated['is_satellite'] : null,
+        );
+
+        $this->createProviderAction->execute($dto);
 
         return redirect()->route('provider.index')
             ->with('success', 'Provider created successfully.');
@@ -80,7 +94,16 @@ class ProviderController extends Controller
      */
     public function update(ProviderRequest $request, Provider $provider): RedirectResponse
     {
-        $provider->update($request->validated());
+        $validated = $request->validated();
+        $dto = new ProviderUpdateDTO(
+            id: $provider->id,
+            name: $validated['name'],
+            email: $validated['email'] ?? null,
+            country: $validated['country'] ?? null,
+            isSatellite: isset($validated['is_satellite']) ? (bool) $validated['is_satellite'] : null,
+        );
+
+        $this->updateProviderAction->execute($dto);
 
         return redirect()->route('provider.show', $provider)
             ->with('success', 'Provider updated successfully.');

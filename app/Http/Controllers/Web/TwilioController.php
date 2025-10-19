@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Twilio\CreateTwilioIncomingAction;
 use App\Domain\Actions\Twilio\ExportTwilioCarriersToCsvAction;
 use App\Domain\Actions\Twilio\ExportTwilioIncomingToCsvAction;
 use App\Domain\Actions\Twilio\GetTwilioCarrierListAction;
 use App\Domain\Actions\Twilio\GetTwilioIncomingListAction;
+use App\Domain\Actions\Twilio\UpdateTwilioCarrierAction;
+use App\Domain\DTOs\Twilio\TwilioCarrierUpdateDTO;
+use App\Domain\DTOs\Twilio\TwilioIncomingCreateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Twilio\Web\TwilioCarrierIndexRequest;
 use App\Http\Requests\Twilio\Web\TwilioCarrierUpdateRequest;
@@ -16,9 +20,10 @@ use App\Http\Requests\Twilio\Web\TwilioIncomingStoreRequest;
 use App\Models\System\Provider;
 use App\Models\System\TwilioCarrier;
 use App\Models\System\TwilioIncoming;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class TwilioController extends Controller
 {
@@ -27,6 +32,8 @@ class TwilioController extends Controller
         private readonly GetTwilioIncomingListAction $getTwilioIncomingListAction,
         private readonly ExportTwilioCarriersToCsvAction $exportTwilioCarriersToCsvAction,
         private readonly ExportTwilioIncomingToCsvAction $exportTwilioIncomingToCsvAction,
+        private readonly CreateTwilioIncomingAction $createTwilioIncomingAction,
+        private readonly UpdateTwilioCarrierAction $updateTwilioCarrierAction,
     ) {}
 
     /**
@@ -62,13 +69,15 @@ class TwilioController extends Controller
     /**
      * Update Twilio Carrier
      */
-    public function updateCarrier(TwilioCarrierUpdateRequest $request, TwilioCarrier $carrier): Response
+    public function updateCarrier(TwilioCarrierUpdateRequest $request, TwilioCarrier $carrier): RedirectResponse
     {
         $validated = $request->validated();
+        $dto = new TwilioCarrierUpdateDTO(
+            carrierId: $carrier->id,
+            providerId: (int) $validated['provider_id'],
+        );
 
-        $carrier->update([
-            'provider_id' => $validated['provider_id'],
-        ]);
+        $this->updateTwilioCarrierAction->execute($dto);
 
         return redirect()->route('twilio.carriers')
             ->with('success', 'Twilio Carrier updated successfully.');
@@ -110,15 +119,17 @@ class TwilioController extends Controller
     /**
      * Store Twilio Incoming Message
      */
-    public function storeIncoming(TwilioIncomingStoreRequest $request): Response
+    public function storeIncoming(TwilioIncomingStoreRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
-        TwilioIncoming::create([
-            'number' => $validated['number'],
-            'body' => $validated['body'],
-            'message' => $validated['message'] ?? '',
-        ]);
+        $dto = new TwilioIncomingCreateDTO(
+            number: $validated['number'],
+            body: $validated['body'],
+            message: $validated['message'] ?? null,
+        );
+
+        $this->createTwilioIncomingAction->execute($dto);
 
         return redirect()->route('twilio.incoming')
             ->with('success', 'Twilio Incoming message created successfully.');
@@ -127,7 +138,7 @@ class TwilioController extends Controller
     /**
      * Export Twilio Carriers to CSV
      */
-    public function exportCarriers(TwilioCarrierIndexRequest $request): Response
+    public function exportCarriers(TwilioCarrierIndexRequest $request): StreamedResponse
     {
         $filters = $request->validated();
         $csvData = $this->exportTwilioCarriersToCsvAction->execute($filters);
@@ -148,7 +159,7 @@ class TwilioController extends Controller
     /**
      * Export Twilio Incoming Messages to CSV
      */
-    public function exportIncoming(TwilioIncomingIndexRequest $request): Response
+    public function exportIncoming(TwilioIncomingIndexRequest $request): StreamedResponse
     {
         $filters = $request->validated();
         $csvData = $this->exportTwilioIncomingToCsvAction->execute($filters);

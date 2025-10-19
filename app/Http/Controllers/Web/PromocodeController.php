@@ -11,7 +11,7 @@ use App\Http\Requests\Promocode\Web\PromocodeIndexRequest;
 use App\Http\Requests\Promocode\Web\PromocodeStoreRequest;
 use App\Http\Requests\Promocode\Web\PromocodeUpdateRequest;
 use App\Models\Finance\Promocode;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -48,7 +48,7 @@ class PromocodeController extends Controller
     /**
      * Store new Promocode
      */
-    public function store(PromocodeStoreRequest $request): Response
+    public function store(PromocodeStoreRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $promocode = new Promocode();
@@ -81,7 +81,7 @@ class PromocodeController extends Controller
     /**
      * Update Promocode
      */
-    public function update(PromocodeUpdateRequest $request, Promocode $promocode): Response
+    public function update(PromocodeUpdateRequest $request, Promocode $promocode): RedirectResponse
     {
         $validated = $request->validated();
         $promocode->type = $validated['type'];
@@ -103,7 +103,7 @@ class PromocodeController extends Controller
     /**
      * Delete Promocode
      */
-    public function destroy(Promocode $promocode): Response
+    public function destroy(Promocode $promocode): RedirectResponse
     {
         $promocode->delete();
 

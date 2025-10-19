@@ -10,8 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\Web\MoneyTransactionIndexRequest;
 use App\Http\Requests\Finance\Web\RefundRequest;
 use App\Models\Finance\MoneyTransaction;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -55,7 +55,7 @@ class MoneyTransactionController extends Controller
     /**
      * Void a money transaction
      */
-    public function void(MoneyTransaction $moneyTransaction): Response
+    public function void(MoneyTransaction $moneyTransaction): JsonResponse
     {
         if (! $moneyTransaction->canBeVoided()) {
             return response()->json(['error' => 'Transaction cannot be voided'], 400);
@@ -85,7 +85,7 @@ class MoneyTransactionController extends Controller
     /**
      * Process refund
      */
-    public function processRefund(RefundRequest $request, MoneyTransaction $moneyTransaction): Response
+    public function processRefund(RefundRequest $request, MoneyTransaction $moneyTransaction): JsonResponse
     {
         if (! $moneyTransaction->canBeRefund()) {
             return response()->json(['error' => 'Transaction cannot be refunded'], 400);

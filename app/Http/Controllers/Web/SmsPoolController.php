@@ -17,6 +17,7 @@ use App\Models\Subscription\SubscriptionCategory;
 use App\Models\System\AdminMessageLog;
 use App\Models\System\Service;
 use App\Models\System\State;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +62,7 @@ class SmsPoolController extends Controller
     /**
      * Remove the specified SMS pool
      */
-    public function destroy(SmsPool $smsPool): Response
+    public function destroy(SmsPool $smsPool): JsonResponse
     {
         $smsPool->delete();
 
@@ -171,7 +172,7 @@ class SmsPoolController extends Controller
     /**
      * Process SMS sending
      */
-    public function processSend(SendSmsRequest $request): Response
+    public function processSend(SendSmsRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -207,7 +208,7 @@ class SmsPoolController extends Controller
     /**
      * Get SMS pool image
      */
-    public function getImage(Request $request): Response
+    public function getImage(Request $request): JsonResponse
     {
         $id = $request->get('id');
         $type = $request->get('type');

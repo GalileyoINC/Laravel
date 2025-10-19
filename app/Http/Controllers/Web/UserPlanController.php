@@ -6,7 +6,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\UserPlan\ExportUnpaidUserPlansToCsvAction;
 use App\Domain\Actions\UserPlan\GetUnpaidUserPlansAction;
-use App\Http\Controllers\Controller;
+use App\Domain\Actions\UserPlan\UpdateUserPlanAction;
+use App\Domain\DTOs\UserPlan\UserPlanUpdateDTO;
 use App\Http\Requests\Users\Web\UserPlanRequest;
 use App\Http\Requests\Users\Web\UserPlanUnpaidIndexRequest;
 use App\Models\Finance\Service;
@@ -21,6 +22,7 @@ class UserPlanController extends Controller
     public function __construct(
         private readonly GetUnpaidUserPlansAction $getUnpaidUserPlansAction,
         private readonly ExportUnpaidUserPlansToCsvAction $exportUnpaidUserPlansToCsvAction,
+        private readonly UpdateUserPlanAction $updateUserPlanAction,
     ) {}
 
     /**
@@ -59,7 +61,14 @@ class UserPlanController extends Controller
      */
     public function update(UserPlanRequest $request, UserPlan $userPlan): RedirectResponse
     {
-        $userPlan->update($request->validated());
+        $validated = $request->validated();
+
+        $dto = new UserPlanUpdateDTO(
+            id: $userPlan->id,
+            endAt: (string) $validated['end_at'],
+        );
+
+        $this->updateUserPlanAction->execute($dto);
 
         return redirect()->route('user.show', $userPlan->user)
             ->with('success', 'User plan updated successfully.');

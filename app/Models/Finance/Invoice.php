@@ -38,6 +38,14 @@ class Invoice extends Model
 {
     use HasFactory;
 
+    public const PAY_STATUS_NONE = 0;
+
+    public const PAY_STATUS_SUCCESS = 1;
+
+    public const PAY_STATUS_BEGIN = 8;
+
+    public const PAY_STATUS_ABORT = 9;
+
     protected $table = 'invoice';
 
     protected $casts = [

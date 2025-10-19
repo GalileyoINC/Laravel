@@ -33,6 +33,36 @@ class Promocode extends Model
 {
     use HasFactory;
 
+    // Legacy-compatible constants
+    public const TYPE_UNIVERSAL = 0;
+
+    public const TYPE_INDIVIDUAL = 1;
+
+    public const TYPE_FAMILY = 2;
+
+    public const TYPE_BUSINESS = 3;
+
+    public const TYPE_CUSTOM = 4;
+
+    public const TYPE_INFLUENCER = 5;
+
+    public const TYPE_TEST = 6;
+
+    public const TYPE_BASIC = 7;
+
+    public const TYPE_FRIENDS = 8;
+
+    public const TYPE_CUSTOM_WITH_SATELLITE = 10;
+
+    public const TYPE_CUSTOM_WITHOUT_SATELLITE = 11;
+
+    // Used by controllers; align to influencer type
+    public const TYPE_SALE = self::TYPE_INFLUENCER;
+
+    public const STATUS_ACTIVE = 1;
+
+    public const STATUS_NON_ACTIVE = 0;
+
     public $timestamps = false;
 
     protected $table = 'promocode';

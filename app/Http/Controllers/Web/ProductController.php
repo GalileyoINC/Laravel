@@ -4,11 +4,31 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Product\AttachPlanToDeviceAction;
+use App\Domain\Actions\Product\CreateDeviceAction;
+use App\Domain\Actions\Product\CreateDevicePlanAction;
+use App\Domain\Actions\Product\DeleteDevicePhotoAction;
+use App\Domain\Actions\Product\DetachPlanFromDeviceAction;
 use App\Domain\Actions\Product\GetAlertServiceListAction;
 use App\Domain\Actions\Product\GetDevicePlanListAction;
 use App\Domain\Actions\Product\GetProductDeviceListAction;
 use App\Domain\Actions\Product\GetSubscriptionServiceListAction;
 use App\Domain\Actions\Product\ProcessApplePurchaseAction;
+use App\Domain\Actions\Product\SetMainDevicePhotoAction;
+use App\Domain\Actions\Product\UpdateDeviceAction;
+use App\Domain\Actions\Product\UpdateDevicePlanAction;
+use App\Domain\Actions\Product\UpdateSubscriptionServiceAction;
+use App\Domain\Actions\Product\UploadDevicePhotoAction;
+use App\Domain\DTOs\Product\AttachPlanToDeviceDTO;
+use App\Domain\DTOs\Product\DetachPlanFromDeviceDTO;
+use App\Domain\DTOs\Product\DeviceCreateDTO;
+use App\Domain\DTOs\Product\DevicePhotoDeleteDTO;
+use App\Domain\DTOs\Product\DevicePhotoSetMainDTO;
+use App\Domain\DTOs\Product\DevicePhotoUploadDTO;
+use App\Domain\DTOs\Product\DevicePlanCreateDTO;
+use App\Domain\DTOs\Product\DevicePlanUpdateDTO;
+use App\Domain\DTOs\Product\DeviceUpdateDTO;
+use App\Domain\DTOs\Product\SubscriptionUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\Web\ProductAlertIndexRequest;
 use App\Http\Requests\Product\Web\ProductDeviceIndexRequest;
@@ -21,9 +41,10 @@ use App\Http\Requests\Service\Web\ServiceSettingsRequest;
 use App\Models\Device\Device;
 use App\Models\Device\DevicePlan;
 use App\Models\Finance\Service;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 
@@ -35,6 +56,16 @@ class ProductController extends Controller
         private readonly GetProductDeviceListAction $getProductDeviceListAction,
         private readonly GetDevicePlanListAction $getDevicePlanListAction,
         private readonly ProcessApplePurchaseAction $processApplePurchaseAction,
+        private readonly CreateDeviceAction $createDeviceAction,
+        private readonly UpdateDeviceAction $updateDeviceAction,
+        private readonly CreateDevicePlanAction $createDevicePlanAction,
+        private readonly UpdateDevicePlanAction $updateDevicePlanAction,
+        private readonly AttachPlanToDeviceAction $attachPlanToDeviceAction,
+        private readonly DetachPlanFromDeviceAction $detachPlanFromDeviceAction,
+        private readonly UploadDevicePhotoAction $uploadDevicePhotoAction,
+        private readonly DeleteDevicePhotoAction $deleteDevicePhotoAction,
+        private readonly SetMainDevicePhotoAction $setMainDevicePhotoAction,
+        private readonly UpdateSubscriptionServiceAction $updateSubscriptionServiceAction,
     ) {}
 
     /**
@@ -71,21 +102,21 @@ class ProductController extends Controller
     /**
      * Update subscription
      */
-    public function updateSubscription(ProductSubscriptionRequest $request, Service $service): Response
+    public function updateSubscription(ProductSubscriptionRequest $request, Service $service): RedirectResponse
     {
         $validated = $request->validated();
+        $dto = new SubscriptionUpdateDTO(
+            serviceId: $service->id,
+            name: $validated['name'],
+            description: $validated['description'] ?? null,
+            price: (float) $validated['price'],
+            specialPrice: isset($validated['special_price']) ? (float) $validated['special_price'] : null,
+            isSpecialPrice: (bool) ($validated['is_special_price'] ?? false),
+            isActive: (bool) ($validated['is_active'] ?? true),
+            settings: $validated['settings'] ?? [],
+        );
 
-        $data = [
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'special_price' => $validated['special_price'] ?? null,
-            'is_special_price' => $validated['is_special_price'] ?? false,
-            'is_active' => $validated['is_active'] ?? true,
-            'settings' => $validated['settings'] ?? [],
-        ];
-
-        $service->update($data);
+        $this->updateSubscriptionServiceAction->execute($dto);
 
         return redirect()->route('product.subscription')
             ->with('success', 'Subscription updated successfully.');
@@ -137,21 +168,21 @@ class ProductController extends Controller
     /**
      * Update alert
      */
-    public function updateAlert(ProductSubscriptionRequest $request, Service $service): Response
+    public function updateAlert(ProductSubscriptionRequest $request, Service $service): RedirectResponse
     {
         $validated = $request->validated();
+        $dto = new SubscriptionUpdateDTO(
+            serviceId: $service->id,
+            name: $validated['name'],
+            description: $validated['description'] ?? null,
+            price: (float) $validated['price'],
+            specialPrice: isset($validated['special_price']) ? (float) $validated['special_price'] : null,
+            isSpecialPrice: (bool) ($validated['is_special_price'] ?? false),
+            isActive: (bool) ($validated['is_active'] ?? true),
+            settings: $validated['settings'] ?? [],
+        );
 
-        $data = [
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'special_price' => $validated['special_price'] ?? null,
-            'is_special_price' => $validated['is_special_price'] ?? false,
-            'is_active' => $validated['is_active'] ?? true,
-            'settings' => $validated['settings'] ?? [],
-        ];
-
-        $service->update($data);
+        $this->updateSubscriptionServiceAction->execute($dto);
 
         return redirect()->route('product.alert')
             ->with('success', 'Alert updated successfully.');
@@ -182,20 +213,19 @@ class ProductController extends Controller
     /**
      * Store a newly created device
      */
-    public function storeDevice(ProductDeviceRequest $request): Response
+    public function storeDevice(ProductDeviceRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+        $dto = new DeviceCreateDTO(
+            name: $validated['name'],
+            description: $validated['description'] ?? null,
+            price: (float) $validated['price'],
+            specialPrice: isset($validated['special_price']) ? (float) $validated['special_price'] : null,
+            isSpecialPrice: (bool) ($validated['is_special_price'] ?? false),
+            isActive: (bool) ($validated['is_active'] ?? true),
+        );
 
-        $data = [
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'special_price' => $validated['special_price'] ?? null,
-            'is_special_price' => $validated['is_special_price'] ?? false,
-            'is_active' => $validated['is_active'] ?? true,
-        ];
-
-        $device = Device::create($data);
+        $this->createDeviceAction->execute($dto);
 
         return redirect()->route('product.device')
             ->with('success', 'Device created successfully.');
@@ -219,20 +249,20 @@ class ProductController extends Controller
     /**
      * Update the specified device
      */
-    public function updateDevice(ProductDeviceRequest $request, Device $device): Response
+    public function updateDevice(ProductDeviceRequest $request, Device $device): RedirectResponse
     {
         $validated = $request->validated();
+        $dto = new DeviceUpdateDTO(
+            id: $device->id,
+            name: $validated['name'],
+            description: $validated['description'] ?? null,
+            price: (float) $validated['price'],
+            specialPrice: isset($validated['special_price']) ? (float) $validated['special_price'] : null,
+            isSpecialPrice: (bool) ($validated['is_special_price'] ?? false),
+            isActive: (bool) ($validated['is_active'] ?? $device->is_active),
+        );
 
-        $data = [
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'special_price' => $validated['special_price'] ?? null,
-            'is_special_price' => $validated['is_special_price'] ?? false,
-            'is_active' => $validated['is_active'] ?? $device->is_active,
-        ];
-
-        $device->update($data);
+        $this->updateDeviceAction->execute($dto);
 
         return redirect()->route('product.device')
             ->with('success', 'Device updated successfully.');
@@ -253,11 +283,11 @@ class ProductController extends Controller
     /**
      * Delete device photo
      */
-    public function deletePhoto(Request $request): Response
+    public function deletePhoto(Request $request): JsonResponse
     {
-        $photoId = $request->get('id');
-
-        // Delete photo logic here
+        $photoId = (string) $request->get('id');
+        $dto = new DevicePhotoDeleteDTO(photoId: $photoId);
+        $this->deleteDevicePhotoAction->execute($dto);
 
         return response()->json(['success' => 'Photo deleted successfully']);
     }
@@ -265,11 +295,11 @@ class ProductController extends Controller
     /**
      * Set main photo
      */
-    public function setMainPhoto(Request $request): Response
+    public function setMainPhoto(Request $request): JsonResponse
     {
-        $photoId = $request->get('id');
-
-        // Set main photo logic here
+        $photoId = (string) $request->get('id');
+        $dto = new DevicePhotoSetMainDTO(photoId: $photoId);
+        $this->setMainDevicePhotoAction->execute($dto);
 
         return response()->json(['success' => 'Main photo set successfully']);
     }
@@ -277,21 +307,21 @@ class ProductController extends Controller
     /**
      * Upload device photo
      */
-    public function uploadPhoto(Request $request, Device $device): Response
+    public function uploadPhoto(Request $request, Device $device): JsonResponse
     {
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
         $file = $request->file('file');
-        $path = $file->store('devices', 'public');
+        $dto = new DevicePhotoUploadDTO(deviceId: $device->id, file: $file);
+        $result = $this->uploadDevicePhotoAction->execute($dto);
 
         return response()->json([
-            'initialPreview' => [Storage::url($path)],
+            'initialPreview' => [$result['url']],
             'initialPreviewConfig' => [[
-                'caption' => $file->getClientOriginalName(),
+                'caption' => $result['caption'],
                 'url' => route('product.delete-photo'),
-                'key' => 'temp_key',
+                'key' => $result['path'],
                 'type' => 'image',
             ]],
         ]);
@@ -322,18 +352,17 @@ class ProductController extends Controller
     /**
      * Store a newly created device plan
      */
-    public function storePlan(ProductDevicePlanRequest $request): Response
+    public function storePlan(ProductDevicePlanRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+        $dto = new DevicePlanCreateDTO(
+            name: $validated['name'],
+            description: $validated['description'] ?? null,
+            price: (float) $validated['price'],
+            isActive: (bool) ($validated['is_active'] ?? true),
+        );
 
-        $data = [
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'is_active' => $validated['is_active'] ?? true,
-        ];
-
-        $plan = DevicePlan::create($data);
+        $this->createDevicePlanAction->execute($dto);
 
         return redirect()->route('product.plan')
             ->with('success', 'Device plan created successfully.');
@@ -352,18 +381,18 @@ class ProductController extends Controller
     /**
      * Update the specified device plan
      */
-    public function updatePlan(ProductDevicePlanRequest $request, DevicePlan $plan): Response
+    public function updatePlan(ProductDevicePlanRequest $request, DevicePlan $plan): RedirectResponse
     {
         $validated = $request->validated();
+        $dto = new DevicePlanUpdateDTO(
+            id: $plan->id,
+            name: $validated['name'],
+            description: $validated['description'] ?? null,
+            price: (float) $validated['price'],
+            isActive: (bool) ($validated['is_active'] ?? $plan->is_active),
+        );
 
-        $data = [
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'is_active' => $validated['is_active'] ?? $plan->is_active,
-        ];
-
-        $plan->update($data);
+        $this->updateDevicePlanAction->execute($dto);
 
         return redirect()->route('product.plan')
             ->with('success', 'Device plan updated successfully.');
@@ -372,14 +401,20 @@ class ProductController extends Controller
     /**
      * Attach plan to device
      */
-    public function attachPlan(Request $request, DevicePlan $plan, Device $device): Response
+    public function attachPlan(Request $request, DevicePlan $plan, Device $device): RedirectResponse
     {
         $validated = $request->validate([
             'price' => ['nullable', 'numeric', 'min:0'],
             'is_default' => ['nullable', 'boolean'],
         ]);
 
-        // Attach plan logic here
+        $dto = new AttachPlanToDeviceDTO(
+            deviceId: $device->id,
+            planId: $plan->id,
+            price: isset($validated['price']) ? (float) $validated['price'] : null,
+            isDefault: isset($validated['is_default']) ? (bool) $validated['is_default'] : null,
+        );
+        $this->attachPlanToDeviceAction->execute($dto);
 
         return redirect()->route('product.edit-device', $device)
             ->with('success', 'Plan attached successfully.');
@@ -388,9 +423,10 @@ class ProductController extends Controller
     /**
      * Detach plan from device
      */
-    public function detachPlan(DevicePlan $plan, Device $device): Response
+    public function detachPlan(DevicePlan $plan, Device $device): RedirectResponse
     {
-        // Detach plan logic here
+        $dto = new DetachPlanFromDeviceDTO(deviceId: $device->id, planId: $plan->id);
+        $this->detachPlanFromDeviceAction->execute($dto);
 
         return redirect()->route('product.edit-device', $device)
             ->with('success', 'Plan detached successfully.');

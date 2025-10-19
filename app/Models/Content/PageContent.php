@@ -27,6 +27,13 @@ class PageContent extends Model
 {
     use HasFactory;
 
+    public const STATUS_TEMP = 0;
+
+    public const STATUS_PUBLISH = 1;
+
+    /** Backward compatible alias used in controllers */
+    public const STATUS_DRAFT = self::STATUS_TEMP;
+
     public $timestamps = false;
 
     protected $table = 'page_content';

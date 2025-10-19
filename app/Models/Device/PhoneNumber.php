@@ -45,6 +45,14 @@ class PhoneNumber extends Model
     // Phone type constants (extend as needed)
     public const TYPE_NONE = 0;
 
+    public const TYPE_SATELLITE = 1;
+
+    public const TYPE_BIVY = 2;
+
+    public const TYPE_PIVOTEL = 3;
+
+    public const TYPE_MOBILE = 4;
+
     protected $table = 'phone_number';
 
     protected $casts = [

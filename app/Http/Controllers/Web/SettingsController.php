@@ -16,8 +16,9 @@ use App\Http\Requests\Settings\Web\SettingsPublicRequest;
 use App\Http\Requests\Settings\Web\SettingsSmsRequest;
 use App\Http\Requests\Users\Web\UserPointSettingsRequest;
 use App\Models\System\Settings;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 
@@ -32,7 +33,7 @@ class SettingsController extends Controller
     /**
      * Flush settings cache
      */
-    public function flush(): Response
+    public function flush(): RedirectResponse
     {
         $this->flushSettingsAction->execute([]);
 
@@ -71,7 +72,7 @@ class SettingsController extends Controller
     /**
      * Update main settings
      */
-    public function updateMain(SettingsMainRequest $request): Response
+    public function updateMain(SettingsMainRequest $request): RedirectResponse
     {
         if (! auth()->user()->showSettingsRO()) {
             $validated = $request->validated();
@@ -93,7 +94,7 @@ class SettingsController extends Controller
     /**
      * Update SMS settings
      */
-    public function updateSms(SettingsSmsRequest $request): Response
+    public function updateSms(SettingsSmsRequest $request): RedirectResponse
     {
         if (! auth()->user()->showSettingsRO()) {
             $validated = $request->validated();
@@ -116,7 +117,7 @@ class SettingsController extends Controller
     /**
      * Update API settings
      */
-    public function updateApi(SettingsApiRequest $request): Response
+    public function updateApi(SettingsApiRequest $request): RedirectResponse
     {
         if (! auth()->user()->showSettingsRO()) {
             $validated = $request->validated();
@@ -139,7 +140,7 @@ class SettingsController extends Controller
     /**
      * Update app settings
      */
-    public function updateApp(SettingsAppRequest $request): Response
+    public function updateApp(SettingsAppRequest $request): RedirectResponse
     {
         if (! auth()->user()->showSettingsRO()) {
             $validated = $request->validated();
@@ -179,7 +180,7 @@ class SettingsController extends Controller
     /**
      * Update public settings
      */
-    public function updatePublic(SettingsPublicRequest $request): Response
+    public function updatePublic(SettingsPublicRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -196,7 +197,7 @@ class SettingsController extends Controller
     /**
      * Update user point settings
      */
-    public function updateUserPoint(UserPointSettingsRequest $request): Response
+    public function updateUserPoint(UserPointSettingsRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -213,7 +214,7 @@ class SettingsController extends Controller
     /**
      * Generate BitPay configuration
      */
-    public function bitpayGeneration(Request $request): Response
+    public function bitpayGeneration(Request $request): JsonResponse
     {
         if ($request->ajax()) {
             $pairingCode = $this->generateBitPayConfig();

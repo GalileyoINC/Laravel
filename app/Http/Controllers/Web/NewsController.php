@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
-use App\Domain\Actions\News\CreateNewsAction;
 use App\Domain\Actions\News\GetLastNewsAction;
 use App\Domain\Actions\News\GetNewsListAction;
+use App\Domain\Actions\News\StoreNewsAction;
+use App\Domain\Actions\News\UpdateNewsAction;
+use App\Domain\DTOs\News\NewsCreateDTO;
+use App\Domain\DTOs\News\NewsUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\News\Web\NewsIndexRequest;
 use App\Http\Requests\News\Web\NewsRequest;
@@ -15,15 +18,15 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class NewsController extends Controller
 {
     public function __construct(
-        private readonly CreateNewsAction $createNewsAction,
         private readonly GetLastNewsAction $getLastNewsAction,
         private readonly GetNewsListAction $getNewsListAction,
+        private readonly StoreNewsAction $storeNewsAction,
+        private readonly UpdateNewsAction $updateNewsAction,
     ) {}
 
     /**
@@ -55,21 +58,16 @@ class NewsController extends Controller
     {
         $validated = $request->validated();
 
-        $data = [
-            'name' => $validated['name'],
-            'title' => $validated['title'] ?? null,
-            'meta_keywords' => $validated['meta_keywords'] ?? null,
-            'meta_description' => $validated['meta_description'] ?? null,
-            'status' => $validated['status'] ?? 0,
-        ];
+        $dto = new NewsCreateDTO(
+            name: $validated['name'],
+            title: $validated['title'] ?? null,
+            metaKeywords: $validated['meta_keywords'] ?? null,
+            metaDescription: $validated['meta_description'] ?? null,
+            status: (int) ($validated['status'] ?? 0),
+            image: $request->file('image'),
+        );
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('news', 'public');
-        }
-
-        $data['slug'] = Str::slug($data['name']);
-
-        $news = News::create($data);
+        $this->storeNewsAction->execute($dto);
 
         return Redirect::to(route('news.index'))
             ->with('success', 'News created successfully.');
@@ -102,24 +100,17 @@ class NewsController extends Controller
     {
         $validated = $request->validated();
 
-        $data = [
-            'name' => $validated['name'],
-            'title' => $validated['title'] ?? null,
-            'meta_keywords' => $validated['meta_keywords'] ?? null,
-            'meta_description' => $validated['meta_description'] ?? null,
-            'status' => $validated['status'] ?? 0,
-        ];
+        $dto = new NewsUpdateDTO(
+            id: $news->id,
+            name: $validated['name'],
+            title: $validated['title'] ?? null,
+            metaKeywords: $validated['meta_keywords'] ?? null,
+            metaDescription: $validated['meta_description'] ?? null,
+            status: (int) ($validated['status'] ?? 0),
+            image: $request->file('image'),
+        );
 
-        if ($request->hasFile('image')) {
-            if ($news->image) {
-                Storage::disk('public')->delete($news->image);
-            }
-            $data['image'] = $request->file('image')->store('news', 'public');
-        }
-
-        $data['slug'] = Str::slug($data['name']);
-
-        $news->update($data);
+        $this->updateNewsAction->execute($dto);
 
         return Redirect::to(route('news.index'))
             ->with('success', 'News updated successfully.');

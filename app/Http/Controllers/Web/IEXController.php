@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\IEX\CreateMarketstackIndexAction;
 use App\Domain\Actions\IEX\ExportIexWebhooksToCsvAction;
 use App\Domain\Actions\IEX\ExportMarketstackIndexesToCsvAction;
 use App\Domain\Actions\IEX\GetIexWebhookListAction;
 use App\Domain\Actions\IEX\GetMarketstackIndexListAction;
+use App\Domain\Actions\IEX\UpdateMarketstackIndexAction;
+use App\Domain\DTOs\IEX\MarketstackIndexStoreDTO;
+use App\Domain\DTOs\IEX\MarketstackIndexUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IEX\Web\IexWebhookIndexRequest;
 use App\Http\Requests\IEX\Web\MarketstackIndexRequest;
+use App\Http\Requests\IEX\Web\MarketstackStoreRequest;
+use App\Http\Requests\IEX\Web\MarketstackUpdateRequest;
 use App\Models\System\IexWebhook;
 use App\Models\System\MarketstackIndx;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class IEXController extends Controller
@@ -26,6 +31,8 @@ class IEXController extends Controller
         private readonly ExportIexWebhooksToCsvAction $exportIexWebhooksToCsvAction,
         private readonly GetMarketstackIndexListAction $getMarketstackIndexListAction,
         private readonly ExportMarketstackIndexesToCsvAction $exportMarketstackIndexesToCsvAction,
+        private readonly CreateMarketstackIndexAction $createMarketstackIndexAction,
+        private readonly UpdateMarketstackIndexAction $updateMarketstackIndexAction,
     ) {}
 
     /**
@@ -89,27 +96,20 @@ class IEXController extends Controller
     /**
      * Update Marketstack Index
      */
-    public function updateMarketstack(Request $request, MarketstackIndx $index): Response
+    public function updateMarketstack(MarketstackUpdateRequest $request, MarketstackIndx $index): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'symbol' => 'required|string|max:10',
-            'country' => 'required|string|max:100',
-            'currency' => 'required|string|max:10',
-            'has_intraday' => 'boolean',
-            'has_eod' => 'boolean',
-            'is_active' => 'boolean',
-        ]);
-
-        $index->update([
-            'name' => $request->get('name'),
-            'symbol' => $request->get('symbol'),
-            'country' => $request->get('country'),
-            'currency' => $request->get('currency'),
-            'has_intraday' => $request->boolean('has_intraday'),
-            'has_eod' => $request->boolean('has_eod'),
-            'is_active' => $request->boolean('is_active'),
-        ]);
+        $v = $request->validated();
+        $dto = new MarketstackIndexUpdateDTO(
+            id: $index->id,
+            name: $v['name'],
+            symbol: $v['symbol'],
+            country: $v['country'],
+            currency: $v['currency'],
+            hasIntraday: (bool) ($v['has_intraday'] ?? false),
+            hasEod: (bool) ($v['has_eod'] ?? false),
+            isActive: (bool) ($v['is_active'] ?? false),
+        );
+        $this->updateMarketstackIndexAction->execute($dto);
 
         return redirect()->route('iex.marketstack')
             ->with('success', 'Marketstack Index updated successfully.');
@@ -126,27 +126,19 @@ class IEXController extends Controller
     /**
      * Store Marketstack Index
      */
-    public function storeMarketstack(Request $request): Response
+    public function storeMarketstack(MarketstackStoreRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'symbol' => 'required|string|max:10',
-            'country' => 'required|string|max:100',
-            'currency' => 'required|string|max:10',
-            'has_intraday' => 'boolean',
-            'has_eod' => 'boolean',
-            'is_active' => 'boolean',
-        ]);
-
-        MarketstackIndx::create([
-            'name' => $request->get('name'),
-            'symbol' => $request->get('symbol'),
-            'country' => $request->get('country'),
-            'currency' => $request->get('currency'),
-            'has_intraday' => $request->boolean('has_intraday'),
-            'has_eod' => $request->boolean('has_eod'),
-            'is_active' => $request->boolean('is_active'),
-        ]);
+        $v = $request->validated();
+        $dto = new MarketstackIndexStoreDTO(
+            name: $v['name'],
+            symbol: $v['symbol'],
+            country: $v['country'],
+            currency: $v['currency'],
+            hasIntraday: (bool) ($v['has_intraday'] ?? false),
+            hasEod: (bool) ($v['has_eod'] ?? false),
+            isActive: (bool) ($v['is_active'] ?? false),
+        );
+        $this->createMarketstackIndexAction->execute($dto);
 
         return redirect()->route('iex.marketstack')
             ->with('success', 'Marketstack Index created successfully.');

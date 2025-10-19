@@ -7,8 +7,9 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Artisan;
 use DB;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 
@@ -25,7 +26,7 @@ class MaintenanceController extends Controller
     /**
      * Set Session Data
      */
-    public function setSession(Request $request): Response
+    public function setSession(Request $request): JsonResponse
     {
         $request->validate([
             'key' => 'required|string',
@@ -47,7 +48,7 @@ class MaintenanceController extends Controller
     /**
      * Clear Cache
      */
-    public function clearCache(): Response
+    public function clearCache(): RedirectResponse
     {
         Artisan::call('cache:clear');
         Artisan::call('config:clear');
@@ -61,7 +62,7 @@ class MaintenanceController extends Controller
     /**
      * Clear Logs
      */
-    public function clearLogs(): Response
+    public function clearLogs(): RedirectResponse
     {
         Artisan::call('log:clear');
 
@@ -72,7 +73,7 @@ class MaintenanceController extends Controller
     /**
      * Database Maintenance
      */
-    public function databaseMaintenance(): Response
+    public function databaseMaintenance(): RedirectResponse
     {
         Artisan::call('migrate:status');
         Artisan::call('db:seed --class=DatabaseSeeder');

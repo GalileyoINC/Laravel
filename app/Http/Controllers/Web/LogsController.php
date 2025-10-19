@@ -12,10 +12,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Logs\Web\ActiveRecordLogIndexRequest;
 use App\Http\Requests\Logs\Web\ApiLogIndexRequest;
 use App\Models\System\ApiLog;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LogsController extends Controller
@@ -68,7 +68,7 @@ class LogsController extends Controller
     /**
      * Delete API Log by key
      */
-    public function deleteByKey(Request $request, string $key): Response
+    public function deleteByKey(Request $request, string $key): RedirectResponse
     {
         if (! auth()->user()->isSuper()) {
             return redirect()->back()

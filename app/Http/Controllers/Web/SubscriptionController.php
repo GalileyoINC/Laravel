@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Subscription\ActivateSubscriptionAction;
+use App\Domain\Actions\Subscription\CreateSubscriptionAction;
+use App\Domain\Actions\Subscription\DeactivateSubscriptionAction;
 use App\Domain\Actions\Subscription\ExportSubscriptionsToCsvAction;
 use App\Domain\Actions\Subscription\GetSubscriptionListAction;
+use App\Domain\Actions\Subscription\UpdateSubscriptionAction;
+use App\Domain\DTOs\Subscription\SubscriptionActivateRequestDTO;
+use App\Domain\DTOs\Subscription\SubscriptionDeactivateRequestDTO;
+use App\Domain\DTOs\Subscription\SubscriptionStoreRequestDTO;
+use App\Domain\DTOs\Subscription\SubscriptionUpdateRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Subscription\Web\SubscriptionIndexRequest;
 use App\Http\Requests\Subscription\Web\SubscriptionStoreRequest;
 use App\Http\Requests\Subscription\Web\SubscriptionUpdateRequest;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionCategory;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
@@ -23,6 +31,10 @@ class SubscriptionController extends Controller
     public function __construct(
         private readonly GetSubscriptionListAction $getSubscriptionListAction,
         private readonly ExportSubscriptionsToCsvAction $exportSubscriptionsToCsvAction,
+        private readonly CreateSubscriptionAction $createSubscriptionAction,
+        private readonly UpdateSubscriptionAction $updateSubscriptionAction,
+        private readonly ActivateSubscriptionAction $activateSubscriptionAction,
+        private readonly DeactivateSubscriptionAction $deactivateSubscriptionAction,
     ) {}
 
     /**
@@ -78,26 +90,22 @@ class SubscriptionController extends Controller
     /**
      * Store new Subscription
      */
-    public function store(SubscriptionStoreRequest $request): Response
+    public function store(SubscriptionStoreRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $subscription = new Subscription();
-        $subscription->id_subscription_category = $validated['id_subscription_category'];
-        $subscription->title = $validated['title'];
-        $subscription->percent = $validated['percent'] ?? null;
-        $subscription->alias = $validated['alias'] ?? null;
-        $subscription->description = $validated['description'] ?? null;
-        $subscription->is_custom = $validated['is_custom'] ?? false;
-        $subscription->show_reactions = $validated['show_reactions'] ?? false;
-        $subscription->show_comments = $validated['show_comments'] ?? false;
+        $dto = new SubscriptionStoreRequestDTO(
+            categoryId: (int) $validated['id_subscription_category'],
+            title: $validated['title'],
+            percent: $validated['percent'] ?? null,
+            alias: $validated['alias'] ?? null,
+            description: $validated['description'] ?? null,
+            isCustom: (bool) ($validated['is_custom'] ?? false),
+            showReactions: (bool) ($validated['show_reactions'] ?? false),
+            showComments: (bool) ($validated['show_comments'] ?? false),
+            imageFile: $request->file('imageFile'),
+        );
 
-        // Handle image upload
-        if ($request->hasFile('imageFile')) {
-            $imagePath = $request->file('imageFile')->store('subscriptions', 'public');
-            $subscription->image = $imagePath;
-        }
-
-        $subscription->save();
+        $this->createSubscriptionAction->execute($dto);
 
         return redirect()->route('subscription.index')
             ->with('success', 'Subscription created successfully.');
@@ -119,30 +127,23 @@ class SubscriptionController extends Controller
     /**
      * Update Subscription
      */
-    public function update(SubscriptionUpdateRequest $request, Subscription $subscription): Response
+    public function update(SubscriptionUpdateRequest $request, Subscription $subscription): RedirectResponse
     {
         $validated = $request->validated();
-        $subscription->id_subscription_category = $validated['id_subscription_category'];
-        $subscription->title = $validated['title'];
-        $subscription->percent = $validated['percent'] ?? null;
-        $subscription->alias = $validated['alias'] ?? null;
-        $subscription->description = $validated['description'] ?? null;
-        $subscription->is_custom = $validated['is_custom'] ?? $subscription->is_custom;
-        $subscription->show_reactions = $validated['show_reactions'] ?? $subscription->show_reactions;
-        $subscription->show_comments = $validated['show_comments'] ?? $subscription->show_comments;
+        $dto = new SubscriptionUpdateRequestDTO(
+            id: $subscription->id,
+            categoryId: (int) $validated['id_subscription_category'],
+            title: $validated['title'],
+            percent: $validated['percent'] ?? null,
+            alias: $validated['alias'] ?? null,
+            description: $validated['description'] ?? null,
+            isCustom: $validated['is_custom'] ?? null,
+            showReactions: $validated['show_reactions'] ?? null,
+            showComments: $validated['show_comments'] ?? null,
+            imageFile: $request->file('imageFile'),
+        );
 
-        // Handle image upload
-        if ($request->hasFile('imageFile')) {
-            // Delete old image if exists
-            if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {
-                Storage::disk('public')->delete($subscription->image);
-            }
-
-            $imagePath = $request->file('imageFile')->store('subscriptions', 'public');
-            $subscription->image = $imagePath;
-        }
-
-        $subscription->save();
+        $this->updateSubscriptionAction->execute($dto);
 
         return redirect()->route('subscription.index')
             ->with('success', 'Subscription updated successfully.');
@@ -164,9 +165,10 @@ class SubscriptionController extends Controller
     /**
      * Activate Subscription
      */
-    public function activate(Subscription $subscription): Response
+    public function activate(Subscription $subscription): RedirectResponse
     {
-        $subscription->update(['is_active' => true]);
+        $dto = new SubscriptionActivateRequestDTO(id: $subscription->id);
+        $this->activateSubscriptionAction->execute($dto);
 
         return redirect()->back()
             ->with('success', 'Subscription activated successfully.');
@@ -175,9 +177,10 @@ class SubscriptionController extends Controller
     /**
      * Deactivate Subscription
      */
-    public function deactivate(Subscription $subscription): Response
+    public function deactivate(Subscription $subscription): RedirectResponse
     {
-        $subscription->update(['is_active' => false]);
+        $dto = new SubscriptionDeactivateRequestDTO(id: $subscription->id);
+        $this->deactivateSubscriptionAction->execute($dto);
 
         return redirect()->back()
             ->with('success', 'Subscription deactivated successfully.');
@@ -186,7 +189,7 @@ class SubscriptionController extends Controller
     /**
      * Delete Subscription
      */
-    public function destroy(Subscription $subscription): Response
+    public function destroy(Subscription $subscription): RedirectResponse
     {
         // Delete image if exists
         if ($subscription->image && Storage::disk('public')->exists($subscription->image)) {

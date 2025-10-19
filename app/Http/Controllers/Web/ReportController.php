@@ -19,6 +19,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
 {
@@ -105,7 +106,7 @@ class ReportController extends Controller
     /**
      * Export referral report to CSV
      */
-    public function refToCsv(Request $request, ?string $month = null): Response
+    public function refToCsv(Request $request, ?string $month = null): StreamedResponse
     {
         $date = $month ? Carbon::parse($month) : Carbon::now();
         $report = $this->getReferralReport($date);
@@ -140,7 +141,9 @@ class ReportController extends Controller
         $content = $headerContent.$mainContent;
         $fileName = 'report_referral_'.$date->format('F_Y').'.csv';
 
-        return response($content, 200, [
+        return response()->streamDownload(function () use ($content) {
+            echo $content;
+        }, $fileName, [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
             'Pragma' => 'no-cache',
