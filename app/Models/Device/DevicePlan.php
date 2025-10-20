@@ -38,7 +38,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\DevicePlanFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\DeviceDevicePlanFactory>
  */
 class DevicePlan extends Model
 {
@@ -60,14 +60,19 @@ class DevicePlan extends Model
         'price',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_plan');
     }
 
+    /**
+     * @return BelongsTo<Device, $this>
+     */
     public function device(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Device\Device::class, 'id_device');
+        return $this->belongsTo(Device::class, 'id_device');
     }
 }
-

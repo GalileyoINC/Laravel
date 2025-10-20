@@ -60,7 +60,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoiceFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceInvoiceFactory>
  */
 class Invoice extends Model
 {
@@ -91,47 +91,74 @@ class Invoice extends Model
         'description',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\BpSubscription, $this>
+     */
     public function bp_subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\BpSubscription::class, 'id_bp_subscribe');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\Address, $this>
+     */
     public function addresses(): HasMany
     {
         return $this->hasMany(\App\Models\User\Address::class, 'id_invoice');
     }
 
+    /**
+     * @return HasMany<ContractLinePaid, $this>
+     */
     public function contract_line_paids(): HasMany
     {
         return $this->hasMany(ContractLinePaid::class, 'id_invoice');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\Affiliate, $this>
+     */
     public function invite_affiliates(): HasMany
     {
         return $this->hasMany(\App\Models\User\Affiliate::class, 'id_reward_invoice');
     }
 
+    /**
+     * @return HasMany<InvoiceLine, $this>
+     */
     public function invoice_lines(): HasMany
     {
         return $this->hasMany(InvoiceLine::class, 'id_invoice');
     }
 
+    /**
+     * @return BelongsToMany<Promocode, $this>
+     */
     public function promocodes(): BelongsToMany
     {
         return $this->belongsToMany(Promocode::class, 'invoice_promocode', 'id_invoice', 'id_promo')
             ->withPivot('id');
     }
 
+    /**
+     * @return BelongsToMany<Service, $this>
+     */
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'invoice_service', 'id_invoice', 'id_service');
     }
 
+    /**
+     * @return HasMany<MoneyTransaction, $this>
+     */
     public function money_transactions(): HasMany
     {
         return $this->hasMany(MoneyTransaction::class, 'id_invoice');
@@ -139,6 +166,8 @@ class Invoice extends Model
 
     /**
      * Get money transactions (camelCase alias)
+     *
+     * @return HasMany<MoneyTransaction, $this>
      */
     public function moneyTransactions(): HasMany
     {
@@ -147,6 +176,8 @@ class Invoice extends Model
 
     /**
      * Get invoice lines (camelCase alias)
+     *
+     * @return HasMany<InvoiceLine, $this>
      */
     public function invoiceLines(): HasMany
     {

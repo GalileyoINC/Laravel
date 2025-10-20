@@ -68,7 +68,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContractLineFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceContractLineFactory>
  */
 class ContractLine extends Model
 {
@@ -107,37 +107,58 @@ class ContractLine extends Model
         'title',
     ];
 
+    /**
+     * @return BelongsTo<Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_service');
     }
 
+    /**
+     * @return BelongsTo<SpsContract, $this>
+     */
     public function sps_contract(): BelongsTo
     {
         return $this->belongsTo(SpsContract::class, 'id_sps_contract');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<ContractLinePaid, $this>
+     */
     public function contract_line_paids(): HasMany
     {
         return $this->hasMany(ContractLinePaid::class, 'id_contract_line');
     }
 
+    /**
+     * @return HasMany<InvoiceLine, $this>
+     */
     public function invoice_lines(): HasMany
     {
         return $this->hasMany(InvoiceLine::class, 'id_contract_line');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\UserPlanShedule, $this>
+     */
     public function user_plan_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_contract_line');
     }
 
     // Added to support queries in ContractLineController@unpaid
+    /**
+     * @return HasOne<\App\Models\User\UserPlan, $this>
+     */
     public function userPlan(): HasOne
     {
         return $this->hasOne(\App\Models\User\UserPlan::class, 'id_user', 'id_user')

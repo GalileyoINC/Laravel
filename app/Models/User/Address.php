@@ -59,7 +59,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AddressFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserAddressFactory>
  */
 class Address extends Model
 {
@@ -90,11 +90,17 @@ class Address extends Model
         'address_type',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\Invoice, $this>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_invoice');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');

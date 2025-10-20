@@ -46,7 +46,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContractLinePaidFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceContractLinePaidFactory>
  */
 class ContractLinePaid extends Model
 {
@@ -74,16 +74,25 @@ class ContractLinePaid extends Model
         'days',
     ];
 
+    /**
+     * @return BelongsTo<ContractLine, $this>
+     */
     public function contract_line(): BelongsTo
     {
         return $this->belongsTo(ContractLine::class, 'id_contract_line');
     }
 
+    /**
+     * @return BelongsTo<Invoice, $this>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
+    /**
+     * @return BelongsTo<InvoiceLine, $this>
+     */
     public function invoice_line(): BelongsTo
     {
         return $this->belongsTo(InvoiceLine::class, 'id_invoice_line');

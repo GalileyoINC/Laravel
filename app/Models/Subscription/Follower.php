@@ -46,7 +46,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FollowerFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SubscriptionFollowerFactory>
  */
 class Follower extends Model
 {
@@ -70,32 +70,51 @@ class Follower extends Model
         'invite_settings',
     ];
 
+    /**
+     * @return BelongsTo<FollowerList, $this>
+     */
     public function follower_list(): BelongsTo
     {
         return $this->belongsTo(FollowerList::class, 'id_follower_list');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user_leader');
     }
 
-    // Added to align with controller usage
+    /**
+     * Added to align with controller usage
+     *
+     * @return BelongsTo<FollowerList, $this>
+     */
     public function followerList(): BelongsTo
     {
         return $this->belongsTo(FollowerList::class, 'id_follower_list');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function userLeader(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user_leader');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function userFollower(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user_follower');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Follower>
+     */
     protected static function newFactory()
     {
         return FollowerFactory::new();

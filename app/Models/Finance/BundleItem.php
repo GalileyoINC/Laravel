@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\BundleItemFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceBundleItemFactory>
  */
 class BundleItem extends Model
 {
@@ -67,11 +67,17 @@ class BundleItem extends Model
         'custom_data',
     ];
 
+    /**
+     * @return BelongsTo<Bundle, $this>
+     */
     public function bundle(): BelongsTo
     {
         return $this->belongsTo(Bundle::class, 'id_bundle');
     }
 
+    /**
+     * @return BelongsTo<Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_item');

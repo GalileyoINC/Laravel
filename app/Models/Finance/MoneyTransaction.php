@@ -11,8 +11,8 @@ namespace App\Models\Finance;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class MoneyTransaction
@@ -64,7 +64,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MoneyTransactionFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceMoneyTransactionFactory>
  */
 class MoneyTransaction extends Model
 {
@@ -99,37 +99,58 @@ class MoneyTransaction extends Model
         'note',
     ];
 
+    /**
+     * @return BelongsTo<CreditCard, $this>
+     */
     public function credit_card(): BelongsTo
     {
         return $this->belongsTo(CreditCard::class, 'id_credit_card');
     }
 
     // Alias used by controllers/views
+    /**
+     * @return BelongsTo<CreditCard, $this>
+     */
     public function creditCard(): BelongsTo
     {
         return $this->belongsTo(CreditCard::class, 'id_credit_card');
     }
 
+    /**
+     * @return BelongsTo<Invoice, $this>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
+    /**
+     * @return BelongsTo<MoneyTransaction, $this>
+     */
     public function money_transaction(): BelongsTo
     {
         return $this->belongsTo(self::class, 'id_refund');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Analytics\LogAuthorize, $this>
+     */
     public function log_authorizes(): HasMany
     {
         return $this->hasMany(\App\Models\Analytics\LogAuthorize::class, 'id_money_transaction');
     }
 
+    /**
+     * @return HasMany<MoneyTransaction, $this>
+     */
     public function money_transactions(): HasMany
     {
         return $this->hasMany(self::class, 'id_refund');

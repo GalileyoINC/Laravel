@@ -11,8 +11,8 @@ namespace App\Models\Finance;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class SpsContract
@@ -56,7 +56,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SpsContractFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceSpsContractFactory>
  */
 class SpsContract extends Model
 {
@@ -96,21 +96,33 @@ class SpsContract extends Model
         'user_plan_data',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\User\UserPlan, $this>
+     */
     public function user_plan(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\UserPlan::class, 'id_plan');
     }
 
+    /**
+     * @return BelongsTo<Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_service');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<ContractLine, $this>
+     */
     public function contract_lines(): HasMany
     {
         return $this->hasMany(ContractLine::class, 'id_sps_contract');

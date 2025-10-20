@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
+use App\Models\System\TwilioCarrier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\System\TwilioCarrier;
 
 /**
  * Class ProviderTwilioCarrier
@@ -29,7 +29,7 @@ use App\Models\System\TwilioCarrier;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProviderTwilioCarrierFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceProviderTwilioCarrierFactory>
  */
 class ProviderTwilioCarrier extends Model
 {
@@ -51,11 +51,17 @@ class ProviderTwilioCarrier extends Model
         'id_twilio_carrier',
     ];
 
+    /**
+     * @return BelongsTo<Provider, $this>
+     */
     public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class, 'id_provider');
     }
 
+    /**
+     * @return BelongsTo<TwilioCarrier, $this>
+     */
     public function twilio_carrier(): BelongsTo
     {
         return $this->belongsTo(TwilioCarrier::class, 'id_twilio_carrier');

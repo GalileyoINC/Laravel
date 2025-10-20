@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserServiceFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserUserServiceFactory>
  */
 class UserService extends Model
 {
@@ -51,11 +51,17 @@ class UserService extends Model
         'id_service',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');

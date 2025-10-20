@@ -66,7 +66,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserPlanFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserUserPlanFactory>
  */
 class UserPlan extends Model
 {
@@ -131,31 +131,49 @@ class UserPlan extends Model
         return $this->end_at;
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\InvoiceLine, $this>
+     */
     public function invoice_line(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\InvoiceLine::class, 'id_invoice_line');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<AdminMember, $this>
+     */
     public function admin_members(): HasMany
     {
         return $this->hasMany(AdminMember::class, 'id_plan');
     }
 
+    /**
+     * @return HasMany<MemberTemplate, $this>
+     */
     public function member_templates(): HasMany
     {
         return $this->hasMany(MemberTemplate::class, 'id_plan');
     }
 
+    /**
+     * @return HasMany<\App\Models\Finance\SpsContract, $this>
+     */
     public function sps_contracts(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_plan');

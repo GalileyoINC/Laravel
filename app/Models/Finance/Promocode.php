@@ -12,9 +12,8 @@ use App\Models\Subscription\PromocodeInfluencer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Promocode
@@ -51,7 +50,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PromocodeFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinancePromocodeFactory>
  */
 class Promocode extends Model
 {
@@ -113,18 +112,27 @@ class Promocode extends Model
         'description',
     ];
 
+    /**
+     * @return BelongsToMany<Invoice, $this>
+     */
     public function invoices(): BelongsToMany
     {
         return $this->belongsToMany(Invoice::class, 'invoice_promocode', 'id_promo', 'id_invoice')
             ->withPivot('id');
     }
 
+    /**
+     * @return HasOne<PromocodeInfluencer, $this>
+     */
     public function promocode_influencer(): HasOne
     {
         return $this->hasOne(PromocodeInfluencer::class, 'id_promocode');
     }
 
     // Alias to satisfy controllers using ->with(['influencer'])
+    /**
+     * @return HasOne<PromocodeInfluencer, $this>
+     */
     public function influencer(): HasOne
     {
         return $this->hasOne(PromocodeInfluencer::class, 'id_promocode');

@@ -69,7 +69,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CreditCardFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceCreditCardFactory>
  */
 class CreditCard extends Model
 {
@@ -111,11 +111,17 @@ class CreditCard extends Model
         'expiry_year',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<MoneyTransaction, $this>
+     */
     public function money_transactions(): HasMany
     {
         return $this->hasMany(MoneyTransaction::class, 'id_credit_card');

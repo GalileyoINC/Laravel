@@ -12,9 +12,8 @@ use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Service
@@ -90,7 +89,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ServiceFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceServiceFactory>
  */
 class Service extends Model
 {
@@ -158,46 +157,73 @@ class Service extends Model
         return [];
     }
 
+    /**
+     * @return HasMany<BundleItem, $this>
+     */
     public function bundle_items(): HasMany
     {
         return $this->hasMany(BundleItem::class, 'id_item');
     }
 
+    /**
+     * @return HasMany<ContractLine, $this>
+     */
     public function contract_lines(): HasMany
     {
         return $this->hasMany(ContractLine::class, 'id_service');
     }
 
+    /**
+     * @return HasMany<\App\Models\Device\DevicePlan, $this>
+     */
     public function device_plans(): HasMany
     {
         return $this->hasMany(\App\Models\Device\DevicePlan::class, 'id_plan');
     }
 
+    /**
+     * @return BelongsToMany<Invoice, $this>
+     */
     public function invoices(): BelongsToMany
     {
         return $this->belongsToMany(Invoice::class, 'invoice_service', 'id_service', 'id_invoice');
     }
 
+    /**
+     * @return HasMany<\App\Models\Content\ProductPhoto, $this>
+     */
     public function product_photos(): HasMany
     {
         return $this->hasMany(\App\Models\Content\ProductPhoto::class, 'id_service');
     }
 
+    /**
+     * @return HasMany<SpsContract, $this>
+     */
     public function sps_contracts(): HasMany
     {
         return $this->hasMany(SpsContract::class, 'id_service');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\UserPlan, $this>
+     */
     public function user_plans(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPlan::class, 'id_service');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\UserPlanShedule, $this>
+     */
     public function user_plan_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_service');
     }
 
+    /**
+     * @return BelongsToMany<\App\Models\User\User, $this>
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'user_service', 'id_service', 'id_user');

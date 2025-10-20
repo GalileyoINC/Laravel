@@ -46,9 +46,13 @@ class PhoneNumber extends Model
 
     // Legacy type constants kept for BC with reports/controllers
     public const TYPE_NONE = 0;
+
     public const TYPE_SATELLITE = 1;
+
     public const TYPE_BIVY = 2;
+
     public const TYPE_PIVOTEL = 3;
+
     public const TYPE_MOBILE = 4;
 
     protected $table = 'phone_number';
@@ -75,7 +79,7 @@ class PhoneNumber extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\User\User, \App\Models\Device\PhoneNumber>
+     * @return BelongsTo<\App\Models\User\User, $this>
      */
     public function user(): BelongsTo
     {
@@ -83,7 +87,7 @@ class PhoneNumber extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Finance\Provider, \App\Models\Device\PhoneNumber>
+     * @return BelongsTo<\App\Models\Finance\Provider, $this>
      */
     public function provider(): BelongsTo
     {
@@ -120,4 +124,3 @@ class PhoneNumber extends Model
         return empty($types) ? 'Unknown' : implode(', ', $types);
     }
 }
-

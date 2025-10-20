@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserSubscriptionAddressFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserUserSubscriptionAddressFactory>
  */
 class UserSubscriptionAddress extends Model
 {
@@ -54,11 +54,17 @@ class UserSubscriptionAddress extends Model
         'zip',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\Subscription, $this>
+     */
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');

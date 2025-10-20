@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MarketstackIndxFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceMarketstackIndxFactory>
  */
 class MarketstackIndx extends Model
 {

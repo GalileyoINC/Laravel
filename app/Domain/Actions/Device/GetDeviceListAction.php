@@ -17,9 +17,6 @@ class GetDeviceListAction
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    /**
-     * @return array<string, mixed>
-     */
     public function execute(array $data): array
     {
         $dto = new DeviceListRequestDTO(

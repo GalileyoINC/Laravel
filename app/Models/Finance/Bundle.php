@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Bundle
@@ -50,7 +49,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\BundleFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceBundleFactory>
  */
 class Bundle extends Model
 {
@@ -74,18 +73,24 @@ class Bundle extends Model
     ];
 
     /**
-     * @return BelongsToMany<Service, static, BundleItem, int, int>
+     * @return BelongsToMany<Service, $this>
      */
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'bundle_items', 'id_bundle', 'id_service');
     }
 
+    /**
+     * @return HasMany<BundleItem, $this>
+     */
     public function bundle_items(): HasMany
     {
         return $this->hasMany(BundleItem::class, 'id_bundle');
     }
 
+    /**
+     * @return HasMany<InvoiceLine, $this>
+     */
     public function invoice_lines(): HasMany
     {
         return $this->hasMany(InvoiceLine::class, 'id_bundle');

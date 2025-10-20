@@ -56,7 +56,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoiceLineFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceInvoiceLineFactory>
  */
 class InvoiceLine extends Model
 {
@@ -94,26 +94,41 @@ class InvoiceLine extends Model
         'id_bundle',
     ];
 
+    /**
+     * @return BelongsTo<Bundle, $this>
+     */
     public function bundle(): BelongsTo
     {
         return $this->belongsTo(Bundle::class, 'id_bundle');
     }
 
+    /**
+     * @return BelongsTo<ContractLine, $this>
+     */
     public function contract_line(): BelongsTo
     {
         return $this->belongsTo(ContractLine::class, 'id_contract_line');
     }
 
+    /**
+     * @return BelongsTo<Invoice, $this>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
+    /**
+     * @return HasMany<ContractLinePaid, $this>
+     */
     public function contract_line_paids(): HasMany
     {
         return $this->hasMany(ContractLinePaid::class, 'id_invoice_line');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\UserPlan, $this>
+     */
     public function user_plans(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPlan::class, 'id_invoice_line');

@@ -38,7 +38,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProductPhotoFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentProductPhotoFactory>
  */
 class ProductPhoto extends Model
 {
@@ -59,6 +59,9 @@ class ProductPhoto extends Model
         'is_main',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\Service, $this>
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');

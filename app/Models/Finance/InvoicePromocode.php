@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoicePromocodeFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceInvoicePromocodeFactory>
  */
 class InvoicePromocode extends Model
 {
@@ -53,11 +53,17 @@ class InvoicePromocode extends Model
         'id_invoice',
     ];
 
+    /**
+     * @return BelongsTo<Invoice, $this>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
+    /**
+     * @return BelongsTo<Promocode, $this>
+     */
     public function promocode(): BelongsTo
     {
         return $this->belongsTo(Promocode::class, 'id_promo');

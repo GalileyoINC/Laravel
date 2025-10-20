@@ -12,9 +12,8 @@ use Database\Factories\FinanceProviderFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Provider
@@ -48,7 +47,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProviderFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceProviderFactory>
  */
 class Provider extends Model
 {
@@ -67,16 +66,25 @@ class Provider extends Model
         'country',
     ];
 
+    /**
+     * @return HasMany<\App\Models\Device\PhoneNumber, $this>
+     */
     public function phone_numbers(): HasMany
     {
         return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_provider');
     }
 
+    /**
+     * @return BelongsToMany<\App\Models\System\TwilioCarrier, $this>
+     */
     public function twilio_carriers(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\System\TwilioCarrier::class, 'provider_twilio_carrier', 'id_provider', 'id_twilio_carrier');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPoolPhoneNumber, $this>
+     */
     public function sms_pool_phone_numbers(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPoolPhoneNumber::class, 'id_provider');

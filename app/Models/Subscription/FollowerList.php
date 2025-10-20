@@ -57,7 +57,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FollowerListFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SubscriptionFollowerListFactory>
  */
 class FollowerList extends Model
 {
@@ -83,21 +83,33 @@ class FollowerList extends Model
         'is_active',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Subscription\Follower, $this>
+     */
     public function followers(): HasMany
     {
         return $this->hasMany(Follower::class, 'id_follower_list');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\Invite, $this>
+     */
     public function invites(): HasMany
     {
         return $this->hasMany(Invite::class, 'id_follower_list');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsShedule, $this>
+     */
     public function sms_shedules(): HasMany
     {
         return $this->hasMany(SmsShedule::class, 'id_follower_list');
