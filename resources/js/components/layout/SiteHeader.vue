@@ -1,49 +1,68 @@
 <template>
-  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 px-4 backdrop-blur-sm transition-colors dark:border-slate-800 dark:bg-slate-950/95 md:px-6">
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-sm transition-colors dark:border-slate-800 dark:bg-slate-950/95">
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 py-8 sm:px-6 lg:px-8">
       <!-- Left side -->
-      <div class="flex flex-1 items-center gap-2">
+      <div class="flex items-center gap-3">
+        <!-- Mobile Menu Button (TODO) -->
+        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground size-8 md:hidden" type="button">
+          <svg class="pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12L20 12"></path>
+            <path d="M4 12H20"></path>
+            <path d="M4 12H20"></path>
+          </svg>
+        </button>
+        
         <!-- Logo -->
-        <div class="flex items-center">
-          <router-link
-            to="/dashboard"
-            class="w-20 text-cyan-500 hover:text-cyan-600"
-          >
-            <img src="/galileyo-icon.svg" alt="Galileyo" class="h-8 w-8" />
+        <div class="flex items-center gap-6">
+          <router-link to="/" class="flex w-20">
+            <img src="/galileyo_new_logo.png" alt="Galileyo" class="object-contain" />
           </router-link>
         </div>
       </div>
       
-      <!-- Middle area -->
-      <div class="grow">
+      <!-- Middle area - Navigation for public users -->
+      <div v-if="!isAuthenticated" class="flex items-center gap-3">
+        <div class="flex items-center gap-6">
+          <nav class="relative z-10 flex max-w-max flex-1 items-center justify-center max-md:hidden">
+            <ul class="group flex flex-1 list-none items-center justify-center space-x-1 gap-2">
+              <li>
+                <router-link to="/" class="py-1.5 font-medium text-muted-foreground hover:text-primary">
+                  Home
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/faq" class="py-1.5 font-medium text-muted-foreground hover:text-primary">
+                  FAQ
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/contact" class="py-1.5 font-medium text-muted-foreground hover:text-primary">
+                  Contact
+                </router-link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      
+      <!-- Middle area - Search for authenticated users -->
+      <div v-else class="grow">
         <div class="relative mx-auto w-full max-w-xs">
           <CommandMenu />
         </div>
       </div>
       
       <!-- Right side -->
-      <div class="flex flex-1 items-center justify-end gap-2">
+      <div class="flex items-center gap-3">
         <!-- Public Navigation (not logged in) -->
         <template v-if="!isAuthenticated">
-          <nav class="hidden md:flex items-center gap-6 mr-4">
-            <router-link to="/" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-              Home
-            </router-link>
-            <router-link to="/faq" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-              FAQ
-            </router-link>
-            <router-link to="/contact" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-              Contact
-            </router-link>
-          </nav>
-          
           <!-- Theme Toggle -->
           <ThemeToggle />
           
           <!-- Sign In Button -->
           <router-link
             to="/login"
-            class="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 text-white"
           >
             Sign In
           </router-link>
