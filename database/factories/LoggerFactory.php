@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Analytics\Logger>
  */
-class AnalyticsLoggerFactory extends Factory
+class LoggerFactory extends Factory
 {
     protected $model = Logger::class;
 

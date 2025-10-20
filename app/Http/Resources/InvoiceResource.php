@@ -23,12 +23,12 @@ class InvoiceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'total' => $this->total,
-            'paid_status' => $this->paid_status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'id' => $this->getAttribute('id'),
+            'user_id' => $this->getAttribute('user_id'),
+            'total' => $this->getAttribute('total'),
+            'paid_status' => $this->getAttribute('paid_status'),
+            'created_at' => $this->getAttribute('created_at'),
+            'updated_at' => $this->getAttribute('updated_at'),
             'user' => $this->whenLoaded('user'),
             'invoice_lines' => $this->whenLoaded('invoiceLines'),
             'money_transactions' => $this->whenLoaded('moneyTransactions'),

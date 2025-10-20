@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\Session>
  */
-class UserSessionFactory extends Factory
+class SessionFactory extends Factory
 {
     /**
      * Define the model's default state.

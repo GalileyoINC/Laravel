@@ -90,6 +90,9 @@ class EmailPool extends Model
     /**
      * Get available sending types for dropdowns
      */
+    /**
+     * @return array<int, string>
+     */
     public static function getSendingTypes(): array
     {
         return [
@@ -102,6 +105,9 @@ class EmailPool extends Model
 
     /**
      * Get available statuses for dropdowns
+     */
+    /**
+     * @return array<int, string>
      */
     public static function getStatuses(): array
     {

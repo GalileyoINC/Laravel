@@ -101,11 +101,16 @@ class EmailPoolArchive extends SmsPool
      */
     public static function getStatuses(): array
     {
-        return parent::getStatuses();
+        /** @var array<int, string> $statuses */
+        $statuses = parent::getStatuses();
+        return $statuses;
     }
 
     /**
      * Get the attachments for this email pool archive
+     */
+    /**
+     * @return HasMany<EmailPoolAttachment, $this>
      */
     public function attachments(): HasMany
     {

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
+use App\Models\Content\Reaction;
 use Database\Factories\SmsPoolReactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +49,8 @@ class SmsPoolReaction extends Model
 
     protected $table = 'sms_pool_reaction';
 
-    protected $primaryKey = ['id_sms_pool', 'id_user'];
+    /** @phpstan-ignore-next-line composite key not natively supported */
+    protected $primaryKey = 'id_sms_pool';
 
     protected $casts = [
         'id_sms_pool' => 'int',
@@ -88,10 +90,7 @@ class SmsPoolReaction extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<SmsPoolReaction>
-     */
-    /**
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<App\Models\Communication\SmsPoolReaction>
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\SmsPoolReaction>
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Content\PageContent>
  */
-class ContentPageContentFactory extends Factory
+class PageContentFactory extends Factory
 {
     /**
      * Define the model's default state.

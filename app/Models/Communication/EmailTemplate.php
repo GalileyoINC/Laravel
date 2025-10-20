@@ -65,12 +65,16 @@ class EmailTemplate extends Model
     /**
      * Place variables in the email body
      */
+    /**
+     * @param array<string, string|int|float> $variables
+     */
     public function placeBody(array $variables = []): string
     {
         $body = $this->body;
 
         foreach ($variables as $key => $value) {
-            $body = str_replace('{'.$key.'}', $value, $body);
+            $replacement = is_scalar($value) ? (string) $value : '';
+            $body = str_replace('{'.$key.'}', $replacement, $body);
         }
 
         return $body;

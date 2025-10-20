@@ -21,16 +21,16 @@ class ContactResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
+            'id' => $this->getAttribute('id'),
+            'name' => $this->getAttribute('name'),
+            'email' => $this->getAttribute('email'),
+            'phone' => $this->getAttribute('phone'),
             'subject' => $this->subject,
             'message' => $this->getAttribute('message') ?? $this->getAttribute('body'),
-            'status' => $this->getAttribute('status'),
+            'status' => (int) $this->getAttribute('status'),
             'status_text' => $this->getStatusText(),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->getAttribute('created_at'),
+            'updated_at' => $this->getAttribute('updated_at'),
         ];
     }
 

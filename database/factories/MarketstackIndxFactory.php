@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Finance\MarketstackIndx>
  */
-class FinanceMarketstackIndxFactory extends Factory
+class MarketstackIndxFactory extends Factory
 {
     /**
      * Define the model's default state.

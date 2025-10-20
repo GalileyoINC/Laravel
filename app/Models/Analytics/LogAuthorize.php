@@ -41,12 +41,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereUpdatedAt($value)
  *
  * @mixin \Eloquent
+ * @method static \Database\Factories\LogAuthorizeFactory factory()
+ */
+/**
+ * @phpstan-use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LogAuthorizeFactory>
  */
 /**
  * @phpstan-ignore-next-line
  */
 class LogAuthorize extends Model
 {
+    /** @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LogAuthorizeFactory> */
     use HasFactory;
 
     /** @phpstan-ignore-line */

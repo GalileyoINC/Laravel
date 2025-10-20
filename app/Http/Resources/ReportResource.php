@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\Models\Content\Report
+ * @mixin \App\Models\Analytics\Report
  */
 class ReportResource extends JsonResource
 {
@@ -23,12 +23,12 @@ class ReportResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'content' => $this->content,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'id' => $this->getAttribute('id'),
+            'title' => $this->getAttribute('title'),
+            'content' => $this->getAttribute('content'),
+            'status' => $this->getAttribute('status'),
+            'created_at' => $this->getAttribute('created_at'),
+            'updated_at' => $this->getAttribute('updated_at'),
         ];
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\System\Setting>
  */
-class SystemSettingFactory extends Factory
+class SettingFactory extends Factory
 {
     protected $model = Setting::class;
 

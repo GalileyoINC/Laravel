@@ -32,12 +32,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereSort($value)
  *
  * @mixin \Eloquent
+ * @method static \Database\Factories\ReportArchiveFactory factory()
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportArchiveFactory>
+ * @phpstan-use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportArchiveFactory>
  */
 class ReportArchive extends Model
 {
+    /** @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportArchiveFactory> */
     use HasFactory;
 
     /** @phpstan-ignore-line */

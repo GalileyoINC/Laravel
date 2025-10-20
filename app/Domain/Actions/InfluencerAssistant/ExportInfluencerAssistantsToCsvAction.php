@@ -42,7 +42,7 @@ final class ExportInfluencerAssistantsToCsvAction
         /** @var InfluencerAssistant $influencerAssistant */
         foreach ($items as $influencerAssistant) {
             $rows[] = [
-                $influencerAssistant->user ? $influencerAssistant->user->first_name.' '.$influencerAssistant->user->last_name : '',
+                $influencerAssistant->user ? (($influencerAssistant->user->first_name ?? '').' '.($influencerAssistant->user->last_name ?? '')) : '',
                 $influencerAssistant->created_at->format('Y-m-d H:i:s'),
             ];
         }

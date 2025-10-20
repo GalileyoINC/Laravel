@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\ConversationFile>
  */
-class CommunicationConversationFileFactory extends Factory
+class ConversationFileFactory extends Factory
 {
     protected $model = ConversationFile::class;
 

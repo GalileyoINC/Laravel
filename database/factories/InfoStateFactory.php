@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Analytics\InfoState>
  */
-class AnalyticsInfoStateFactory extends Factory
+class InfoStateFactory extends Factory
 {
     protected $model = InfoState::class;
 

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Analytics\ReportArchive>
  */
-class AnalyticsReportArchiveFactory extends Factory
+class ReportArchiveFactory extends Factory
 {
     protected $model = ReportArchive::class;
 

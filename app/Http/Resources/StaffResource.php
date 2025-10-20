@@ -23,14 +23,14 @@ class StaffResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'role' => $this->role,
-            'is_active' => $this->is_active,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'id' => $this->getAttribute('id'),
+            'first_name' => $this->getAttribute('first_name'),
+            'last_name' => $this->getAttribute('last_name'),
+            'email' => $this->getAttribute('email'),
+            'role' => $this->getAttribute('role'),
+            'is_active' => $this->getAttribute('is_active'),
+            'created_at' => $this->getAttribute('created_at'),
+            'updated_at' => $this->getAttribute('updated_at'),
         ];
     }
 }

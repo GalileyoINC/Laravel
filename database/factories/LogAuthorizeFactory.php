@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Analytics\LogAuthorize>
  */
-class AnalyticsLogAuthorizeFactory extends Factory
+class LogAuthorizeFactory extends Factory
 {
     protected $model = LogAuthorize::class;
 

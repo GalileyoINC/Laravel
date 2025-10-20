@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Finance\Bundle>
  */
-class FinanceBundleFactory extends Factory
+class BundleFactory extends Factory
 {
     protected $model = Bundle::class;
 

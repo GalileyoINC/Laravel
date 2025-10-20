@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Analytics\LoginStatistic>
  */
-class AnalyticsLoginStatisticFactory extends Factory
+class LoginStatisticFactory extends Factory
 {
     protected $model = LoginStatistic::class;
 

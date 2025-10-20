@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subscription\BpSubscription>
  */
-class SubscriptionBpSubscriptionFactory extends Factory
+class BpSubscriptionFactory extends Factory
 {
     /**
      * Define the model's default state.

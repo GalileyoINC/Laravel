@@ -38,12 +38,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LoginStatistic whereUserAgent($value)
  *
  * @mixin \Eloquent
+ * @method static \Database\Factories\LoginStatisticFactory factory()
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoginStatisticFactory>
+ * @phpstan-use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoginStatisticFactory>
  */
 class LoginStatistic extends Model
 {
+    /** @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoginStatisticFactory> */
     use HasFactory;
 
     /** @phpstan-ignore-line */

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Finance\Promocode>
  */
-class FinancePromocodeFactory extends Factory
+class PromocodeFactory extends Factory
 {
     /**
      * Define the model's default state.

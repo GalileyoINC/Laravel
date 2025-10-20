@@ -57,20 +57,24 @@ class BookmarkService implements BookmarkServiceInterface
             $totalCount = $query->count();
 
             // Transform each result to match frontend expectations
-            $results->each(function ($item) {
+            $results->each(function (SmsPool $item): void {
                 // Add images field
-                $item->setAttribute('images', $item->photos->map(fn ($photo) => [
-                    'id' => $photo->id,
-                    'url' => $photo->url,
-                    'thumbnail' => $photo->thumbnail_url ?? $photo->url,
+                $item->setAttribute('images', $item->photos->map(function (\App\Models\Communication\SmsPoolPhoto $photo): array {
+                    return [
+                        'id' => $photo->getAttribute('id'),
+                        'url' => $photo->getAttribute('url'),
+                        'thumbnail' => $photo->getAttribute('thumbnail_url') ?? $photo->getAttribute('url'),
+                    ];
                 ])->toArray());
 
                 // Add reactions
-                $item->setAttribute('reactions', $item->reactions->map(fn ($reaction) => [
-                    'id' => $reaction->id,
-                    'type' => $reaction->type,
-                    'count' => $reaction->count,
-                    'is_user_reacted' => $reaction->is_user_reacted ?? false,
+                $item->setAttribute('reactions', $item->reactions->map(function (\App\Models\Content\Reaction $reaction): array {
+                    return [
+                        'id' => $reaction->getAttribute('id'),
+                        'type' => $reaction->getAttribute('type'),
+                        'count' => $reaction->getAttribute('count'),
+                        'is_user_reacted' => (bool) ($reaction->getAttribute('is_user_reacted') ?? false),
+                    ];
                 ])->toArray());
 
                 // Add user info

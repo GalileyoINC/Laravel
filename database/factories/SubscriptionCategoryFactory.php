@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Database\Factories\Subscription;
+namespace Database\Factories;
 
 use App\Models\Subscription\SubscriptionCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;

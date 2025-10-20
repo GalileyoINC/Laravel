@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\UserPointSetting>
  */
-class UserUserPointSettingFactory extends Factory
+class UserPointSettingFactory extends Factory
 {
     /**
      * Define the model's default state.

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Notification\UserFollowerAlert>
  */
-class NotificationUserFollowerAlertFactory extends Factory
+class UserFollowerAlertFactory extends Factory
 {
     /**
      * Define the model's default state.

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\Verification>
  */
-class UserVerificationFactory extends Factory
+class VerificationFactory extends Factory
 {
     /**
      * Define the model's default state.

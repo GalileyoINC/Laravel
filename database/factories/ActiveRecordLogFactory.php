@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\System\ActiveRecordLog>
  */
-class SystemActiveRecordLogFactory extends Factory
+class ActiveRecordLogFactory extends Factory
 {
     /**
      * Define the model's default state.

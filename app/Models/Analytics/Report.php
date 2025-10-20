@@ -17,12 +17,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Report query()
  *
  * @mixin \Eloquent
+ * @method static \Database\Factories\ReportFactory factory()
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportFactory>
+ * @phpstan-use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportFactory>
  */
 class Report extends Model
 {
+    /** @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportFactory> */
     use HasFactory;
 
     /** @phpstan-ignore-line */

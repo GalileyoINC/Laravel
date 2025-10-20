@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\EmailPoolAttachment>
  */
-class CommunicationEmailPoolAttachmentFactory extends Factory
+class EmailPoolAttachmentFactory extends Factory
 {
     protected $model = EmailPoolAttachment::class;
 

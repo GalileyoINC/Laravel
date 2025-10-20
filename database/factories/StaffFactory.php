@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\System\Staff>
  */
-class SystemStaffFactory extends Factory
+class StaffFactory extends Factory
 {
     protected $model = Staff::class;
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\SmsPoolPhoto>
  */
-class CommunicationSmsPoolPhotoFactory extends Factory
+class SmsPoolPhotoFactory extends Factory
 {
     /**
      * Define the model's default state.

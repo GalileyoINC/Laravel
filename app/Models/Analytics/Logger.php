@@ -56,10 +56,12 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoggerFactory>
+ * @phpstan-use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoggerFactory>
+ * @method static \Database\Factories\LoggerFactory factory()
  */
 class Logger extends Model
 {
+    /** @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoggerFactory> */
     use HasFactory;
 
     /** @phpstan-ignore-line */

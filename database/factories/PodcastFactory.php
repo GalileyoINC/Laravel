@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Content\Podcast>
  */
-class ContentPodcastFactory extends Factory
+class PodcastFactory extends Factory
 {
     /**
      * Define the model's default state.

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\SmsShedule>
  */
-class CommunicationSmsSheduleFactory extends Factory
+class SmsSheduleFactory extends Factory
 {
     protected $model = SmsShedule::class;
 

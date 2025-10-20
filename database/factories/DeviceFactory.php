@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Database\Factories\Device;
+namespace Database\Factories;
 
 use App\Models\Device\Device;
 use App\Models\User\User;

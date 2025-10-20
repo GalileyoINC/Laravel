@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\Conversation>
  */
-class CommunicationConversationFactory extends Factory
+class ConversationFactory extends Factory
 {
     protected $model = Conversation::class;
 

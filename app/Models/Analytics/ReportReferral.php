@@ -30,12 +30,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral wherePeriod($value)
  *
  * @mixin \Eloquent
+ * @method static \Database\Factories\ReportReferralFactory factory()
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportReferralFactory>
+ * @phpstan-use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportReferralFactory>
  */
 class ReportReferral extends Model
 {
+    /** @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportReferralFactory> */
     use HasFactory;
 
     /** @phpstan-ignore-line */

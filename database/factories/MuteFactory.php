@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\Mute>
  */
-class UserMuteFactory extends Factory
+class MuteFactory extends Factory
 {
     /**
      * Define the model's default state.
