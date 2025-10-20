@@ -23,42 +23,8 @@ class ConversationFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(3),
-            'type' => $this->faker->randomElement(['direct', 'group', 'support']),
-            'status' => $this->faker->randomElement(['active', 'archived', 'deleted']),
-            'created_by' => User::factory(),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
-    }
-
-    /**
-     * Create a direct conversation.
-     */
-    public function direct(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'type' => 'direct',
-        ]);
-    }
-
-    /**
-     * Create a group conversation.
-     */
-    public function group(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'type' => 'group',
-        ]);
-    }
-
-    /**
-     * Create an active conversation.
-     */
-    public function active(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'status' => 'active',
-        ]);
     }
 }

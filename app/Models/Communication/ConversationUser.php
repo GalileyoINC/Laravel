@@ -60,6 +60,14 @@ class ConversationUser extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ConversationUserFactory
+    {
+        return \Database\Factories\ConversationUserFactory::new();
     }
 }
