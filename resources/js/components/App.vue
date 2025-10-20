@@ -1,10 +1,10 @@
 <template>
   <div id="app" class="font-inter relative z-10 flex min-h-screen flex-col">
-    <SiteHeader v-if="isAuthenticated" :show-map="true" />
+    <SiteHeader :show-map="isAuthenticated" />
     <main class="flex flex-1 flex-col">
       <RouterView />
     </main>
-    <SiteFooter v-if="isAuthenticated" />
+    <SiteFooter />
   </div>
 </template>
 
