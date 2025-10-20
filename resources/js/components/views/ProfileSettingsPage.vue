@@ -298,7 +298,7 @@ const fetchProfile = async () => {
       return
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/v1/customer/get-profile`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/v1/customer/get-profile`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Accept': 'application/json',
@@ -350,7 +350,7 @@ const handleImageUpload = async (event) => {
     const formData = new FormData()
     formData.append('image_file', file)
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/v1/customer/update-profile`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/v1/customer/update-profile`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -392,7 +392,7 @@ const removeProfilePicture = async () => {
       throw new Error('Not authenticated')
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/v1/customer/remove-avatar`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/v1/customer/remove-avatar`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -421,7 +421,7 @@ const saveSettings = async () => {
       throw new Error('Not authenticated')
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/v1/customer/update-profile`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/v1/customer/update-profile`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
