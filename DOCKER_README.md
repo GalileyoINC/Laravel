@@ -1,6 +1,6 @@
 # Galileyo Docker Setup
 
-Овој Docker setup овозможува да работиш со Laravel и Vue.js на порта 8001.
+Овој Docker setup овозможува да работиш со Laravel и Vue.js на порта 80.
 
 ## 🚀 Брзо Стартување
 
@@ -38,8 +38,9 @@ docker-compose exec app php artisan db:seed --force
 
 ## 🌐 Пристапни URL-а
 
--   **Frontend (Vue.js)**: http://localhost:8001
--   **API (Laravel)**: http://localhost:8001/api
+-   **Vue Frontend**: http://localhost (root `/`, `/login`, `/dashboard`, итн.)
+-   **Admin Panel**: http://localhost/admin/login (Laravel Blade)
+-   **API**: http://localhost/api (за Vue frontend)
 -   **Database**: localhost:3307
 -   **Redis**: localhost:6380
 
@@ -82,6 +83,19 @@ galileyo_network/
 -   **Nginx**: Alpine
 -   **Database**: MariaDB Latest
 -   **Cache**: Redis 7
+
+## 📁 Storage Direktorii
+
+Docker image автоматски ги креира следните direktorii при build:
+-   `storage/framework/cache/data`
+-   `storage/framework/sessions`
+-   `storage/framework/views`
+-   `storage/framework/testing`
+-   `storage/logs`
+-   `storage/app/public`
+-   `bootstrap/cache`
+
+Permissions се автоматски поставени на `775`.
 
 ## 🐛 Debugging
 

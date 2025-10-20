@@ -41,5 +41,15 @@ RUN docker-php-ext-enable redis
 # Set working directory
 WORKDIR /var/www
 
+# Create Laravel storage directories with proper permissions
+RUN mkdir -p storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/framework/testing \
+    storage/logs \
+    storage/app/public \
+    bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
 # Set user
 USER www-data

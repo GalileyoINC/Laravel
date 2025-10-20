@@ -39,14 +39,14 @@ docker-compose exec app php artisan migrate --force
 echo "🌱 Seeding database..."
 docker-compose exec app php artisan db:seed --force
 
-# Set proper permissions
+# Set proper permissions (storage dirs already created in Dockerfile)
 echo "🔐 Setting permissions..."
-docker-compose exec app chown -R www-data:www-data /var/www/storage
-docker-compose exec app chown -R www-data:www-data /var/www/bootstrap/cache
+docker-compose exec app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 echo "✅ Galileyo Docker Environment is ready!"
-echo "🌐 Frontend: http://localhost:20000"
-echo "🔌 API: http://localhost:20000/api"
+echo "🌐 Vue Frontend: http://localhost"
+echo "🔐 Admin Panel: http://localhost/admin/login"
+echo "🔌 API: http://localhost/api"
 echo "📊 Database: localhost:3307"
 echo "🔴 Redis: localhost:6380"
 echo ""

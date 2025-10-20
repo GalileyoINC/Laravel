@@ -66,17 +66,19 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
 // WEB ROUTES (Admin Panel)
 // ========================================
 
-// Public routes (no auth required)
-Route::get('/login', [SiteController::class, 'login'])->name('site.login');
-Route::post('/login', [SiteController::class, 'loginSubmit'])->name('site.login.submit');
-Route::get('/logout', [SiteController::class, 'logout'])->name('site.logout');
-Route::get('/error', [SiteController::class, 'error'])->name('site.error');
+// Public routes (no auth required) - Admin login
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [SiteController::class, 'login'])->name('site.login');
+    Route::post('/login', [SiteController::class, 'loginSubmit'])->name('site.login.submit');
+    Route::get('/error', [SiteController::class, 'error'])->name('site.error');
+});
 
-// Protected routes (auth required)
-Route::middleware(['auth'])->group(function () {
+// Protected admin routes (auth required) - All under /admin prefix
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Site Routes
     Route::get('/', [SiteController::class, 'index'])->name('site.index');
-    Route::post('/logout', [SiteController::class, 'logout'])->name('site.logout');
+    Route::get('/logout', [SiteController::class, 'logout'])->name('site.logout');
+    Route::post('/logout', [SiteController::class, 'logout']);
     Route::get('/self', [SiteController::class, 'self'])->name('site.self');
     Route::post('/self', [SiteController::class, 'selfSubmit'])->name('site.self.submit');
     Route::post('/reset', [SiteController::class, 'reset'])->name('site.reset');
@@ -504,3 +506,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('news/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
     Route::get('news/export/csv', [NewsController::class, 'export'])->name('news.export');
 });
+
+// ========================================
+// VUE SPA CATCH-ALL (exclude admin and api)
+// ========================================
+Route::view('/{any}', 'app')->where('any', '^(?!admin|api)(.*)$');
