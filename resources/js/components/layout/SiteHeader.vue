@@ -23,29 +23,58 @@
       
       <!-- Right side -->
       <div class="flex flex-1 items-center justify-end gap-2">
-        <!-- Map Button -->
-        <router-link
-          v-if="showMap"
-          to="/alerts-map"
-          class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
-        >
-          <MapIcon class="h-5 w-5" />
-        </router-link>
+        <!-- Public Navigation (not logged in) -->
+        <template v-if="!isAuthenticated">
+          <nav class="hidden md:flex items-center gap-6 mr-4">
+            <router-link to="/" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+              Home
+            </router-link>
+            <router-link to="/faq" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+              FAQ
+            </router-link>
+            <router-link to="/contact" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+              Contact
+            </router-link>
+          </nav>
+          
+          <!-- Theme Toggle -->
+          <ThemeToggle />
+          
+          <!-- Sign In Button -->
+          <router-link
+            to="/login"
+            class="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600"
+          >
+            Sign In
+          </router-link>
+        </template>
         
-        <!-- Theme Toggle -->
-        <ThemeToggle />
-        
-        <!-- Create Post Button -->
-        <button
-          @click="openCreatePost"
-          class="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600"
-        >
-          <PlusIcon class="h-4 w-4" />
-          <span class="hidden sm:inline">Post</span>
-        </button>
-        
-        <!-- User Menu -->
-        <UserMenu :user="clientUser" @create-post="openCreatePost" />
+        <!-- Authenticated Navigation (logged in) -->
+        <template v-else>
+          <!-- Map Button -->
+          <router-link
+            v-if="showMap"
+            to="/alerts-map"
+            class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <MapIcon class="h-5 w-5" />
+          </router-link>
+          
+          <!-- Theme Toggle -->
+          <ThemeToggle />
+          
+          <!-- Create Post Button -->
+          <button
+            @click="openCreatePost"
+            class="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600"
+          >
+            <PlusIcon class="h-4 w-4" />
+            <span class="hidden sm:inline">Post</span>
+          </button>
+          
+          <!-- User Menu -->
+          <UserMenu :user="clientUser" @create-post="openCreatePost" />
+        </template>
       </div>
     </div>
 
@@ -61,12 +90,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { MapIcon, PlusIcon } from 'lucide-vue-next'
 import CommandMenu from './CommandMenu.vue'
 import ThemeToggle from './ThemeToggle.vue'
 import UserMenu from './UserMenu.vue'
 import CreatePostModal from '../feed/CreatePostModal.vue'
+import { useAuthStore } from '../../stores/auth'
 
 const props = defineProps({
   showMap: {
@@ -75,8 +105,13 @@ const props = defineProps({
   }
 })
 
+const authStore = useAuthStore()
 const clientUser = ref(null)
 const isCreatePostOpen = ref(false)
+
+const isAuthenticated = computed(() => {
+  return !!authStore.token
+})
 
 onMounted(() => {
   if (typeof window !== 'undefined') {
