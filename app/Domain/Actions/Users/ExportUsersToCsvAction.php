@@ -12,10 +12,7 @@ use App\Models\User\User;
 class ExportUsersToCsvAction
 {
     /**
-     * @return array<int, array<int, mixed>>
-     */
-    /**
-     * @return array<string, mixed>
+     * @return list<list<mixed>>
      */
     public function execute(ExportUsersRequestDTO $dto): array
     {

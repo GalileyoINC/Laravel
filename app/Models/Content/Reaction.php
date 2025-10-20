@@ -61,7 +61,7 @@ class Reaction extends Model
             ->withPivot('id_user');
     }
 
-    protected static function newFactory()
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return ReactionFactory::new();
     }

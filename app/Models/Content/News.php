@@ -66,14 +66,14 @@ class News extends Model
     ];
 
     /**
-     * @return HasMany<\App\Models\Content\NewsContent, $this>
+     * @return HasMany<NewsContent, $this>
      */
     public function news_contents(): HasMany
     {
         return $this->hasMany(NewsContent::class, 'id_news');
     }
 
-    protected static function newFactory()
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return NewsFactory::new();
     }

@@ -28,7 +28,7 @@ class SetupDemoData extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $this->info('🚀 Setting up Galileyo Laravel Demo Data...');
         $this->newLine();
@@ -66,14 +66,14 @@ class SetupDemoData extends Command
         $this->line('3. Check the database for generated data');
 
         $this->newLine();
-        $this->info('🔗 API Base URL: http://localhost:8000/api');
-        $this->info('📊 Database: Check your MySQL database for demo data');
+
+        return 0;
     }
 
     /**
      * Display summary of created data
      */
-    private function displaySummary()
+    private function displaySummary(): void
     {
         $this->info('📊 Demo Data Summary:');
         $this->newLine();

@@ -74,7 +74,7 @@ class Comment extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Content\Comment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Comment, $this>
      */
     public function comment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -98,7 +98,7 @@ class Comment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Content\Comment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Comment, $this>
      */
     public function replies(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -106,7 +106,7 @@ class Comment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Content\Comment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Comment, $this>
      */
     public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -121,7 +121,7 @@ class Comment extends Model
         return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_comment');
     }
 
-    protected static function newFactory()
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return CommentFactory::new();
     }

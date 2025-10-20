@@ -26,7 +26,7 @@ class AddHasFactoryTrait extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $this->info('🔧 Adding HasFactory trait to all models...');
         $this->newLine();
@@ -78,8 +78,8 @@ class AddHasFactoryTrait extends Command
 
         $this->newLine();
         $this->info('🎉 Completed!');
-        $this->info("✅ Updated: {$updatedCount} models");
-        $this->info("⏭️  Skipped: {$skippedCount} models");
+
+        return 0;
     }
 
     /**

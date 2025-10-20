@@ -67,7 +67,7 @@ class Page extends Model
     ];
 
     /**
-     * @return HasMany<\App\Models\Content\PageContent, $this>
+     * @return HasMany<PageContent, $this>
      */
     public function page_contents(): HasMany
     {
@@ -77,7 +77,7 @@ class Page extends Model
     /**
      * Create a new factory instance for the model.
      */
-    protected static function newFactory()
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return ContentPageFactory::new();
     }

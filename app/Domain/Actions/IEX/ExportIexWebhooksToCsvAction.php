@@ -10,7 +10,7 @@ final class ExportIexWebhooksToCsvAction
 {
     /**
      * @param  array<string, mixed>  $filters
-     * @return array<int, array<int, mixed>>
+     * @return list<list<mixed>>
      */
     public function execute(array $filters): array
     {

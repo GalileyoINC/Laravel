@@ -71,7 +71,7 @@ class SmsPoolReaction extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     * @return BelongsTo<SmsPool, $this>
      */
     public function sms_pool(): BelongsTo
     {
@@ -86,7 +86,7 @@ class SmsPoolReaction extends Model
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    protected static function newFactory()
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return SmsPoolReactionFactory::new();
     }
