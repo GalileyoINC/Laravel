@@ -22,13 +22,21 @@ class LoggerFactory extends Factory
     public function definition(): array
     {
         return [
-            'level' => $this->faker->randomElement(['debug', 'info', 'warning', 'error', 'critical']),
-            'message' => $this->faker->sentence(),
-            'context' => json_encode([
-                'user_id' => $this->faker->numberBetween(1, 100),
-                'ip' => $this->faker->ipv4(),
-                'user_agent' => $this->faker->userAgent(),
-            ]),
+            'employee_login' => $this->faker->userName(),
+            'employee_first_name' => $this->faker->firstName(),
+            'employee_last_name' => $this->faker->lastName(),
+            'access_level' => $this->faker->numberBetween(1, 5),
+            'category' => $this->faker->randomElement(['system', 'user', 'admin', 'api', 'database']),
+            'error_type' => $this->faker->randomElement(['Error', 'Warning', 'Info']),
+            'source' => $this->faker->word(),
+            'content' => $this->faker->sentence(),
+            'module' => $this->faker->randomElement(['auth', 'user', 'payment', 'subscription']),
+            'controller' => $this->faker->word().'Controller',
+            'action' => $this->faker->randomElement(['index', 'show', 'store', 'update', 'destroy']),
+            'ip' => $this->faker->ipv4(),
+            'user_agent' => $this->faker->userAgent(),
+            'primary_json' => json_encode(['id' => $this->faker->numberBetween(1, 1000)]),
+            'changed_fields' => json_encode(['field' => 'value']),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
@@ -39,8 +47,8 @@ class LoggerFactory extends Factory
     public function error(): static
     {
         return $this->state(fn (array $attributes) => [
-            'level' => 'error',
-            'message' => 'An error occurred: '.$this->faker->sentence(),
+            'error_type' => 'Error',
+            'content' => 'An error occurred: '.$this->faker->sentence(),
         ]);
     }
 
@@ -50,8 +58,8 @@ class LoggerFactory extends Factory
     public function info(): static
     {
         return $this->state(fn (array $attributes) => [
-            'level' => 'info',
-            'message' => 'User action: '.$this->faker->sentence(),
+            'error_type' => 'Info',
+            'content' => 'User action: '.$this->faker->sentence(),
         ]);
     }
 }

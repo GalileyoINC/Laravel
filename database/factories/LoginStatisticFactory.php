@@ -24,10 +24,12 @@ class LoginStatisticFactory extends Factory
     {
         return [
             'id_user' => User::factory(),
-            'ip_address' => $this->faker->ipv4(),
+            'id_device' => null,
+            'type' => $this->faker->numberBetween(0, 2), // 0=web, 1=mobile, 2=api
+            'ip' => $this->faker->ipv4(),
             'user_agent' => $this->faker->userAgent(),
-            'login_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'success' => $this->faker->boolean(90),
+            'data' => json_encode(['success' => $this->faker->boolean(90)]),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 
@@ -37,7 +39,7 @@ class LoginStatisticFactory extends Factory
     public function successful(): static
     {
         return $this->state(fn (array $attributes) => [
-            'success' => true,
+            'data' => json_encode(['success' => true]),
         ]);
     }
 
@@ -47,7 +49,7 @@ class LoginStatisticFactory extends Factory
     public function failed(): static
     {
         return $this->state(fn (array $attributes) => [
-            'success' => false,
+            'data' => json_encode(['success' => false]),
         ]);
     }
 }
