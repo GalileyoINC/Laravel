@@ -26,9 +26,16 @@ class DemoDataSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create users
+        // Create users only if there are less than 50
         $this->command->info('Creating users...');
-        User::factory(50)->create();
+        $existingUsers = User::count();
+        if ($existingUsers < 50) {
+            $usersToCreate = 50 - $existingUsers;
+            User::factory($usersToCreate)->create();
+            $this->command->info("✅ Created {$usersToCreate} additional users");
+        } else {
+            $this->command->info("⏭️  Skipped: Already have {$existingUsers} users");
+        }
 
         // Create staff members
         $this->command->info('Creating staff members...');
