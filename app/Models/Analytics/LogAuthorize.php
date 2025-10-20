@@ -90,6 +90,6 @@ class LogAuthorize extends Model
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return \Database\Factories\AnalyticsLogAuthorizeFactory::new();
+        return \Database\Factories\LogAuthorizeFactory::new();
     }
 }

@@ -56,7 +56,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsLoggerFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoggerFactory>
  */
 class Logger extends Model
 {
@@ -96,6 +96,6 @@ class Logger extends Model
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return \Database\Factories\AnalyticsLoggerFactory::new();
+        return \Database\Factories\LoggerFactory::new();
     }
 }

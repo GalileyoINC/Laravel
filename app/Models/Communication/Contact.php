@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Communication;
 
-use Database\Factories\CommunicationContactFactory;
+use Database\Factories\ContactFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $status
  * @property-read \App\Models\User\User|null $user
  *
- * @method static \Database\Factories\CommunicationContactFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\ContactFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact query()
@@ -43,7 +43,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationContactFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContactFactory>
  */
 class Contact extends Model
 {
@@ -87,6 +87,6 @@ class Contact extends Model
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return CommunicationContactFactory::new();
+        return ContactFactory::new();
     }
 }

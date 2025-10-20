@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsReportReferralFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportReferralFactory>
  */
 class ReportReferral extends Model
 {
@@ -59,6 +59,6 @@ class ReportReferral extends Model
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return \Database\Factories\AnalyticsReportReferralFactory::new();
+        return \Database\Factories\ReportReferralFactory::new();
     }
 }

@@ -101,7 +101,7 @@ use Throwable;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsPoolFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SmsPoolFactory>
  */
 class SmsPool extends Model
 {

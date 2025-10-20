@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\System\Staff>
  */
-class StaffFactory extends Factory
+class SystemStaffFactory extends Factory
 {
     protected $model = Staff::class;
 
@@ -25,7 +25,7 @@ class StaffFactory extends Factory
         return [
             'username' => $this->faker->unique()->userName(),
             'email' => $this->faker->unique()->safeEmail(),
-            'auth_key' => $this->faker->sha256(),
+            'auth_key' => mb_substr($this->faker->sha1(), 0, 32),
             'password_hash' => Hash::make('password'),
             'password_reset_token' => null,
             'role' => $this->faker->numberBetween(1, 5),

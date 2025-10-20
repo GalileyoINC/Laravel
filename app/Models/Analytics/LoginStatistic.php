@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsLoginStatisticFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoginStatisticFactory>
  */
 class LoginStatistic extends Model
 {
@@ -80,6 +80,6 @@ class LoginStatistic extends Model
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return \Database\Factories\AnalyticsLoginStatisticFactory::new();
+        return \Database\Factories\LoginStatisticFactory::new();
     }
 }

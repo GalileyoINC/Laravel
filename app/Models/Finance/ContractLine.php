@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
+use App\Models\User\UserPlanShedule;
 use Database\Factories\FinanceContractLineFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read SpsContract|null $sps_contract
  * @property-read \App\Models\User\User|null $user
  * @property-read \App\Models\User\UserPlan|null $userPlan
- * @property-read Collection<int, \App\Models\User\UserPlanShedule> $user_plan_shedules
+ * @property-read Collection<int, UserPlanShedule> $user_plan_shedules
  * @property-read int|null $user_plan_shedules_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLine newModelQuery()
@@ -150,11 +151,11 @@ class ContractLine extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\User\UserPlanShedule, $this>
+     * @return HasMany<UserPlanShedule, $this>
      */
     public function user_plan_shedules(): HasMany
     {
-        return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_contract_line');
+        return $this->hasMany(UserPlanShedule::class, 'id_contract_line');
     }
 
     // Added to support queries in ContractLineController@unpaid

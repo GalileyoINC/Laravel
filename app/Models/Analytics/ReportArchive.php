@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsReportArchiveFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReportArchiveFactory>
  */
 class ReportArchive extends Model
 {
@@ -57,6 +57,6 @@ class ReportArchive extends Model
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return \Database\Factories\AnalyticsReportArchiveFactory::new();
+        return \Database\Factories\ReportArchiveFactory::new();
     }
 }

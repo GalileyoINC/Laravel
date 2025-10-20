@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\System\Setting>
  */
-class SettingFactory extends Factory
+class SystemSettingFactory extends Factory
 {
     protected $model = Setting::class;
 
@@ -22,7 +22,7 @@ class SettingFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word(),
+            'name' => $this->faker->unique()->regexify('[a-z]{2,8}'),
             'prod' => $this->faker->sentence(),
             'dev' => $this->faker->sentence(),
         ];

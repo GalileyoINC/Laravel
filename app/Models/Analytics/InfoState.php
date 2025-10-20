@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsInfoStateFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InfoStateFactory>
  */
 class InfoState extends Model
 {
@@ -55,6 +55,6 @@ class InfoState extends Model
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
-        return \Database\Factories\AnalyticsInfoStateFactory::new();
+        return \Database\Factories\InfoStateFactory::new();
     }
 }

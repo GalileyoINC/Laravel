@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Content\Page>
  */
-class PageFactory extends Factory
+class ContentPageFactory extends Factory
 {
     protected $model = Page::class;
 

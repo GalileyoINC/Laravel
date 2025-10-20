@@ -7,9 +7,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Finance\CreditCard>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductDigitalAlerts>
  */
-class FinanceCreditCardFactory extends Factory
+class ProductDigitalAlertsFactory extends Factory
 {
     /**
      * Define the model's default state.
