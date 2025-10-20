@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Promocode
@@ -47,6 +49,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Promocode whereType($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PromocodeFactory>
  */
 class Promocode extends Model
 {
@@ -108,7 +113,7 @@ class Promocode extends Model
         'description',
     ];
 
-    public function invoices()
+    public function invoices(): BelongsToMany
     {
         return $this->belongsToMany(Invoice::class, 'invoice_promocode', 'id_promo', 'id_invoice')
             ->withPivot('id');

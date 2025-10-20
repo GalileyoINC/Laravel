@@ -11,6 +11,7 @@ namespace App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class UserPointSetting
@@ -34,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserPointSettingFactory>
+ */
 class UserPointSetting extends Model
 {
     use HasFactory;
@@ -49,7 +53,7 @@ class UserPointSetting extends Model
         'price',
     ];
 
-    public function user_point_histories()
+    public function user_point_histories(): HasMany
     {
         return $this->hasMany(UserPointHistory::class, 'id_user_point_settings');
     }

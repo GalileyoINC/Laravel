@@ -11,6 +11,7 @@ namespace App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class AuthRule
@@ -32,6 +33,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AuthRuleFactory>
+ */
 class AuthRule extends Model
 {
     use HasFactory;
@@ -46,7 +50,7 @@ class AuthRule extends Model
         'data',
     ];
 
-    public function auth_items()
+    public function auth_items(): HasMany
     {
         return $this->hasMany(AuthItem::class, 'rule_name');
     }

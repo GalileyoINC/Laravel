@@ -13,6 +13,9 @@ final class UploadPageImageAction
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(PageImageUploadDTO $dto): array
     {
         $path = $dto->file->store('pages', 'public');

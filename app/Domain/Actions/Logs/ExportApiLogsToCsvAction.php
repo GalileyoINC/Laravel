@@ -12,6 +12,9 @@ final class ExportApiLogsToCsvAction
      * @param  array<string, mixed>  $filters
      * @return array<int, array<int, mixed>>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(array $filters): array
     {
         $query = ApiLog::query();

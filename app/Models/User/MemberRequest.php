@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class MemberRequest
@@ -36,6 +37,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MemberRequestFactory>
+ */
 class MemberRequest extends Model
 {
     use HasFactory;
@@ -61,7 +65,7 @@ class MemberRequest extends Model
         'is_active',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user_from');
     }

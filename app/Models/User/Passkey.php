@@ -43,6 +43,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PasskeyFactory>
+ */
 class Passkey extends Model
 {
     use HasFactory;

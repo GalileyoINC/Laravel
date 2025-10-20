@@ -19,6 +19,9 @@ class NewsRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         $newsId = $this->route('news')->id ?? null;
@@ -41,6 +44,9 @@ class NewsRequest extends FormRequest
     /**
      * Get custom messages for validator errors
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function messages(): array
     {
         return [
@@ -59,6 +65,9 @@ class NewsRequest extends FormRequest
 
     /**
      * Get custom attributes for validator errors
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function attributes(): array
     {

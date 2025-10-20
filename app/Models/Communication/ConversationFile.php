@@ -10,6 +10,7 @@ namespace App\Models\Communication;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class ConversationFile
@@ -41,6 +42,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationFileFactory>
+ */
 class ConversationFile extends Model
 {
     use HasFactory;
@@ -62,12 +66,18 @@ class ConversationFile extends Model
         'sizes',
     ];
 
-    public function conversation()
+    /**
+     * @return BelongsTo<\App\Models\Communication\Conversation, $this>
+     */
+    public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class, 'id_conversation');
     }
 
-    public function conversation_message()
+    /**
+     * @return BelongsTo<\App\Models\Communication\ConversationMessage, $this>
+     */
+    public function conversation_message(): BelongsTo
     {
         return $this->belongsTo(ConversationMessage::class, 'id_conversation_message');
     }

@@ -33,6 +33,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\TwilioCarrierFactory>
+ */
 class TwilioCarrier extends Model
 {
     use HasFactory;

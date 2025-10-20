@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AuthItemChild
@@ -26,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AuthItemChildFactory>
+ */
 class AuthItemChild extends Model
 {
     use HasFactory;
@@ -36,7 +40,7 @@ class AuthItemChild extends Model
 
     protected $table = 'auth_item_child';
 
-    public function auth_item()
+    public function auth_item(): BelongsTo
     {
         return $this->belongsTo(AuthItem::class, 'child');
     }

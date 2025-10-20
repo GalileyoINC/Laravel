@@ -21,6 +21,9 @@ class BookmarkService implements BookmarkServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user): array
     {
         try {
@@ -106,6 +109,9 @@ class BookmarkService implements BookmarkServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function createBookmark(BookmarkRequestDTO $dto, ?User $user): array
     {
         try {
@@ -147,6 +153,9 @@ class BookmarkService implements BookmarkServiceInterface
     /**
      * {@inheritdoc}
      *
+     * @return array<string, mixed>
+     */
+    /**
      * @return array<string, mixed>
      */
     public function deleteBookmark(BookmarkRequestDTO $dto, ?User $user): array

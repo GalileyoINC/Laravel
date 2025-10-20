@@ -12,6 +12,9 @@ class LoginAsUserAction
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(int $adminId, int $targetUserId): array
     {
         $admin = User::findOrFail($adminId);

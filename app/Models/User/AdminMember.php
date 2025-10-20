@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AdminMember
@@ -31,6 +32,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AdminMemberFactory>
+ */
 class AdminMember extends Model
 {
     use HasFactory;
@@ -51,12 +55,12 @@ class AdminMember extends Model
         'id_plan',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_member');
     }
 
-    public function user_plan()
+    public function user_plan(): BelongsTo
     {
         return $this->belongsTo(UserPlan::class, 'id_plan');
     }

@@ -10,6 +10,7 @@ namespace App\Models\Content;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class NewsContent
@@ -34,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentNewsContentFactory>
+ */
 class NewsContent extends Model
 {
     use HasFactory;
@@ -55,7 +59,10 @@ class NewsContent extends Model
         'content',
     ];
 
-    public function news()
+    /**
+     * @return BelongsTo<\App\Models\Content\News, $this>
+     */
+    public function news(): BelongsTo
     {
         return $this->belongsTo(News::class, 'id_news');
     }

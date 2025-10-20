@@ -12,6 +12,7 @@ use Database\Factories\ContentPageFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Page
@@ -40,6 +41,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentPageFactory>
+ */
 class Page extends Model
 {
     use HasFactory;
@@ -62,7 +66,10 @@ class Page extends Model
         'params',
     ];
 
-    public function page_contents()
+    /**
+     * @return HasMany<\App\Models\Content\PageContent, $this>
+     */
+    public function page_contents(): HasMany
     {
         return $this->hasMany(PageContent::class, 'id_page');
     }

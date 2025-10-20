@@ -22,6 +22,9 @@ class PrivateFeedService implements PrivateFeedServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getPrivateFeedList(PrivateFeedListRequestDTO $dto, User $user): array
     {
         try {

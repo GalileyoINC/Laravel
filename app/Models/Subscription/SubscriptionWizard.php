@@ -10,6 +10,7 @@ namespace App\Models\Subscription;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class SubscriptionWizard
@@ -30,6 +31,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SubscriptionWizardFactory>
+ */
 class SubscriptionWizard extends Model
 {
     use HasFactory;
@@ -48,7 +52,7 @@ class SubscriptionWizard extends Model
         'settings',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

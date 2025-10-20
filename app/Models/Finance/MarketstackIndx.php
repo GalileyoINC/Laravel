@@ -39,6 +39,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MarketstackIndxFactory>
+ */
 class MarketstackIndx extends Model
 {
     use HasFactory;

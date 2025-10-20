@@ -23,6 +23,9 @@ class ProductService implements ProductServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getProductList(ProductListRequestDTO $dto, ?User $user): array
     {
         try {
@@ -69,6 +72,9 @@ class ProductService implements ProductServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getProductAlerts(ProductAlertsRequestDTO $dto, ?User $user): array
     {
         try {
@@ -100,6 +106,9 @@ class ProductService implements ProductServiceInterface
     /**
      * {@inheritdoc}
      *
+     * @return array<string, mixed>
+     */
+    /**
      * @return array<string, mixed>
      */
     public function processApplePurchase(ApplePurchaseRequestDTO $dto, User $user): array

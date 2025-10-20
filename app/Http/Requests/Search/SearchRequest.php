@@ -21,6 +21,9 @@ class SearchRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -36,6 +39,9 @@ class SearchRequest extends FormRequest
      * Get custom messages for validator errors.
      *
      * @return array<string, string>
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function messages(): array
     {
@@ -57,6 +63,9 @@ class SearchRequest extends FormRequest
      * Get custom attributes for validator errors.
      *
      * @return array<string, string>
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function attributes(): array
     {

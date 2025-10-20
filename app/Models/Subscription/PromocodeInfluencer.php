@@ -11,6 +11,7 @@ namespace App\Models\Subscription;
 use App\Models\Finance\Promocode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class PromocodeInfluencer
@@ -24,6 +25,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PromocodeInfluencer whereIdPromocode($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PromocodeInfluencerFactory>
  */
 class PromocodeInfluencer extends Model
 {
@@ -41,7 +45,7 @@ class PromocodeInfluencer extends Model
         'id_promocode' => 'int',
     ];
 
-    public function promocode()
+    public function promocode(): BelongsTo
     {
         return $this->belongsTo(Promocode::class, 'id_promocode');
     }

@@ -49,6 +49,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsPoolReportFactory>
+ */
 class SmsPoolReport extends Model
 {
     use HasFactory;

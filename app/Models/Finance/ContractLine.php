@@ -67,6 +67,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContractLineFactory>
+ */
 class ContractLine extends Model
 {
     use HasFactory;

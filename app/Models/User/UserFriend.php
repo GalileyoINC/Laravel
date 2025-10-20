@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserFriend
@@ -27,6 +28,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFriend whereIdUser($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserFriendFactory>
  */
 class UserFriend extends Model
 {
@@ -46,7 +50,7 @@ class UserFriend extends Model
         'id_friend',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }

@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class InviteAffiliate
@@ -35,6 +36,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InviteAffiliateFactory>
+ */
 class InviteAffiliate extends Model
 {
     use HasFactory;
@@ -57,12 +61,12 @@ class InviteAffiliate extends Model
         'id_reward_invoice',
     ];
 
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_reward_invoice');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_inviter');
     }

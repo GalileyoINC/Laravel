@@ -10,6 +10,7 @@ namespace App\Models\Communication;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class ConversationUser
@@ -27,6 +28,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationUserFactory>
+ */
 class ConversationUser extends Model
 {
     use HasFactory;
@@ -42,12 +46,18 @@ class ConversationUser extends Model
         'id_user' => 'int',
     ];
 
-    public function conversation()
+    /**
+     * @return BelongsTo<\App\Models\Communication\Conversation, $this>
+     */
+    public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class, 'id_conversation');
     }
 
-    public function user()
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

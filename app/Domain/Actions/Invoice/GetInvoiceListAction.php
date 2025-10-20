@@ -13,6 +13,9 @@ final class GetInvoiceListAction
      * @param  array<string, mixed>  $filters
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(array $filters, int $perPage = 20): array
     {
         $query = Invoice::with(['user', 'invoiceLines', 'moneyTransactions']);

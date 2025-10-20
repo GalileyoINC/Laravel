@@ -12,6 +12,7 @@ use Database\Factories\NewsFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class News
@@ -42,6 +43,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentNewsFactory>
+ */
 class News extends Model
 {
     use HasFactory;
@@ -61,7 +65,10 @@ class News extends Model
         'params',
     ];
 
-    public function news_contents()
+    /**
+     * @return HasMany<\App\Models\Content\NewsContent, $this>
+     */
+    public function news_contents(): HasMany
     {
         return $this->hasMany(NewsContent::class, 'id_news');
     }

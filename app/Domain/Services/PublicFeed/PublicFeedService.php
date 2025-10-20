@@ -23,6 +23,9 @@ class PublicFeedService implements PublicFeedServiceInterface
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getPublicFeedOptions(PublicFeedOptionsRequestDTO $dto, ?User $user): array
     {
         try {
@@ -50,6 +53,9 @@ class PublicFeedService implements PublicFeedServiceInterface
 
     /**
      * {@inheritdoc}
+     */
+    /**
+     * @return array<string, mixed>
      */
     /**
      * @return array<string, mixed>
@@ -107,6 +113,9 @@ class PublicFeedService implements PublicFeedServiceInterface
 
     /**
      * {@inheritdoc}
+     */
+    /**
+     * @return array<string, mixed>
      */
     /**
      * @return array<string, mixed>

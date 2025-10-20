@@ -11,6 +11,8 @@ namespace App\Models\Finance;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class MoneyTransaction
@@ -61,6 +63,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MoneyTransactionFactory>
+ */
 class MoneyTransaction extends Model
 {
     use HasFactory;
@@ -94,38 +99,38 @@ class MoneyTransaction extends Model
         'note',
     ];
 
-    public function credit_card()
+    public function credit_card(): BelongsTo
     {
         return $this->belongsTo(CreditCard::class, 'id_credit_card');
     }
 
     // Alias used by controllers/views
-    public function creditCard()
+    public function creditCard(): BelongsTo
     {
         return $this->belongsTo(CreditCard::class, 'id_credit_card');
     }
 
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
-    public function money_transaction()
+    public function money_transaction(): BelongsTo
     {
         return $this->belongsTo(self::class, 'id_refund');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function log_authorizes()
+    public function log_authorizes(): HasMany
     {
         return $this->hasMany(\App\Models\Analytics\LogAuthorize::class, 'id_money_transaction');
     }
 
-    public function money_transactions()
+    public function money_transactions(): HasMany
     {
         return $this->hasMany(self::class, 'id_refund');
     }

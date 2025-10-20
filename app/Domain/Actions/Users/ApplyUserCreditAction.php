@@ -13,6 +13,9 @@ class ApplyUserCreditAction
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(ApplyUserCreditDTO $dto): array
     {
         $user = User::findOrFail($dto->userId);

@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\WeatherGovProcessFactory>
+ */
 class WeatherGovProcess extends Model
 {
     use HasFactory;

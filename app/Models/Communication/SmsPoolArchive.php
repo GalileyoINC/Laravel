@@ -37,6 +37,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsPoolArchiveFactory>
+ */
 class SmsPoolArchive extends Model
 {
     use HasFactory;
@@ -66,21 +69,33 @@ class SmsPoolArchive extends Model
         'updated_at',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\System\Staff, $this>
+     */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class, 'id_staff');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\Subscription, $this>
+     */
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class, 'id_subscription');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\FollowerList, $this>
+     */
     public function followerList(): BelongsTo
     {
         return $this->belongsTo(FollowerList::class, 'id_follower_list');

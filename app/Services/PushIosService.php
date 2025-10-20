@@ -62,10 +62,13 @@ class PushIosService
     private function sendToDevice(string $token, string $body, string $title, bool $isProd): void
     {
         // Mock implementation - replace with actual APNS call
+        // Using $this->certificatePath and $this->passphrase for actual implementation
         Log::info("Sending push notification to iOS device: {$token}", [
             'title' => $title,
             'body' => $body,
             'production' => $isProd,
+            'certificate_path' => $this->certificatePath,
+            'passphrase_configured' => !empty($this->passphrase),
         ]);
     }
 

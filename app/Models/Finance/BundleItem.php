@@ -10,6 +10,7 @@ namespace App\Models\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class BundleItem
@@ -37,6 +38,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\BundleItemFactory>
+ */
 class BundleItem extends Model
 {
     use HasFactory;
@@ -63,12 +67,12 @@ class BundleItem extends Model
         'custom_data',
     ];
 
-    public function bundle()
+    public function bundle(): BelongsTo
     {
         return $this->belongsTo(Bundle::class, 'id_bundle');
     }
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_item');
     }

@@ -21,6 +21,9 @@ class UserPointSettingsRequest extends FormRequest
      *
      * @return array<string, array<int, string>|string>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -38,6 +41,9 @@ class UserPointSettingsRequest extends FormRequest
      * Get custom messages for validator errors
      *
      * @return array<string, string>
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function messages(): array
     {
@@ -62,6 +68,9 @@ class UserPointSettingsRequest extends FormRequest
      * Get custom attributes for validator errors
      *
      * @return array<string, string>
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function attributes(): array
     {

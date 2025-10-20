@@ -12,6 +12,9 @@ class CreditCardService implements CreditCardServiceInterface
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(CreditCardListRequestDTO $dto): array
     {
         $query = CreditCard::query()->with(['user']);
@@ -56,6 +59,9 @@ class CreditCardService implements CreditCardServiceInterface
         return CreditCard::with(['user'])->findOrFail($id);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     /**
      * @return array<string, mixed>
      */

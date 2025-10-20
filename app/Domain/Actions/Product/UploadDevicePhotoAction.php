@@ -13,6 +13,9 @@ final class UploadDevicePhotoAction
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(DevicePhotoUploadDTO $dto): array
     {
         // Persist file

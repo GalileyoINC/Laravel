@@ -10,6 +10,7 @@ namespace App\Models\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class InvoicePromocode
@@ -31,6 +32,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoicePromocodeFactory>
+ */
 class InvoicePromocode extends Model
 {
     use HasFactory;
@@ -49,12 +53,12 @@ class InvoicePromocode extends Model
         'id_invoice',
     ];
 
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
-    public function promocode()
+    public function promocode(): BelongsTo
     {
         return $this->belongsTo(Promocode::class, 'id_promo');
     }

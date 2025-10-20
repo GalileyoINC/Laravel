@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class InvoiceLine
@@ -54,6 +55,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoiceLineFactory>
+ */
 class InvoiceLine extends Model
 {
     use HasFactory;
@@ -90,12 +94,12 @@ class InvoiceLine extends Model
         'id_bundle',
     ];
 
-    public function bundle()
+    public function bundle(): BelongsTo
     {
         return $this->belongsTo(Bundle::class, 'id_bundle');
     }
 
-    public function contract_line()
+    public function contract_line(): BelongsTo
     {
         return $this->belongsTo(ContractLine::class, 'id_contract_line');
     }
@@ -105,12 +109,12 @@ class InvoiceLine extends Model
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
-    public function contract_line_paids()
+    public function contract_line_paids(): HasMany
     {
         return $this->hasMany(ContractLinePaid::class, 'id_invoice_line');
     }
 
-    public function user_plans()
+    public function user_plans(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPlan::class, 'id_invoice_line');
     }

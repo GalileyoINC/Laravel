@@ -24,6 +24,9 @@ class CustomerService implements CustomerServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getProfile(GetProfileRequestDTO $dto, User $user): array
     {
         try {
@@ -67,6 +70,9 @@ class CustomerService implements CustomerServiceInterface
     /**
      * {@inheritdoc}
      *
+     * @return array<string, mixed>
+     */
+    /**
      * @return array<string, mixed>
      */
     public function updateProfile(UpdateProfileRequestDTO $dto, User $user): array
@@ -113,6 +119,9 @@ class CustomerService implements CustomerServiceInterface
     /**
      * {@inheritdoc}
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function changePassword(ChangePasswordRequestDTO $dto, User $user): array
     {
         try {
@@ -144,6 +153,9 @@ class CustomerService implements CustomerServiceInterface
     /**
      * {@inheritdoc}
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function logout(User $user): array
     {
         try {
@@ -166,6 +178,9 @@ class CustomerService implements CustomerServiceInterface
 
     /**
      * {@inheritdoc}
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function deleteAccount(User $user): array
     {
@@ -191,6 +206,9 @@ class CustomerService implements CustomerServiceInterface
 
     /**
      * Update privacy settings
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function updatePrivacy(UpdatePrivacyRequestDTO $dto, User $user): array
     {
@@ -224,6 +242,9 @@ class CustomerService implements CustomerServiceInterface
     /**
      * Remove avatar
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function removeAvatar(User $user): array
     {
         try {
@@ -251,6 +272,9 @@ class CustomerService implements CustomerServiceInterface
 
     /**
      * Remove header image
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function removeHeader(User $user): array
     {

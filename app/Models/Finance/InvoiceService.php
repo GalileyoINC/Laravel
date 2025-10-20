@@ -10,6 +10,7 @@ namespace App\Models\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class InvoiceService
@@ -26,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceService whereIdService($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoiceServiceFactory>
  */
 class InvoiceService extends Model
 {
@@ -47,12 +51,12 @@ class InvoiceService extends Model
         'id_service',
     ];
 
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_service');
     }

@@ -89,6 +89,9 @@ use Throwable;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SubscriptionFactory>
+ */
 class Subscription extends Model
 {
     use HasFactory;

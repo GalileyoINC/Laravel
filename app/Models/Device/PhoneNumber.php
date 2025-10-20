@@ -83,6 +83,14 @@ class PhoneNumber extends Model
     }
 
     /**
+     * @return BelongsTo<\App\Models\Finance\Provider, \App\Models\Device\PhoneNumber>
+     */
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Finance\Provider::class, 'id_provider');
+    }
+
+    /**
      * Get the phone number (alias for phone_number property)
      */
     public function getNumberAttribute(): ?string
@@ -112,3 +120,4 @@ class PhoneNumber extends Model
         return empty($types) ? 'Unknown' : implode(', ', $types);
     }
 }
+

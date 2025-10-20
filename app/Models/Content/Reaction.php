@@ -12,6 +12,8 @@ use Database\Factories\ReactionFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Reaction
@@ -33,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReactionFactory>
+ */
 class Reaction extends Model
 {
     use HasFactory;
@@ -48,7 +53,7 @@ class Reaction extends Model
         'is_user_reacted',
     ];
 
-    public function sms_pools()
+    public function sms_pools(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Communication\SmsPool::class, 'sms_pool_reaction', 'id_reaction', 'id_sms_pool')
             ->withPivot('id_user');

@@ -54,10 +54,6 @@ use App\Domain\Services\Subscription\SubscriptionService;
 use App\Domain\Services\Subscription\SubscriptionServiceInterface;
 use App\Domain\Services\Users\UsersService;
 use App\Domain\Services\Users\UsersServiceInterface;
-use App\Services\Invoice\InvoiceService;
-use App\Services\Invoice\InvoiceServiceInterface;
-use App\Services\Staff\StaffService;
-use App\Services\Staff\StaffServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -201,11 +197,6 @@ class AppServiceProvider extends ServiceProvider
             EmailTemplateService::class
         );
 
-        // Register Invoice services
-        $this->app->bind(
-            InvoiceServiceInterface::class,
-            InvoiceService::class
-        );
 
         // Register Report services
         $this->app->bind(
@@ -219,11 +210,6 @@ class AppServiceProvider extends ServiceProvider
             SettingsService::class
         );
 
-        // Register Staff services
-        $this->app->bind(
-            StaffServiceInterface::class,
-            StaffService::class
-        );
 
         // Register Maintenance services
         $this->app->bind(

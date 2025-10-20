@@ -12,6 +12,9 @@ final class ExportUnpaidUserPlansToCsvAction
      * @param  array<string, mixed>  $filters
      * @return array<int, array<int, mixed>>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(array $filters): array
     {
         $expDate = isset($filters['exp_date']) ? (int) $filters['exp_date'] : 30;

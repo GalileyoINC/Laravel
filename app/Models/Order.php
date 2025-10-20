@@ -9,6 +9,7 @@ use App\Models\Finance\Service;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -52,6 +53,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\OrderFactory>
+ */
 class Order extends Model
 {
     use HasFactory;
@@ -84,17 +88,17 @@ class Order extends Model
         'payment_details',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_product');
     }
 
-    public function creditCard()
+    public function creditCard(): BelongsTo
     {
         return $this->belongsTo(CreditCard::class, 'id_credit_card');
     }

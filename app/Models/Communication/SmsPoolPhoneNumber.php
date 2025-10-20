@@ -51,6 +51,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsPoolPhoneNumberFactory>
+ */
 class SmsPoolPhoneNumber extends Model
 {
     use HasFactory;
@@ -82,33 +85,51 @@ class SmsPoolPhoneNumber extends Model
         'type',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Device\PhoneNumber, $this>
+     */
     public function phone_number(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Device\PhoneNumber::class, 'id_phone_number');
     }
 
     /** Alias to satisfy controllers using ->with(['phoneNumber']) */
+    /**
+     * @return BelongsTo<\App\Models\Device\PhoneNumber, $this>
+     */
     public function phoneNumber(): BelongsTo
     {
         return $this->phone_number();
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\Provider, $this>
+     */
     public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class, 'id_provider');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
     public function sms_pool(): BelongsTo
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
     /** Alias for consistency */
+    /**
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
     public function smsPool(): BelongsTo
     {
         return $this->sms_pool();
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');

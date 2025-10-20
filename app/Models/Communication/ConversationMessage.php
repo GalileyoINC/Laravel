@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class ConversationMessage
@@ -45,6 +46,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationMessageFactory>
+ */
 class ConversationMessage extends Model
 {
     use HasFactory;
@@ -69,22 +73,34 @@ class ConversationMessage extends Model
         'token',
     ];
 
-    public function conversation()
+    /**
+     * @return BelongsTo<\App\Models\Communication\Conversation, $this>
+     */
+    public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class, 'id_conversation');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function conversation_files()
+    /**
+     * @return HasMany<\App\Models\Communication\ConversationFile, $this>
+     */
+    public function conversation_files(): HasMany
     {
         return $this->hasMany(ConversationFile::class, 'id_conversation_message');
     }
 
-    public function conversation_unvieweds()
+    /**
+     * @return HasMany<\App\Models\Communication\ConversationUnviewed, $this>
+     */
+    public function conversation_unvieweds(): HasMany
     {
         return $this->hasMany(ConversationUnviewed::class, 'id_conversation_message');
     }

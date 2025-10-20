@@ -44,6 +44,9 @@ use Throwable;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ActiveRecordLogFactory>
+ */
 class ActiveRecordLog extends Model
 {
     use HasFactory;

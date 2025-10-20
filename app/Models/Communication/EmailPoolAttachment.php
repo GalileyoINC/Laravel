@@ -10,6 +10,7 @@ namespace App\Models\Communication;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class EmailPoolAttachment
@@ -32,6 +33,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationEmailPoolAttachmentFactory>
+ */
 class EmailPoolAttachment extends Model
 {
     use HasFactory;
@@ -51,7 +55,10 @@ class EmailPoolAttachment extends Model
         'content_type',
     ];
 
-    public function email_pool()
+    /**
+     * @return BelongsTo<\App\Models\Communication\EmailPool, $this>
+     */
+    public function email_pool(): BelongsTo
     {
         return $this->belongsTo(EmailPool::class, 'id_email_pool');
     }

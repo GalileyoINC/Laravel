@@ -16,6 +16,9 @@ class ReportService implements ReportServiceInterface
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getLoginStatistic(ReportStatisticRequestDTO $dto): array
     {
         $query = User::query();
@@ -46,6 +49,9 @@ class ReportService implements ReportServiceInterface
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getSoldDevices(ReportStatisticRequestDTO $dto): array
     {
         $query = ContractLine::query()
@@ -70,6 +76,9 @@ class ReportService implements ReportServiceInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     /**
      * @return array<string, mixed>
      */
@@ -104,6 +113,9 @@ class ReportService implements ReportServiceInterface
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getReferralReport(ReportCsvRequestDTO $dto): array
     {
         $query = User::query()
@@ -132,6 +144,9 @@ class ReportService implements ReportServiceInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     /**
      * @return array<string, mixed>
      */
@@ -165,6 +180,9 @@ class ReportService implements ReportServiceInterface
         return $stats;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     /**
      * @return array<string, mixed>
      */

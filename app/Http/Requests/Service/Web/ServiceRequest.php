@@ -19,6 +19,9 @@ class ServiceRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -36,6 +39,9 @@ class ServiceRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function messages(): array
     {

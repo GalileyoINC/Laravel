@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class User
@@ -332,47 +333,47 @@ class User extends Authenticatable
         'name_search',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(self::class, 'id_inviter');
     }
 
-    public function bookmarks()
+    public function bookmarks(): HasMany
     {
         return $this->hasMany(\App\Models\Bookmark::class, 'user_id');
     }
 
-    public function addresses()
+    public function addresses(): HasMany
     {
         return $this->hasMany(Address::class, 'id_user');
     }
 
-    public function admin_members()
+    public function admin_members(): HasMany
     {
         return $this->hasMany(AdminMember::class, 'id_member');
     }
 
-    public function affiliates()
+    public function affiliates(): HasMany
     {
         return $this->hasMany(Affiliate::class, 'id_user_parent');
     }
 
-    public function affiliate_invites()
+    public function affiliate_invites(): HasMany
     {
         return $this->hasMany(Invite::class, 'id_user');
     }
 
-    public function bp_subscriptions()
+    public function bp_subscriptions(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\BpSubscription::class, 'id_user');
     }
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(\App\Models\Content\Comment::class, 'id_user');
     }
 
-    public function contacts()
+    public function contacts(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\Contact::class, 'id_user');
     }
@@ -387,17 +388,17 @@ class User extends Authenticatable
         return $this->contract_lines();
     }
 
-    public function conversation_messages()
+    public function conversation_messages(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\ConversationMessage::class, 'id_user');
     }
 
-    public function conversations()
+    public function conversations(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Communication\Conversation::class, 'conversation_user', 'id_user', 'id_conversation');
     }
 
-    public function credit_cards()
+    public function credit_cards(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
@@ -410,67 +411,67 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
 
-    public function devices()
+    public function devices(): HasMany
     {
         return $this->hasMany(\App\Models\Device\Device::class, 'id_user');
     }
 
-    public function followers()
+    public function followers(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\Follower::class, 'id_user_leader');
     }
 
-    public function follower_lists()
+    public function follower_lists(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\FollowerList::class, 'id_user');
     }
 
-    public function influencer_assistants()
+    public function influencer_assistants(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\InfluencerAssistant::class, 'id_influencer');
     }
 
-    public function invites()
+    public function invites(): HasMany
     {
         return $this->hasMany(Invite::class, 'id_user');
     }
 
-    public function invite_affiliates()
+    public function invite_affiliates(): HasMany
     {
         return $this->hasMany(Affiliate::class, 'id_inviter');
     }
 
-    public function invoices()
+    public function invoices(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\Invoice::class, 'id_user');
     }
 
-    public function log_authorizes()
+    public function log_authorizes(): HasMany
     {
         return $this->hasMany(\App\Models\Analytics\LogAuthorize::class, 'id_user');
     }
 
-    public function login_statistics()
+    public function login_statistics(): HasMany
     {
         return $this->hasMany(\App\Models\Analytics\LoginStatistic::class, 'id_user');
     }
 
-    public function member_requests()
+    public function member_requests(): HasMany
     {
         return $this->hasMany(MemberRequest::class, 'id_user_from');
     }
 
-    public function member_templates()
+    public function member_templates(): HasMany
     {
         return $this->hasMany(MemberTemplate::class, 'id_admin');
     }
 
-    public function money_transactions()
+    public function money_transactions(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_user');
     }
 
-    public function phone_numbers()
+    public function phone_numbers(): HasMany
     {
         return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_user');
     }
@@ -480,38 +481,38 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_user');
     }
 
-    public function sms_pools()
+    public function sms_pools(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPool::class, 'id_user');
     }
 
-    public function sms_pool_phone_numbers()
+    public function sms_pool_phone_numbers(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPoolPhoneNumber::class, 'id_user');
     }
 
-    public function sms_pool_reactions()
+    public function sms_pool_reactions(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPoolReaction::class, 'id_user');
     }
 
-    public function sms_shedules()
+    public function sms_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_user');
     }
 
-    public function sps_add_user_requests()
+    public function sps_add_user_requests(): HasMany
     {
         return $this->hasMany(SpsAddUserRequest::class, 'id_user');
     }
 
-    public function sps_contracts()
+    public function sps_contracts(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_user');
     }
 
     /**
-     * @return BelongsToMany<\App\Models\Subscription\Subscription, static, \App\Models\Subscription\UserSubscriptionAddress, int, int>
+     * @return BelongsToMany<\App\Models\Subscription\Subscription, static>
      */
     public function subscriptions(): BelongsToMany
     {
@@ -519,42 +520,42 @@ class User extends Authenticatable
             ->withPivot('id', 'zip');
     }
 
-    public function subscription_wizards()
+    public function subscription_wizards(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\SubscriptionWizard::class, 'id_user');
     }
 
-    public function users()
+    public function users(): HasMany
     {
         return $this->hasMany(self::class, 'id_inviter');
     }
 
-    public function user_follower_alerts()
+    public function user_follower_alerts(): HasMany
     {
         return $this->hasMany(\App\Models\Notification\UserFollowerAlert::class, 'id_user');
     }
 
-    public function user_friends()
+    public function user_friends(): HasMany
     {
         return $this->hasMany(UserFriend::class, 'id_user');
     }
 
-    public function user_plans()
+    public function user_plans(): HasMany
     {
         return $this->hasMany(UserPlan::class, 'id_user');
     }
 
-    public function user_plan_shedules()
+    public function user_plan_shedules(): HasMany
     {
         return $this->hasMany(UserPlanShedule::class, 'id_user');
     }
 
-    public function user_point_histories()
+    public function user_point_histories(): HasMany
     {
         return $this->hasMany(UserPointHistory::class, 'id_user');
     }
 
-    public function services()
+    public function services(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Finance\Service::class, 'user_service', 'id_user', 'id_service');
     }

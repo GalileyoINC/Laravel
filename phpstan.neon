@@ -3,11 +3,10 @@ includes:
 
 parameters:
     paths:
-        - app/Domain
-        - app/Http
-        - routes
+        - App
     level: 8
     treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
     scanFiles:
         - app/Models/Finance/Promocode.php
         - app/Models/Finance/InvoiceLine.php

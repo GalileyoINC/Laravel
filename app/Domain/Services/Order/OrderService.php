@@ -118,6 +118,9 @@ class OrderService implements OrderServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getTestOrder(): array
     {
         return [

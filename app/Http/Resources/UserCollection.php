@@ -15,6 +15,9 @@ class UserCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         $data = $this->collection->map(fn ($user) => [
@@ -62,6 +65,9 @@ class UserCollection extends ResourceCollection
     /**
      * Get additional data that should be returned with the resource array.
      *
+     * @return array<string, mixed>
+     */
+    /**
      * @return array<string, mixed>
      */
     public function with(Request $request): array

@@ -19,6 +19,9 @@ class BundleRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         $bundleId = $this->route('bundle')->id ?? null;
@@ -40,6 +43,9 @@ class BundleRequest extends FormRequest
     /**
      * Get custom messages for validator errors
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function messages(): array
     {
         return [
@@ -57,6 +63,9 @@ class BundleRequest extends FormRequest
 
     /**
      * Get custom attributes for validator errors
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function attributes(): array
     {

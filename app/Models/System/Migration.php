@@ -25,6 +25,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MigrationFactory>
+ */
 class Migration extends Model
 {
     use HasFactory;

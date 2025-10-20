@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProductDigitalAlertsFactory>
+ */
 class ProductDigitalAlerts extends Model
 {
     use HasFactory;

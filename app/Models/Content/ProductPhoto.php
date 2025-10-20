@@ -10,6 +10,7 @@ namespace App\Models\Content;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class ProductPhoto
@@ -36,6 +37,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProductPhotoFactory>
+ */
 class ProductPhoto extends Model
 {
     use HasFactory;
@@ -55,7 +59,7 @@ class ProductPhoto extends Model
         'is_main',
     ];
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }

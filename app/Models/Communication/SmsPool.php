@@ -100,6 +100,9 @@ use Throwable;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsPoolFactory>
+ */
 class SmsPool extends Model
 {
     use HasFactory;
@@ -166,68 +169,107 @@ class SmsPool extends Model
         }
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\System\Staff, $this>
+     */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(\App\Models\System\Staff::class, 'id_staff');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\Subscription, $this>
+     */
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
+    /**
+     * @return HasMany<\App\Models\Content\Comment, $this>
+     */
     public function comments(): HasMany
     {
         return $this->hasMany(\App\Models\Content\Comment::class, 'id_sms_pool');
     }
 
+    /**
+     * @return BelongsToMany<\App\Models\Device\PhoneNumber, $this>
+     */
     public function phone_numbers(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Device\PhoneNumber::class, 'sms_pool_phone_number', 'id_sms_pool', 'id_phone_number')
             ->withPivot('id', 'id_user', 'number', 'is_satellite', 'status', 'sid', 'error', 'id_provider', 'type');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
+     */
     public function sms_pool_photos(): HasMany
     {
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_pool');
     }
 
+    /**
+     * @return HasMany<\App\Models\Bookmark, $this>
+     */
     public function bookmarks(): HasMany
     {
         return $this->hasMany(\App\Models\Bookmark::class, 'post_id');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
+     */
     public function photos(): HasMany
     {
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_pool');
     }
 
+    /**
+     * @return BelongsToMany<\App\Models\Content\Reaction, $this>
+     */
     public function reactions(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Content\Reaction::class, 'sms_pool_reaction', 'id_sms_pool', 'id_reaction')
             ->withPivot('id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsShedule, $this>
+     */
     public function sms_shedules(): HasMany
     {
         return $this->hasMany(SmsShedule::class, 'id_sms_pool');
     }
 
+    /**
+     * @return HasMany<\App\Models\User\UserPointHistory, $this>
+     */
     public function user_point_histories(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_sms_pool');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\FollowerList, $this>
+     */
     public function followerList(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function assistant(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_assistant');
@@ -235,6 +277,7 @@ class SmsPool extends Model
 
     /**
      * Get images relationship (alias for photos)
+     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
      */
     public function images(): HasMany
     {

@@ -16,6 +16,9 @@ final class SendSmsAction
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(SendSmsRequestDTO $dto): array
     {
         $phone = PhoneNumber::findOrFail($dto->phoneNumberId);

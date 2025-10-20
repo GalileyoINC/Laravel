@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AuthAssignment
@@ -28,6 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AuthAssignmentFactory>
+ */
 class AuthAssignment extends Model
 {
     use HasFactory;
@@ -38,7 +42,7 @@ class AuthAssignment extends Model
 
     protected $table = 'auth_assignment';
 
-    public function auth_item()
+    public function auth_item(): BelongsTo
     {
         return $this->belongsTo(AuthItem::class, 'item_name');
     }

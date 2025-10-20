@@ -11,6 +11,7 @@ namespace App\Models\Subscription;
 use Database\Factories\FollowerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Follower
@@ -44,6 +45,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FollowerFactory>
+ */
 class Follower extends Model
 {
     use HasFactory;
@@ -66,28 +70,28 @@ class Follower extends Model
         'invite_settings',
     ];
 
-    public function follower_list()
+    public function follower_list(): BelongsTo
     {
         return $this->belongsTo(FollowerList::class, 'id_follower_list');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user_leader');
     }
 
     // Added to align with controller usage
-    public function followerList()
+    public function followerList(): BelongsTo
     {
         return $this->belongsTo(FollowerList::class, 'id_follower_list');
     }
 
-    public function userLeader()
+    public function userLeader(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user_leader');
     }
 
-    public function userFollower()
+    public function userFollower(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user_follower');
     }

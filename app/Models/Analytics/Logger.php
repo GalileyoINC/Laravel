@@ -55,6 +55,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsLoggerFactory>
+ */
 class Logger extends Model
 {
     use HasFactory;

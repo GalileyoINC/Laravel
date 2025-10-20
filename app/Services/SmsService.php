@@ -48,6 +48,9 @@ class SmsService
     /**
      * Get the last response
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getResponse(): array
     {
         return $this->response;

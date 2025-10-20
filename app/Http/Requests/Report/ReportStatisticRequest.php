@@ -13,6 +13,9 @@ class ReportStatisticRequest extends FormRequest
         return true;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -22,6 +25,9 @@ class ReportStatisticRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function messages(): array
     {
         return [

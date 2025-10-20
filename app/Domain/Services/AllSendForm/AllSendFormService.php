@@ -24,6 +24,9 @@ class AllSendFormService implements AllSendFormServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getAllSendOptions(AllSendOptionsRequestDTO $dto, ?User $user): array
     {
         try {
@@ -66,6 +69,9 @@ class AllSendFormService implements AllSendFormServiceInterface
     /**
      * {@inheritdoc}
      *
+     * @return array<string, mixed>
+     */
+    /**
      * @return array<string, mixed>
      */
     public function sendBroadcast(AllSendBroadcastRequestDTO $dto, User $user): array
@@ -153,6 +159,9 @@ class AllSendFormService implements AllSendFormServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function uploadImage(AllSendImageUploadRequestDTO $dto, User $user): array
     {
         try {
@@ -195,6 +204,9 @@ class AllSendFormService implements AllSendFormServiceInterface
     /**
      * {@inheritdoc}
      *
+     * @return array<string, mixed>
+     */
+    /**
      * @return array<string, mixed>
      */
     public function deleteImage(int $imageId, User $user): array

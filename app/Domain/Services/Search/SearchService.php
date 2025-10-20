@@ -20,6 +20,9 @@ class SearchService implements SearchServiceInterface
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function search(SearchRequestDTO $dto, ?User $user): array
     {
         try {
@@ -85,15 +88,19 @@ class SearchService implements SearchServiceInterface
                 // Add bookmark status
                 $item->setAttribute('is_bookmarked', false);
                 if ($user) {
-                    // TODO: Check if user has bookmarked this post
-                    // $item->is_bookmarked = $user->bookmarks()->where('post_id', $item->id)->exists();
+                    $item->setAttribute(
+                        'is_bookmarked',
+                        $user->bookmarks()->where('post_id', $item->id)->exists()
+                    );
                 }
 
                 // Add like status
                 $item->setAttribute('is_liked', false);
                 if ($user) {
-                    // TODO: Check if user has liked this post
-                    // $item->is_liked = $user->reactions()->where('post_id', $item->id)->exists();
+                    $item->setAttribute(
+                        'is_liked',
+                        $item->reactions()->wherePivot('id_user', $user->id)->exists()
+                    );
                 }
             });
 

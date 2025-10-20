@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Throwable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Staff
@@ -50,6 +51,9 @@ use Throwable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Staff whereUsername($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\StaffFactory>
  */
 class Staff extends Model
 {
@@ -107,12 +111,12 @@ class Staff extends Model
         return (int) ($this->role ?? 0) === self::ROLE_ADMIN;
     }
 
-    public function sms_pools()
+    public function sms_pools(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPool::class, 'id_staff');
     }
 
-    public function sms_shedules()
+    public function sms_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_staff');
     }

@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Invite
@@ -41,6 +42,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InviteFactory>
+ */
 class Invite extends Model
 {
     use HasFactory;
@@ -65,12 +69,12 @@ class Invite extends Model
         'token',
     ];
 
-    public function follower_list()
+    public function follower_list(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }

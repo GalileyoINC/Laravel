@@ -35,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\RegisterFactory>
+ */
 class Register extends Model
 {
     use HasFactory;

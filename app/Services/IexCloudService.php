@@ -25,15 +25,21 @@ class IexCloudService
     /**
      * Get data from IEX Cloud API
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function get(string $uri): array
     {
         try {
             $url = $this->apiUrl.'/'.ltrim($uri, '/');
+            // Add API key to URL for actual implementation
+            $urlWithKey = $url.'?token='.$this->apiKey;
 
             // Mock implementation - replace with actual API call
             return [
                 'success' => true,
                 'uri' => $uri,
+                'url' => $urlWithKey,
                 'data' => [
                     'symbol' => 'AAPL',
                     'price' => 150.00,
@@ -54,6 +60,9 @@ class IexCloudService
     /**
      * Get stock quote
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getQuote(string $symbol): array
     {
         return $this->get("stock/{$symbol}/quote");
@@ -61,6 +70,9 @@ class IexCloudService
 
     /**
      * Get stock OHLC data
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function getOhlc(string $symbol): array
     {

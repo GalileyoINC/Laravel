@@ -10,6 +10,7 @@ namespace App\Models\Device;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class DevicePlan
@@ -36,6 +37,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\DevicePlanFactory>
+ */
 class DevicePlan extends Model
 {
     use HasFactory;
@@ -56,8 +60,14 @@ class DevicePlan extends Model
         'price',
     ];
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_plan');
     }
+
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Device\Device::class, 'id_device');
+    }
 }
+

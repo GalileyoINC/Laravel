@@ -14,6 +14,9 @@ class ExportUsersToCsvAction
     /**
      * @return array<int, array<int, mixed>>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(ExportUsersRequestDTO $dto): array
     {
         $query = User::with(['phoneNumbers', 'contractLines']);

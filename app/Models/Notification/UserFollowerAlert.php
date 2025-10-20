@@ -10,6 +10,7 @@ namespace App\Models\Notification;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserFollowerAlert
@@ -33,6 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserFollowerAlert whereUsed($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserFollowerAlertFactory>
  */
 class UserFollowerAlert extends Model
 {
@@ -58,7 +62,7 @@ class UserFollowerAlert extends Model
         'end_at',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

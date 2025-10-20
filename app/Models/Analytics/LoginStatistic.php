@@ -10,6 +10,7 @@ namespace App\Models\Analytics;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class LoginStatistic
@@ -38,6 +39,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsLoginStatisticFactory>
+ */
 class LoginStatistic extends Model
 {
     use HasFactory;
@@ -62,7 +66,10 @@ class LoginStatistic extends Model
         'data',
     ];
 
-    public function user()
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }

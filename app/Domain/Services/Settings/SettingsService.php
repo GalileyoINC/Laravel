@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 class SettingsService implements SettingsServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getAllSettings(): array
     {
         return Cache::remember('all_settings', 3600, fn () => [
@@ -21,6 +24,9 @@ class SettingsService implements SettingsServiceInterface
         ]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function updateSettings(SettingsUpdateRequestDTO $dto): array
     {
         if ($dto->sms_settings) {
@@ -70,6 +76,9 @@ class SettingsService implements SettingsServiceInterface
         Cache::forget('public_settings');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPublicSettings(SettingsPublicRequestDTO $dto): array
     {
         return Cache::remember('public_settings', 3600, fn () => [
@@ -78,6 +87,9 @@ class SettingsService implements SettingsServiceInterface
         ]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function generateBitpayConfig(): array
     {
         $pairingCode = bin2hex(random_bytes(16));

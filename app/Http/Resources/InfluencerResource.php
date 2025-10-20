@@ -14,6 +14,9 @@ class InfluencerResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [
@@ -39,6 +42,9 @@ class InfluencerResource extends JsonResource
     /**
      * Get additional data that should be returned with the resource array.
      *
+     * @return array<string, mixed>
+     */
+    /**
      * @return array<string, mixed>
      */
     public function with(Request $request): array

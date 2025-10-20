@@ -22,6 +22,9 @@ class SummarizeAction
      *
      * @throws Exception
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(array $data): array
     {
         $dto = SummarizeRequestDTO::fromArray($data);

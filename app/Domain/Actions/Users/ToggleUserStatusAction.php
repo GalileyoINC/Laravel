@@ -11,6 +11,9 @@ class ToggleUserStatusAction
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(int $userId): array
     {
         $user = User::findOrFail($userId);

@@ -13,6 +13,9 @@ use App\Models\Finance\Service;
 
 class BundleService implements BundleServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(BundleListRequestDTO $dto): array
     {
         $query = Bundle::query();
@@ -83,6 +86,9 @@ class BundleService implements BundleServiceInterface
         return $bundle->load('services');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     /**
      * @return array<string, mixed>
      */

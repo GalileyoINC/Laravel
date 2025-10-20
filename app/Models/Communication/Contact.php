@@ -42,6 +42,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationContactFactory>
+ */
 class Contact extends Model
 {
     use HasFactory;
@@ -71,6 +74,9 @@ class Contact extends Model
         'status',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');

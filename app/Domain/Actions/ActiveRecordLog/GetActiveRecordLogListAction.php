@@ -16,6 +16,9 @@ final class GetActiveRecordLogListAction
      * @param  array<string, mixed>  $filters
      * @return array{logs: LengthAwarePaginator<int, ActiveRecordLog>, actionTypes: array<int,string>, staffList: array<int,string>}
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(array $filters, int $perPage = 20): array
     {
         $query = ActiveRecordLog::with(['user', 'staff']);

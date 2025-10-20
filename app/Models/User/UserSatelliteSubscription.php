@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserSatelliteSubscription
@@ -26,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSatelliteSubscription whereIdUser($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserSatelliteSubscriptionFactory>
  */
 class UserSatelliteSubscription extends Model
 {
@@ -47,12 +51,12 @@ class UserSatelliteSubscription extends Model
         'id_subscription',
     ];
 
-    public function subscription()
+    public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }

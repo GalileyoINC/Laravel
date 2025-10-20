@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailPoolService implements EmailPoolServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(EmailPoolListRequestDTO $dto): array
     {
         $query = EmailPool::query();
@@ -56,6 +59,9 @@ class EmailPoolService implements EmailPoolServiceInterface
         $email->delete();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function resend(int $id): array
     {
         $emailPool = EmailPool::findOrFail($id);

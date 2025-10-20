@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserPlanShedule
@@ -42,6 +43,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserPlanSheduleFactory>
+ */
 class UserPlanShedule extends Model
 {
     use HasFactory;
@@ -72,17 +76,17 @@ class UserPlanShedule extends Model
         'id_contract_line',
     ];
 
-    public function contract_line()
+    public function contract_line(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\ContractLine::class, 'id_contract_line');
     }
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }

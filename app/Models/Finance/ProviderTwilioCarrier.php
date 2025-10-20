@@ -10,6 +10,8 @@ namespace App\Models\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\System\TwilioCarrier;
 
 /**
  * Class ProviderTwilioCarrier
@@ -25,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ProviderTwilioCarrier whereIdTwilioCarrier($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProviderTwilioCarrierFactory>
  */
 class ProviderTwilioCarrier extends Model
 {
@@ -46,12 +51,12 @@ class ProviderTwilioCarrier extends Model
         'id_twilio_carrier',
     ];
 
-    public function provider()
+    public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class, 'id_provider');
     }
 
-    public function twilio_carrier()
+    public function twilio_carrier(): BelongsTo
     {
         return $this->belongsTo(TwilioCarrier::class, 'id_twilio_carrier');
     }

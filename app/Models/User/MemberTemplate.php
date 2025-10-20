@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class MemberTemplate
@@ -39,6 +40,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MemberTemplateFactory>
+ */
 class MemberTemplate extends Model
 {
     use HasFactory;
@@ -63,12 +67,12 @@ class MemberTemplate extends Model
         'expired_at',
     ];
 
-    public function user_plan()
+    public function user_plan(): BelongsTo
     {
         return $this->belongsTo(UserPlan::class, 'id_plan');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_admin');
     }

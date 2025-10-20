@@ -36,27 +36,42 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationFactory>
+ */
 class Conversation extends Model
 {
     use HasFactory;
 
     protected $table = 'conversation';
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\ConversationFile, $this>
+     */
     public function conversation_files(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ConversationFile::class, 'id_conversation');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\ConversationMessage, $this>
+     */
     public function conversation_messages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ConversationMessage::class, 'id_conversation');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\ConversationUnviewed, $this>
+     */
     public function conversation_unvieweds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ConversationUnviewed::class, 'id_conversation');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\User\User, $this>
+     */
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'conversation_user', 'id_conversation', 'id_user');

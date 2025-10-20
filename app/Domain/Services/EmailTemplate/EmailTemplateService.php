@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailTemplateService implements EmailTemplateServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(EmailTemplateListRequestDTO $dto): array
     {
         $query = EmailTemplate::query();
@@ -74,6 +77,9 @@ class EmailTemplateService implements EmailTemplateServiceInterface
         return $template;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getBody(int $id): array
     {
         $template = EmailTemplate::findOrFail($id);
@@ -92,6 +98,9 @@ class EmailTemplateService implements EmailTemplateServiceInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function sendAdminEmail(EmailTemplateSendRequestDTO $dto): array
     {
         $template = EmailTemplate::findOrFail($dto->id);

@@ -41,6 +41,7 @@ class Bookmark extends Model
 
     /**
      * Get the user that owns the bookmark
+     * @return BelongsTo<\App\Models\User\User, $this>
      */
     public function user(): BelongsTo
     {
@@ -49,6 +50,7 @@ class Bookmark extends Model
 
     /**
      * Get the post that is bookmarked
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
      */
     public function post(): BelongsTo
     {

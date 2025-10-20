@@ -50,6 +50,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationEmailPoolFactory>
+ */
 class EmailPool extends Model
 {
     use HasFactory;
@@ -110,11 +113,17 @@ class EmailPool extends Model
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\EmailPoolAttachment, $this>
+     */
     public function email_pool_attachments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(EmailPoolAttachment::class, 'id_email_pool');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\EmailPoolAttachment, $this>
+     */
     public function attachments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(EmailPoolAttachment::class, 'id_email_pool');

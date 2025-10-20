@@ -12,6 +12,9 @@ class ContractLineService implements ContractLineServiceInterface
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getUnpaidContracts(ContractLineListRequestDTO $dto): array
     {
         $query = ContractLine::query()

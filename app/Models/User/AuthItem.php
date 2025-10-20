@@ -11,6 +11,8 @@ namespace App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AuthItem
@@ -41,6 +43,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AuthItemFactory>
+ */
 class AuthItem extends Model
 {
     use HasFactory;
@@ -62,17 +67,17 @@ class AuthItem extends Model
         'data',
     ];
 
-    public function auth_rule()
+    public function auth_rule(): BelongsTo
     {
         return $this->belongsTo(AuthRule::class, 'rule_name');
     }
 
-    public function auth_assignments()
+    public function auth_assignments(): HasMany
     {
         return $this->hasMany(AuthAssignment::class, 'item_name');
     }
 
-    public function auth_item_children()
+    public function auth_item_children(): HasMany
     {
         return $this->hasMany(AuthItemChild::class, 'child');
     }

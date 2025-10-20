@@ -12,6 +12,9 @@ use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Service
@@ -86,6 +89,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ServiceFactory>
+ */
 class Service extends Model
 {
     use HasFactory;
@@ -152,47 +158,47 @@ class Service extends Model
         return [];
     }
 
-    public function bundle_items()
+    public function bundle_items(): HasMany
     {
         return $this->hasMany(BundleItem::class, 'id_item');
     }
 
-    public function contract_lines()
+    public function contract_lines(): HasMany
     {
         return $this->hasMany(ContractLine::class, 'id_service');
     }
 
-    public function device_plans()
+    public function device_plans(): HasMany
     {
         return $this->hasMany(\App\Models\Device\DevicePlan::class, 'id_plan');
     }
 
-    public function invoices()
+    public function invoices(): BelongsToMany
     {
         return $this->belongsToMany(Invoice::class, 'invoice_service', 'id_service', 'id_invoice');
     }
 
-    public function product_photos()
+    public function product_photos(): HasMany
     {
         return $this->hasMany(\App\Models\Content\ProductPhoto::class, 'id_service');
     }
 
-    public function sps_contracts()
+    public function sps_contracts(): HasMany
     {
         return $this->hasMany(SpsContract::class, 'id_service');
     }
 
-    public function user_plans()
+    public function user_plans(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPlan::class, 'id_service');
     }
 
-    public function user_plan_shedules()
+    public function user_plan_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\User\UserPlanShedule::class, 'id_service');
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'user_service', 'id_service', 'id_user');
     }

@@ -10,6 +10,7 @@ namespace App\Models\Content;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class PageContent
@@ -33,6 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PageContent whereStatus($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentPageContentFactory>
  */
 class PageContent extends Model
 {
@@ -65,7 +69,10 @@ class PageContent extends Model
         'content',
     ];
 
-    public function page()
+    /**
+     * @return BelongsTo<\App\Models\Content\Page, $this>
+     */
+    public function page(): BelongsTo
     {
         return $this->belongsTo(Page::class, 'id_page');
     }

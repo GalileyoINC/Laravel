@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserPointHistory
@@ -39,6 +40,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserPointHistoryFactory>
+ */
 class UserPointHistory extends Model
 {
     use HasFactory;
@@ -63,22 +67,22 @@ class UserPointHistory extends Model
         'quantity',
     ];
 
-    public function comment()
+    public function comment(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Content\Comment::class, 'id_comment');
     }
 
-    public function sms_pool()
+    public function sms_pool(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function user_point_setting()
+    public function user_point_setting(): BelongsTo
     {
         return $this->belongsTo(UserPointSetting::class, 'id_user_point_settings');
     }

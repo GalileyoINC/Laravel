@@ -7,6 +7,9 @@ namespace App\Http\Controllers\Web;
 use App\Domain\Actions\Communication\ExportPhoneNumbersToCsvAction;
 use App\Domain\Actions\Communication\GetPhoneNumberListAction;
 use App\Domain\Actions\Communication\SendSmsAction;
+use App\Domain\Actions\Device\DetectProviderAction;
+use App\Domain\Actions\Device\EnsureSingleActiveNumberAction;
+use App\Domain\Actions\Device\NormalizePhoneNumberAction;
 use App\Domain\DTOs\Communication\SendSmsRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Communication\Web\PhoneNumberIndexRequest;
@@ -28,6 +31,9 @@ class PhoneNumberController extends Controller
         private readonly GetPhoneNumberListAction $getPhoneNumberListAction,
         private readonly ExportPhoneNumbersToCsvAction $exportPhoneNumbersToCsvAction,
         private readonly SendSmsAction $sendSmsAction,
+        private readonly NormalizePhoneNumberAction $normalizePhoneNumberAction,
+        private readonly DetectProviderAction $detectProviderAction,
+        private readonly EnsureSingleActiveNumberAction $ensureSingleActiveNumberAction,
     ) {}
 
     /**
@@ -69,7 +75,22 @@ class PhoneNumberController extends Controller
      */
     public function update(PhoneNumberRequest $request, PhoneNumber $phoneNumber): RedirectResponse
     {
-        $phoneNumber->update($request->validated());
+        $phoneNumber->fill($request->validated());
+
+        // Normalize number
+        $this->normalizePhoneNumberAction->execute($phoneNumber);
+
+        // Detect provider for satellite/mobile
+        if (in_array($phoneNumber->type, [PhoneNumber::TYPE_SATELLITE, PhoneNumber::TYPE_MOBILE], true)) {
+            $this->detectProviderAction->execute($phoneNumber);
+        }
+
+        $phoneNumber->save();
+
+        // Ensure single active number flags
+        if ($phoneNumber->is_active) {
+            $this->ensureSingleActiveNumberAction->execute($phoneNumber);
+        }
 
         $redirectRoute = $request->input('referer') === 'user' ? 'user.index' : 'web.phone-number.index';
 
@@ -190,7 +211,16 @@ class PhoneNumberController extends Controller
         }
 
         $phoneNumber->fill($request->validated());
+
+        // Normalize, detect provider, save, ensure invariants
+        $this->normalizePhoneNumberAction->execute($phoneNumber);
+        if (in_array($phoneNumber->type, [PhoneNumber::TYPE_SATELLITE, PhoneNumber::TYPE_MOBILE], true)) {
+            $this->detectProviderAction->execute($phoneNumber);
+        }
         $phoneNumber->save();
+        if ($phoneNumber->is_active) {
+            $this->ensureSingleActiveNumberAction->execute($phoneNumber);
+        }
 
         return redirect()->route('user.index')
             ->with('success', 'Phone number created successfully.');

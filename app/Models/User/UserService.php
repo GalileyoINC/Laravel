@@ -10,6 +10,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserService
@@ -26,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserService whereIdUser($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserServiceFactory>
  */
 class UserService extends Model
 {
@@ -47,12 +51,12 @@ class UserService extends Model
         'id_service',
     ];
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }

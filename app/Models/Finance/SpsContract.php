@@ -11,6 +11,8 @@ namespace App\Models\Finance;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class SpsContract
@@ -53,6 +55,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SpsContractFactory>
+ */
 class SpsContract extends Model
 {
     use HasFactory;
@@ -91,22 +96,22 @@ class SpsContract extends Model
         'user_plan_data',
     ];
 
-    public function user_plan()
+    public function user_plan(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\UserPlan::class, 'id_plan');
     }
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_service');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function contract_lines()
+    public function contract_lines(): HasMany
     {
         return $this->hasMany(ContractLine::class, 'id_sps_contract');
     }

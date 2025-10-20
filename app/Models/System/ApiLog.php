@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ApiLogFactory>
+ */
 class ApiLog extends Model
 {
     use HasFactory;

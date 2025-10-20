@@ -12,6 +12,9 @@ class SetSubscriptionFeedVisibilityAction
     /**
      * @return array<string, mixed>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(SetFeedVisibilityDTO $dto): array
     {
         $updated = Subscription::where('id', $dto->subscriptionId)

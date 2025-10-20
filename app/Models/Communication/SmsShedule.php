@@ -64,6 +64,9 @@ use Throwable;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsSheduleFactory>
+ */
 class SmsShedule extends Model
 {
     use HasFactory;
@@ -129,43 +132,67 @@ class SmsShedule extends Model
         }
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\FollowerList, $this>
+     */
     public function follower_list(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
     // Alias expected by controllers
+    /**
+     * @return BelongsTo<\App\Models\Subscription\FollowerList, $this>
+     */
     public function followerList(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
     public function sms_pool(): BelongsTo
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
     // Alias expected by controllers
+    /**
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
     public function smsPool(): BelongsTo
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\System\Staff, $this>
+     */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(\App\Models\System\Staff::class, 'id_staff');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\Subscription, $this>
+     */
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
+     */
     public function sms_pool_photos(): HasMany
     {
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_shedule');

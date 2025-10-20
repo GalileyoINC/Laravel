@@ -43,6 +43,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsPoolPhotoFactory>
+ */
 class SmsPoolPhoto extends Model
 {
     use HasFactory;
@@ -66,7 +69,7 @@ class SmsPoolPhoto extends Model
     ];
 
     /**
-     * @return BelongsTo<SmsPool, static>
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
      */
     public function sms_pool(): BelongsTo
     {
@@ -74,7 +77,7 @@ class SmsPoolPhoto extends Model
     }
 
     /**
-     * @return BelongsTo<SmsShedule, static>
+     * @return BelongsTo<\App\Models\Communication\SmsShedule, $this>
      */
     public function sms_shedule(): BelongsTo
     {

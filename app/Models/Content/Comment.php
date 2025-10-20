@@ -49,6 +49,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentCommentFactory>
+ */
 class Comment extends Model
 {
     use HasFactory;
@@ -70,31 +73,49 @@ class Comment extends Model
         'is_deleted',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Content\Comment, $this>
+     */
     public function comment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(self::class, 'id_parent');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
     public function sms_pool(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Content\Comment, $this>
+     */
     public function replies(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(self::class, 'id_parent');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Content\Comment, $this>
+     */
     public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(self::class, 'id_parent');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\User\UserPointHistory, $this>
+     */
     public function user_point_histories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\User\UserPointHistory::class, 'id_comment');

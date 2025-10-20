@@ -11,6 +11,7 @@ namespace App\Models\Subscription;
 use Database\Factories\InfluencerPageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class InfluencerPage
@@ -40,6 +41,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InfluencerPageFactory>
+ */
 class InfluencerPage extends Model
 {
     use HasFactory;
@@ -58,7 +62,7 @@ class InfluencerPage extends Model
         'image',
     ];
 
-    public function subscription()
+    public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class, 'id_subscription');
     }

@@ -21,6 +21,9 @@ class UserPlanRequest extends FormRequest
      *
      * @return array<string, array<int, string>|string>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -32,6 +35,9 @@ class UserPlanRequest extends FormRequest
      * Get custom messages for validator errors.
      *
      * @return array<string, string>
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function messages(): array
     {

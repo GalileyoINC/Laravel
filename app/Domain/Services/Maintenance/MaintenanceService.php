@@ -22,6 +22,9 @@ class MaintenanceService implements MaintenanceServiceInterface
      *
      * @throws Exception
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function summarize(SummarizeRequestDTO $dto): array
     {
         try {

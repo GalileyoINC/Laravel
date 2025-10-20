@@ -41,6 +41,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AppleNotificationFactory>
+ */
 class AppleNotification extends Model
 {
     use HasFactory;

@@ -11,6 +11,7 @@ namespace App\Models\Subscription;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class SubscriptionCategory
@@ -33,6 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SubscriptionCategoryFactory>
+ */
 class SubscriptionCategory extends Model
 {
     use HasFactory;
@@ -52,7 +56,7 @@ class SubscriptionCategory extends Model
         'position_no',
     ];
 
-    public function subscriptions()
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class, 'id_subscription_category');
     }

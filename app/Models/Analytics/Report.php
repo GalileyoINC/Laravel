@@ -6,6 +6,7 @@ namespace App\Models\Analytics;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read \App\Models\Communication\SmsPool|null $news
@@ -16,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Report query()
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsReportFactory>
  */
 class Report extends Model
 {
@@ -37,12 +41,18 @@ class Report extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function user()
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function news()
+    /**
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
+    public function news(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_news');
     }

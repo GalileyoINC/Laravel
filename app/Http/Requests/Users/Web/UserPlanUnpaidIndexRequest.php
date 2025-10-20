@@ -16,6 +16,9 @@ class UserPlanUnpaidIndexRequest extends FormRequest
     /**
      * @return array<string, array<int, string>|string>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [

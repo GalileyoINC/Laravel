@@ -33,6 +33,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AdminMessageLogFactory>
+ */
 class AdminMessageLog extends Model
 {
     use HasFactory;

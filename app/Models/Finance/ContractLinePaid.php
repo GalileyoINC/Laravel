@@ -10,6 +10,7 @@ namespace App\Models\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class ContractLinePaid
@@ -44,6 +45,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContractLinePaidFactory>
+ */
 class ContractLinePaid extends Model
 {
     use HasFactory;
@@ -70,17 +74,17 @@ class ContractLinePaid extends Model
         'days',
     ];
 
-    public function contract_line()
+    public function contract_line(): BelongsTo
     {
         return $this->belongsTo(ContractLine::class, 'id_contract_line');
     }
 
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'id_invoice');
     }
 
-    public function invoice_line()
+    public function invoice_line(): BelongsTo
     {
         return $this->belongsTo(InvoiceLine::class, 'id_invoice_line');
     }

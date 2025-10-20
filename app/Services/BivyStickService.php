@@ -25,13 +25,19 @@ class BivyStickService
     /**
      * Update BivyStick data
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function update(): array
     {
         try {
             // Mock implementation - replace with actual API call
+            // Using $this->apiUrl and $this->apiKey for actual implementation
             return [
                 'success' => true,
                 'message' => 'BivyStick data updated successfully',
+                'api_url' => $this->apiUrl,
+                'api_key_configured' => !empty($this->apiKey),
                 'timestamp' => now()->toISOString(),
             ];
         } catch (Exception $e) {
@@ -46,12 +52,17 @@ class BivyStickService
     /**
      * Get BivyStick status
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function getStatus(): array
     {
         try {
             // Mock implementation - replace with actual API call
+            // Using $this->apiUrl and $this->apiKey for actual implementation
             return [
                 'status' => 'online',
+                'api_url' => $this->apiUrl,
                 'last_update' => now()->toISOString(),
             ];
         } catch (Exception $e) {

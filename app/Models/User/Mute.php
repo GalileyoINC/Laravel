@@ -6,6 +6,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read \App\Models\Subscription\Subscription|null $subscription
@@ -16,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Mute query()
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MuteFactory>
  */
 class Mute extends Model
 {
@@ -37,12 +41,12 @@ class Mute extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function subscription()
+    public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }

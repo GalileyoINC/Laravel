@@ -11,6 +11,8 @@ namespace App\Models\Subscription;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class BpSubscription
@@ -41,6 +43,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\BpSubscriptionFactory>
+ */
 class BpSubscription extends Model
 {
     use HasFactory;
@@ -60,12 +65,12 @@ class BpSubscription extends Model
         'email',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
-    public function invoices()
+    public function invoices(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\Invoice::class, 'id_bp_subscribe');
     }

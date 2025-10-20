@@ -11,6 +11,9 @@ use Log;
 
 class DeviceService implements DeviceServiceInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function getList(DeviceListRequestDTO $dto): array
     {
         $query = Device::query()->with(['user']);
@@ -60,6 +63,9 @@ class DeviceService implements DeviceServiceInterface
         $device->delete();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function sendPushNotification(DevicePushRequestDTO $dto): array
     {
         $device = Device::findOrFail($dto->deviceId);

@@ -33,6 +33,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SessionFactory>
+ */
 class Session extends Model
 {
     use HasFactory;
@@ -66,6 +69,9 @@ class Session extends Model
 
     /**
      * Serialize to JSON (like YII)
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function jsonSerialize(): array
     {

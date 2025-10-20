@@ -11,6 +11,7 @@ namespace App\Models\Communication;
 use Database\Factories\SmsPoolReactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class SmsPoolReaction
@@ -32,6 +33,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SmsPoolReaction whereIdUser($value)
  *
  * @mixin \Eloquent
+ */
+/**
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsPoolReactionFactory>
  */
 class SmsPoolReaction extends Model
 {
@@ -58,17 +62,26 @@ class SmsPoolReaction extends Model
         'created_at',
     ];
 
-    public function reaction()
+    /**
+     * @return BelongsTo<\App\Models\Content\Reaction, $this>
+     */
+    public function reaction(): BelongsTo
     {
         return $this->belongsTo(Reaction::class, 'id_reaction');
     }
 
-    public function sms_pool()
+    /**
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
+    public function sms_pool(): BelongsTo
     {
         return $this->belongsTo(SmsPool::class, 'id_sms_pool');
     }
 
-    public function user()
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
