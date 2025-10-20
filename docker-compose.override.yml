@@ -1,0 +1,8 @@
+services:
+  nginx:
+    ports:
+      - "80:80"
+  app:
+    environment:
+      - APP_URL=http://${SERVER_IP:-localhost}
+      - VITE_APP_URL=http://${SERVER_IP:-localhost}
