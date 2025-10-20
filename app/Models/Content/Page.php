@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
-use Database\Factories\ContentPageFactory;
+use Database\Factories\PageFactory as RootPageFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -80,8 +80,8 @@ class Page extends Model
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory<Page>
      */
-    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    protected static function newFactory(): RootPageFactory
     {
-        return ContentPageFactory::new();
+        return RootPageFactory::new();
     }
 }

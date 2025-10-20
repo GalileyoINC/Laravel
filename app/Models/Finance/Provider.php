@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Database\Factories\FinanceProviderFactory;
+use Database\Factories\ProviderFactory as RootProviderFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -97,8 +97,8 @@ class Provider extends Model
     /**
      * @return FinanceProviderFactory
      */
-    protected static function newFactory()
+    protected static function newFactory(): RootProviderFactory
     {
-        return FinanceProviderFactory::new();
+        return RootProviderFactory::new();
     }
 }

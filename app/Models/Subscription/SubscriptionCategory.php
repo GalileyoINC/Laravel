@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Subscription;
 
+use Database\Factories\SubscriptionCategoryFactory as RootSubscriptionCategoryFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,5 +63,10 @@ class SubscriptionCategory extends Model
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class, 'id_subscription_category');
+    }
+
+    protected static function newFactory(): RootSubscriptionCategoryFactory
+    {
+        return RootSubscriptionCategoryFactory::new();
     }
 }

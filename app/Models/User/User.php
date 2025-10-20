@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Database\Factories\UserFactory as RootUserFactory;
 
 /**
  * Class User
@@ -708,5 +709,10 @@ class User extends Authenticatable
     public function showSettings(): bool
     {
         return true;
+    }
+
+    protected static function newFactory(): RootUserFactory
+    {
+        return RootUserFactory::new();
     }
 }

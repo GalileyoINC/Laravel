@@ -18,6 +18,8 @@ use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionCategory;
 use App\Models\User\User;
 use App\Models\User\UserSubscription;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -135,14 +137,18 @@ class DatabaseSeeder extends Seeder
         $this->command->info('👤 Creating demo users...');
 
         // Admin user
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@galileyo.com'],
-            User::factory()->make([
-                'first_name' => 'Admin',
-                'last_name' => 'User',
-                'role' => 1,
-                'is_valid_email' => true,
-            ])->toArray()
+            array_merge(
+                User::factory()->make([
+                    'first_name' => 'Admin',
+                    'last_name' => 'User',
+                    'role' => 1,
+                    'is_valid_email' => true,
+                    'status' => 1,
+                ])->toArray(),
+                ['password_hash' => Hash::make('pass')]
+            )
         );
 
         // Test user
@@ -169,6 +175,42 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('✅ Created demo users');
 
+        // Seed any remaining models that have factories but empty tables
+        $this->command->info('🧩 Seeding remaining models with factories (only if their tables are empty)...');
+        $seededCount = 0;
+
+        foreach ($this->discoverModelClasses() as $modelClass) {
+            // Only attempt for Eloquent models with factory method
+            if (! is_subclass_of($modelClass, Model::class)) {
+                continue;
+            }
+
+            if (! method_exists($modelClass, 'factory')) {
+                continue;
+            }
+
+            try {
+                /** @var Model $model */
+                $model = new $modelClass();
+
+                // Skip if table already has data
+                if ($model->newQuery()->exists()) {
+                    continue;
+                }
+
+                // Default record count per empty table; adjust if needed later
+                $countToCreate = 10;
+
+                $created = $modelClass::factory()->count($countToCreate)->create();
+                $this->command->info("✅ Seeded ".$created->count()." records for ".$modelClass);
+                $seededCount++;
+            } catch (\Throwable $e) {
+                $this->command->warn('⚠️ Skipped '.$modelClass.' (reason: '.$e->getMessage().')');
+            }
+        }
+
+        $this->command->info('🧮 Remaining empty models seeded: '.$seededCount);
+
         $this->command->info('🎉 Database seeding completed successfully!');
         $this->command->info('');
         $this->command->info('Demo users created:');
@@ -177,5 +219,42 @@ class DatabaseSeeder extends Seeder
         $this->command->info('🌟 Influencer: influencer@galileyo.com');
         $this->command->info('');
         $this->command->info('All users have password: "password"');
+    }
+
+    /**
+     * Discover all model classes under app/Models.
+     *
+     * @return array<int, class-string<\Illuminate\Database\Eloquent\Model>>
+     */
+    private function discoverModelClasses(): array
+    {
+        $baseDir = base_path('app/Models');
+        if (! is_dir($baseDir)) {
+            return [];
+        }
+
+        $classes = [];
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($baseDir, \FilesystemIterator::SKIP_DOTS)
+        );
+
+        /** @var \SplFileInfo $file */
+        foreach ($iterator as $file) {
+            if ($file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $relativePath = str_replace($baseDir.'/', '', $file->getPathname());
+            $relativeNoExt = substr($relativePath, 0, -4); // strip .php
+            $fqcn = 'App\\Models\\'.str_replace(['/', '\\'], '\\', $relativeNoExt);
+
+            if (class_exists($fqcn)) {
+                $classes[] = $fqcn;
+            }
+        }
+
+        // De-duplicate and keep order stable
+        return array_values(array_unique($classes));
     }
 }

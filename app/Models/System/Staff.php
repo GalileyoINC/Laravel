@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Database\Factories\SystemStaffFactory;
+use Database\Factories\StaffFactory as RootStaffFactory;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
@@ -136,8 +136,8 @@ class Staff extends Model implements Authenticatable
     /**
      * Create a new factory instance for the model.
      */
-    protected static function newFactory()
+    protected static function newFactory(): RootStaffFactory
     {
-        return SystemStaffFactory::new();
+        return RootStaffFactory::new();
     }
 }

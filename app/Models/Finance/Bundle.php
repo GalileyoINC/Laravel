@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
-use Database\Factories\FinanceBundleFactory;
+use Database\Factories\BundleFactory as RootBundleFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -100,8 +100,8 @@ class Bundle extends Model
     /**
      * Create a new factory instance for the model.
      */
-    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    protected static function newFactory(): RootBundleFactory
     {
-        return FinanceBundleFactory::new();
+        return RootBundleFactory::new();
     }
 }

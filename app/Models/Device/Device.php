@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Device;
 
+use Database\Factories\DeviceFactory as RootDeviceFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -81,5 +82,10 @@ class Device extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+    }
+
+    protected static function newFactory(): RootDeviceFactory
+    {
+        return RootDeviceFactory::new();
     }
 }

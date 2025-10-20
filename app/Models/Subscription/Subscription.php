@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Subscription;
 
+use Database\Factories\SubscriptionFactory as RootSubscriptionFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -297,5 +298,10 @@ class Subscription extends Model
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
             ->withPivot('id', 'zip');
+    }
+
+    protected static function newFactory(): RootSubscriptionFactory
+    {
+        return RootSubscriptionFactory::new();
     }
 }

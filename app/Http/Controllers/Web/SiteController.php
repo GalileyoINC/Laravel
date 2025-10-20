@@ -50,22 +50,23 @@ class SiteController extends Controller
         ];
 
         $result = $this->loginAction->execute($loginData);
+        $data = $result->getData(true);
 
-        if ($result->getData()->status === 'success') {
+        if ($result->getStatusCode() === 200 && isset($data['user_id'])) {
             // Find user and login with Laravel Auth
-            $userId = (int) $result->getData()->user_id;
+            $userId = (int) $data['user_id'];
             $user = User::find($userId);
             if ($user) {
                 /** @var User $user */
                 Auth::login($user, false);
-                $request->session()->regenerate();
+                session()->regenerate();
 
                 return Redirect::to(route('site.index'));
             }
         }
 
         return Redirect::back()
-            ->withErrors(['username' => $result->getData()->error ?? 'Login failed'])
+            ->withErrors(['username' => $data['error'] ?? 'Login failed'])
             ->withInput();
     }
 

@@ -32,10 +32,10 @@ class ContactController extends Controller
     public function index(Request $request): View
     {
         $dto = new ContactListRequestDTO(
-            page: $request->get('page', 1),
-            limit: $request->get('limit', 20),
-            search: $request->get('search'),
-            status: $request->get('status', 1)
+            page: (int) $request->query('page', 1),
+            limit: (int) $request->query('limit', 20),
+            search: $request->query('search'),
+            status: (int) $request->query('status', 1)
         );
 
         $contacts = $this->getContactListAction->execute($dto->toArray());

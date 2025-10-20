@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\System;
 
-use Database\Factories\SystemSettingFactory;
+use Database\Factories\SettingFactory as RootSettingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -56,8 +56,8 @@ class Setting extends Model
     /**
      * @return SystemSettingFactory
      */
-    protected static function newFactory()
+    protected static function newFactory(): RootSettingFactory
     {
-        return SystemSettingFactory::new();
+        return RootSettingFactory::new();
     }
 }

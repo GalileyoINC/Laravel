@@ -63,10 +63,10 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $dto = new UsersListRequestDTO(
-            page: $request->get('page', 1),
-            pageSize: $request->get('page_size', 20),
-            search: $request->get('search'),
-            role: $request->get('role'),
+            page: (int) $request->query('page', 1),
+            pageSize: (int) $request->query('page_size', 20),
+            search: $request->query('search'),
+            role: $request->has('role') ? (int) $request->query('role') : null,
             validEmailOnly: $request->boolean('valid_email_only', false)
         );
 
