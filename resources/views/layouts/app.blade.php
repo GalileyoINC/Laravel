@@ -462,6 +462,11 @@
             <div class="content">
                 @yield('content')
             </div>
+            <footer class="main-footer">
+                <div class="footer-content">
+                    <strong>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}.</strong> All rights reserved.
+                </div>
+            </footer>
         </div>
     </div>
 

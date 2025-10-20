@@ -84,14 +84,15 @@ html, body {
     color: #daeb8f;
 }
 .sidebar {
-    position: absolute;
+    position: fixed;
     top: 0;
+    bottom: 0;
     left: 0;
     padding-top: 50px;
-    min-height: 100%;
     width: 230px;
     z-index: 810;
     background: #004358;
+    overflow-y: auto;
     -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
     -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out;
     -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
@@ -270,6 +271,18 @@ html, body {
     line-height: 50px;
     border-top: 1px solid #eeeeee;
     box-sizing: content-box;
+}
+.main-footer {
+    background: #004358;
+    color: #fff;
+    padding: 15px;
+    margin-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-size: 13px;
+}
+.main-footer .footer-content {
+    margin: 0;
 }
 .btn-admin {
     color: #fff;
