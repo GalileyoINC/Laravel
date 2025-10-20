@@ -40,6 +40,7 @@ class EmailPoolAttachment extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'email_pool_attachment';
@@ -56,7 +57,7 @@ class EmailPoolAttachment extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Communication\EmailPool, $this>
+     * @return BelongsTo<EmailPool, $this>
      */
     public function email_pool(): BelongsTo
     {

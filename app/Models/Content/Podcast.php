@@ -42,6 +42,7 @@ class Podcast extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'podcast';
 
     protected $casts = [

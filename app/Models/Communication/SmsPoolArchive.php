@@ -44,6 +44,27 @@ class SmsPoolArchive extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
+    public int $id_user;
+
+    public int $id_staff;
+
+    public int $id_subscription;
+
+    public int $id_follower_list;
+
+    public int $purpose;
+
+    public string $message;
+
+    public string $body;
+
+    public string $status;
+
+    public string $created_at;
+
+    public string $updated_at;
+
     public $timestamps = false;
 
     protected $table = 'sms_pool_archive';
@@ -70,7 +91,7 @@ class SmsPoolArchive extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\User\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -78,7 +99,7 @@ class SmsPoolArchive extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\System\Staff, $this>
+     * @return BelongsTo<Staff, $this>
      */
     public function staff(): BelongsTo
     {
@@ -86,7 +107,7 @@ class SmsPoolArchive extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Subscription\Subscription, $this>
+     * @return BelongsTo<Subscription, $this>
      */
     public function subscription(): BelongsTo
     {
@@ -94,7 +115,7 @@ class SmsPoolArchive extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Subscription\FollowerList, $this>
+     * @return BelongsTo<FollowerList, $this>
      */
     public function followerList(): BelongsTo
     {

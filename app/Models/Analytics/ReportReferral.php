@@ -38,6 +38,7 @@ class ReportReferral extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'report_referral';
@@ -52,4 +53,12 @@ class ReportReferral extends Model
         'influencer_percent',
         'data',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<ReportReferral>
+     */
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\AnalyticsReportReferralFactory::new();
+    }
 }

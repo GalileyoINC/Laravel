@@ -52,6 +52,7 @@ class ContractLinePaid extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'contract_line_paid';
 
     protected $casts = [

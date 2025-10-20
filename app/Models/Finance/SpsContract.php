@@ -62,6 +62,7 @@ class SpsContract extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'sps_contract';

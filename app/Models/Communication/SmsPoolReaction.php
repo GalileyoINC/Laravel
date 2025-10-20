@@ -41,6 +41,7 @@ class SmsPoolReaction extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     public $timestamps = false;
@@ -86,6 +87,12 @@ class SmsPoolReaction extends Model
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<SmsPoolReaction>
+     */
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<App\Models\Communication\SmsPoolReaction>
+     */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return SmsPoolReactionFactory::new();

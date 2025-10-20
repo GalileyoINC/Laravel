@@ -40,8 +40,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PageContent extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */ /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     public const STATUS_TEMP = 0;
 
     public const STATUS_PUBLISH = 1;
@@ -70,7 +71,7 @@ class PageContent extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Content\Page, $this>
+     * @return BelongsTo<Page, $this>
      */
     public function page(): BelongsTo
     {

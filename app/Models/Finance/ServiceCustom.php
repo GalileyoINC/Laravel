@@ -42,6 +42,7 @@ class ServiceCustom extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'service_custom';

@@ -36,12 +36,16 @@ class AuthAssignment extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     public $timestamps = false;
 
     protected $table = 'auth_assignment';
 
+    /**
+     * @return BelongsTo<AuthItem, $this>
+     */
     public function auth_item(): BelongsTo
     {
         return $this->belongsTo(AuthItem::class, 'item_name');

@@ -42,6 +42,7 @@ class UserFollowerAlert extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'user_follower_alert';
@@ -62,6 +63,9 @@ class UserFollowerAlert extends Model
         'end_at',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');

@@ -46,6 +46,7 @@ class LoginStatistic extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'login_statistic';
@@ -72,5 +73,13 @@ class LoginStatistic extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<LoginStatistic>
+     */
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\AnalyticsLoginStatisticFactory::new();
     }
 }

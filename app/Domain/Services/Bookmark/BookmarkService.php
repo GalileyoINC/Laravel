@@ -141,7 +141,7 @@ class BookmarkService implements BookmarkServiceInterface
             return [
                 'id' => $bookmark->id,
                 'post_id' => $dto->postId,
-                'created_at' => $bookmark->created_at->toIso8601String(),
+                'created_at' => $bookmark->created_at?->toIso8601String() ?? '',
             ];
 
         } catch (Exception $e) {

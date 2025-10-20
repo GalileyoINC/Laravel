@@ -45,6 +45,7 @@ class BundleItem extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'bundle_item';

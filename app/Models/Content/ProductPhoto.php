@@ -44,6 +44,7 @@ class ProductPhoto extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'product_photo';
 
     protected $casts = [

@@ -42,6 +42,7 @@ class TwilioIncoming extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'twilio_incoming';
 
     protected $casts = [

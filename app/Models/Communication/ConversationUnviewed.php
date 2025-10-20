@@ -39,6 +39,7 @@ class ConversationUnviewed extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'conversation_unviewed';
@@ -56,7 +57,7 @@ class ConversationUnviewed extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Communication\Conversation, $this>
+     * @return BelongsTo<Conversation, $this>
      */
     public function conversation(): BelongsTo
     {
@@ -64,7 +65,7 @@ class ConversationUnviewed extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Communication\ConversationMessage, $this>
+     * @return BelongsTo<ConversationMessage, $this>
      */
     public function conversation_message(): BelongsTo
     {

@@ -36,6 +36,7 @@ class EmergencyTipsRequest extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'emergency_tips_request';

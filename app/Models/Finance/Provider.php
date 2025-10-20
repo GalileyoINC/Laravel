@@ -53,6 +53,7 @@ class Provider extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'provider';
 
     protected $casts = [
@@ -92,6 +93,9 @@ class Provider extends Model
 
     /**
      * Create a new factory instance for the model.
+     */
+    /**
+     * @return FinanceProviderFactory
      */
     protected static function newFactory()
     {

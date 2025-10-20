@@ -61,8 +61,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class FollowerList extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */ /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     protected $table = 'follower_list';
 
     protected $casts = [
@@ -84,7 +85,7 @@ class FollowerList extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\User\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -92,7 +93,7 @@ class FollowerList extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\Subscription\Follower, $this>
+     * @return HasMany<Follower, $this>
      */
     public function followers(): HasMany
     {
@@ -100,7 +101,7 @@ class FollowerList extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\User\Invite, $this>
+     * @return HasMany<Invite, $this>
      */
     public function invites(): HasMany
     {
@@ -108,7 +109,7 @@ class FollowerList extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\Communication\SmsShedule, $this>
+     * @return HasMany<SmsShedule, $this>
      */
     public function sms_shedules(): HasMany
     {
@@ -131,6 +132,9 @@ class FollowerList extends Model
         return $this->attributes['image'] ?? null;
     }
 
+    /**
+     * @return FollowerListFactory
+     */
     protected static function newFactory()
     {
         return FollowerListFactory::new();

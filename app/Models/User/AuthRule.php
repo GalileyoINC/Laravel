@@ -40,6 +40,7 @@ class AuthRule extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     protected $table = 'auth_rule';
@@ -50,6 +51,9 @@ class AuthRule extends Model
         'data',
     ];
 
+    /**
+     * @return HasMany<AuthItem, $this>
+     */
     public function auth_items(): HasMany
     {
         return $this->hasMany(AuthItem::class, 'rule_name');

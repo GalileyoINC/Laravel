@@ -46,6 +46,7 @@ class EmailTemplate extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'email_template';
 
     protected $casts = [

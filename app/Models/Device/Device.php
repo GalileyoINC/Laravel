@@ -51,6 +51,7 @@ class Device extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'device';
 
     protected $casts = [

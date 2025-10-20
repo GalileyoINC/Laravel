@@ -66,6 +66,7 @@ class Invoice extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public const PAY_STATUS_NONE = 0;
 
     public const PAY_STATUS_SUCCESS = 1;

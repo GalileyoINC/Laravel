@@ -38,6 +38,7 @@ class SubscriptionWizard extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'subscription_wizard';
@@ -52,6 +53,9 @@ class SubscriptionWizard extends Model
         'settings',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');

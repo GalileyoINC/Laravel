@@ -49,6 +49,7 @@ class ConversationFile extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'conversation_file';
 
     protected $casts = [
@@ -67,7 +68,7 @@ class ConversationFile extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Communication\Conversation, $this>
+     * @return BelongsTo<Conversation, $this>
      */
     public function conversation(): BelongsTo
     {
@@ -75,7 +76,7 @@ class ConversationFile extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Communication\ConversationMessage, $this>
+     * @return BelongsTo<ConversationMessage, $this>
      */
     public function conversation_message(): BelongsTo
     {

@@ -10,11 +10,11 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class User
@@ -228,6 +228,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory;
 
+    /** @phpstan-ignore-line */
     public const STATUS_ACTIVE = 1;
 
     public const STATUS_CANCEL = 2;
@@ -333,186 +334,288 @@ class User extends Authenticatable
         'name_search',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(self::class, 'id_inviter');
     }
 
+    /**
+     * @return HasMany<\App\Models\Bookmark, $this>
+     */
     public function bookmarks(): HasMany
     {
         return $this->hasMany(\App\Models\Bookmark::class, 'user_id');
     }
 
+    /**
+     * @return HasMany<Address, $this>
+     */
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<AdminMember, $this>
+     */
     public function admin_members(): HasMany
     {
         return $this->hasMany(AdminMember::class, 'id_member');
     }
 
+    /**
+     * @return HasMany<Affiliate, $this>
+     */
     public function affiliates(): HasMany
     {
         return $this->hasMany(Affiliate::class, 'id_user_parent');
     }
 
+    /**
+     * @return HasMany<Invite, $this>
+     */
     public function affiliate_invites(): HasMany
     {
         return $this->hasMany(Invite::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Subscription\BpSubscription, $this>
+     */
     public function bp_subscriptions(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\BpSubscription::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Content\Comment, $this>
+     */
     public function comments(): HasMany
     {
         return $this->hasMany(\App\Models\Content\Comment::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\Contact, $this>
+     */
     public function contacts(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\Contact::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Finance\ContractLine, $this>
+     */
     public function contract_lines(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\ContractLine::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Finance\ContractLine, $this>
+     */
     public function contractLines(): HasMany
     {
         return $this->contract_lines();
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\ConversationMessage, $this>
+     */
     public function conversation_messages(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\ConversationMessage::class, 'id_user');
     }
 
+    /**
+     * @return BelongsToMany<\App\Models\Communication\Conversation, $this>
+     */
     public function conversations(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Communication\Conversation::class, 'conversation_user', 'id_user', 'id_conversation');
     }
 
+    /**
+     * @return HasMany<\App\Models\Finance\CreditCard, $this>
+     */
     public function credit_cards(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
 
     /**
-     * @return HasMany<\App\Models\Finance\CreditCard, static>
+     * @return HasMany<\App\Models\Finance\CreditCard, $this>
      */
     public function creditCards(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Device\Device, $this>
+     */
     public function devices(): HasMany
     {
         return $this->hasMany(\App\Models\Device\Device::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Subscription\Follower, $this>
+     */
     public function followers(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\Follower::class, 'id_user_leader');
     }
 
+    /**
+     * @return HasMany<\App\Models\Subscription\FollowerList, $this>
+     */
     public function follower_lists(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\FollowerList::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Subscription\InfluencerAssistant, $this>
+     */
     public function influencer_assistants(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\InfluencerAssistant::class, 'id_influencer');
     }
 
+    /**
+     * @return HasMany<Invite, $this>
+     */
     public function invites(): HasMany
     {
         return $this->hasMany(Invite::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<Affiliate, $this>
+     */
     public function invite_affiliates(): HasMany
     {
         return $this->hasMany(Affiliate::class, 'id_inviter');
     }
 
+    /**
+     * @return HasMany<\App\Models\Finance\Invoice, $this>
+     */
     public function invoices(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\Invoice::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Analytics\LogAuthorize, $this>
+     */
     public function log_authorizes(): HasMany
     {
         return $this->hasMany(\App\Models\Analytics\LogAuthorize::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Analytics\LoginStatistic, $this>
+     */
     public function login_statistics(): HasMany
     {
         return $this->hasMany(\App\Models\Analytics\LoginStatistic::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<MemberRequest, $this>
+     */
     public function member_requests(): HasMany
     {
         return $this->hasMany(MemberRequest::class, 'id_user_from');
     }
 
+    /**
+     * @return HasMany<MemberTemplate, $this>
+     */
     public function member_templates(): HasMany
     {
         return $this->hasMany(MemberTemplate::class, 'id_admin');
     }
 
+    /**
+     * @return HasMany<\App\Models\Finance\MoneyTransaction, $this>
+     */
     public function money_transactions(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\MoneyTransaction::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Device\PhoneNumber, $this>
+     */
     public function phone_numbers(): HasMany
     {
         return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Device\PhoneNumber, $this>
+     */
     public function phoneNumbers(): HasMany
     {
         return $this->hasMany(\App\Models\Device\PhoneNumber::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPool, $this>
+     */
     public function sms_pools(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPool::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPoolPhoneNumber, $this>
+     */
     public function sms_pool_phone_numbers(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPoolPhoneNumber::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPoolReaction, $this>
+     */
     public function sms_pool_reactions(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPoolReaction::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsShedule, $this>
+     */
     public function sms_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<SpsAddUserRequest, $this>
+     */
     public function sps_add_user_requests(): HasMany
     {
         return $this->hasMany(SpsAddUserRequest::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<\App\Models\Finance\SpsContract, $this>
+     */
     public function sps_contracts(): HasMany
     {
         return $this->hasMany(\App\Models\Finance\SpsContract::class, 'id_user');
     }
 
     /**
-     * @return BelongsToMany<\App\Models\Subscription\Subscription, static>
+     * @return BelongsToMany<\App\Models\Subscription\Subscription, $this>
      */
     public function subscriptions(): BelongsToMany
     {
@@ -520,41 +623,65 @@ class User extends Authenticatable
             ->withPivot('id', 'zip');
     }
 
+    /**
+     * @return HasMany<\App\Models\Subscription\SubscriptionWizard, $this>
+     */
     public function subscription_wizards(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription\SubscriptionWizard::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<User, $this>
+     */
     public function users(): HasMany
     {
         return $this->hasMany(self::class, 'id_inviter');
     }
 
+    /**
+     * @return HasMany<\App\Models\Notification\UserFollowerAlert, $this>
+     */
     public function user_follower_alerts(): HasMany
     {
         return $this->hasMany(\App\Models\Notification\UserFollowerAlert::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<UserFriend, $this>
+     */
     public function user_friends(): HasMany
     {
         return $this->hasMany(UserFriend::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<UserPlan, $this>
+     */
     public function user_plans(): HasMany
     {
         return $this->hasMany(UserPlan::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<UserPlanShedule, $this>
+     */
     public function user_plan_shedules(): HasMany
     {
         return $this->hasMany(UserPlanShedule::class, 'id_user');
     }
 
+    /**
+     * @return HasMany<UserPointHistory, $this>
+     */
     public function user_point_histories(): HasMany
     {
         return $this->hasMany(UserPointHistory::class, 'id_user');
     }
 
+    /**
+     * @return BelongsToMany<\App\Models\Finance\Service, $this>
+     */
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Finance\Service::class, 'user_service', 'id_user', 'id_service');

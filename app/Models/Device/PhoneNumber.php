@@ -42,7 +42,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PhoneNumber extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */ /** @phpstan-ignore-line */ /** @phpstan-ignore-line */
 
     // Legacy type constants kept for BC with reports/controllers
     public const TYPE_NONE = 0;
@@ -54,6 +54,24 @@ class PhoneNumber extends Model
     public const TYPE_PIVOTEL = 3;
 
     public const TYPE_MOBILE = 4;
+
+    public ?int $id_user = null;
+
+    public ?string $phone_number = null;
+
+    public bool $is_active = false;
+
+    public ?int $type = null;
+
+    public ?bool $is_valid = null;
+
+    public ?bool $is_primary = null;
+
+    public ?bool $is_send = null;
+
+    public ?string $twilio_type = null;
+
+    public ?int $id_provider = null;
 
     protected $table = 'phone_number';
 

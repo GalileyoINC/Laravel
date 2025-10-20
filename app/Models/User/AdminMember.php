@@ -39,6 +39,7 @@ class AdminMember extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'admin_member';
@@ -55,11 +56,17 @@ class AdminMember extends Model
         'id_plan',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_member');
     }
 
+    /**
+     * @return BelongsTo<UserPlan, $this>
+     */
     public function user_plan(): BelongsTo
     {
         return $this->belongsTo(UserPlan::class, 'id_plan');

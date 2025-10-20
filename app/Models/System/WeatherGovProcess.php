@@ -34,6 +34,7 @@ class WeatherGovProcess extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'weather_gov_process';

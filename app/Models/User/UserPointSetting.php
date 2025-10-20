@@ -42,6 +42,7 @@ class UserPointSetting extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'user_point_settings';
 
     protected $casts = [
@@ -53,6 +54,9 @@ class UserPointSetting extends Model
         'price',
     ];
 
+    /**
+     * @return HasMany<UserPointHistory, $this>
+     */
     public function user_point_histories(): HasMany
     {
         return $this->hasMany(UserPointHistory::class, 'id_user_point_settings');

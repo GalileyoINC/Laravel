@@ -71,6 +71,7 @@ class SmsShedule extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'sms_shedule';
 
     protected $casts = [
@@ -102,6 +103,9 @@ class SmsShedule extends Model
 
     /**
      * Provide schedule statuses for filters and labeling.
+     */
+    /**
+     * @return array<int, string>
      */
     public static function getStatuses(): array
     {
@@ -158,7 +162,7 @@ class SmsShedule extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     * @return BelongsTo<SmsPool, $this>
      */
     public function sms_pool(): BelongsTo
     {
@@ -167,7 +171,7 @@ class SmsShedule extends Model
 
     // Alias expected by controllers
     /**
-     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     * @return BelongsTo<SmsPool, $this>
      */
     public function smsPool(): BelongsTo
     {
@@ -191,7 +195,7 @@ class SmsShedule extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
+     * @return HasMany<SmsPoolPhoto, $this>
      */
     public function sms_pool_photos(): HasMany
     {

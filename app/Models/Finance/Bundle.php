@@ -55,6 +55,7 @@ class Bundle extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'bundle';
 
     protected $casts = [

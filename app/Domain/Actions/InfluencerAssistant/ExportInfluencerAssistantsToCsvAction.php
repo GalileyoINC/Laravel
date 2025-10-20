@@ -10,10 +10,7 @@ final class ExportInfluencerAssistantsToCsvAction
 {
     /**
      * @param  array<string, mixed>  $filters
-     * @return array<int, array<int, mixed>>
-     */
-    /**
-     * @return array<string, mixed>
+     * @return list<list<mixed>>
      */
     public function execute(array $filters): array
     {
@@ -42,6 +39,7 @@ final class ExportInfluencerAssistantsToCsvAction
 
         $rows = [];
         $rows[] = ['User', 'Created At'];
+        /** @var InfluencerAssistant $influencerAssistant */
         foreach ($items as $influencerAssistant) {
             $rows[] = [
                 $influencerAssistant->user ? $influencerAssistant->user->first_name.' '.$influencerAssistant->user->last_name : '',

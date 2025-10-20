@@ -95,6 +95,7 @@ class Service extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public const TYPE_SUBSCRIBE = 1;
 
     public const TYPE_DEVICE_PLAN = 2;
@@ -151,6 +152,9 @@ class Service extends Model
     ];
 
     // ===== Helpers expected by controllers =====
+    /**
+     * @return array<string, mixed>
+     */
     public static function loadCustomParams(): array
     {
         // Placeholder: return empty params until customized
@@ -258,6 +262,9 @@ class Service extends Model
 
     /**
      * Create a new factory instance for the model.
+     */
+    /**
+     * @return ServiceFactory
      */
     protected static function newFactory()
     {

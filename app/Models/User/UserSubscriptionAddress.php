@@ -39,6 +39,7 @@ class UserSubscriptionAddress extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'user_subscription_address';

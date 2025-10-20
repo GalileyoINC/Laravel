@@ -40,6 +40,7 @@ class ReportArchive extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'report_archive';
@@ -50,4 +51,12 @@ class ReportArchive extends Model
         'data',
         'sort',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<ReportArchive>
+     */
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\AnalyticsReportArchiveFactory::new();
+    }
 }

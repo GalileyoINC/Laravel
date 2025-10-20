@@ -41,7 +41,7 @@ class SpsApiService
                 'status' => 'valid',
                 'location' => 'Unknown',
                 'api_url' => $this->apiUrl,
-                'api_key_configured' => !empty($this->apiKey),
+                'api_key_configured' => ! empty($this->apiKey),
                 'timestamp' => now()->toISOString(),
             ];
         } catch (Exception $e) {
@@ -67,7 +67,7 @@ class SpsApiService
             return [
                 'status' => 'online',
                 'api_url' => $this->apiUrl,
-                'api_key_configured' => !empty($this->apiKey),
+                'api_key_configured' => ! empty($this->apiKey),
                 'last_check' => now()->toISOString(),
             ];
         } catch (Exception $e) {

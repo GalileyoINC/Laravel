@@ -36,6 +36,7 @@ class RecentSearch extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'recent_search';

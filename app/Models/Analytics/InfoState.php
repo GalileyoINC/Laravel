@@ -38,6 +38,7 @@ class InfoState extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'info_state';
 
     protected $casts = [
@@ -48,4 +49,12 @@ class InfoState extends Model
         'key',
         'value',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<InfoState>
+     */
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\AnalyticsInfoStateFactory::new();
+    }
 }

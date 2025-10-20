@@ -47,6 +47,7 @@ class MemberTemplate extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'member_template';
@@ -67,11 +68,17 @@ class MemberTemplate extends Model
         'expired_at',
     ];
 
+    /**
+     * @return BelongsTo<UserPlan, $this>
+     */
     public function user_plan(): BelongsTo
     {
         return $this->belongsTo(UserPlan::class, 'id_plan');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_admin');

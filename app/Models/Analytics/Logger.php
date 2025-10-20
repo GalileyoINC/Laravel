@@ -62,6 +62,7 @@ class Logger extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'logger';
@@ -89,4 +90,12 @@ class Logger extends Model
         'user_agent',
         'changed_fields',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Logger>
+     */
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\AnalyticsLoggerFactory::new();
+    }
 }

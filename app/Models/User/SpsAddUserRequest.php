@@ -42,6 +42,7 @@ class SpsAddUserRequest extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'sps_add_user_request';
 
     protected $casts = [
@@ -59,6 +60,9 @@ class SpsAddUserRequest extends Model
         'post_data',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');

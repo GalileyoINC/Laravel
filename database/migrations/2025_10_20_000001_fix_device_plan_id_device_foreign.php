@@ -53,7 +53,7 @@ return new class extends Migration
             $doctrineTable = $schema->listTableDetails($table);
 
             return $doctrineTable->hasForeignKey($indexName);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // If doctrine not available, attempt raw check
             try {
                 $dbName = $connection->getDatabaseName();
@@ -62,8 +62,8 @@ return new class extends Migration
                     [$dbName, $table, $indexName]
                 );
 
-                return ((int)($count->cnt ?? 0)) > 0;
-            } catch (\Throwable) {
+                return ((int) ($count->cnt ?? 0)) > 0;
+            } catch (Throwable) {
                 return false;
             }
         }

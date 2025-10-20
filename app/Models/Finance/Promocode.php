@@ -54,7 +54,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Promocode extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */
 
     // Legacy-compatible constants
     public const TYPE_UNIVERSAL = 0;

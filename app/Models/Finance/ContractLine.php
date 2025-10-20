@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
+use Database\Factories\FinanceContractLineFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -68,12 +69,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceContractLineFactory>
+ * @use HasFactory<FinanceContractLineFactory>
  */
 class ContractLine extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'contract_line';
 
     protected $casts = [

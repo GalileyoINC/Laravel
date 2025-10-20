@@ -56,6 +56,9 @@ class SubscriptionCategory extends Model
         'position_no',
     ];
 
+    /**
+     * @return HasMany<Subscription, $this>
+     */
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class, 'id_subscription_category');

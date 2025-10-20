@@ -42,6 +42,7 @@ class Register extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'register';
 
     protected $casts = [

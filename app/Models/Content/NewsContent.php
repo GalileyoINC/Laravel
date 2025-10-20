@@ -42,6 +42,7 @@ class NewsContent extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'news_content';
@@ -60,7 +61,7 @@ class NewsContent extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Content\News, $this>
+     * @return BelongsTo<News, $this>
      */
     public function news(): BelongsTo
     {

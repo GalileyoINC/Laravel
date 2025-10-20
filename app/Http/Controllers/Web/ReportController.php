@@ -331,12 +331,18 @@ class ReportController extends Controller
     }
 
     // Helper methods
+    /**
+     * @return array<string, mixed>
+     */
     private function getLoginStatistic(Request $request): array
     {
         // Implementation for login statistics
         return [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getLoginStatisticByDay(Request $request, string $date): array
     {
         // Implementation for login statistics by day
@@ -355,6 +361,9 @@ class ReportController extends Controller
         return response('', 200);
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getReportDates(): array
     {
         $dates = [];
@@ -368,6 +377,9 @@ class ReportController extends Controller
         return $dates;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getReferralReport(Carbon $date): array
     {
         // Implementation for referral report
@@ -380,6 +392,9 @@ class ReportController extends Controller
         return $alerts * $referrals * 0.1;
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getMonthsList(): array
     {
         $months = [];
@@ -428,24 +443,36 @@ class ReportController extends Controller
         return 0;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getSpsData(Carbon $baseDate, Carbon $nowDate, string $lastDay): array
     {
         // Implementation for SPS data
         return [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getNewPlansData(string $firstDay, string $lastDay): array
     {
         // Implementation for new plans data
         return [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getNewPlansSpsData(string $firstDay, string $lastDay): array
     {
         // Implementation for new plans SPS data
         return [];
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private function getYesterdayPlansData(Carbon $baseDate, Carbon $nowDate, string $yesterDay): ?array
     {
         if ($baseDate->format('Y-m') !== $nowDate->format('Y-m')) {
@@ -456,6 +483,9 @@ class ReportController extends Controller
         return [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getCurrentPlansData(Carbon $baseDate, Carbon $nowDate, string $lastDay): array
     {
         // Implementation for current plans data
@@ -491,12 +521,20 @@ class ReportController extends Controller
         return (object) [];
     }
 
+    /**
+     * @param  array<string, mixed>  $params
+     * @return array<string, mixed>
+     */
     private function getCustomerSourceReportByMonth(array $params): array
     {
         // Implementation for customer source report by month
         return [];
     }
 
+    /**
+     * @param  array<string, mixed>  $params
+     * @return array<string, mixed>
+     */
     private function getCustomerSourceReportByYears(array $params): array
     {
         // Implementation for customer source report by years

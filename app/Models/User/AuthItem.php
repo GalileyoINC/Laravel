@@ -11,8 +11,8 @@ namespace App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class AuthItem
@@ -50,6 +50,7 @@ class AuthItem extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     protected $table = 'auth_item';
@@ -67,16 +68,25 @@ class AuthItem extends Model
         'data',
     ];
 
+    /**
+     * @return BelongsTo<AuthRule, $this>
+     */
     public function auth_rule(): BelongsTo
     {
         return $this->belongsTo(AuthRule::class, 'rule_name');
     }
 
+    /**
+     * @return HasMany<AuthAssignment, $this>
+     */
     public function auth_assignments(): HasMany
     {
         return $this->hasMany(AuthAssignment::class, 'item_name');
     }
 
+    /**
+     * @return HasMany<AuthItemChild, $this>
+     */
     public function auth_item_children(): HasMany
     {
         return $this->hasMany(AuthItemChild::class, 'child');

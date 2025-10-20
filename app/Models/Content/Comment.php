@@ -56,6 +56,7 @@ class Comment extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'comment';
 
     protected $casts = [

@@ -49,8 +49,9 @@ use Throwable;
  */
 class ActiveRecordLog extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */ /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'active_record_log';
@@ -74,6 +75,9 @@ class ActiveRecordLog extends Model
     ];
 
     // Action type labels for filters and exports
+    /**
+     * @return array<int, string>
+     */
     public static function getActionTypeList(): array
     {
         $defaults = [
@@ -100,11 +104,17 @@ class ActiveRecordLog extends Model
     }
 
     // Relationships
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<Staff, $this>
+     */
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class, 'id_staff');

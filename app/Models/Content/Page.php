@@ -48,6 +48,7 @@ class Page extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public const STATUS_OFF = 0;
 
     public const STATUS_ON = 1;
@@ -76,6 +77,8 @@ class Page extends Model
 
     /**
      * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Page>
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {

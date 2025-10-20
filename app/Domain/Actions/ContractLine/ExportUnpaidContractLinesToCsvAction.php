@@ -11,10 +11,7 @@ final class ExportUnpaidContractLinesToCsvAction
 {
     /**
      * @param  array<string, mixed>  $filters
-     * @return array<int, array<int, mixed>>
-     */
-    /**
-     * @return array<string, mixed>
+     * @return list<list<mixed>>
      */
     public function execute(array $filters): array
     {

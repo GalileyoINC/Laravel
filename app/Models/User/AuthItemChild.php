@@ -34,12 +34,16 @@ class AuthItemChild extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     public $timestamps = false;
 
     protected $table = 'auth_item_child';
 
+    /**
+     * @return BelongsTo<AuthItem, $this>
+     */
     public function auth_item(): BelongsTo
     {
         return $this->belongsTo(AuthItem::class, 'child');

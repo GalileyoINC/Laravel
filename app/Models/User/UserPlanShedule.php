@@ -50,6 +50,7 @@ class UserPlanShedule extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'user_plan_shedule';

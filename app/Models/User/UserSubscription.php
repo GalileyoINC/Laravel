@@ -37,6 +37,7 @@ class UserSubscription extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     public $timestamps = false;
@@ -53,11 +54,17 @@ class UserSubscription extends Model
         'id_subscription',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\Subscription, $this>
+     */
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');

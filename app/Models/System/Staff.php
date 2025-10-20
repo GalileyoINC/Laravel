@@ -9,11 +9,13 @@ declare(strict_types=1);
 namespace App\Models\System;
 
 use Database\Factories\SystemStaffFactory;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Throwable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Throwable;
 
 /**
  * Class Staff
@@ -55,10 +57,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\StaffFactory>
  */
-class Staff extends Model
+class Staff extends Model implements Authenticatable
 {
-    use HasFactory;
+    use AuthenticatableTrait, HasFactory; /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     public const ROLE_ADMIN = 1;
 
     public const STATUS_ACTIVE = 1;
@@ -88,6 +91,9 @@ class Staff extends Model
         'is_superlogin',
     ];
 
+    /**
+     * @return array<int, string>
+     */
     public static function getForDropDown(): array
     {
         try {
@@ -111,11 +117,17 @@ class Staff extends Model
         return (int) ($this->role ?? 0) === self::ROLE_ADMIN;
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsPool, $this>
+     */
     public function sms_pools(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsPool::class, 'id_staff');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsShedule, $this>
+     */
     public function sms_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_staff');

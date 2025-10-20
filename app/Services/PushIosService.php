@@ -29,6 +29,9 @@ class PushIosService
     /**
      * Send push notification to iOS devices
      */
+    /**
+     * @param  array<string>  $tokens
+     */
     public function send(array $tokens, string $body, string $title = '', ?bool $isProd = null): bool
     {
         try {
@@ -68,7 +71,7 @@ class PushIosService
             'body' => $body,
             'production' => $isProd,
             'certificate_path' => $this->certificatePath,
-            'passphrase_configured' => !empty($this->passphrase),
+            'passphrase_configured' => ! empty($this->passphrase),
         ]);
     }
 

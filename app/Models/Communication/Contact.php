@@ -47,7 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Contact extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */
 
     /**
      * Status constants

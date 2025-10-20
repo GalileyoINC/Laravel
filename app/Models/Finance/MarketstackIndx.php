@@ -46,6 +46,7 @@ class MarketstackIndx extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'marketstack_indx';

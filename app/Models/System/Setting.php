@@ -34,8 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Setting extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     public $timestamps = false;
@@ -51,6 +52,9 @@ class Setting extends Model
 
     /**
      * Create a new factory instance for the model.
+     */
+    /**
+     * @return SystemSettingFactory
      */
     protected static function newFactory()
     {

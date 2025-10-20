@@ -44,6 +44,7 @@ class MemberRequest extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'member_request';
@@ -65,6 +66,9 @@ class MemberRequest extends Model
         'is_active',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user_from');

@@ -44,7 +44,7 @@ final class ExportAdminMessageLogsToCsvAction
                 $log->obj_type,
                 $log->obj_id,
                 $log->body,
-                $log->created_at->format('Y-m-d H:i:s'),
+                $log->created_at?->format('Y-m-d H:i:s') ?? '',
             ];
         }
 

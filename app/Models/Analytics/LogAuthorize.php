@@ -43,12 +43,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\AnalyticsLogAuthorizeFactory>
+ * @phpstan-ignore-next-line
  */
 class LogAuthorize extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'log_authorize';
 
     protected $casts = [
@@ -82,5 +83,13 @@ class LogAuthorize extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<LogAuthorize>
+     */
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\AnalyticsLogAuthorizeFactory::new();
     }
 }

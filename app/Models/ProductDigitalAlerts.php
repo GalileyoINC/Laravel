@@ -24,6 +24,7 @@ class ProductDigitalAlerts extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'product_digital_alerts';
 
     protected $fillable = [

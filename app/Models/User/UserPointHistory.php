@@ -47,6 +47,7 @@ class UserPointHistory extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'user_point_history';
@@ -67,21 +68,33 @@ class UserPointHistory extends Model
         'quantity',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Content\Comment, $this>
+     */
     public function comment(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Content\Comment::class, 'id_comment');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     */
     public function sms_pool(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_sms_pool');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<UserPointSetting, $this>
+     */
     public function user_point_setting(): BelongsTo
     {
         return $this->belongsTo(UserPointSetting::class, 'id_user_point_settings');

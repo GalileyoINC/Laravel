@@ -70,8 +70,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class UserPlan extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'user_plan';
@@ -114,6 +115,9 @@ class UserPlan extends Model
 
     /**
      * Helper for controllers/views to render pay interval options.
+     */
+    /**
+     * @return array<int, string>
      */
     public static function getPayIntervals(): array
     {

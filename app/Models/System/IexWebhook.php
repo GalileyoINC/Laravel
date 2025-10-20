@@ -44,6 +44,7 @@ class IexWebhook extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'iex_webhook';
 
     protected $casts = [

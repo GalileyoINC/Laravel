@@ -37,7 +37,7 @@ class BivyStickService
                 'success' => true,
                 'message' => 'BivyStick data updated successfully',
                 'api_url' => $this->apiUrl,
-                'api_key_configured' => !empty($this->apiKey),
+                'api_key_configured' => ! empty($this->apiKey),
                 'timestamp' => now()->toISOString(),
             ];
         } catch (Exception $e) {

@@ -43,10 +43,11 @@ class Conversation extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'conversation';
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\ConversationFile, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ConversationFile, $this>
      */
     public function conversation_files(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -54,7 +55,7 @@ class Conversation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\ConversationMessage, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ConversationMessage, $this>
      */
     public function conversation_messages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -62,7 +63,7 @@ class Conversation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\ConversationUnviewed, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ConversationUnviewed, $this>
      */
     public function conversation_unvieweds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

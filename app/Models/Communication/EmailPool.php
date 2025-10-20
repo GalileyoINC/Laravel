@@ -55,7 +55,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EmailPool extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */
 
     /**
      * Status constants
@@ -114,7 +114,7 @@ class EmailPool extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\EmailPoolAttachment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<EmailPoolAttachment, $this>
      */
     public function email_pool_attachments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -122,7 +122,7 @@ class EmailPool extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Communication\EmailPoolAttachment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<EmailPoolAttachment, $this>
      */
     public function attachments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

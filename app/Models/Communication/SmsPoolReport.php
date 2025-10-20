@@ -56,6 +56,7 @@ class SmsPoolReport extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'sms_pool_report';

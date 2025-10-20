@@ -43,6 +43,7 @@ class InviteAffiliate extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'invite_affiliate';
@@ -61,11 +62,17 @@ class InviteAffiliate extends Model
         'id_reward_invoice',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Finance\Invoice, $this>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Finance\Invoice::class, 'id_reward_invoice');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_inviter');

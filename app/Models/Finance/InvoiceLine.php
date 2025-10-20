@@ -60,8 +60,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class InvoiceLine extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'invoice_line';

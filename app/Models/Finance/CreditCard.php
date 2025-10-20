@@ -73,8 +73,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class CreditCard extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     protected $table = 'credit_card';
 
     protected $casts = [
@@ -129,6 +130,23 @@ class CreditCard extends Model
 
     /**
      * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<CreditCard>
+     */
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<App\Models\Finance\CreditCard>
+     */
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<App\Models\Finance\CreditCard>
+     */
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<App\Models\Finance\CreditCard>
+     */
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<App\Models\Finance\CreditCard>
+     */
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<App\Models\Finance\CreditCard>
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {

@@ -46,6 +46,7 @@ class AppleAppTransaction extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'apple_app_transactions';

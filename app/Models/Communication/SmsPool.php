@@ -211,7 +211,7 @@ class SmsPool extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
+     * @return HasMany<SmsPoolPhoto, $this>
      */
     public function sms_pool_photos(): HasMany
     {
@@ -227,7 +227,7 @@ class SmsPool extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
+     * @return HasMany<SmsPoolPhoto, $this>
      */
     public function photos(): HasMany
     {
@@ -244,7 +244,7 @@ class SmsPool extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\Communication\SmsShedule, $this>
+     * @return HasMany<SmsShedule, $this>
      */
     public function sms_shedules(): HasMany
     {
@@ -277,7 +277,8 @@ class SmsPool extends Model
 
     /**
      * Get images relationship (alias for photos)
-     * @return HasMany<\App\Models\Communication\SmsPoolPhoto, $this>
+     *
+     * @return HasMany<SmsPoolPhoto, $this>
      */
     public function images(): HasMany
     {

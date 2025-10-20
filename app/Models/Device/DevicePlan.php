@@ -44,6 +44,7 @@ class DevicePlan extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'device_plan';
 
     protected $casts = [

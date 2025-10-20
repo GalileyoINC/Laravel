@@ -25,6 +25,7 @@ class Mute extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'mute';
 
     protected $fillable = [
@@ -41,11 +42,17 @@ class Mute extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\Subscription, $this>
+     */
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');

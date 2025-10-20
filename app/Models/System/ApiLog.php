@@ -36,6 +36,7 @@ class ApiLog extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'api_log';

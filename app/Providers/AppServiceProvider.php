@@ -197,7 +197,6 @@ class AppServiceProvider extends ServiceProvider
             EmailTemplateService::class
         );
 
-
         // Register Report services
         $this->app->bind(
             ReportServiceInterface::class,
@@ -209,7 +208,6 @@ class AppServiceProvider extends ServiceProvider
             SettingsServiceInterface::class,
             SettingsService::class
         );
-
 
         // Register Maintenance services
         $this->app->bind(

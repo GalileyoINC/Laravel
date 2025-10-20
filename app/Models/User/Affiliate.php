@@ -44,6 +44,7 @@ class Affiliate extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'affiliate';
 
     protected $casts = [
@@ -60,6 +61,9 @@ class Affiliate extends Model
         'params',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user_parent');

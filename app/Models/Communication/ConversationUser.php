@@ -35,6 +35,7 @@ class ConversationUser extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     public $timestamps = false;
@@ -47,7 +48,7 @@ class ConversationUser extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Communication\Conversation, $this>
+     * @return BelongsTo<Conversation, $this>
      */
     public function conversation(): BelongsTo
     {

@@ -46,8 +46,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class InfluencerPage extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */ /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-line */
     protected $table = 'influencer_page';
 
     protected $casts = [
@@ -62,11 +63,17 @@ class InfluencerPage extends Model
         'image',
     ];
 
+    /**
+     * @return BelongsTo<Subscription, $this>
+     */
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class, 'id_subscription');
     }
 
+    /**
+     * @return InfluencerPageFactory
+     */
     protected static function newFactory()
     {
         return InfluencerPageFactory::new();

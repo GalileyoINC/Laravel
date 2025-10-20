@@ -50,6 +50,7 @@ class SmsPoolPhoto extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'sms_pool_photo';
 
     protected $casts = [
@@ -69,7 +70,7 @@ class SmsPoolPhoto extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     * @return BelongsTo<SmsPool, $this>
      */
     public function sms_pool(): BelongsTo
     {
@@ -77,7 +78,7 @@ class SmsPoolPhoto extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Communication\SmsShedule, $this>
+     * @return BelongsTo<SmsShedule, $this>
      */
     public function sms_shedule(): BelongsTo
     {

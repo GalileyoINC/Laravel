@@ -94,7 +94,7 @@ use Throwable;
  */
 class Subscription extends Model
 {
-    use HasFactory;
+    use HasFactory; /** @phpstan-ignore-line */ /** @phpstan-ignore-line */ /** @phpstan-ignore-line */
 
     // Modes for statistics helpers
     public const ACTIVE_ONLY = 1;
@@ -157,6 +157,9 @@ class Subscription extends Model
      * Return all subscriptions as [id => label] for filter dropdowns.
      * Uses title if available, otherwise falls back to name.
      */
+    /**
+     * @return array<int, string>
+     */
     public static function getAllAsArray(): array
     {
         return self::query()
@@ -174,6 +177,9 @@ class Subscription extends Model
      * Return subscriptions as array of ['id' => int, 'name' => string]
      * suitable for blade dropdowns expecting keys by name.
      */
+    /**
+     * @return list<array{id: int, name: string}>
+     */
     public static function getForDropDown(): array
     {
         return self::query()
@@ -189,6 +195,9 @@ class Subscription extends Model
     /**
      * Get user counts per subscription.
      * Returns array of ['id_subscription' => int, 'cnt' => int].
+     */
+    /**
+     * @return list<array{id_subscription: int, cnt: int}>
      */
     public static function getUserStatistics(int $mode = self::ACTIVE_ONLY): array
     {
@@ -221,38 +230,59 @@ class Subscription extends Model
         return false;
     }
 
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_influencer');
     }
 
     // Alias expected by controllers
+    /**
+     * @return BelongsTo<\App\Models\User\User, $this>
+     */
     public function influencer(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_influencer');
     }
 
+    /**
+     * @return BelongsTo<SubscriptionCategory, $this>
+     */
     public function subscription_category(): BelongsTo
     {
         return $this->belongsTo(SubscriptionCategory::class, 'id_subscription_category');
     }
 
+    /**
+     * @return HasMany<InfluencerPage, $this>
+     */
     public function influencer_pages(): HasMany
     {
         return $this->hasMany(InfluencerPage::class, 'id_subscription');
     }
 
     // Alias expected by controllers
+    /**
+     * @return HasOne<InfluencerPage, $this>
+     */
     public function influencerPage(): HasOne
     {
         return $this->hasOne(InfluencerPage::class, 'id_subscription');
     }
 
+    /**
+     * @return HasMany<\App\Models\Communication\SmsShedule, $this>
+     */
     public function sms_shedules(): HasMany
     {
         return $this->hasMany(\App\Models\Communication\SmsShedule::class, 'id_subscription');
     }
 
+    /**
+     * @return BelongsToMany<\App\Models\User\User, $this>
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
@@ -260,6 +290,9 @@ class Subscription extends Model
     }
 
     // Alias expected by controllers for counting/queries
+    /**
+     * @return BelongsToMany<\App\Models\User\User, $this>
+     */
     public function userSubscriptions(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')

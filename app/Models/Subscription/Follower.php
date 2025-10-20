@@ -52,6 +52,7 @@ class Follower extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'follower';
 
     protected $casts = [

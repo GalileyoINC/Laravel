@@ -60,6 +60,7 @@ class Order extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'orders';
 
     protected $casts = [
@@ -88,16 +89,25 @@ class Order extends Model
         'payment_details',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
+    /**
+     * @return BelongsTo<Service, $this>
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'id_product');
     }
 
+    /**
+     * @return BelongsTo<CreditCard, $this>
+     */
     public function creditCard(): BelongsTo
     {
         return $this->belongsTo(CreditCard::class, 'id_credit_card');

@@ -58,6 +58,7 @@ class SmsPoolPhoneNumber extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'sms_pool_phone_number';
@@ -103,7 +104,7 @@ class SmsPoolPhoneNumber extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Finance\Provider, $this>
+     * @return BelongsTo<Provider, $this>
      */
     public function provider(): BelongsTo
     {
@@ -111,7 +112,7 @@ class SmsPoolPhoneNumber extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     * @return BelongsTo<SmsPool, $this>
      */
     public function sms_pool(): BelongsTo
     {
@@ -120,7 +121,7 @@ class SmsPoolPhoneNumber extends Model
 
     /** Alias for consistency */
     /**
-     * @return BelongsTo<\App\Models\Communication\SmsPool, $this>
+     * @return BelongsTo<SmsPool, $this>
      */
     public function smsPool(): BelongsTo
     {

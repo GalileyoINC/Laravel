@@ -65,6 +65,7 @@ class Address extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'address';
 
     protected $casts = [

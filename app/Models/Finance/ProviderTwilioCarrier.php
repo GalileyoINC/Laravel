@@ -35,6 +35,7 @@ class ProviderTwilioCarrier extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $incrementing = false;
 
     public $timestamps = false;

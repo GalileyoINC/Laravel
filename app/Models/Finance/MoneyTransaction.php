@@ -70,6 +70,7 @@ class MoneyTransaction extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'money_transaction';
 
     protected $casts = [

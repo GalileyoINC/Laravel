@@ -14,6 +14,9 @@ class SmsService
 {
     private string $provider;
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $response = [];
 
     public function __construct(string $provider = 'twilio')

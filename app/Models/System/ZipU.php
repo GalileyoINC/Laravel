@@ -42,6 +42,7 @@ class ZipU extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'zip_us';

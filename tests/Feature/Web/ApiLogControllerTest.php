@@ -6,10 +6,10 @@ namespace Tests\Feature\Web;
 
 use App\Http\Controllers\Web\ApiLogController;
 use App\Models\System\ApiLog;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Route;
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 final class ApiLogControllerTest extends TestCase

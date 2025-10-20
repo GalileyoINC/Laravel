@@ -50,6 +50,7 @@ class News extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'news';
 
     protected $casts = [
@@ -73,6 +74,9 @@ class News extends Model
         return $this->hasMany(NewsContent::class, 'id_news');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<News>
+     */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return NewsFactory::new();

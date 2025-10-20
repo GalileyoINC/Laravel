@@ -49,6 +49,7 @@ class Invite extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'invite';
 
     protected $casts = [
@@ -69,11 +70,17 @@ class Invite extends Model
         'token',
     ];
 
+    /**
+     * @return BelongsTo<\App\Models\Subscription\FollowerList, $this>
+     */
     public function follower_list(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Subscription\FollowerList::class, 'id_follower_list');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');

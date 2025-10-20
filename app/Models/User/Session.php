@@ -40,6 +40,7 @@ class Session extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'session';
 
     protected $fillable = [
@@ -61,6 +62,8 @@ class Session extends Model
 
     /**
      * Get the user that owns the session
+     *
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

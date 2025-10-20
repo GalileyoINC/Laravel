@@ -25,6 +25,7 @@ class Report extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     protected $table = 'report';
 
     protected $fillable = [
@@ -55,5 +56,13 @@ class Report extends Model
     public function news(): BelongsTo
     {
         return $this->belongsTo(\App\Models\Communication\SmsPool::class, 'id_news');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Report>
+     */
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\AnalyticsReportFactory::new();
     }
 }

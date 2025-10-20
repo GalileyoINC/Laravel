@@ -36,6 +36,7 @@ class UserFriend extends Model
 {
     use HasFactory;
 
+    /** @phpstan-ignore-line */
     public $timestamps = false;
 
     protected $table = 'user_friend';
@@ -50,6 +51,9 @@ class UserFriend extends Model
         'id_friend',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
