@@ -69,4 +69,12 @@ class InvoicePromocode extends Model
     {
         return $this->belongsTo(Promocode::class, 'id_promo');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\InvoicePromocodeFactory
+    {
+        return \Database\Factories\InvoicePromocodeFactory::new();
+    }
 }

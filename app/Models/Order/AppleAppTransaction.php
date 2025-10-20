@@ -68,4 +68,12 @@ class AppleAppTransaction extends Model
         'apple_created_at',
         'is_process',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AppleAppTransactionFactory
+    {
+        return \Database\Factories\AppleAppTransactionFactory::new();
+    }
 }

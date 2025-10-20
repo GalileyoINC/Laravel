@@ -59,4 +59,12 @@ class ZipU extends Model
         'timezone',
         'daylight_savings_time_flag',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ZipUFactory
+    {
+        return \Database\Factories\ZipUFactory::new();
+    }
 }

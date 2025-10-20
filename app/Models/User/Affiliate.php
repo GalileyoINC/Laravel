@@ -68,4 +68,12 @@ class Affiliate extends Model
     {
         return $this->belongsTo(User::class, 'id_user_parent');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AffiliateFactory
+    {
+        return \Database\Factories\AffiliateFactory::new();
+    }
 }

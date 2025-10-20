@@ -67,4 +67,12 @@ class AppleNotification extends Model
         'original_transaction_id',
         'is_process',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AppleNotificationFactory
+    {
+        return \Database\Factories\AppleNotificationFactory::new();
+    }
 }

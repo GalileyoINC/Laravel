@@ -135,4 +135,12 @@ class SmsPoolPhoneNumber extends Model
     {
         return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SmsPoolPhoneNumberFactory
+    {
+        return \Database\Factories\SmsPoolPhoneNumberFactory::new();
+    }
 }

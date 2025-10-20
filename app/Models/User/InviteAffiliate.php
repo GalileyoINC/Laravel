@@ -77,4 +77,12 @@ class InviteAffiliate extends Model
     {
         return $this->belongsTo(User::class, 'id_inviter');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\InviteAffiliateFactory
+    {
+        return \Database\Factories\InviteAffiliateFactory::new();
+    }
 }

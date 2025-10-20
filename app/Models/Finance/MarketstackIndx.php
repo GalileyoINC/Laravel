@@ -68,4 +68,12 @@ class MarketstackIndx extends Model
         'is_active',
         'full',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\MarketstackIndxFactory
+    {
+        return \Database\Factories\MarketstackIndxFactory::new();
+    }
 }

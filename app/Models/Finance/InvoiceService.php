@@ -67,4 +67,12 @@ class InvoiceService extends Model
     {
         return $this->belongsTo(Service::class, 'id_service');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\InvoiceServiceFactory
+    {
+        return \Database\Factories\InvoiceServiceFactory::new();
+    }
 }

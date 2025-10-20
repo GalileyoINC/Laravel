@@ -79,4 +79,12 @@ class EmailTemplate extends Model
 
         return $body;
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\EmailTemplateFactory
+    {
+        return \Database\Factories\EmailTemplateFactory::new();
+    }
 }

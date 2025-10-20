@@ -84,4 +84,12 @@ class SmsPoolPhoto extends Model
     {
         return $this->belongsTo(SmsShedule::class, 'id_sms_shedule');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SmsPoolPhotoFactory
+    {
+        return \Database\Factories\SmsPoolPhotoFactory::new();
+    }
 }

@@ -52,4 +52,12 @@ class InfluencerAssistant extends Model
     {
         return $this->belongsTo(User::class, 'id_influencer');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\InfluencerAssistantFactory
+    {
+        return \Database\Factories\InfluencerAssistantFactory::new();
+    }
 }

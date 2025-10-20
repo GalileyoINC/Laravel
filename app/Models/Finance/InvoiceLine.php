@@ -134,4 +134,12 @@ class InvoiceLine extends Model
     {
         return $this->hasMany(\App\Models\User\UserPlan::class, 'id_invoice_line');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\InvoiceLineFactory
+    {
+        return \Database\Factories\InvoiceLineFactory::new();
+    }
 }

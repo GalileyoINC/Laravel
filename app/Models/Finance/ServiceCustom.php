@@ -64,4 +64,12 @@ class ServiceCustom extends Model
         'feed_min',
         'feed_max',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ServiceCustomFactory
+    {
+        return \Database\Factories\ServiceCustomFactory::new();
+    }
 }

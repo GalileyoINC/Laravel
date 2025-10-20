@@ -43,4 +43,12 @@ class SettingsSafe extends Model
     protected $fillable = [
         'value',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SettingsSafeFactory
+    {
+        return \Database\Factories\SettingsSafeFactory::new();
+    }
 }

@@ -99,4 +99,12 @@ class UserPointHistory extends Model
     {
         return $this->belongsTo(UserPointSetting::class, 'id_user_point_settings');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\UserPointHistoryFactory
+    {
+        return \Database\Factories\UserPointHistoryFactory::new();
+    }
 }

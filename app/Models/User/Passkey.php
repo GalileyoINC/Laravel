@@ -76,4 +76,12 @@ class Passkey extends Model
         'createdAt',
         'aaguid',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\PasskeyFactory
+    {
+        return \Database\Factories\PasskeyFactory::new();
+    }
 }

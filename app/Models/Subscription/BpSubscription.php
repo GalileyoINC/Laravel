@@ -81,4 +81,12 @@ class BpSubscription extends Model
     {
         return $this->hasMany(\App\Models\Finance\Invoice::class, 'id_bp_subscribe');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\BpSubscriptionFactory
+    {
+        return \Database\Factories\BpSubscriptionFactory::new();
+    }
 }

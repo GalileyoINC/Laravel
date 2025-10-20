@@ -62,4 +62,12 @@ class TwilioCarrier extends Model
     {
         return $this->belongsTo(\App\Models\Finance\Provider::class, 'provider_id');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\TwilioCarrierFactory
+    {
+        return \Database\Factories\TwilioCarrierFactory::new();
+    }
 }

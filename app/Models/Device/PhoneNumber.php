@@ -141,4 +141,12 @@ class PhoneNumber extends Model
 
         return empty($types) ? 'Unknown' : implode(', ', $types);
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\PhoneNumberFactory
+    {
+        return \Database\Factories\PhoneNumberFactory::new();
+    }
 }

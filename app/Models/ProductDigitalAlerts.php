@@ -52,4 +52,12 @@ class ProductDigitalAlerts extends Model
     {
         return $this->table ?? 'product_digital_alerts';
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ProductDigitalAlertsFactory
+    {
+        return \Database\Factories\ProductDigitalAlertsFactory::new();
+    }
 }

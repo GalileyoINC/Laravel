@@ -137,4 +137,12 @@ class Promocode extends Model
     {
         return $this->hasOne(PromocodeInfluencer::class, 'id_promocode');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\PromocodeFactory
+    {
+        return \Database\Factories\PromocodeFactory::new();
+    }
 }

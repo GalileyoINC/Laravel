@@ -63,4 +63,12 @@ class EmailPoolAttachment extends Model
     {
         return $this->belongsTo(EmailPool::class, 'id_email_pool');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\EmailPoolAttachmentFactory
+    {
+        return \Database\Factories\EmailPoolAttachmentFactory::new();
+    }
 }

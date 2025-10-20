@@ -50,4 +50,12 @@ class AuthAssignment extends Model
     {
         return $this->belongsTo(AuthItem::class, 'item_name');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AuthAssignmentFactory
+    {
+        return \Database\Factories\AuthAssignmentFactory::new();
+    }
 }

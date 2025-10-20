@@ -56,4 +56,12 @@ class TwilioIncoming extends Model
         'message',
         'type',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\TwilioIncomingFactory
+    {
+        return \Database\Factories\TwilioIncomingFactory::new();
+    }
 }

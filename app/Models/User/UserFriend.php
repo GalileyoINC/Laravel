@@ -58,4 +58,12 @@ class UserFriend extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\UserFriendFactory
+    {
+        return \Database\Factories\UserFriendFactory::new();
+    }
 }

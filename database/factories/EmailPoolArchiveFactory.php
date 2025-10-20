@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Communication\EmailPoolArchive;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class EmailPoolArchiveFactory extends Factory
 {
+    protected $model = EmailPoolArchive::class;
+
     /**
      * Define the model's default state.
      *

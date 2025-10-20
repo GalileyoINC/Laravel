@@ -85,4 +85,12 @@ class Session extends Model
             'expiresAt' => $this->expiresAt,
         ];
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SessionFactory
+    {
+        return \Database\Factories\SessionFactory::new();
+    }
 }

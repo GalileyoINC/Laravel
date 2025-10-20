@@ -83,4 +83,12 @@ class MemberTemplate extends Model
     {
         return $this->belongsTo(User::class, 'id_admin');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\MemberTemplateFactory
+    {
+        return \Database\Factories\MemberTemplateFactory::new();
+    }
 }

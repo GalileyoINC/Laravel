@@ -55,4 +55,12 @@ class Register extends Model
         'last_name',
         'is_unfinished_signup',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\RegisterFactory
+    {
+        return \Database\Factories\RegisterFactory::new();
+    }
 }

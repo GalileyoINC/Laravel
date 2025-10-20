@@ -67,4 +67,12 @@ class ProductPhoto extends Model
     {
         return $this->belongsTo(\App\Models\Finance\Service::class, 'id_service');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ProductPhotoFactory
+    {
+        return \Database\Factories\ProductPhotoFactory::new();
+    }
 }

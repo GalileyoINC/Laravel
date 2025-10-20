@@ -49,4 +49,12 @@ class ApiLog extends Model
         'key',
         'value',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ApiLogFactory
+    {
+        return \Database\Factories\ApiLogFactory::new();
+    }
 }

@@ -98,4 +98,12 @@ class ContractLinePaid extends Model
     {
         return $this->belongsTo(InvoiceLine::class, 'id_invoice_line');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ContractLinePaidFactory
+    {
+        return \Database\Factories\ContractLinePaidFactory::new();
+    }
 }

@@ -77,4 +77,12 @@ class PageContent extends Model
     {
         return $this->belongsTo(Page::class, 'id_page');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\PageContentFactory
+    {
+        return \Database\Factories\PageContentFactory::new();
+    }
 }

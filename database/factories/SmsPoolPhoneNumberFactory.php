@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Communication\SmsPoolPhoneNumber;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class SmsPoolPhoneNumberFactory extends Factory
 {
+    protected $model = SmsPoolPhoneNumber::class;
+
     /**
      * Define the model's default state.
      *

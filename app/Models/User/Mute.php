@@ -57,4 +57,12 @@ class Mute extends Model
     {
         return $this->belongsTo(\App\Models\Subscription\Subscription::class, 'id_subscription');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\MuteFactory
+    {
+        return \Database\Factories\MuteFactory::new();
+    }
 }

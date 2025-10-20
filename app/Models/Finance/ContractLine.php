@@ -167,4 +167,12 @@ class ContractLine extends Model
         return $this->hasOne(\App\Models\User\UserPlan::class, 'id_user', 'id_user')
             ->whereColumn('user_plan.id_service', 'contract_line.id_service');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ContractLineFactory
+    {
+        return \Database\Factories\ContractLineFactory::new();
+    }
 }

@@ -83,4 +83,12 @@ class BundleItem extends Model
     {
         return $this->belongsTo(Service::class, 'id_item');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\BundleItemFactory
+    {
+        return \Database\Factories\BundleItemFactory::new();
+    }
 }

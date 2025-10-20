@@ -58,4 +58,12 @@ class IexWebhook extends Model
         'name',
         'data',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\IexWebhookFactory
+    {
+        return \Database\Factories\IexWebhookFactory::new();
+    }
 }

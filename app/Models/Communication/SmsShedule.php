@@ -201,4 +201,12 @@ class SmsShedule extends Model
     {
         return $this->hasMany(SmsPoolPhoto::class, 'id_sms_shedule');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SmsSheduleFactory
+    {
+        return \Database\Factories\SmsSheduleFactory::new();
+    }
 }

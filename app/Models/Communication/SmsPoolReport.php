@@ -92,4 +92,12 @@ class SmsPoolReport extends Model
         'api_users',
         'day',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SmsPoolReportFactory
+    {
+        return \Database\Factories\SmsPoolReportFactory::new();
+    }
 }

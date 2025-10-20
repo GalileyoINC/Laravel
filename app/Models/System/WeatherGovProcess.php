@@ -42,4 +42,12 @@ class WeatherGovProcess extends Model
     protected $fillable = [
         'api_id',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\WeatherGovProcessFactory
+    {
+        return \Database\Factories\WeatherGovProcessFactory::new();
+    }
 }

@@ -91,4 +91,12 @@ class AuthItem extends Model
     {
         return $this->hasMany(AuthItemChild::class, 'child');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AuthItemFactory
+    {
+        return \Database\Factories\AuthItemFactory::new();
+    }
 }

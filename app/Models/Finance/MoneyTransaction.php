@@ -188,4 +188,12 @@ class MoneyTransaction extends Model
 
         return $this->save();
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\MoneyTransactionFactory
+    {
+        return \Database\Factories\MoneyTransactionFactory::new();
+    }
 }

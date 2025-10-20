@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Finance\SpsContract;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class SpsContractFactory extends Factory
 {
+    protected $model = SpsContract::class;
+
     /**
      * Define the model's default state.
      *

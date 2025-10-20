@@ -85,4 +85,12 @@ class Account extends Model
         'createdAt',
         'updatedAt',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AccountFactory
+    {
+        return \Database\Factories\AccountFactory::new();
+    }
 }

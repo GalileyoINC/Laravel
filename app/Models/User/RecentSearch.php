@@ -51,4 +51,12 @@ class RecentSearch extends Model
         'phrase',
         'id_search_user',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\RecentSearchFactory
+    {
+        return \Database\Factories\RecentSearchFactory::new();
+    }
 }

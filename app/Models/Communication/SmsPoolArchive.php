@@ -121,4 +121,12 @@ class SmsPoolArchive extends Model
     {
         return $this->belongsTo(FollowerList::class, 'id_follower_list');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SmsPoolArchiveFactory
+    {
+        return \Database\Factories\SmsPoolArchiveFactory::new();
+    }
 }

@@ -48,4 +48,12 @@ class AuthItemChild extends Model
     {
         return $this->belongsTo(AuthItem::class, 'child');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AuthItemChildFactory
+    {
+        return \Database\Factories\AuthItemChildFactory::new();
+    }
 }

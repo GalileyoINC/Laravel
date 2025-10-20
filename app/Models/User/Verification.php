@@ -58,4 +58,12 @@ class Verification extends Model
         'createdAt',
         'updatedAt',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\VerificationFactory
+    {
+        return \Database\Factories\VerificationFactory::new();
+    }
 }

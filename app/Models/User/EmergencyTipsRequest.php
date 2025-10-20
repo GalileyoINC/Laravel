@@ -49,4 +49,12 @@ class EmergencyTipsRequest extends Model
         'first_name',
         'email',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\EmergencyTipsRequestFactory
+    {
+        return \Database\Factories\EmergencyTipsRequestFactory::new();
+    }
 }

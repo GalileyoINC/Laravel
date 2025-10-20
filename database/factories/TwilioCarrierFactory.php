@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\System\TwilioCarrier;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TwilioCarrierFactory extends Factory
 {
+    protected $model = TwilioCarrier::class;
+
     /**
      * Define the model's default state.
      *

@@ -67,4 +67,12 @@ class NewsContent extends Model
     {
         return $this->belongsTo(News::class, 'id_news');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\NewsContentFactory
+    {
+        return \Database\Factories\NewsContentFactory::new();
+    }
 }

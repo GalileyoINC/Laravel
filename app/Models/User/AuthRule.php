@@ -58,4 +58,12 @@ class AuthRule extends Model
     {
         return $this->hasMany(AuthItem::class, 'rule_name');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AuthRuleFactory
+    {
+        return \Database\Factories\AuthRuleFactory::new();
+    }
 }

@@ -128,4 +128,12 @@ class SpsContract extends Model
     {
         return $this->hasMany(ContractLine::class, 'id_sps_contract');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\SpsContractFactory
+    {
+        return \Database\Factories\SpsContractFactory::new();
+    }
 }

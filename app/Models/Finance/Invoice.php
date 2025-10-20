@@ -184,4 +184,12 @@ class Invoice extends Model
     {
         return $this->invoice_lines();
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\InvoiceFactory
+    {
+        return \Database\Factories\InvoiceFactory::new();
+    }
 }

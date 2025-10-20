@@ -71,4 +71,12 @@ class AdminMember extends Model
     {
         return $this->belongsTo(UserPlan::class, 'id_plan');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AdminMemberFactory
+    {
+        return \Database\Factories\AdminMemberFactory::new();
+    }
 }

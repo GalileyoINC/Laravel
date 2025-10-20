@@ -55,4 +55,12 @@ class Podcast extends Model
         'url',
         'image',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\PodcastFactory
+    {
+        return \Database\Factories\PodcastFactory::new();
+    }
 }

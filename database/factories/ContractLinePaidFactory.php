@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Finance\ContractLinePaid;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ContractLinePaidFactory extends Factory
 {
+    protected $model = ContractLinePaid::class;
+
     /**
      * Define the model's default state.
      *

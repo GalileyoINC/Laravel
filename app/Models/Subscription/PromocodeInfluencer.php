@@ -49,4 +49,12 @@ class PromocodeInfluencer extends Model
     {
         return $this->belongsTo(Promocode::class, 'id_promocode');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\PromocodeInfluencerFactory
+    {
+        return \Database\Factories\PromocodeInfluencerFactory::new();
+    }
 }

@@ -48,4 +48,12 @@ class Migration extends Model
     protected $fillable = [
         'apply_time',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\MigrationFactory
+    {
+        return \Database\Factories\MigrationFactory::new();
+    }
 }

@@ -61,4 +61,12 @@ class AdminMessageLog extends Model
         'obj_id',
         'body',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\AdminMessageLogFactory
+    {
+        return \Database\Factories\AdminMessageLogFactory::new();
+    }
 }

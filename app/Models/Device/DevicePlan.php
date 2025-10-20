@@ -76,4 +76,12 @@ class DevicePlan extends Model
     {
         return $this->belongsTo(Device::class, 'id_device');
     }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\DevicePlanFactory
+    {
+        return \Database\Factories\DevicePlanFactory::new();
+    }
 }
