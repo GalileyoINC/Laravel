@@ -103,7 +103,8 @@ class AddHasFactoryTrait extends Command
         if (! str_contains($content, 'use HasFactory;')) {
             // Find the class declaration
             $classPattern = '/(class \w+ extends Model\s*\{)/';
-            $content = preg_replace($classPattern, '$1'."\n\tuse HasFactory;\n", $content);
+            $result = preg_replace($classPattern, '$1'."\n\tuse HasFactory;\n", $content);
+            $content = $result ?? $content;
         }
 
         return $content;
