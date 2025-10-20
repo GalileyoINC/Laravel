@@ -137,9 +137,10 @@ const fetchNews = async (loadMore = false) => {
   
   try {
     const token = localStorage.getItem('auth_token')
-    let url = `${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/news/last`
+    const baseUrl = import.meta.env.VITE_API_URL || ''
+    let url = `${baseUrl}/api/news/last`
     if (activeTab.value === "discover") {
-      url = `${import.meta.env.VITE_API_URL || 'http://localhost:20000'}/api/news/by-influencers`
+      url = `${baseUrl}/api/news/by-influencers`
     }
 
     const page = loadMore ? currentPage.value + 1 : 1

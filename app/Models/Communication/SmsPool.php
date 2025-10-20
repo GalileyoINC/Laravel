@@ -325,7 +325,7 @@ class SmsPool extends Model
 
     public function getTypeAttribute(): ?int
     {
-        return $this->attributes['type'] ?? null;
+        return isset($this->attributes['type']) ? (int) $this->attributes['type'] : null;
     }
 
     public function getTitleAttribute(): ?string

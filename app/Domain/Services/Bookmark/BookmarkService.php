@@ -65,7 +65,7 @@ class BookmarkService implements BookmarkServiceInterface
                         'url' => $photo->getAttribute('url'),
                         'thumbnail' => $photo->getAttribute('thumbnail_url') ?? $photo->getAttribute('url'),
                     ];
-                ])->toArray());
+                })->toArray());
 
                 // Add reactions
                 $item->setAttribute('reactions', $item->reactions->map(function (\App\Models\Content\Reaction $reaction): array {
@@ -75,7 +75,7 @@ class BookmarkService implements BookmarkServiceInterface
                         'count' => $reaction->getAttribute('count'),
                         'is_user_reacted' => (bool) ($reaction->getAttribute('is_user_reacted') ?? false),
                     ];
-                ])->toArray());
+                })->toArray());
 
                 // Add user info
                 $item->setAttribute('user_info', [
