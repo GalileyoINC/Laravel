@@ -147,30 +147,36 @@ class DatabaseSeeder extends Seeder
                     'is_valid_email' => true,
                     'status' => 1,
                 ])->toArray(),
-                ['password_hash' => Hash::make('pass')]
+                ['password_hash' => Hash::make('password')]
             )
         );
 
         // Test user
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'test@galileyo.com'],
-            User::factory()->make([
-                'first_name' => 'Test',
-                'last_name' => 'User',
-                'role' => 2,
-                'is_valid_email' => true,
-            ])->toArray()
+            array_merge(
+                User::factory()->make([
+                    'first_name' => 'Test',
+                    'last_name' => 'User',
+                    'role' => 2,
+                    'is_valid_email' => true,
+                ])->toArray(),
+                ['password_hash' => Hash::make('password')]
+            )
         );
 
         // Influencer user
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'influencer@galileyo.com'],
-            User::factory()->influencer()->make([
-                'first_name' => 'Influencer',
-                'last_name' => 'User',
-                'role' => 2,
-                'is_valid_email' => true,
-            ])->toArray()
+            array_merge(
+                User::factory()->influencer()->make([
+                    'first_name' => 'Influencer',
+                    'last_name' => 'User',
+                    'role' => 2,
+                    'is_valid_email' => true,
+                ])->toArray(),
+                ['password_hash' => Hash::make('password')]
+            )
         );
 
         $this->command->info('✅ Created demo users');
