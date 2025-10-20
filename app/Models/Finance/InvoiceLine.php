@@ -56,7 +56,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceInvoiceLineFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoiceLineFactory>
  */
 class InvoiceLine extends Model
 {

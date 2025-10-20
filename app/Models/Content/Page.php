@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection<int, PageContent> $page_contents
  * @property-read int|null $page_contents_count
  *
- * @method static \Database\Factories\ContentPageFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\PageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page query()
@@ -42,7 +42,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentPageFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PageFactory>
  */
 class Page extends Model
 {

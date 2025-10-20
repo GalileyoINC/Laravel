@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentReactionFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ReactionFactory>
  */
 class Reaction extends Model
 {

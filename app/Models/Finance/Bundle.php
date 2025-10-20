@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection<int, Service> $services
  * @property-read int|null $services_count
  *
- * @method static \Database\Factories\FinanceBundleFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\BundleFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Bundle query()
@@ -49,7 +49,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceBundleFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\BundleFactory>
  */
 class Bundle extends Model
 {

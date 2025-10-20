@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentPageContentFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PageContentFactory>
  */
 class PageContent extends Model
 {

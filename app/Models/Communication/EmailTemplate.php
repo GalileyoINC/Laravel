@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationEmailTemplateFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\EmailTemplateFactory>
  */
 class EmailTemplate extends Model
 {

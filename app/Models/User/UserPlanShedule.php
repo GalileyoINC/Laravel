@@ -44,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserUserPlanSheduleFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserPlanSheduleFactory>
  */
 class UserPlanShedule extends Model
 {

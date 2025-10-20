@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceInvoiceServiceFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoiceServiceFactory>
  */
 class InvoiceService extends Model
 {

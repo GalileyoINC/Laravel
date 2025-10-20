@@ -56,7 +56,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceSpsContractFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SpsContractFactory>
  */
 class SpsContract extends Model
 {

@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceBundleItemFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\BundleItemFactory>
  */
 class BundleItem extends Model
 {

@@ -44,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentNewsFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\NewsFactory>
  */
 class News extends Model
 {

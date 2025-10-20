@@ -65,7 +65,7 @@ use Throwable;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationSmsSheduleFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SmsSheduleFactory>
  */
 class SmsShedule extends Model
 {

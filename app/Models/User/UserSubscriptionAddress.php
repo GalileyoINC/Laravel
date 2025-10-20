@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserUserSubscriptionAddressFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserSubscriptionAddressFactory>
  */
 class UserSubscriptionAddress extends Model
 {

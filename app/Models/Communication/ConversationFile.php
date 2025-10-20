@@ -43,7 +43,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationFileFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ConversationFileFactory>
  */
 class ConversationFile extends Model
 {
@@ -81,5 +81,13 @@ class ConversationFile extends Model
     public function conversation_message(): BelongsTo
     {
         return $this->belongsTo(ConversationMessage::class, 'id_conversation_message');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ConversationFileFactory
+    {
+        return \Database\Factories\ConversationFileFactory::new();
     }
 }

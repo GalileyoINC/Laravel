@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceInvoicePromocodeFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InvoicePromocodeFactory>
  */
 class InvoicePromocode extends Model
 {

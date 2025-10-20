@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection<int, \App\Models\System\TwilioCarrier> $twilio_carriers
  * @property-read int|null $twilio_carriers_count
  *
- * @method static \Database\Factories\FinanceProviderFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\ProviderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider query()
@@ -47,7 +47,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceProviderFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProviderFactory>
  */
 class Provider extends Model
 {

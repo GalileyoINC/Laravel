@@ -44,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SubscriptionBpSubscriptionFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\BpSubscriptionFactory>
  */
 class BpSubscription extends Model
 {

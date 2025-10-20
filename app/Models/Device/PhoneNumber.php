@@ -38,7 +38,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\DevicePhoneNumberFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PhoneNumberFactory>
  */
 class PhoneNumber extends Model
 {

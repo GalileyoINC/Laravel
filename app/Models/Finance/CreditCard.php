@@ -69,7 +69,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceCreditCardFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CreditCardFactory>
  */
 class CreditCard extends Model
 {

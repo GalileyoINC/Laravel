@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationUserFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ConversationUserFactory>
  */
 class ConversationUser extends Model
 {

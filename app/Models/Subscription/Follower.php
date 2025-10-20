@@ -46,7 +46,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SubscriptionFollowerFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FollowerFactory>
  */
 class Follower extends Model
 {

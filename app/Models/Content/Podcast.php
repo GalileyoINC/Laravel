@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ContentPodcastFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PodcastFactory>
  */
 class Podcast extends Model
 {

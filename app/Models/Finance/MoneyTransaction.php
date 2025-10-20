@@ -64,7 +64,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinanceMoneyTransactionFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\MoneyTransactionFactory>
  */
 class MoneyTransaction extends Model
 {

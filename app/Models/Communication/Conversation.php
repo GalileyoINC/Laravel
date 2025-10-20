@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ConversationFactory>
  */
 class Conversation extends Model
 {
@@ -76,5 +76,13 @@ class Conversation extends Model
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(\App\Models\User\User::class, 'conversation_user', 'id_conversation', 'id_user');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ConversationFactory
+    {
+        return \Database\Factories\ConversationFactory::new();
     }
 }

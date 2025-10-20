@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CommunicationConversationUnviewedFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ConversationUnviewedFactory>
  */
 class ConversationUnviewed extends Model
 {
@@ -62,6 +62,22 @@ class ConversationUnviewed extends Model
     public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class, 'id_conversation');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ConversationUnviewedFactory
+    {
+        return \Database\Factories\ConversationUnviewedFactory::new();
     }
 
     /**

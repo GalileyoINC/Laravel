@@ -50,7 +50,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @mixin \Eloquent
  */
 /**
- * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\FinancePromocodeFactory>
+ * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\PromocodeFactory>
  */
 class Promocode extends Model
 {
