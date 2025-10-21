@@ -111,16 +111,45 @@ class SiteController extends Controller
     }
 
     /**
+     * Self action (profile view)
+     */
+    public function self(): View
+    {
+        $user = Auth::user();
+        $username = $user->username ?? (string) (explode('@', (string) ($user->email ?? 'user@example.com'))[0] ?? 'user');
+
+        $staff = (object) [
+            'username' => $username,
+            'email' => (string) ($user->email ?? ''),
+            'first_name' => (string) ($user->first_name ?? ''),
+            'last_name' => (string) ($user->last_name ?? ''),
+            'created_at' => $user->created_at ?? now(),
+            'updated_at' => $user->updated_at ?? now(),
+            'role' => 1,
+        ];
+
+        if (request()->ajax()) {
+            return ViewFacade::make('site._self-modal', compact('staff'));
+        }
+
+        return ViewFacade::make('site.self', compact('staff'));
+    }
+
+    /**
      * Self action (profile update)
      */
-    public function self(SelfRequest $request): View|RedirectResponse
+    public function selfSubmit(SelfRequest $request): RedirectResponse
     {
-        $staff = Staff::find(Auth::id());
-        if (! $staff) {
-            return Redirect::to(route('site.index'))
-                ->withErrors(['error' => 'Staff member not found.']);
+        $user = Auth::user();
+        if (! $user) {
+            return Redirect::to(route('site.login'));
         }
-        $staff->update($request->validated());
+
+        $data = $request->validated();
+        $user->first_name = $data['first_name'] ?? $user->first_name;
+        $user->last_name = $data['last_name'] ?? $user->last_name;
+        $user->email = $data['email'] ?? $user->email;
+        $user->save();
 
         return Redirect::to(route('site.index'))
             ->with('success', 'You have successfully updated your data.');

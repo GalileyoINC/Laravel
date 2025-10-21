@@ -8,8 +8,9 @@ declare(strict_types=1);
 
 namespace App\Models\Finance;
 
+use App\Models\User\UserPlan;
 use App\Models\User\UserPlanShedule;
-use Database\Factories\FinanceContractLineFactory;
+use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Service|null $service
  * @property-read SpsContract|null $sps_contract
  * @property-read \App\Models\User\User|null $user
- * @property-read \App\Models\User\UserPlan|null $userPlan
+ * @property-read UserPlan|null $userPlan
  * @property-read Collection<int, UserPlanShedule> $user_plan_shedules
  * @property-read int|null $user_plan_shedules_count
  *
@@ -67,10 +68,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLine whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ContractLine whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 /**
- * @use HasFactory<FinanceContractLineFactory>
+ * @use HasFactory
  */
 class ContractLine extends Model
 {
@@ -160,11 +161,11 @@ class ContractLine extends Model
 
     // Added to support queries in ContractLineController@unpaid
     /**
-     * @return HasOne<\App\Models\User\UserPlan, $this>
+     * @return HasOne<UserPlan, $this>
      */
     public function userPlan(): HasOne
     {
-        return $this->hasOne(\App\Models\User\UserPlan::class, 'id_user', 'id_user')
+        return $this->hasOne(UserPlan::class, 'id_user', 'id_user')
             ->whereColumn('user_plan.id_service', 'contract_line.id_service');
     }
 

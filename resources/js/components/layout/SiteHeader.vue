@@ -62,7 +62,7 @@
           <!-- Sign In Button -->
           <router-link
             to="/login"
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 text-white"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400 hover:bg-slate-100 hover:text-slate-900 h-9 px-4 py-2 text-slate-700 dark:text-white dark:hover:bg-slate-800"
           >
             Sign In
           </router-link>

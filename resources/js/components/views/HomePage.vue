@@ -537,7 +537,7 @@
     </section>
 
     <!-- Newsletter Signup -->
-    <div class="mx-auto mt-16 max-w-5xl rounded-2xl border p-8 text-center">
+    <div class="mx-auto mt-16 max-w-5xl rounded-2xl border p-8 text-center mb-[30px]">
       <h3 class="mb-4 text-2xl font-bold text-slate-900 dark:text-white">
         Still on the fence?
       </h3>
