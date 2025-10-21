@@ -19,6 +19,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View as ViewFacade;
 
 class SettingsController extends Controller
@@ -45,8 +46,11 @@ class SettingsController extends Controller
     public function index(): View
     {
         // Check if user can view settings
-        $currentUser = auth()->user();
-        if (! $currentUser || ! $currentUser->showSettings()) {
+        $currentUser = Auth::user();
+        $canViewSettings = $currentUser && \method_exists($currentUser, 'showSettings')
+            ? (bool) $currentUser->showSettings()
+            : true;
+        if (! $currentUser || ! $canViewSettings) {
             abort(404, 'The requested page does not exist.');
         }
 
@@ -73,8 +77,11 @@ class SettingsController extends Controller
      */
     public function updateMain(SettingsMainRequest $request): RedirectResponse
     {
-        $currentUser = auth()->user();
-        if ($currentUser && ! $currentUser->showSettingsRO()) {
+        $currentUser = Auth::user();
+        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+            ? (bool) $currentUser->showSettingsRO()
+            : false;
+        if ($currentUser && ! $isReadOnly) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(
@@ -96,8 +103,11 @@ class SettingsController extends Controller
      */
     public function updateSms(SettingsSmsRequest $request): RedirectResponse
     {
-        $currentUser = auth()->user();
-        if ($currentUser && ! $currentUser->showSettingsRO()) {
+        $currentUser = Auth::user();
+        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+            ? (bool) $currentUser->showSettingsRO()
+            : false;
+        if ($currentUser && ! $isReadOnly) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(
@@ -120,8 +130,11 @@ class SettingsController extends Controller
      */
     public function updateApi(SettingsApiRequest $request): RedirectResponse
     {
-        $currentUser = auth()->user();
-        if ($currentUser && ! $currentUser->showSettingsRO()) {
+        $currentUser = Auth::user();
+        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+            ? (bool) $currentUser->showSettingsRO()
+            : false;
+        if ($currentUser && ! $isReadOnly) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(
@@ -144,8 +157,11 @@ class SettingsController extends Controller
      */
     public function updateApp(SettingsAppRequest $request): RedirectResponse
     {
-        $currentUser = auth()->user();
-        if ($currentUser && ! $currentUser->showSettingsRO()) {
+        $currentUser = Auth::user();
+        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+            ? (bool) $currentUser->showSettingsRO()
+            : false;
+        if ($currentUser && ! $isReadOnly) {
             $validated = $request->validated();
 
             $dto = new SettingsUpdateRequestDTO(

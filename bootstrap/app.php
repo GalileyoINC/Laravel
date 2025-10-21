@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'cors' => App\Http\Middleware\CorsMiddleware::class,
             'auth.sanctum' => Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            'auth.any' => App\Http\Middleware\AuthAnyMiddleware::class,
         ]);
 
         // Configure auth middleware for API to return JSON instead of redirecting

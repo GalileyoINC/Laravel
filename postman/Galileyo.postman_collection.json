@@ -1,0 +1,281 @@
+{
+  "info": {
+    "name": "Galileyo API",
+    "_postman_id": "d3f7f4a2-1a11-4bde-9d3c-000000000001",
+    "description": "Postman collection for Galileyo API endpoints. Set {{base_url}} and {{token}} in an environment.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost/api" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {"name": "login","request": {"method": "POST","url": "{{base_url}}/v1/auth/login","body": {"mode": "raw","raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\"\n}"},"header": [{"key":"Content-Type","value":"application/json"}]}},
+        {"name": "test","request": {"method": "GET","url": "{{base_url}}/v1/auth/test"}},
+        {"name": "options (wildcard)","request": {"method": "OPTIONS","url": "{{base_url}}/v1/auth/anything"}}
+      ]
+    },
+    {
+      "name": "default",
+      "item": [
+        {"name": "login","request": {"method": "POST","url": "{{base_url}}/v1/default/login","body": {"mode": "raw","raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\"\n}"},"header": [{"key":"Content-Type","value":"application/json"}]}},
+        {"name": "signup","request": {"method": "POST","url": "{{base_url}}/v1/default/signup","body": {"mode": "raw","raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\",\n  \"name\": \"John\"\n}"},"header": [{"key":"Content-Type","value":"application/json"}]}},
+        {"name": "news-by-subscription","request": {"method": "POST","url": "{{base_url}}/v1/default/news-by-subscription"}},
+        {"name": "options (wildcard)","request": {"method": "OPTIONS","url": "{{base_url}}/v1/default/anything"}}
+      ]
+    },
+    {
+      "name": "customer (auth)",
+      "item": [
+        {"name": "get-profile","request": {"method": "GET","url": "{{base_url}}/v1/customer/get-profile"}},
+        {"name": "update-profile","request": {"method": "POST","url": "{{base_url}}/v1/customer/update-profile"}},
+        {"name": "change-password","request": {"method": "POST","url": "{{base_url}}/v1/customer/change-password"}},
+        {"name": "update-privacy","request": {"method": "POST","url": "{{base_url}}/v1/customer/update-privacy"}},
+        {"name": "remove-avatar","request": {"method": "POST","url": "{{base_url}}/v1/customer/remove-avatar"}},
+        {"name": "remove-header","request": {"method": "POST","url": "{{base_url}}/v1/customer/remove-header"}},
+        {"name": "logout","request": {"method": "POST","url": "{{base_url}}/v1/customer/logout"}},
+        {"name": "delete","request": {"method": "POST","url": "{{base_url}}/v1/customer/delete"}}
+      ]
+    },
+    {
+      "name": "chat (auth)",
+      "item": [
+        {"name": "list","request": {"method": "POST","url": "{{base_url}}/v1/chat/list"}},
+        {"name": "chat-messages","request": {"method": "POST","url": "{{base_url}}/v1/chat/chat-messages"}},
+        {"name": "view","request": {"method": "POST","url": "{{base_url}}/v1/chat/view"}},
+        {"name": "upload","request": {"method": "POST","url": "{{base_url}}/v1/chat/upload"}},
+        {"name": "create-group","request": {"method": "POST","url": "{{base_url}}/v1/chat/create-group"}},
+        {"name": "get-friend-chat","request": {"method": "POST","url": "{{base_url}}/v1/chat/get-friend-chat"}},
+        {"name": "get-file","request": {"method": "GET","url": "{{base_url}}/v1/chat/get-file/1"}}
+      ]
+    },
+    {
+      "name": "comment (auth)",
+      "item": [
+        {"name": "get","request": {"method": "POST","url": "{{base_url}}/v1/comment/get"}},
+        {"name": "get-replies","request": {"method": "POST","url": "{{base_url}}/v1/comment/get-replies"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/comment/create"}},
+        {"name": "update","request": {"method": "POST","url": "{{base_url}}/v1/comment/update"}},
+        {"name": "delete","request": {"method": "POST","url": "{{base_url}}/v1/comment/delete"}}
+      ]
+    },
+    {
+      "name": "credit-card (auth)",
+      "item": [
+        {"name": "list","request": {"method": "POST","url": "{{base_url}}/v1/credit-card/list"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/credit-card/create"}},
+        {"name": "update","request": {"method": "POST","url": "{{base_url}}/v1/credit-card/update"}},
+        {"name": "set-preferred","request": {"method": "POST","url": "{{base_url}}/v1/credit-card/set-preferred"}},
+        {"name": "delete","request": {"method": "POST","url": "{{base_url}}/v1/credit-card/delete"}}
+      ]
+    },
+    {
+      "name": "device (auth)",
+      "item": [
+        {"name": "update","request": {"method": "POST","url": "{{base_url}}/v1/device/update"}},
+        {"name": "verify","request": {"method": "POST","url": "{{base_url}}/v1/device/verify"}},
+        {"name": "push-settings-get","request": {"method": "GET","url": "{{base_url}}/v1/device/push-settings-get"}},
+        {"name": "push-settings-set","request": {"method": "POST","url": "{{base_url}}/v1/device/push-settings-set"}}
+      ]
+    },
+    {
+      "name": "influencer (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/influencer/index"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/influencer/create"}}
+      ]
+    },
+    {
+      "name": "legacy",
+      "item": [
+        {"name": "webLogin","request": {"method": "POST","url": "{{base_url}}/auth/login"}}
+      ]
+    },
+    {
+      "name": "news (auth)",
+      "item": [
+        {"name": "last","request": {"method": "POST","url": "{{base_url}}/v1/news/last"}},
+        {"name": "get-latest-news","request": {"method": "POST","url": "{{base_url}}/v1/news/get-latest-news"}},
+        {"name": "by-influencers","request": {"method": "POST","url": "{{base_url}}/v1/news/by-influencers"}},
+        {"name": "by-subscription","request": {"method": "POST","url": "{{base_url}}/v1/news/by-subscription"}},
+        {"name": "by-follower-list","request": {"method": "POST","url": "{{base_url}}/v1/news/by-follower-list"}},
+        {"name": "set-reaction","request": {"method": "POST","url": "{{base_url}}/v1/news/set-reaction"}},
+        {"name": "remove-reaction","request": {"method": "POST","url": "{{base_url}}/v1/news/remove-reaction"}},
+        {"name": "report","request": {"method": "POST","url": "{{base_url}}/v1/news/report"}},
+        {"name": "mute","request": {"method": "POST","url": "{{base_url}}/v1/news/mute"}},
+        {"name": "unmute","request": {"method": "POST","url": "{{base_url}}/v1/news/unmute"}}
+      ]
+    },
+    {
+      "name": "order (auth)",
+      "item": [
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/order/create"}},
+        {"name": "pay","request": {"method": "POST","url": "{{base_url}}/v1/order/pay"}},
+        {"name": "test","request": {"method": "GET","url": "{{base_url}}/v1/order/test"}}
+      ]
+    },
+    {
+      "name": "phone (auth)",
+      "item": [
+        {"name": "verify","request": {"method": "POST","url": "{{base_url}}/v1/phone/verify"}},
+        {"name": "set","request": {"method": "POST","url": "{{base_url}}/v1/phone/set"}}
+      ]
+    },
+    {
+      "name": "private-feed (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/private-feed/index"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/private-feed/create"}},
+        {"name": "update","request": {"method": "POST","url": "{{base_url}}/v1/private-feed/update"}},
+        {"name": "delete","request": {"method": "POST","url": "{{base_url}}/v1/private-feed/delete"}}
+      ]
+    },
+    {
+      "name": "feed (auth)",
+      "item": [
+        {"name": "set","request": {"method": "POST","url": "{{base_url}}/v1/feed/set"}},
+        {"name": "satellite-set","request": {"method": "POST","url": "{{base_url}}/v1/feed/satellite-set"}},
+        {"name": "category","request": {"method": "GET","url": "{{base_url}}/v1/feed/category"}},
+        {"name": "index","request": {"method": "POST","url": "{{base_url}}/v1/feed/index"}},
+        {"name": "satellite-index","request": {"method": "GET","url": "{{base_url}}/v1/feed/satellite-index"}},
+        {"name": "add-own-marketstack-indx-subscription","request": {"method": "POST","url": "{{base_url}}/v1/feed/add-own-marketstack-indx-subscription"}},
+        {"name": "add-own-marketstack-ticker-subscription","request": {"method": "POST","url": "{{base_url}}/v1/feed/add-own-marketstack-ticker-subscription"}},
+        {"name": "options","request": {"method": "GET","url": "{{base_url}}/v1/feed/options"}},
+        {"name": "delete-private-feed","request": {"method": "POST","url": "{{base_url}}/v1/feed/delete-private-feed"}},
+        {"name": "get-image","request": {"method": "GET","url": "{{base_url}}/v1/feed/get-image"}}
+      ]
+    },
+    {
+      "name": "product (auth)",
+      "item": [
+        {"name": "list","request": {"method": "POST","url": "{{base_url}}/v1/product/list"}},
+        {"name": "alerts","request": {"method": "POST","url": "{{base_url}}/v1/product/alerts"}},
+        {"name": "purchase","request": {"method": "POST","url": "{{base_url}}/v1/product/purchase"}}
+      ]
+    },
+    {
+      "name": "public-feed (auth)",
+      "item": [
+        {"name": "get-options","request": {"method": "POST","url": "{{base_url}}/v1/public-feed/get-options"}},
+        {"name": "send","request": {"method": "POST","url": "{{base_url}}/v1/public-feed/send"}},
+        {"name": "image-upload","request": {"method": "POST","url": "{{base_url}}/v1/public-feed/image-upload"}}
+      ]
+    },
+    {
+      "name": "bundle (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/bundle/index"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/bundle/create"}},
+        {"name": "update","request": {"method": "PUT","url": "{{base_url}}/v1/bundle/update/1"}},
+        {"name": "device-data","request": {"method": "POST","url": "{{base_url}}/v1/bundle/device-data"}}
+      ]
+    },
+    {
+      "name": "contact (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/contact/index"}},
+        {"name": "view","request": {"method": "GET","url": "{{base_url}}/v1/contact/view/1"}},
+        {"name": "delete","request": {"method": "DELETE","url": "{{base_url}}/v1/contact/delete/1"}}
+      ]
+    },
+    {
+      "name": "contract-line (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/contract-line/index"}},
+        {"name": "view","request": {"method": "GET","url": "{{base_url}}/v1/contract-line/view/1"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/contract-line/create"}},
+        {"name": "update","request": {"method": "PUT","url": "{{base_url}}/v1/contract-line/update/1"}},
+        {"name": "delete","request": {"method": "DELETE","url": "{{base_url}}/v1/contract-line/delete/1"}},
+        {"name": "unpaid","request": {"method": "GET","url": "{{base_url}}/v1/contract-line/unpaid"}}
+      ]
+    },
+    {
+      "name": "email-pool (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/email-pool/index"}},
+        {"name": "view","request": {"method": "GET","url": "{{base_url}}/v1/email-pool/view/1"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/email-pool/create"}},
+        {"name": "update","request": {"method": "PUT","url": "{{base_url}}/v1/email-pool/update/1"}},
+        {"name": "delete","request": {"method": "DELETE","url": "{{base_url}}/v1/email-pool/delete/1"}}
+      ]
+    },
+    {
+      "name": "email-template (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/email-template/index"}},
+        {"name": "view","request": {"method": "GET","url": "{{base_url}}/v1/email-template/view/1"}},
+        {"name": "update","request": {"method": "PUT","url": "{{base_url}}/v1/email-template/update/1"}},
+        {"name": "get-body","request": {"method": "GET","url": "{{base_url}}/v1/email-template/body/1"}},
+        {"name": "send-admin-email","request": {"method": "POST","url": "{{base_url}}/v1/email-template/send/1"}}
+      ]
+    },
+    {
+      "name": "report (auth)",
+      "item": [
+        {"name": "login-statistic","request": {"method": "GET","url": "{{base_url}}/v1/report/login-statistic"}},
+        {"name": "sold-devices","request": {"method": "GET","url": "{{base_url}}/v1/report/sold-devices"}},
+        {"name": "influencer-total","request": {"method": "GET","url": "{{base_url}}/v1/report/influencer-total"}},
+        {"name": "referral","request": {"method": "GET","url": "{{base_url}}/v1/report/referral"}},
+        {"name": "statistic","request": {"method": "GET","url": "{{base_url}}/v1/report/statistic"}},
+        {"name": "sms","request": {"method": "GET","url": "{{base_url}}/v1/report/sms"}}
+      ]
+    },
+    {
+      "name": "settings (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/settings/index"}},
+        {"name": "update","request": {"method": "PUT","url": "{{base_url}}/v1/settings/update","header":[{"key":"Content-Type","value":"application/json"}]}},
+        {"name": "flush","request": {"method": "POST","url": "{{base_url}}/v1/settings/flush"}},
+        {"name": "public","request": {"method": "GET","url": "{{base_url}}/v1/settings/public"}},
+        {"name": "bitpay-generation","request": {"method": "POST","url": "{{base_url}}/v1/settings/bitpay-generation"}}
+      ]
+    },
+    {
+      "name": "staff (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/staff/index"}},
+        {"name": "view","request": {"method": "GET","url": "{{base_url}}/v1/staff/view/1"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/staff/create"}},
+        {"name": "update","request": {"method": "PUT","url": "{{base_url}}/v1/staff/update/1"}},
+        {"name": "delete","request": {"method": "DELETE","url": "{{base_url}}/v1/staff/delete/1"}}
+      ]
+    },
+    {
+      "name": "invoice (auth)",
+      "item": [
+        {"name": "index","request": {"method": "GET","url": "{{base_url}}/v1/invoice/index"}},
+        {"name": "view","request": {"method": "GET","url": "{{base_url}}/v1/invoice/view/1"}}
+      ]
+    },
+    {
+      "name": "bookmark (auth)",
+      "item": [
+        {"name": "list","request": {"method": "GET","url": "{{base_url}}/v1/bookmark/list"}},
+        {"name": "create","request": {"method": "POST","url": "{{base_url}}/v1/bookmark/create"}},
+        {"name": "delete","request": {"method": "DELETE","url": "{{base_url}}/v1/bookmark/delete/1"}}
+      ]
+    },
+    {
+      "name": "maintenance (auth)",
+      "item": [
+        {"name": "summarize","request": {"method": "POST","url": "{{base_url}}/v1/maintenance/summarize"}}
+      ]
+    },
+    {
+      "name": "all-send-form (auth)",
+      "item": [
+        {"name": "get-options","request": {"method": "POST","url": "{{base_url}}/v1/all-send-form/get-options"}},
+        {"name": "send","request": {"method": "POST","url": "{{base_url}}/v1/all-send-form/send"}},
+        {"name": "image-upload","request": {"method": "POST","url": "{{base_url}}/v1/all-send-form/image-upload"}},
+        {"name": "image-delete","request": {"method": "POST","url": "{{base_url}}/v1/all-send-form/image-delete"}}
+      ]
+    }
+  ]
+}

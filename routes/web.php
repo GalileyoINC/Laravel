@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Web\ActiveRecordLogController;
 use App\Http\Controllers\Web\AdminMessageLogController;
 use App\Http\Controllers\Web\ApiLogController;
+use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\AppleController;
 use App\Http\Controllers\Web\BundleController;
 use App\Http\Controllers\Web\ContactController;
@@ -66,22 +67,22 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
 // WEB ROUTES (Admin Panel)
 // ========================================
 
-// Public routes (no auth required) - Admin login
+// Public routes (no auth required) - Admin/User unified login
 Route::prefix('admin')->group(function () {
-    Route::get('/login', [SiteController::class, 'login'])->name('site.login');
-    Route::post('/login', [SiteController::class, 'loginSubmit'])->name('site.login.submit');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('site.login');
+    Route::post('/login', [AuthController::class, 'submitLogin'])->name('site.login.submit');
     Route::get('/error', [SiteController::class, 'error'])->name('site.error');
 });
 
 // Protected admin routes (auth required) - All under /admin prefix
-Route::prefix('admin')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->middleware(['auth.any'])->group(function () {
     // Site Routes
     Route::get('/', [SiteController::class, 'index'])->name('site.index');
-    Route::get('/logout', [SiteController::class, 'logout'])->name('site.logout');
-    Route::post('/logout', [SiteController::class, 'logout']);
+    Route::get('/logout', [AuthController::class, 'logout'])->name('site.logout');
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/self', [SiteController::class, 'self'])->name('site.self');
     Route::post('/self', [SiteController::class, 'selfSubmit'])->name('site.self.submit');
-    Route::post('/reset', [SiteController::class, 'reset'])->name('site.reset');
+    Route::post('/reset', [AuthController::class, 'reset'])->name('site.reset');
 
     // Staff Routes
     Route::resource('staff', StaffController::class)->names([

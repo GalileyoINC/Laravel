@@ -4,110 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
-use App\Domain\Actions\Authentication\LoginAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Authentication\Web\LoginRequest;
 use App\Http\Requests\Authentication\Web\SelfRequest;
-use App\Models\System\Staff;
-use App\Models\User\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
 
 class SiteController extends Controller
 {
-    public function __construct(
-        private readonly LoginAction $loginAction
-    ) {}
-
-    /**
-     * Show login form
-     */
-    public function login(): View|RedirectResponse
-    {
-        if (Auth::check()) {
-            return Redirect::to(route('site.index'));
-        }
-
-        return view('site.login');
-    }
-
-    /**
-     * Handle login form submission
-     */
-    public function loginSubmit(LoginRequest $request): RedirectResponse
-    {
-        if (Auth::check()) {
-            return Redirect::to(route('site.index'));
-        }
-        $loginData = [
-            'email' => $request->validated()['username'],
-            'password' => $request->validated()['password'],
-            'device' => [],
-        ];
-
-        $result = $this->loginAction->execute($loginData);
-        $data = $result->getData(true);
-
-        if ($result->getStatusCode() === 200 && isset($data['user_id'])) {
-            // Find user and login with Laravel Auth
-            $userId = (int) $data['user_id'];
-            $user = User::find($userId);
-            if ($user) {
-                /** @var User $user */
-                Auth::login($user, false);
-                session()->regenerate();
-
-                return Redirect::to(route('site.index'));
-            }
-        }
-
-        return Redirect::back()
-            ->withErrors(['username' => $data['error'] ?? 'Login failed'])
-            ->withInput();
-    }
-
-    /**
-     * Logout action
-     */
-    public function logout(Request $request): RedirectResponse
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to(route('site.login'));
-    }
-
     /**
      * Index action (Dashboard)
      */
     public function index(): View
     {
         return ViewFacade::make('site.index');
-    }
-
-    /**
-     * Reset action (for super admin)
-     */
-    public function reset(Request $request): RedirectResponse
-    {
-        if ($request->session()->get('loginFromSuper')) {
-            Auth::logout();
-
-            $super = Staff::find(Staff::ID_SUPER);
-            if ($super) {
-                Auth::login($super, true);
-            }
-
-            $request->session()->forget('loginFromSuper');
-        }
-
-        return Redirect::to(route('site.index'));
     }
 
     /**
@@ -118,11 +30,14 @@ class SiteController extends Controller
         $user = Auth::user();
         $username = $user->username ?? (string) (explode('@', (string) ($user->email ?? 'user@example.com'))[0] ?? 'user');
 
+        $firstName = \is_object($user) && \property_exists($user, 'first_name') ? (string) ($user->first_name ?? '') : '';
+        $lastName = \is_object($user) && \property_exists($user, 'last_name') ? (string) ($user->last_name ?? '') : '';
+
         $staff = (object) [
             'username' => $username,
             'email' => (string) ($user->email ?? ''),
-            'first_name' => (string) ($user->first_name ?? ''),
-            'last_name' => (string) ($user->last_name ?? ''),
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'created_at' => $user->created_at ?? now(),
             'updated_at' => $user->updated_at ?? now(),
             'role' => 1,
@@ -146,9 +61,18 @@ class SiteController extends Controller
         }
 
         $data = $request->validated();
-        $user->first_name = $data['first_name'] ?? $user->first_name;
-        $user->last_name = $data['last_name'] ?? $user->last_name;
-        $user->email = $data['email'] ?? $user->email;
+        if (\is_object($user) && \property_exists($user, 'first_name')) {
+            /** @phpstan-ignore-next-line */
+            $user->first_name = $data['first_name'] ?? $user->first_name;
+        }
+        if (\is_object($user) && \property_exists($user, 'last_name')) {
+            /** @phpstan-ignore-next-line */
+            $user->last_name = $data['last_name'] ?? $user->last_name;
+        }
+        if (\is_object($user) && \property_exists($user, 'email')) {
+            /** @phpstan-ignore-next-line */
+            $user->email = $data['email'] ?? $user->email;
+        }
         $user->save();
 
         return Redirect::to(route('site.index'))
