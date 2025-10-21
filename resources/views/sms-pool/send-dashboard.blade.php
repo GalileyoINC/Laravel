@@ -18,10 +18,10 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="nav-item">
-                            <a class="nav-link active" href="#all" aria-controls="all" role="tab" data-toggle="tab">All</a>
+                            <a class="nav-link active" href="#all" aria-controls="all" role="tab" data-bs-toggle="tab">All</a>
                         </li>
                         <li role="presentation" class="nav-item">
-                            <a class="nav-link" href="#state" aria-controls="state" role="tab" data-toggle="tab">State</a>
+                            <a class="nav-link" href="#state" aria-controls="state" role="tab" data-bs-toggle="tab">State</a>
                         </li>
                     </ul>
 
@@ -144,7 +144,7 @@
 <script>
 // Bootstrap tab functionality
 document.addEventListener('DOMContentLoaded', function() {
-    const tabLinks = document.querySelectorAll('.nav-tabs a[data-toggle="tab"]');
+    const tabLinks = document.querySelectorAll('.nav-tabs a[data-bs-toggle="tab"]');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
     tabLinks.forEach(link => {

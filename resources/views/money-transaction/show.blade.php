@@ -56,15 +56,15 @@
                                 </tr>
                                 <tr>
                                     <th>Success</th>
-                                    <td>{!! $transaction->is_success ? '<span class="label label-success">Yes</span>' : '<span class="label label-danger">No</span>' !!}</td>
+                                    <td>{!! $transaction->is_success ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-danger">No</span>' !!}</td>
                                 </tr>
                                 <tr>
                                     <th>Void</th>
-                                    <td>{!! $transaction->is_void ? '<span class="label label-warning">Yes</span>' : '<span class="label label-default">No</span>' !!}</td>
+                                    <td>{!! $transaction->is_void ? '<span class="badge bg-warning">Yes</span>' : '<span class="badge bg-default">No</span>' !!}</td>
                                 </tr>
                                 <tr>
                                     <th>Test</th>
-                                    <td>{!! $transaction->is_test ? '<span class="label label-info">Yes</span>' : '<span class="label label-default">No</span>' !!}</td>
+                                    <td>{!! $transaction->is_test ? '<span class="badge bg-info">Yes</span>' : '<span class="badge bg-default">No</span>' !!}</td>
                                 </tr>
                                 <tr>
                                     <th>Total</th>

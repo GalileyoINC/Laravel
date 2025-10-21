@@ -51,7 +51,7 @@
                                     <tr>
                                         <th width="30%">Pending Jobs</th>
                                         <td>
-                                            <span class="label label-{{ $queueInfo['jobs_count'] > 0 ? 'warning' : 'success' }}">
+                                            <span class="badge bg-{{ $queueInfo['jobs_count'] > 0 ? 'warning' : 'success' }}">
                                                 {{ $queueInfo['jobs_count'] }}
                                             </span>
                                         </td>
@@ -59,7 +59,7 @@
                                     <tr>
                                         <th>Failed Jobs</th>
                                         <td>
-                                            <span class="label label-{{ $queueInfo['failed_jobs_count'] > 0 ? 'danger' : 'success' }}">
+                                            <span class="badge bg-{{ $queueInfo['failed_jobs_count'] > 0 ? 'danger' : 'success' }}">
                                                 {{ $queueInfo['failed_jobs_count'] }}
                                             </span>
                                         </td>
@@ -68,11 +68,11 @@
                                         <th>Queue Status</th>
                                         <td>
                                             @if($queueInfo['jobs_count'] > 0)
-                                                <span class="label label-warning">Has Pending Jobs</span>
+                                                <span class="badge bg-warning">Has Pending Jobs</span>
                                             @elseif($queueInfo['failed_jobs_count'] > 0)
-                                                <span class="label label-danger">Has Failed Jobs</span>
+                                                <span class="badge bg-danger">Has Failed Jobs</span>
                                             @else
-                                                <span class="label label-success">Healthy</span>
+                                                <span class="badge bg-success">Healthy</span>
                                             @endif
                                         </td>
                                     </tr>

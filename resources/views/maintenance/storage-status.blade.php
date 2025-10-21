@@ -60,9 +60,9 @@
                                         <th width="30%">Public Directory</th>
                                         <td>
                                             @if(is_dir($storageInfo['public_path']))
-                                                <span class="label label-success">Exists</span>
+                                                <span class="badge bg-success">Exists</span>
                                             @else
-                                                <span class="label label-danger">Missing</span>
+                                                <span class="badge bg-danger">Missing</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -70,9 +70,9 @@
                                         <th>Storage Directory</th>
                                         <td>
                                             @if(is_dir($storageInfo['storage_path']))
-                                                <span class="label label-success">Exists</span>
+                                                <span class="badge bg-success">Exists</span>
                                             @else
-                                                <span class="label label-danger">Missing</span>
+                                                <span class="badge bg-danger">Missing</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -80,9 +80,9 @@
                                         <th>Logs Directory</th>
                                         <td>
                                             @if(is_dir($storageInfo['logs_path']))
-                                                <span class="label label-success">Exists</span>
+                                                <span class="badge bg-success">Exists</span>
                                             @else
-                                                <span class="label label-danger">Missing</span>
+                                                <span class="badge bg-danger">Missing</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -90,9 +90,9 @@
                                         <th>Cache Directory</th>
                                         <td>
                                             @if(is_dir($storageInfo['cache_path']))
-                                                <span class="label label-success">Exists</span>
+                                                <span class="badge bg-success">Exists</span>
                                             @else
-                                                <span class="label label-danger">Missing</span>
+                                                <span class="badge bg-danger">Missing</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -100,9 +100,9 @@
                                         <th>Sessions Directory</th>
                                         <td>
                                             @if(is_dir($storageInfo['sessions_path']))
-                                                <span class="label label-success">Exists</span>
+                                                <span class="badge bg-success">Exists</span>
                                             @else
-                                                <span class="label label-danger">Missing</span>
+                                                <span class="badge bg-danger">Missing</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -110,9 +110,9 @@
                                         <th>Views Directory</th>
                                         <td>
                                             @if(is_dir($storageInfo['views_path']))
-                                                <span class="label label-success">Exists</span>
+                                                <span class="badge bg-success">Exists</span>
                                             @else
-                                                <span class="label label-danger">Missing</span>
+                                                <span class="badge bg-danger">Missing</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -169,23 +169,23 @@
                                                     <td><strong>{{ $label }}</strong></td>
                                                     <td>
                                                         @if(is_readable($storageInfo[$key]))
-                                                            <span class="label label-success">Yes</span>
+                                                            <span class="badge bg-success">Yes</span>
                                                         @else
-                                                            <span class="label label-danger">No</span>
+                                                            <span class="badge bg-danger">No</span>
                                                         @endif
                                                     </td>
                                                     <td>
                                                         @if(is_writable($storageInfo[$key]))
-                                                            <span class="label label-success">Yes</span>
+                                                            <span class="badge bg-success">Yes</span>
                                                         @else
-                                                            <span class="label label-danger">No</span>
+                                                            <span class="badge bg-danger">No</span>
                                                         @endif
                                                     </td>
                                                     <td>
                                                         @if(is_executable($storageInfo[$key]))
-                                                            <span class="label label-success">Yes</span>
+                                                            <span class="badge bg-success">Yes</span>
                                                         @else
-                                                            <span class="label label-danger">No</span>
+                                                            <span class="badge bg-danger">No</span>
                                                         @endif
                                                     </td>
                                                 </tr>

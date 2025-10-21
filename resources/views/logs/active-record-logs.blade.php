@@ -87,7 +87,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="label label-info">{{ ucfirst($log->action_type) }}</span>
+                                            <span class="badge bg-info">{{ ucfirst($log->action_type) }}</span>
                                         </td>
                                         <td>{{ $log->model }}</td>
                                         <td>{{ $log->id_model }}</td>

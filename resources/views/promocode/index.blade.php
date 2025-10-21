@@ -115,24 +115,24 @@
                                 <td @dataColumn(0)>{{ $promocode->id }}</td>
                                 <td @dataColumn(1) @dataValue($promocode->type)>
                                     @if($promocode->type === 'discount')
-                                        <span class="label label-primary">Discount</span>
+                                        <span class="badge bg-primary">Discount</span>
                                     @elseif($promocode->type === 'trial')
-                                        <span class="label label-info">Trial</span>
+                                        <span class="badge bg-info">Trial</span>
                                     @elseif($promocode->type === 'influencer')
-                                        <span class="label label-warning">Influencer</span>
+                                        <span class="badge bg-warning">Influencer</span>
                                     @elseif($promocode->type === 'test')
-                                        <span class="label label-default">Test</span>
+                                        <span class="badge bg-default">Test</span>
                                     @else
-                                        <span class="label label-default">{{ ucfirst($promocode->type) }}</span>
+                                        <span class="badge bg-default">{{ ucfirst($promocode->type) }}</span>
                                     @endif
                                 </td>
                                 <td @dataColumn(2)>{{ $promocode->text }}</td>
                                 <td @dataColumn(3)>{{ $promocode->discount }}%</td>
                                 <td @dataColumn(4) @dataValue($promocode->is_active ? '1' : '0')>
                                     @if($promocode->is_active)
-                                        <span class="label label-success">Active</span>
+                                        <span class="badge bg-success">Active</span>
                                     @else
-                                        <span class="label label-danger">Inactive</span>
+                                        <span class="badge bg-danger">Inactive</span>
                                     @endif
                                 </td>
                                 <td @dataColumn(5)>{{ $promocode->active_from->format('M d, Y') }}</td>

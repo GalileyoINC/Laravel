@@ -19,11 +19,11 @@
                     <td>${{ number_format($invoice->total ?? 0, 2) }}</td>
                     <td>
                         @if($invoice->paid_status == 1)
-                            <span class="label label-success">Paid</span>
+                            <span class="badge bg-success">Paid</span>
                         @elseif($invoice->paid_status == 2)
-                            <span class="label label-warning">Pending</span>
+                            <span class="badge bg-warning">Pending</span>
                         @else
-                            <span class="label label-danger">Failed</span>
+                            <span class="badge bg-danger">Failed</span>
                         @endif
                     </td>
                     <td>{{ $invoice->payment_method ?? 'N/A' }}</td>

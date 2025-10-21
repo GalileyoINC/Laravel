@@ -14,9 +14,9 @@
                 <td>${{ number_format($line->price ?? 0, 2) }}</td>
                 <td>
                     @if($line->invoice && $line->invoice->paid_status == 1)
-                        <span class="label label-success">Paid</span>
+                        <span class="badge bg-success">Paid</span>
                     @else
-                        <span class="label label-warning">Pending</span>
+                        <span class="badge bg-warning">Pending</span>
                     @endif
                 </td>
                 <td>{{ $line->created_at->format('M d, Y') }}</td>

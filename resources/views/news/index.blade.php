@@ -30,9 +30,9 @@ use App\Helpers\TableFilterHelper;
             <td @dataColumn(2)>{{ $item->title ?? 'N/A' }}</td>
             <td @dataColumn(3) @dataValue($item->status == 1 ? '1' : '0')>
                 @if($item->status == 1)
-                    <span class="label label-success">Published</span>
+                    <span class="badge bg-success">Published</span>
                 @else
-                    <span class="label label-default">Draft</span>
+                    <span class="badge bg-default">Draft</span>
                 @endif
             </td>
             <td @dataColumn(4)>{{ $item->created_at->format('M d, Y') }}</td>

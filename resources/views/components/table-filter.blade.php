@@ -25,7 +25,7 @@
                 Showing <b><span class="showing-count">{{ is_countable($data) ? count($data) : 0 }}</span></b> of <b><span class="total-count">{{ is_countable($data) ? count($data) : 0 }}</span></b> items.
             </div>
             <div class="active-filters-badge" style="display: none;">
-                <span class="label label-info">
+                <span class="badge bg-info">
                     <i class="fas fa-filter"></i> <span class="active-filters-count">0</span> active filter(s)
                 </span>
             </div>

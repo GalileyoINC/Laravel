@@ -5,22 +5,20 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-6">
-            <div class="table-responsive">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-heading">
-                            <span>{{ $title ?? 'Active Users and Plans' }}</span>
-                            <div class="pull-right">
-                                <select name="date" class="form-control" style="width:200px; display:inline-block">
-                                    @foreach($months as $key => $month)
-                                        <option value="{{ $key }}" {{ $date == $key ? 'selected' : '' }}>{{ $month }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+        <div class="col-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>{{ $title ?? 'Active Users and Plans' }}</span>
+                    <div class="float-end">
+                        <select name="date" class="form-control form-control-sm" style="width:200px; display:inline-block">
+                            @foreach($months as $key => $month)
+                                <option value="{{ $key }}" {{ $date == $key ? 'selected' : '' }}>{{ $month }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
 
                 <table class="table table-bordered">
                     <thead>
@@ -269,6 +267,8 @@
                         <td class="text-right"><strong>{{ $monthly ?? 0 }}</strong></td>
                     </tr>
                 </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -285,17 +285,24 @@ $(document).ready(function () {
 <style>
 .panel-default {
     border: 1px solid #ddd;
+    margin-bottom: 20px;
 }
 .panel-heading {
     background-color: #f5f5f5;
     border-bottom: 1px solid #ddd;
     padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.pull-right {
-    float: right;
+.panel-body {
+    padding: 15px;
 }
 .text-right {
     text-align: right;
+}
+.table {
+    margin-bottom: 20px;
 }
 </style>
 @endsection

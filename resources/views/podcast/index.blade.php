@@ -60,11 +60,11 @@
                                 <td @dataColumn(4)>{{ $podcast->created_at->format('M d, Y') }}</td>
                                 <td @dataColumn(5) @dataValue($podcast->type)>
                                     @if($podcast->type === 'audio')
-                                        <span class="label label-info">Audio</span>
+                                        <span class="badge bg-info">Audio</span>
                                     @elseif($podcast->type === 'video')
-                                        <span class="label label-success">Video</span>
+                                        <span class="badge bg-success">Video</span>
                                     @else
-                                        <span class="label label-default">{{ ucfirst($podcast->type) }}</span>
+                                        <span class="badge bg-default">{{ ucfirst($podcast->type) }}</span>
                                     @endif
                                 </td>
                                 <td @dataColumn(6)>

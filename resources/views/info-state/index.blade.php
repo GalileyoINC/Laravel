@@ -12,27 +12,27 @@
                 </div>
                 <div class="panel-body">
                     <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                    <form method="GET" class="row g-2 align-items-end mb-3">
+                        <div class="form-group me-2">
+                            <input type="text" name="search" class="form-control form-control-sm" placeholder="Search..." value="{{ request('search') }}">
                         </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="key" class="form-control" placeholder="Key" value="{{ request('key') }}">
+                        <div class="form-group me-2">
+                            <input type="text" name="key" class="form-control form-control-sm" placeholder="Key" value="{{ request('key') }}">
                         </div>
-                        <div class="form-group mr-2">
+                        <div class="form-group me-2">
                             <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
                         </div>
-                        <div class="form-group mr-2">
+                        <div class="form-group me-2">
                             <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
                         </div>
-                        <div class="form-group mr-2">
+                        <div class="form-group me-2">
                             <input type="date" name="updated_at_from" class="form-control" value="{{ request('updated_at_from') }}">
                         </div>
-                        <div class="form-group mr-2">
+                        <div class="form-group me-2">
                             <input type="date" name="updated_at_to" class="form-control" value="{{ request('updated_at_to') }}">
                         </div>
                         <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('info-state.index') }}" class="btn btn-default ml-2">Clear</a>
+                        <a href="{{ route('info-state.index') }}" class="btn btn-default ms-2">Clear</a>
                     </form>
 
                     <!-- Export Button -->

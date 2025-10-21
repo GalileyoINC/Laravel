@@ -27,9 +27,9 @@ use App\Helpers\TableFilterHelper;
             </td>
             <td data-column="5" data-status="{{ $user->status == 1 ? 'active' : 'cancelled' }}">
                 @if($user->status == 1)
-                    <span class="label label-success">Active</span>
+                    <span class="badge bg-success">Active</span>
                 @else
-                    <span class="label label-danger">Cancelled</span>
+                    <span class="badge bg-danger">Cancelled</span>
                 @endif
             </td>
             <td data-column="6" data-value="{{ $user->is_influencer ? 'yes' : 'no' }}">

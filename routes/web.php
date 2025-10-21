@@ -98,6 +98,12 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     // User Routes
     Route::get('user', [UserController::class, 'index'])->name('user.index');
     Route::get('user/create', [UserController::class, 'create'])->name('user.create');
+    Route::get('user/export/csv', [UserController::class, 'toCsv'])->name('user.to-csv');
+    Route::get('user/promocode', [UserController::class, 'promocode'])->name('user.promocode');
+    Route::delete('user/promocode/{promocode}', [UserController::class, 'deleteSaleInfluencerPromocode'])->name('user.delete-promocode');
+    Route::get('user/invoice-line/{contractLine}', [UserController::class, 'getInvoiceLine'])->name('user.invoice-line');
+    Route::match(['get', 'post'], 'user/terminate/{contractLine}', [UserController::class, 'terminate'])->name('user.terminate');
+    Route::post('user/set-feed-visibility', [UserController::class, 'setFeedVisibility'])->name('user.set-feed-visibility');
     Route::post('user', [UserController::class, 'store'])->name('user.store');
     Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
     Route::get('user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
@@ -105,19 +111,13 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::delete('user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::post('user/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggle-status');
     Route::post('user/{user}/login-as', [UserController::class, 'loginAsUser'])->name('user.login-as');
-    Route::get('user/export/csv', [UserController::class, 'toCsv'])->name('user.to-csv');
-    Route::post('user/set-feed-visibility', [UserController::class, 'setFeedVisibility'])->name('user.set-feed-visibility');
     Route::get('user/{user}/transaction-list', [UserController::class, 'getTransactionList'])->name('user.transaction-list');
     Route::get('user/{user}/gateway-profile', [UserController::class, 'getGatewayProfile'])->name('user.gateway-profile');
     Route::get('user/{user}/credit', [UserController::class, 'credit'])->name('user.credit');
     Route::post('user/{user}/credit', [UserController::class, 'creditStore'])->name('user.credit.store');
     Route::post('user/{user}/remove-credit', [UserController::class, 'removeCredit'])->name('user.remove-credit');
-    Route::get('user/promocode', [UserController::class, 'promocode'])->name('user.promocode');
-    Route::delete('user/promocode/{promocode}', [UserController::class, 'deleteSaleInfluencerPromocode'])->name('user.delete-promocode');
-    Route::get('user/invoice-line/{contractLine}', [UserController::class, 'getInvoiceLine'])->name('user.invoice-line');
     Route::post('user/{user}/influencer-verified', [UserController::class, 'influencerVerified'])->name('user.influencer-verified');
     Route::post('user/{user}/influencer-refused', [UserController::class, 'influencerRefused'])->name('user.influencer-refused');
-    Route::match(['get', 'post'], 'user/terminate/{contractLine}', [UserController::class, 'terminate'])->name('user.terminate');
 
     // Register Routes
     Route::get('register', [RegisterController::class, 'index'])->name('register.index');

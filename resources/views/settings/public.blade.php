@@ -12,9 +12,9 @@
         <div class="panel-body">
             <!-- Legacy tabs -->
             <ul class="nav nav-tabs" role="tablist" id="JS__settings_tab">
-                <li role="presentation" class="active"><a href="#main" aria-controls="main" role="tab" data-toggle="tab">Main</a></li>
-                <li role="presentation"><a href="#attention" aria-controls="attention" role="tab" data-toggle="tab">Attention</a></li>
-                <li role="presentation"><a href="#user_point" aria-controls="user_point" role="tab" data-toggle="tab">User Points</a></li>
+                <li role="presentation" class="active"><a href="#main" aria-controls="main" role="tab" data-bs-toggle="tab">Main</a></li>
+                <li role="presentation"><a href="#attention" aria-controls="attention" role="tab" data-bs-toggle="tab">Attention</a></li>
+                <li role="presentation"><a href="#user_point" aria-controls="user_point" role="tab" data-bs-toggle="tab">User Points</a></li>
             </ul>
 
             <div class="tab-content" style="margin-top:15px;">

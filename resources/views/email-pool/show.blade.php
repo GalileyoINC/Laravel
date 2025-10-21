@@ -29,15 +29,15 @@
                                         <th>Status</th>
                                         <td>
                                             @if($emailPool->status === 'sent')
-                                                <span class="label label-success">Sent</span>
+                                                <span class="badge bg-success">Sent</span>
                                             @elseif($emailPool->status === 'pending')
-                                                <span class="label label-warning">Pending</span>
+                                                <span class="badge bg-warning">Pending</span>
                                             @elseif($emailPool->status === 'failed')
-                                                <span class="label label-danger">Failed</span>
+                                                <span class="badge bg-danger">Failed</span>
                                             @elseif($emailPool->status === 'cancelled')
-                                                <span class="label label-default">Cancelled</span>
+                                                <span class="badge bg-default">Cancelled</span>
                                             @else
-                                                <span class="label label-info">{{ ucfirst($emailPool->status) }}</span>
+                                                <span class="badge bg-info">{{ ucfirst($emailPool->status) }}</span>
                                             @endif
                                         </td>
                                     </tr>

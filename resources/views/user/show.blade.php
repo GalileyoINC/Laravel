@@ -5,10 +5,10 @@
     <div class="panel-heading">
         <span>
             @if($user->is_test)
-                <span class="label label-danger">TEST</span>
+                <span class="badge bg-danger">TEST</span>
             @endif
             @if($user->is_influencer)
-                <span class="label label-info">Influencer</span>
+                <span class="badge bg-info">Influencer</span>
             @endif
             Customer #{{ $user->id }}
         </span>
@@ -36,16 +36,16 @@
 
         <ul class="nav nav-tabs" role="tablist" id="itemTab">
             <li role="presentation" class="active">
-                <a href="#base" aria-controls="base" role="tab" data-toggle="tab">Base</a>
+                <a href="#base" aria-controls="base" role="tab" data-bs-toggle="tab">Base</a>
             </li>
             <li role="presentation">
-                <a href="#phones" aria-controls="phones" role="tab" data-toggle="tab">Phones</a>
+                <a href="#phones" aria-controls="phones" role="tab" data-bs-toggle="tab">Phones</a>
             </li>
             <li role="presentation">
-                <a href="#subscriptions" aria-controls="subscriptions" role="tab" data-toggle="tab">Subscriptions</a>
+                <a href="#subscriptions" aria-controls="subscriptions" role="tab" data-bs-toggle="tab">Subscriptions</a>
             </li>
             <li role="presentation">
-                <a href="#credit_cards" aria-controls="credit_cards" role="tab" data-toggle="tab">Credit Cards</a>
+                <a href="#credit_cards" aria-controls="credit_cards" role="tab" data-bs-toggle="tab">Credit Cards</a>
             </li>
         </ul>
 
@@ -77,9 +77,9 @@
                                     <th>Status</th>
                                     <td>
                                         @if($user->status == 1)
-                                            <span class="label label-success">Active</span>
+                                            <span class="badge bg-success">Active</span>
                                         @else
-                                            <span class="label label-danger">Cancelled</span>
+                                            <span class="badge bg-danger">Cancelled</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -234,9 +234,9 @@
                                     <td>{{ $subscription->title ?? 'N/A' }}</td>
                                     <td>
                                         @if($subscription->is_active)
-                                            <span class="label label-success">Active</span>
+                                            <span class="badge bg-success">Active</span>
                                         @else
-                                            <span class="label label-danger">Inactive</span>
+                                            <span class="badge bg-danger">Inactive</span>
                                         @endif
                                     </td>
                                     <td>{{ $subscription->created_at->format('M d, Y') }}</td>

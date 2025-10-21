@@ -63,26 +63,26 @@
                                 <td @dataColumn(0)>{{ $idVal }}</td>
                                 <td @dataColumn(1) @dataValue($type)>
                                     @if($type === 'immediate')
-                                        <span class="label label-success">Immediate</span>
+                                        <span class="badge bg-success">Immediate</span>
                                     @elseif($type === 'later')
-                                        <span class="label label-warning">Later</span>
+                                        <span class="badge bg-warning">Later</span>
                                     @elseif($type === 'background')
-                                        <span class="label label-info">Background</span>
+                                        <span class="badge bg-info">Background</span>
                                     @else
-                                        <span class="label label-default">{{ ucfirst($type) }}</span>
+                                        <span class="badge bg-default">{{ ucfirst($type) }}</span>
                                     @endif
                                 </td>
                                 <td @dataColumn(2) @dataValue($status)>
                                     @if($status === 'sent')
-                                        <span class="badge badge-success">Sent</span>
+                                        <span class="badge bg-success">Sent</span>
                                     @elseif($status === 'pending')
-                                        <span class="badge badge-warning">Pending</span>
+                                        <span class="badge bg-warning">Pending</span>
                                     @elseif($status === 'failed')
-                                        <span class="badge badge-danger">Failed</span>
+                                        <span class="badge bg-danger">Failed</span>
                                     @elseif($status === 'cancelled')
-                                        <span class="badge badge-secondary">Cancelled</span>
+                                        <span class="badge bg-secondary">Cancelled</span>
                                     @else
-                                        <span class="badge badge-info">{{ ucfirst($status) }}</span>
+                                        <span class="badge bg-info">{{ ucfirst($status) }}</span>
                                     @endif
                                 </td>
                                 <td @dataColumn(3)>{{ $fromVal }}</td>

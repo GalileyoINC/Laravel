@@ -48,7 +48,7 @@
                                     <tr>
                                         <th>Type</th>
                                         <td>
-                                            <span class="label label-info">{{ $creditCard->type }}</span>
+                                            <span class="badge bg-info">{{ $creditCard->type }}</span>
                                         </td>
                                     </tr>
                                     <tr>

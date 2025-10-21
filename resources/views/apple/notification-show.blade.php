@@ -28,7 +28,7 @@
                                     <tr>
                                         <th>Notification Type</th>
                                         <td>
-                                            <span class="label label-info">{{ $notification->notification_type }}</span>
+                                            <span class="badge bg-info">{{ $notification->notification_type }}</span>
                                         </td>
                                     </tr>
                                     <tr>

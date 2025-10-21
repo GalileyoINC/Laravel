@@ -23,11 +23,11 @@
                     <td>{{ $line->pay_interval_name ?? 'N/A' }}</td>
                     <td>
                         @if($line->terminated_at)
-                            <span class="label label-danger">Terminated</span>
+                            <span class="badge bg-danger">Terminated</span>
                         @elseif($line->is_active)
-                            <span class="label label-success">Active</span>
+                            <span class="badge bg-success">Active</span>
                         @else
-                            <span class="label label-default">Inactive</span>
+                            <span class="badge bg-default">Inactive</span>
                         @endif
                     </td>
                     <td>{{ $line->start_date ? \Carbon\Carbon::parse($line->start_date)->format('M d, Y') : 'N/A' }}</td>

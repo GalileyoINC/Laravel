@@ -63,7 +63,7 @@
                                     <tr>
                                         <th>Environment</th>
                                         <td>
-                                            <span class="label label-{{ $systemInfo['environment'] === 'production' ? 'success' : 'warning' }}">
+                                            <span class="badge bg-{{ $systemInfo['environment'] === 'production' ? 'success' : 'warning' }}">
                                                 {{ $systemInfo['environment'] }}
                                             </span>
                                         </td>
@@ -71,7 +71,7 @@
                                     <tr>
                                         <th>Debug Mode</th>
                                         <td>
-                                            <span class="label label-{{ $systemInfo['debug_mode'] ? 'danger' : 'success' }}">
+                                            <span class="badge bg-{{ $systemInfo['debug_mode'] ? 'danger' : 'success' }}">
                                                 {{ $systemInfo['debug_mode'] ? 'Enabled' : 'Disabled' }}
                                             </span>
                                         </td>
@@ -104,7 +104,7 @@
                                                 <ul class="list-unstyled">
                                                     @foreach($chunk as $extension)
                                                         <li>
-                                                            <span class="label label-success">{{ $extension }}</span>
+                                                            <span class="badge bg-success">{{ $extension }}</span>
                                                         </li>
                                                     @endforeach
                                                 </ul>

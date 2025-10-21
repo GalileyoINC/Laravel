@@ -35,7 +35,7 @@
                     <td @dataColumn(0)>{{ $product->id }}</td>
                     <td @dataColumn(1)>{{ $product->name }}</td>
                     <td @dataColumn(2) @dataValue($product->status)>
-                        <span class="label label-{{ $product->status == 'active' ? 'success' : 'default' }}">
+                        <span class="badge bg-{{ $product->status == 'active' ? 'success' : 'default' }}">
                             {{ ucfirst($product->status) }}
                         </span>
                     </td>

@@ -43,9 +43,9 @@
                         <th>Status</th>
                         <td>
                             @if($contractLine->terminated_at)
-                                <span class="label label-danger">Terminated on {{ $contractLine->terminated_at }}</span>
+                                <span class="badge bg-danger">Terminated on {{ $contractLine->terminated_at }}</span>
                             @else
-                                <span class="label label-success">Active</span>
+                                <span class="badge bg-success">Active</span>
                             @endif
                         </td>
                     </tr>

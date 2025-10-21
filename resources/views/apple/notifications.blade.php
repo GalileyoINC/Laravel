@@ -69,7 +69,7 @@
                                     <tr>
                                         <td>{{ $notification->id }}</td>
                                         <td>
-                                            <span class="label label-info">{{ $notification->notification_type }}</span>
+                                            <span class="badge bg-info">{{ $notification->notification_type }}</span>
                                         </td>
                                         <td>{{ $notification->transaction_id }}</td>
                                         <td>{{ $notification->original_transaction_id }}</td>

@@ -42,9 +42,9 @@
                             <td>
                                 @php $active = is_array($template) ? ($template['is_active'] ?? false) : ($template->is_active ?? false); @endphp
                                 @if($active)
-                                    <span class="label label-success">Active</span>
+                                    <span class="badge bg-success">Active</span>
                                 @else
-                                    <span class="label label-danger">Inactive</span>
+                                    <span class="badge bg-danger">Inactive</span>
                                 @endif
                             </td>
                             <td>

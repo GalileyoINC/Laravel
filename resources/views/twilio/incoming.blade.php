@@ -10,36 +10,40 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Incomings</h3>
                     <div class="panel-heading-actions">
-                        <a href="{{ route('twilio.create-incoming') }}" class="btn btn-success JS__load_in_modal">
-                            <i class="fas fa-plus"></i> Create Twilio Incoming
+                        <a href="{{ route('twilio.create-incoming') }}" class="btn btn-success btn-sm JS__load_in_modal me-1">
+                            <i class="fas fa-plus"></i> Create
+                        </a>
+                        <a href="{{ route('twilio.export-incoming', request()->query()) }}" class="btn btn-success btn-sm">
+                            <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
                 </div>
                 <div class="panel-body">
                     <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                    <form method="GET" class="mb-3">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-3">
+                                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search..." value="{{ request('search') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="number" class="form-control form-control-sm" placeholder="Phone Number" value="{{ request('number') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" name="created_at_from" class="form-control form-control-sm" placeholder="From" value="{{ request('created_at_from') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" name="created_at_to" class="form-control form-control-sm" placeholder="To" value="{{ request('created_at_to') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm me-1">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                                <a href="{{ route('twilio.incoming') }}" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-times"></i> Clear
+                                </a>
+                            </div>
                         </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="number" class="form-control" placeholder="Phone Number" value="{{ request('number') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('twilio.incoming') }}" class="btn btn-default ml-2">Clear</a>
                     </form>
-
-                    <!-- Export Button -->
-                    <div class="mb-3">
-                        <a href="{{ route('twilio.export-incoming', request()->query()) }}" class="btn btn-success">
-                            <i class="fas fa-download"></i> Export CSV
-                        </a>
-                    </div>
 
                     <!-- Table -->
                     <div class="table-responsive">

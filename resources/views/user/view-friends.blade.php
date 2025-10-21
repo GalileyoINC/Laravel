@@ -23,9 +23,9 @@
                     </td>
                     <td>
                         @if($friendship->status == 1)
-                            <span class="label label-success">Active</span>
+                            <span class="badge bg-success">Active</span>
                         @else
-                            <span class="label label-default">Pending</span>
+                            <span class="badge bg-default">Pending</span>
                         @endif
                     </td>
                     <td>{{ $friendship->created_at->format('M d, Y') }}</td>

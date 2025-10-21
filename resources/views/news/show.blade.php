@@ -52,9 +52,9 @@
                     <th>Status</th>
                     <td>
                         @if($news->status == 1)
-                            <span class="label label-success">Published</span>
+                            <span class="badge bg-success">Published</span>
                         @else
-                            <span class="label label-default">Draft</span>
+                            <span class="badge bg-default">Draft</span>
                         @endif
                     </td>
                 </tr>

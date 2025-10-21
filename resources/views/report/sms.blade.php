@@ -12,20 +12,28 @@
                 </div>
                 <div class="panel-body">
                     <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search by user name or body..." value="{{ request('search') }}">
+                    <form method="GET" class="mb-3">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-8">
+                                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search by user name or body..." value="{{ request('search') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary btn-sm me-1">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                                <a href="{{ route('report.sms') }}" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-times"></i> Clear
+                                </a>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('report.sms') }}" class="btn btn-default ml-2">Clear</a>
                     </form>
 
                     <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
+                    <div class="mb-3 text-muted small">
                         @if(method_exists($sms, 'total') && $sms->total() > 0)
-                            Showing <b>{{ $sms->firstItem() }}-{{ $sms->lastItem() }}</b> of <b>{{ $sms->total() }}</b> items.
+                            Showing <strong>{{ $sms->firstItem() }}-{{ $sms->lastItem() }}</strong> of <strong>{{ $sms->total() }}</strong> items.
                         @else
-                            Showing <b>0-0</b> of <b>0</b> items.
+                            Showing <strong>0-0</strong> of <strong>0</strong> items.
                         @endif
                     </div>
 

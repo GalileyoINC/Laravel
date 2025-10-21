@@ -117,7 +117,7 @@
                                             <td></td>
                                         @endif
                                         <td>
-                                            <select name="is_active" class="form-control" form="filters-form">
+                                            <select name="is_active" class="form-select form-select-sm" form="filters-form">
                                                 <option value=""></option>
                                                 <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
                                                 <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
@@ -125,7 +125,7 @@
                                         </td>
                                         @if($selectedCategory && in_array($selectedCategory->id, [2, 5]))
                                             <td>
-                                                <select name="is_custom" class="form-control" form="filters-form">
+                                                <select name="is_custom" class="form-select form-select-sm" form="filters-form">
                                                     <option value=""></option>
                                                     <option value="1" {{ request('is_custom') == '1' ? 'selected' : '' }}>Custom</option>
                                                     <option value="0" {{ request('is_custom') == '0' ? 'selected' : '' }}>Not Custom</option>
@@ -133,14 +133,14 @@
                                             </td>
                                         @endif
                                         <td>
-                                            <select name="show_reactions" class="form-control" form="filters-form">
+                                            <select name="show_reactions" class="form-select form-select-sm" form="filters-form">
                                                 <option value=""></option>
                                                 <option value="1" {{ request('show_reactions') == '1' ? 'selected' : '' }}>Show Reactions</option>
                                                 <option value="0" {{ request('show_reactions') == '0' ? 'selected' : '' }}>Hide Reactions</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select name="show_comments" class="form-control" form="filters-form">
+                                            <select name="show_comments" class="form-select form-select-sm" form="filters-form">
                                                 <option value=""></option>
                                                 <option value="1" {{ request('show_comments') == '1' ? 'selected' : '' }}>Show Comments</option>
                                                 <option value="0" {{ request('show_comments') == '0' ? 'selected' : '' }}>Hide Comments</option>
@@ -157,7 +157,7 @@
                                         <td></td>
                                         <td>
                                             <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                            <a href="{{ route('subscription.index') }}" class="btn btn-default ml-2">Clear</a>
+                                            <a href="{{ route('subscription.index') }}" class="btn btn-default ms-2">Clear</a>
                                         </td>
                                     </tr>
                                 </thead>

@@ -66,9 +66,9 @@
                     <th>Is Active</th>
                     <td>
                         @if($phoneNumber->is_active)
-                            <span class="label label-success">Active</span>
+                            <span class="badge bg-success">Active</span>
                         @else
-                            <span class="label label-danger">Inactive</span>
+                            <span class="badge bg-danger">Inactive</span>
                         @endif
                     </td>
                 </tr>

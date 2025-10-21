@@ -64,7 +64,7 @@
                                 <td @dataColumn(3)>{{ is_array($card) ? ($card['num'] ?? '') : ($card->num ?? '') }}</td>
                                 <td @dataColumn(4)>{{ is_array($card) ? ($card['phone'] ?? '') : ($card->phone ?? '') }}</td>
                                 <td @dataColumn(5) @dataValue(is_array($card) ? ($card['type'] ?? '') : ($card->type ?? ''))>
-                                    <span class="label label-info">{{ is_array($card) ? ($card['type'] ?? '') : ($card->type ?? '') }}</span>
+                                    <span class="badge bg-info">{{ is_array($card) ? ($card['type'] ?? '') : ($card->type ?? '') }}</span>
                                 </td>
                                 <td @dataColumn(6)>{{ (is_array($card) ? ($card['expiration_year'] ?? '') : ($card->expiration_year ?? '')) }} / {{ (is_array($card) ? ($card['expiration_month'] ?? '') : ($card->expiration_month ?? '')) }}</td>
                                 <td @dataColumn(7)>{{ (is_array($card) ? ($card['anet_customer_payment_profile_id'] ?? '') : ($card->anet_customer_payment_profile_id ?? '')) ?: '-' }}</td>

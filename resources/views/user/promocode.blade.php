@@ -42,16 +42,16 @@
                             </td>
                             <td>
                                 @if($promocode->type == 1)
-                                    <span class="label label-info">Sale</span>
+                                    <span class="badge bg-info">Sale</span>
                                 @else
-                                    <span class="label label-default">Regular</span>
+                                    <span class="badge bg-default">Regular</span>
                                 @endif
                             </td>
                             <td>
                                 @if($promocode->is_active)
-                                    <span class="label label-success">Active</span>
+                                    <span class="badge bg-success">Active</span>
                                 @else
-                                    <span class="label label-danger">Inactive</span>
+                                    <span class="badge bg-danger">Inactive</span>
                                 @endif
                             </td>
                             <td>{{ $promocode->created_at->format('M d, Y') }}</td>

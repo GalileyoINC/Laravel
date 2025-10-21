@@ -39,9 +39,11 @@
     <!-- Publisher / Author URL -->
     <link rel="author" href="https://zorandev.info">
 
-    <!-- Bootstrap 4.6.2 CSS (added for migration) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap 5 Compatibility - Keeps Bootstrap 4 look -->
+    <link href="{{ asset('css/bootstrap5-compat.css') }}?v={{ time() }}" rel="stylesheet">
     <!-- Font Awesome 5.15.3 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts -->
@@ -442,7 +444,7 @@
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -451,7 +453,7 @@
             @if (session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ session('error') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -511,11 +513,11 @@
         });
     </script>
 
-    <!-- jQuery (required for Bootstrap 3.4.1) -->
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <!-- Bootstrap 4.6.2 JavaScript bundle (with Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2LcG8Hk3QZbLrZ9Eme5E5zjv4lrn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <!-- jQuery (still needed for admin.js and live-filter.js) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap 5.3.3 JavaScript bundle (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Admin JavaScript -->
     <script src="{{ asset('js/admin.js') }}"></script>
     <!-- Live Filter JavaScript -->

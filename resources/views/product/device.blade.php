@@ -14,7 +14,7 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -23,7 +23,7 @@
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -34,7 +34,7 @@
             @foreach ($errors->all() as $error)
                 {{ $error }}<br>
             @endforeach
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -46,30 +46,30 @@
         </div>
         <div class="card-body">
             <form action="{{ route('product.device') }}" method="GET" class="mb-4">
-                <div class="form-row">
-                    <div class="col-md-3 mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Search by name or description" value="{{ $filters['search'] ?? '' }}">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <select name="is_active" class="form-control">
-                            <option value="">Select Status</option>
+                    <div class="col-md-2">
+                        <select name="is_active" class="form-select form-select-sm">
+                            <option value="">Status</option>
                             <option value="1" {{ ($filters['is_active'] ?? '') == '1' ? 'selected' : '' }}>Active</option>
                             <option value="0" {{ ($filters['is_active'] ?? '') == '0' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="number" name="price_min" class="form-control" placeholder="Min Price" value="{{ $filters['price_min'] ?? '' }}" step="0.01">
-                            </div>
-                            <div class="col-6">
-                                <input type="number" name="price_max" class="form-control" placeholder="Max Price" value="{{ $filters['price_max'] ?? '' }}" step="0.01">
-                            </div>
-                        </div>
+                    <div class="col-md-2">
+                        <input type="number" name="price_min" class="form-control form-control-sm" placeholder="Min Price" value="{{ $filters['price_min'] ?? '' }}" step="0.01">
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <button type="submit" class="btn btn-primary">Apply Filters</button>
-                        <a href="{{ route('product.device') }}" class="btn btn-secondary">Reset Filters</a>
+                    <div class="col-md-2">
+                        <input type="number" name="price_max" class="form-control form-control-sm" placeholder="Max Price" value="{{ $filters['price_max'] ?? '' }}" step="0.01">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary btn-sm me-1">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <a href="{{ route('product.device') }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-times"></i> Clear
+                        </a>
                     </div>
                 </div>
             </form>
@@ -106,9 +106,9 @@
                             </td>
                             <td>
                                 @if($device->is_active)
-                                    <span class="badge badge-success">Yes</span>
+                                    <span class="badge bg-success">Yes</span>
                                 @else
-                                    <span class="badge badge-danger">No</span>
+                                    <span class="badge bg-danger">No</span>
                                 @endif
                             </td>
                             <td>
@@ -138,12 +138,6 @@
 <style>
 .action-column-1 {
     width: 100px;
-}
-.badge-success {
-    background-color: #1cc88a;
-}
-.badge-danger {
-    background-color: #e74a3b;
 }
 </style>
 @endsection

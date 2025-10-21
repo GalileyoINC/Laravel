@@ -9,45 +9,16 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">IEX Webhooks</h3>
-                </div>
-                <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="event" class="form-control" placeholder="Event" value="{{ request('event') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="set" class="form-control" placeholder="Set" value="{{ request('set') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_from" class="form-control" value="{{ request('updated_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="updated_at_to" class="form-control" value="{{ request('updated_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('iex.webhooks') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
-
-                    <!-- Export Button -->
-                    <div class="mb-3">
-                        <a href="{{ route('iex.export-webhooks', request()->query()) }}" class="btn btn-success">
+                    <div class="box-tools float-end">
+                        <a href="{{ route('iex.export-webhooks', request()->query()) }}" class="btn btn-success btn-sm">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
-
+                </div>
+                <div class="panel-body">
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <table class="table table-bordered table-striped" id="webhooks-table">
                             <thead>
                                 <tr>
                                     <th class="grid__id">ID</th>
@@ -59,6 +30,28 @@
                                     <th>Updated At</th>
                                     <th class="action-column-1">Actions</th>
                                 </tr>
+                                <tr class="filters">
+                                    <td></td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm filter-input" placeholder="IEX ID" data-column="1">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm filter-input" placeholder="Event" data-column="2">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm filter-input" placeholder="Set" data-column="3">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm filter-input" placeholder="Name" data-column="4">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control form-control-sm filter-input" data-column="5">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control form-control-sm filter-input" data-column="6">
+                                    </td>
+                                    <td></td>
+                                </tr>
                             </thead>
                             <tbody>
                                 @forelse($webhooks as $webhook)
@@ -66,7 +59,7 @@
                                         <td>{{ $webhook->id }}</td>
                                         <td>{{ $webhook->iex_id }}</td>
                                         <td>
-                                            <span class="label label-info">{{ $webhook->event }}</span>
+                                            <span class="badge bg-info">{{ $webhook->event }}</span>
                                         </td>
                                         <td>{{ $webhook->set }}</td>
                                         <td>{{ $webhook->name }}</td>
@@ -89,15 +82,83 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $webhooks->appends(request()->query())->links() }}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('webhooks-table');
+    if (!table) return;
+    
+    const filterInputs = table.querySelectorAll('.filter-input');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr')).filter(row => !row.classList.contains('no-results'));
+    
+    // Debounce function
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    // Filter function
+    function filterTable() {
+        const filters = Array.from(filterInputs).map(input => ({
+            column: parseInt(input.dataset.column),
+            value: input.value.toLowerCase().trim()
+        }));
+        
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            let show = true;
+            
+            filters.forEach(filter => {
+                if (filter.value && cells[filter.column]) {
+                    const cellText = cells[filter.column].textContent.toLowerCase().trim();
+                    if (!cellText.includes(filter.value)) {
+                        show = false;
+                    }
+                }
+            });
+            
+            row.style.display = show ? '' : 'none';
+            if (show) visibleCount++;
+        });
+        
+        // Show/hide no results message
+        let noResultsRow = tbody.querySelector('.no-results');
+        if (visibleCount === 0) {
+            if (!noResultsRow) {
+                noResultsRow = document.createElement('tr');
+                noResultsRow.className = 'no-results';
+                noResultsRow.innerHTML = '<td colspan="8" class="text-center">No matching records found.</td>';
+                tbody.appendChild(noResultsRow);
+            }
+        } else if (noResultsRow) {
+            noResultsRow.remove();
+        }
+    }
+    
+    // Attach event listeners with debounce
+    const debouncedFilter = debounce(filterTable, 300);
+    filterInputs.forEach(input => {
+        input.addEventListener('input', debouncedFilter);
+    });
+});
+</script>
+@endpush
 
 <style>
 .panel-default {
@@ -107,9 +168,27 @@
     background-color: #f5f5f5;
     border-bottom: 1px solid #ddd;
     padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.panel-heading .panel-title {
+    margin: 0;
+    flex: 1;
+}
+.panel-heading .box-tools {
+    margin: 0;
 }
 .panel-body {
     padding: 15px;
+}
+.filters td {
+    padding: 5px !important;
+    background-color: #f8f9fa;
+}
+.filters .form-control-sm {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
 }
 .grid__id {
     width: 60px;

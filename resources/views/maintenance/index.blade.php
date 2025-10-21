@@ -59,13 +59,13 @@
                                     <span>Session Management</span>
                                 </div>
                                 <div class="panel-body">
-                                    <form id="session-form" class="form-inline">
+                                    <form id="session-form" class="row g-2 align-items-end">
                                         @csrf
-                                        <div class="form-group mr-2">
-                                            <input type="text" name="key" class="form-control" placeholder="Session Key" required>
+                                        <div class="form-group me-2">
+                                            <input type="text" name="key" class="form-control form-control-sm" placeholder="Session Key" required>
                                         </div>
-                                        <div class="form-group mr-2">
-                                            <input type="text" name="value" class="form-control" placeholder="Session Value">
+                                        <div class="form-group me-2">
+                                            <input type="text" name="value" class="form-control form-control-sm" placeholder="Session Value">
                                         </div>
                                         <button type="submit" class="btn btn-primary">Set Session</button>
                                     </form>

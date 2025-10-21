@@ -32,7 +32,7 @@
                                     <tr>
                                         <th>Status</th>
                                         <td>
-                                            <span class="label label-{{ $transaction->status === 'SUCCESS' ? 'success' : ($transaction->status === 'FAILED' ? 'danger' : 'warning') }}">
+                                            <span class="badge bg-{{ $transaction->status === 'SUCCESS' ? 'success' : ($transaction->status === 'FAILED' ? 'danger' : 'warning') }}">
                                                 {{ $transaction->status }}
                                             </span>
                                         </td>

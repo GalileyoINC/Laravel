@@ -35,11 +35,11 @@
                     <th>Status</th>
                     <td>
                         @if($contact->status == 1)
-                            <span class="label label-warning">New</span>
+                            <span class="badge bg-warning">New</span>
                         @elseif($contact->status == 2)
-                            <span class="label label-success">Replied</span>
+                            <span class="badge bg-success">Replied</span>
                         @else
-                            <span class="label label-default">Closed</span>
+                            <span class="badge bg-default">Closed</span>
                         @endif
                     </td>
                 </tr>

@@ -13,41 +13,39 @@
             <h6 class="m-0 font-weight-bold text-primary">Alert Filters</h6>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-12">
-                    <form action="{{ route('product.alert') }}" method="GET" class="mb-4 alerts-filters">
-                        <div class="form-row">
-                            <div class="col-md-4 mb-3">
-                                <input type="text" name="search" class="form-control" placeholder="Search by name or description" value="{{ $filters['search'] ?? '' }}">
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <select name="is_active" class="form-control">
-                                    <option value="">Select Status</option>
-                                    <option value="1" {{ ($filters['is_active'] ?? '') == '1' ? 'selected' : '' }}>Active</option>
-                                    <option value="0" {{ ($filters['is_active'] ?? '') == '0' ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <button type="submit" class="btn btn-primary">Apply Filters</button>
-                                <a href="{{ route('product.alert') }}" class="btn btn-secondary">Reset Filters</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div style="clear: both;"></div>
-
-            <div class="row">
-                <div class="col-12">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if(method_exists($alerts, 'total') && $alerts->total() > 0)
-                            Showing <b>{{ $alerts->firstItem() }}-{{ $alerts->lastItem() }}</b> of <b>{{ $alerts->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
+            <form action="{{ route('product.alert') }}" method="GET" class="mb-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="is_active" class="form-select form-select-sm">
+                            <option value="">Status</option>
+                            <option value="1" {{ ($filters['is_active'] ?? '') == '1' ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ ($filters['is_active'] ?? '') == '0' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <button type="submit" class="btn btn-primary btn-sm me-1">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <a href="{{ route('product.alert') }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-times"></i> Clear
+                        </a>
                     </div>
                 </div>
+            </form>
+
+            <!-- Summary -->
+            <div class="mb-2 text-muted small">
+                @if(method_exists($alerts, 'total') && $alerts->total() > 0)
+                    Showing <strong>{{ $alerts->firstItem() }}-{{ $alerts->lastItem() }}</strong> of <strong>{{ $alerts->total() }}</strong> items.
+                @else
+                    Showing <strong>0-0</strong> of <strong>0</strong> items.
+                @endif
+            </div>
+
+            <div class="row">
                 <div class="col-12">
                     <div class="table-responsive">
                         <table class="table table-bordered" width="100%" cellspacing="0">
@@ -70,9 +68,9 @@
                                         <td>{{ number_format($alert->price, 2) }}</td>
                                         <td>
                                             @if($alert->is_active)
-                                                <span class="badge badge-success">Yes</span>
+                                                <span class="badge bg-success">Yes</span>
                                             @else
-                                                <span class="badge badge-danger">No</span>
+                                                <span class="badge bg-danger">No</span>
                                             @endif
                                         </td>
                                         <td>

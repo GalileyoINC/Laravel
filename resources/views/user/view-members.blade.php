@@ -19,9 +19,9 @@
                     <td>{{ $member->email }}</td>
                     <td>
                         @if($member->status == 1)
-                            <span class="label label-success">Active</span>
+                            <span class="badge bg-success">Active</span>
                         @else
-                            <span class="label label-danger">Inactive</span>
+                            <span class="badge bg-danger">Inactive</span>
                         @endif
                     </td>
                     <td>

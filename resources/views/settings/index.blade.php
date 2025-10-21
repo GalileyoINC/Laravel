@@ -7,7 +7,7 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -16,7 +16,7 @@
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -27,7 +27,7 @@
             @foreach ($errors->all() as $error)
                 {{ $error }}<br>
             @endforeach
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -45,16 +45,16 @@
         <div class="panel-body">
     <ul class="nav nav-tabs" role="tablist" id="JS__settings_tab">
         <li role="presentation" class="nav-item">
-            <a class="nav-link active" href="#main" aria-controls="main" role="tab" data-toggle="tab">Main</a>
+            <a class="nav-link active" href="#main" aria-controls="main" role="tab" data-bs-toggle="tab">Main</a>
         </li>
         <li role="presentation" class="nav-item">
-            <a class="nav-link" href="#sms" aria-controls="sms" role="tab" data-toggle="tab">SMS</a>
+            <a class="nav-link" href="#sms" aria-controls="sms" role="tab" data-bs-toggle="tab">SMS</a>
         </li>
         <li role="presentation" class="nav-item">
-            <a class="nav-link" href="#app" aria-controls="app" role="tab" data-toggle="tab">APP</a>
+            <a class="nav-link" href="#app" aria-controls="app" role="tab" data-bs-toggle="tab">APP</a>
         </li>
             <li role="presentation" class="nav-item">
-                <a class="nav-link" href="#api" aria-controls="api" role="tab" data-toggle="tab">API</a>
+                <a class="nav-link" href="#api" aria-controls="api" role="tab" data-bs-toggle="tab">API</a>
             </li>
     </ul>
 

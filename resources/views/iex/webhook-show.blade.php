@@ -32,7 +32,7 @@
                                     <tr>
                                         <th>Event</th>
                                         <td>
-                                            <span class="label label-info">{{ $webhook->event }}</span>
+                                            <span class="badge bg-info">{{ $webhook->event }}</span>
                                         </td>
                                     </tr>
                                     <tr>

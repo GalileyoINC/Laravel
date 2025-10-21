@@ -6,9 +6,9 @@
             <th style="width: 200px;">Is Influencer</th>
             <td>
                 @if($model->is_influencer)
-                    <span class="label label-success">Yes</span>
+                    <span class="badge bg-success">Yes</span>
                 @else
-                    <span class="label label-default">No</span>
+                    <span class="badge bg-default">No</span>
                 @endif
             </td>
         </tr>
@@ -54,9 +54,9 @@
                         <td>{{ $promo->type_name ?? 'N/A' }}</td>
                         <td>
                             @if($promo->is_active)
-                                <span class="label label-success">Active</span>
+                                <span class="badge bg-success">Active</span>
                             @else
-                                <span class="label label-danger">Inactive</span>
+                                <span class="badge bg-danger">Inactive</span>
                             @endif
                         </td>
                         <td>{{ $promo->use_count ?? 0 }}</td>

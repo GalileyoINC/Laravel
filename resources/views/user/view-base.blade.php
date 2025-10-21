@@ -20,9 +20,9 @@
             <th>Status</th>
             <td>
                 @if($model->status == 1)
-                    <span class="label label-success">Active</span>
+                    <span class="badge bg-success">Active</span>
                 @else
-                    <span class="label label-danger">Cancelled</span>
+                    <span class="badge bg-danger">Cancelled</span>
                 @endif
             </td>
         </tr>

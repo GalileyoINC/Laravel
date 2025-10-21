@@ -70,24 +70,24 @@
                                         <td>{{ $emailPool->id }}</td>
                                         <td>
                                             @if($emailPool->type === 'immediate')
-                                                <span class="label label-success">Immediate</span>
+                                                <span class="badge bg-success">Immediate</span>
                                             @elseif($emailPool->type === 'later')
-                                                <span class="label label-warning">Later</span>
+                                                <span class="badge bg-warning">Later</span>
                                             @elseif($emailPool->type === 'background')
-                                                <span class="label label-info">Background</span>
+                                                <span class="badge bg-info">Background</span>
                                             @else
-                                                <span class="label label-default">{{ ucfirst($emailPool->type) }}</span>
+                                                <span class="badge bg-default">{{ ucfirst($emailPool->type) }}</span>
                                             @endif
                                         </td>
                                         <td>
                                             @if($emailPool->status === 'sent')
-                                                <span class="label label-success">Sent</span>
+                                                <span class="badge bg-success">Sent</span>
                                             @elseif($emailPool->status === 'failed')
-                                                <span class="label label-danger">Failed</span>
+                                                <span class="badge bg-danger">Failed</span>
                                             @elseif($emailPool->status === 'cancelled')
-                                                <span class="label label-default">Cancelled</span>
+                                                <span class="badge bg-default">Cancelled</span>
                                             @else
-                                                <span class="label label-info">{{ ucfirst($emailPool->status) }}</span>
+                                                <span class="badge bg-info">{{ ucfirst($emailPool->status) }}</span>
                                             @endif
                                         </td>
                                         <td>{{ $emailPool->from }}</td>
