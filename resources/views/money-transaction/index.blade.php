@@ -17,183 +17,112 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <!-- Summary -->
-            <div class="summary" style="margin-bottom:10px;">
-                @if($transactions->total() > 0)
-                    Showing <b>{{ $transactions->firstItem() }}-{{ $transactions->lastItem() }}</b> of <b>{{ $transactions->total() }}</b> items.
-                @else
-                    Showing <b>0-0</b> of <b>0</b> items.
-                @endif
-            </div>
-
-            <div class="table-responsive">
-                <form action="{{ route('money-transaction.index') }}" method="GET" id="filters-form"></form>
-                <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th class="grid__id">ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Invoice</th>
-                        <th>Credit Card</th>
-                        <th>Transaction Type</th>
-                        <th>Transaction ID</th>
-                        <th>Success</th>
-                        <th>Void</th>
-                        <th>Test</th>
-                        <th>Total</th>
-                        <th>Created At</th>
-                        <th class="action-column-5">Actions</th>
-                    </tr>
-                    <tr class="filters">
-                        <td>
-                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
+            @php
+            use App\Helpers\TableFilterHelper;
+            @endphp
+            <x-table-filter 
+                :title="'Money Transactions'" 
+                :data="$transactions"
+                :columns="[
+                    TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                    TableFilterHelper::textColumn('First Name'),
+                    TableFilterHelper::textColumn('Last Name'),
+                    TableFilterHelper::textColumn('Invoice'),
+                    TableFilterHelper::textColumn('Credit Card'),
+                    TableFilterHelper::selectColumn('Transaction Type', ['1' => 'Payment', '2' => 'Refund', '3' => 'Void']),
+                    TableFilterHelper::textColumn('Transaction ID'),
+                    TableFilterHelper::selectColumn('Success', ['1' => 'Yes', '0' => 'No']),
+                    TableFilterHelper::selectColumn('Void', ['1' => 'Yes', '0' => 'No']),
+                    TableFilterHelper::selectColumn('Test', ['1' => 'Yes', '0' => 'No']),
+                    TableFilterHelper::textColumn('Total'),
+                    TableFilterHelper::textColumn('Created At'),
+                    TableFilterHelper::clearButtonColumn('Actions', 'action-column-5'),
+                ]"
+            >
+                @forelse($transactions as $transaction)
+                    <tr class="data-row">
+                        <td @dataColumn(0)>{{ $transaction->id }}</td>
+                        <td @dataColumn(1)>
+                            <a href="{{ route('user.show', $transaction->user->id) }}">{{ $transaction->user->first_name }}</a>
                         </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <select name="transaction_type" class="form-control" form="filters-form">
-                                <option value=""></option>
-                                <option value="1" {{ ($filters['transaction_type'] ?? '') == '1' ? 'selected' : '' }}>Payment</option>
-                                <option value="2" {{ ($filters['transaction_type'] ?? '') == '2' ? 'selected' : '' }}>Refund</option>
-                                <option value="3" {{ ($filters['transaction_type'] ?? '') == '3' ? 'selected' : '' }}>Void</option>
-                            </select>
+                        <td @dataColumn(2)>
+                            <a href="{{ route('user.show', $transaction->user->id) }}">{{ $transaction->user->last_name }}</a>
                         </td>
-                        <td></td>
-                        <td>
-                            <select name="is_success" class="form-control" form="filters-form">
-                                <option value=""></option>
-                                <option value="1" {{ ($filters['is_success'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
-                                <option value="0" {{ ($filters['is_success'] ?? '') == '0' ? 'selected' : '' }}>No</option>
-                            </select>
+                        <td @dataColumn(3)>
+                            <a href="{{ route('invoice.show', $transaction->id_invoice) }}" class="JS__load_in_modal">{{ $transaction->id_invoice }}</a>
                         </td>
-                        <td>
-                            <select name="is_void" class="form-control" form="filters-form">
-                                <option value=""></option>
-                                <option value="1" {{ ($filters['is_void'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
-                                <option value="0" {{ ($filters['is_void'] ?? '') == '0' ? 'selected' : '' }}>No</option>
-                            </select>
+                        <td @dataColumn(4)>
+                            @if($transaction->creditCard)
+                                <a href="{{ route('credit-card.show', $transaction->id_credit_card) }}" class="JS__load_in_modal">
+                                    {{ $transaction->creditCard->type ? $transaction->creditCard->type . ' ' : '' }}
+                                    {{ $transaction->creditCard->num }}
+                                    ({{ $transaction->creditCard->expiration_year }}/{{ $transaction->creditCard->expiration_month }})
+                                </a>
+                            @endif
                         </td>
-                        <td>
-                            <select name="is_test" class="form-control" form="filters-form">
-                                <option value=""></option>
-                                <option value="1" {{ ($filters['is_test'] ?? '') == '1' ? 'selected' : '' }}>Yes</option>
-                                <option value="0" {{ ($filters['is_test'] ?? '') == '0' ? 'selected' : '' }}>No</option>
-                            </select>
+                        <td @dataColumn(5) @dataValue((string) $transaction->transaction_type)>
+                            @switch($transaction->transaction_type)
+                                @case(1)
+                                    Payment
+                                    @break
+                                @case(2)
+                                    Refund
+                                    @break
+                                @case(3)
+                                    Void
+                                    @break
+                                @default
+                                    Unknown
+                            @endswitch
                         </td>
-                        <td>
-                            <div class="row" style="gap:6px;">
-                                <input type="number" name="total_min" class="form-control" placeholder="Min" value="{{ $filters['total_min'] ?? '' }}" step="0.01" style="max-width:120px;">
-                                <input type="number" name="total_max" class="form-control" placeholder="Max" value="{{ $filters['total_max'] ?? '' }}" step="0.01" style="max-width:120px;">
+                        <td @dataColumn(6)>{{ $transaction->transaction_id }}</td>
+                        <td @dataColumn(7) @dataValue($transaction->is_success ? '1' : '0')>
+                            @if($transaction->is_success)
+                                <span class="badge badge-success">Yes</span>
+                            @else
+                                <span class="badge badge-danger">No</span>
+                            @endif
+                        </td>
+                        <td @dataColumn(8) @dataValue($transaction->is_void ? '1' : '0')>
+                            @if($transaction->is_void)
+                                <span class="badge badge-warning">Yes</span>
+                            @else
+                                <span class="badge badge-secondary">No</span>
+                            @endif
+                        </td>
+                        <td @dataColumn(9) @dataValue($transaction->is_test ? '1' : '0')>
+                            @if($transaction->is_test)
+                                <span class="badge badge-info">Yes</span>
+                            @else
+                                <span class="badge badge-secondary">No</span>
+                            @endif
+                        </td>
+                        <td @dataColumn(10)>{{ number_format($transaction->total, 2) }} {{ config('app.currency', '$') }}</td>
+                        <td @dataColumn(11)>{{ $transaction->created_at->format('M d, Y') }}</td>
+                        <td @dataColumn(12)>
+                            <div class="btn-group">
+                                <a href="{{ route('money-transaction.show', $transaction) }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye fa-fw"></i>
+                                </a>
+                                @if($transaction->canBeVoided())
+                                    <form action="{{ route('money-transaction.void', $transaction) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to void this payment?');">
+                                        @csrf
+                                        @method('POST')
+                                        <button type="submit" class="btn btn-sm btn-danger">Void</button>
+                                    </form>
+                                @endif
+                                @if($transaction->canBeRefund())
+                                    <a href="{{ route('money-transaction.refund', $transaction) }}" class="btn btn-sm btn-danger JS__load_in_modal">Refund</a>
+                                @endif
                             </div>
                         </td>
-                        <td>
-                            <input type="date" name="created_at" class="form-control" form="filters-form" value="{{ $filters['created_at'] ?? '' }}">
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                            <a href="{{ route('money-transaction.index') }}" class="btn btn-default ml-2">Clear</a>
-                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    @forelse($transactions as $transaction)
-                        <tr>
-                            <td>{{ $transaction->id }}</td>
-                            <td>
-                                <a href="{{ route('user.show', $transaction->user->id) }}">
-                                    {{ $transaction->user->first_name }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ route('user.show', $transaction->user->id) }}">
-                                    {{ $transaction->user->last_name }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ route('invoice.show', $transaction->id_invoice) }}" class="JS__load_in_modal">
-                                    {{ $transaction->id_invoice }}
-                                </a>
-                            </td>
-                            <td>
-                                @if($transaction->creditCard)
-                                    <a href="{{ route('credit-card.show', $transaction->id_credit_card) }}" class="JS__load_in_modal">
-                                        {{ $transaction->creditCard->type ? $transaction->creditCard->type . ' ' : '' }}
-                                        {{ $transaction->creditCard->num }}
-                                        ({{ $transaction->creditCard->expiration_year }}/{{ $transaction->creditCard->expiration_month }})
-                                    </a>
-                                @endif
-                            </td>
-                            <td>
-                                @switch($transaction->transaction_type)
-                                    @case(1)
-                                        Payment
-                                        @break
-                                    @case(2)
-                                        Refund
-                                        @break
-                                    @case(3)
-                                        Void
-                                        @break
-                                    @default
-                                        Unknown
-                                @endswitch
-                            </td>
-                            <td>{{ $transaction->transaction_id }}</td>
-                            <td>
-                                @if($transaction->is_success)
-                                    <span class="badge badge-success">Yes</span>
-                                @else
-                                    <span class="badge badge-danger">No</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($transaction->is_void)
-                                    <span class="badge badge-warning">Yes</span>
-                                @else
-                                    <span class="badge badge-secondary">No</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($transaction->is_test)
-                                    <span class="badge badge-info">Yes</span>
-                                @else
-                                    <span class="badge badge-secondary">No</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('money-transaction.show', $transaction) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye fa-fw"></i>
-                                    </a>
-                                    @if($transaction->canBeVoided())
-                                        <form action="{{ route('money-transaction.void', $transaction) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to void this payment?');">
-                                            @csrf
-                                            @method('POST')
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                Void
-                                            </button>
-                                        </form>
-                                    @endif
-                                    @if($transaction->canBeRefund())
-                                        <a href="{{ route('money-transaction.refund', $transaction) }}" class="btn btn-sm btn-danger JS__load_in_modal">
-                                            Refund
-                                        </a>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="13" class="text-center">No transactions found.</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-                {{ $transactions->links() }}
-            </div>
+                @empty
+                    <tr>
+                        <td colspan="13" class="text-center">No transactions found.</td>
+                    </tr>
+                @endforelse
+            </x-table-filter>
         </div>
     </div>
 </div>

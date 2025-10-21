@@ -11,101 +11,66 @@
                     <h3 class="panel-title">Influencer's Assistants</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Create Button -->
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
+
                     <div class="mb-3">
                         <a href="{{ route('influencer-assistant.create') }}" class="btn btn-success">
                             <i class="fas fa-plus"></i> Create Influencer's Assistant
                         </a>
-                    </div>
-
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($influencerAssistants->total() > 0)
-                            Showing <b>{{ $influencerAssistants->firstItem() }}-{{ $influencerAssistants->lastItem() }}</b> of <b>{{ $influencerAssistants->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
-
-                    <!-- Export Button -->
-                    <div class="mb-3">
                         <a href="{{ route('influencer-assistant.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Influencer</th>
-                                    <th>Assistant</th>
-                                    <th class="action-column-1">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <div class="d-flex" style="gap:6px;">
-                                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                            <input type="text" name="userInfluencerName" class="form-control" form="filters-form" placeholder="Influencer Name" value="{{ request('userInfluencerName') }}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="userAssistantName" class="form-control" form="filters-form" placeholder="Assistant Name" value="{{ request('userAssistantName') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('influencer-assistant.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($influencerAssistants as $influencerAssistant)
-                                    <tr>
-                                        <td>
-                                            @if($influencerAssistant->influencer)
-                                                <a href="{{ route('user.show', $influencerAssistant->influencer) }}">
-                                                    {{ $influencerAssistant->influencer->first_name }} {{ $influencerAssistant->influencer->last_name }}
-                                                </a>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($influencerAssistant->assistant)
-                                                <a href="{{ route('user.show', $influencerAssistant->assistant) }}">
-                                                    {{ $influencerAssistant->assistant->first_name }} {{ $influencerAssistant->assistant->last_name }}
-                                                </a>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <form method="POST" action="{{ route('influencer-assistant.destroy', ['idInfluencer' => $influencerAssistant->id_influencer, 'idAssistant' => $influencerAssistant->id_assistant]) }}" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this influencer assistant?')">
-                                                        <i class="fas fa-trash fa-fw"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center">No influencer assistants found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $influencerAssistants->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Influencer\'s Assistants'" 
+                        :data="$influencerAssistants"
+                        :columns="[
+                            TableFilterHelper::textColumn('Influencer'),
+                            TableFilterHelper::textColumn('Assistant'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                        ]"
+                    >
+                        @forelse($influencerAssistants as $influencerAssistant)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>
+                                    @if($influencerAssistant->influencer)
+                                        <a href="{{ route('user.show', $influencerAssistant->influencer) }}">
+                                            {{ $influencerAssistant->influencer->first_name }} {{ $influencerAssistant->influencer->last_name }}
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(1)>
+                                    @if($influencerAssistant->assistant)
+                                        <a href="{{ route('user.show', $influencerAssistant->assistant) }}">
+                                            {{ $influencerAssistant->assistant->first_name }} {{ $influencerAssistant->assistant->last_name }}
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(2)>
+                                    <div class="btn-group">
+                                        <form method="POST" action="{{ route('influencer-assistant.destroy', ['idInfluencer' => $influencerAssistant->id_influencer, 'idAssistant' => $influencerAssistant->id_assistant]) }}" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this influencer assistant?')">
+                                                <i class="fas fa-trash fa-fw"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center">No influencer assistants found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

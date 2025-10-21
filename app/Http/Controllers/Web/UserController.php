@@ -64,7 +64,7 @@ class UserController extends Controller
     {
         $dto = new UsersListRequestDTO(
             page: (int) $request->query('page', 1),
-            pageSize: (int) $request->query('page_size', 20),
+            pageSize: (int) $request->query('page_size', 1000), // Increased for client-side filtering
             search: $request->query('search'),
             role: $request->has('role') ? (int) $request->query('role') : null,
             validEmailOnly: $request->boolean('valid_email_only', false)

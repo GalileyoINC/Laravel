@@ -18,68 +18,40 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <!-- Summary -->
-            <div class="summary" style="margin-bottom:10px;">
-                @if($registers->total() > 0)
-                    Showing <b>{{ $registers->firstItem() }}-{{ $registers->lastItem() }}</b> of <b>{{ $registers->total() }}</b> items.
-                @else
-                    Showing <b>0-0</b> of <b>0</b> items.
-                @endif
-            </div>
-
-            <div class="table-responsive">
-                <form action="{{ route('register.index') }}" method="GET" id="filters-form">
-                    <input type="hidden" name="is_unfinished_signup" value="{{ $isUnfinishedSignup }}">
-                </form>
-                <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
+            @php
+            use App\Helpers\TableFilterHelper;
+            @endphp
+            <x-table-filter 
+                :title="$isUnfinishedSignup == 1 ? 'Unfinished Signups' : 'Subscribed for newsletters'" 
+                :data="$registers"
+                :columns="[
+                    TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                    TableFilterHelper::textColumn('Email'),
+                    TableFilterHelper::textColumn('First Name'),
+                    TableFilterHelper::textColumn('Last Name'),
+                    TableFilterHelper::textColumn('Created At'),
+                    TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                ]"
+            >
+                @forelse($registers as $register)
+                    <tr class="data-row">
+                        <td @dataColumn(0)>{{ $register->id }}</td>
+                        <td @dataColumn(1)>{{ $register->email }}</td>
+                        <td @dataColumn(2)>{{ $register->first_name }}</td>
+                        <td @dataColumn(3)>{{ $register->last_name }}</td>
+                        <td @dataColumn(4)>{{ $register->created_at->format('M d, Y') }}</td>
+                        <td @dataColumn(5)>
+                            <div class="btn-group">
+                                <!-- No actions for register records -->
+                            </div>
+                        </td>
+                    </tr>
+                @empty
                     <tr>
-                        <th class="grid__id">ID</th>
-                        <th>Email</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Created At</th>
-                        <th class="action-column-1">Actions</th>
+                        <td colspan="6" class="text-center">No registers found.</td>
                     </tr>
-                    <tr class="filters">
-                        <td>
-                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <input type="date" name="created_at" class="form-control" form="filters-form" value="{{ $filters['created_at'] ?? '' }}">
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                            <a href="{{ route('register.index', ['is_unfinished_signup' => $isUnfinishedSignup]) }}" class="btn btn-default ml-2">Clear</a>
-                        </td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @forelse($registers as $register)
-                        <tr>
-                            <td>{{ $register->id }}</td>
-                            <td>{{ $register->email }}</td>
-                            <td>{{ $register->first_name }}</td>
-                            <td>{{ $register->last_name }}</td>
-                            <td>{{ $register->created_at->format('M d, Y') }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <!-- No actions for register records -->
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">No registers found.</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-                {{ $registers->links() }}
-            </div>
+                @endforelse
+            </x-table-filter>
         </div>
     </div>
 </div>

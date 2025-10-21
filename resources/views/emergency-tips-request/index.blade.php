@@ -11,84 +11,47 @@
                     <h3 class="panel-title">Emergency Tips Requests</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($emergencyTipsRequests->total() > 0)
-                            Showing <b>{{ $emergencyTipsRequests->firstItem() }}-{{ $emergencyTipsRequests->lastItem() }}</b> of <b>{{ $emergencyTipsRequests->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('emergency-tips-request.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>First Name</th>
-                                    <th>Email</th>
-                                    <th>Created At</th>
-                                    <th class="action-column-1">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="first_name" class="form-control" form="filters-form" placeholder="First Name" value="{{ request('first_name') }}">
-                                    </td>
-                                    <td>
-                                        <input type="email" name="email" class="form-control" form="filters-form" placeholder="Email" value="{{ request('email') }}">
-                                    </td>
-                                    <td>
-                                        <div class="d-flex" style="gap:6px;">
-                                            <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                            <input type="date" name="created_at_to" class="form-control" form="filters-form" value="{{ request('created_at_to') }}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('emergency-tips-request.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($emergencyTipsRequests as $emergencyTipsRequest)
-                                    <tr>
-                                        <td>{{ $emergencyTipsRequest->id }}</td>
-                                        <td>{{ $emergencyTipsRequest->first_name }}</td>
-                                        <td>{{ $emergencyTipsRequest->email }}</td>
-                                        <td>{{ $emergencyTipsRequest->created_at->format('M d, Y') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('emergency-tips-request.show', $emergencyTipsRequest) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No emergency tips requests found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $emergencyTipsRequests->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Emergency Tips Requests'" 
+                        :data="$emergencyTipsRequests"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('First Name'),
+                            TableFilterHelper::textColumn('Email'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                        ]"
+                    >
+                        @forelse($emergencyTipsRequests as $emergencyTipsRequest)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $emergencyTipsRequest->id }}</td>
+                                <td @dataColumn(1)>{{ $emergencyTipsRequest->first_name }}</td>
+                                <td @dataColumn(2)>{{ $emergencyTipsRequest->email }}</td>
+                                <td @dataColumn(3)>{{ $emergencyTipsRequest->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(4)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('emergency-tips-request.show', $emergencyTipsRequest) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No emergency tips requests found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

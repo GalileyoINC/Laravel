@@ -11,144 +11,75 @@
                     <h3 class="panel-title">Message Schedules</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($smsSchedules->total() > 0)
-                            Showing <b>{{ $smsSchedules->firstItem() }}-{{ $smsSchedules->lastItem() }}</b> of <b>{{ $smsSchedules->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('sms-schedule.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Purpose</th>
-                                    <th>Sender</th>
-                                    <th>Subscription</th>
-                                    <th>Private Feed</th>
-                                    <th>Status</th>
-                                    <th>Body</th>
-                                    <th>Sended At</th>
-                                    <th>Created At</th>
-                                    <th>Updated At</th>
-                                    <th class="action-column-1">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <select name="purpose" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($purposes as $key => $value)
-                                                <option value="{{ $key }}" {{ request('purpose') == $key ? 'selected' : '' }}>
-                                                    {{ $value }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <select name="id_subscription" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($subscriptions as $id => $name)
-                                                <option value="{{ $id }}" {{ request('id_subscription') == $id ? 'selected' : '' }}>
-                                                    {{ $name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="followerListName" class="form-control" form="filters-form" placeholder="Private Feed" value="{{ request('followerListName') }}">
-                                    </td>
-                                    <td>
-                                        <select name="status" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($statuses as $key => $value)
-                                                <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
-                                                    {{ $value }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <input type="date" name="sended_at_from" class="form-control" form="filters-form" value="{{ request('sended_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('sms-schedule.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($smsSchedules as $smsSchedule)
-                                    <tr>
-                                        <td>{{ $smsSchedule->id }}</td>
-                                        <td>{{ $purposes[$smsSchedule->purpose] ?? $smsSchedule->purpose }}</td>
-                                        <td>
-                                            @if($smsSchedule->user)
-                                                User: {{ $smsSchedule->user->first_name }} {{ $smsSchedule->user->last_name }}
-                                            @elseif($smsSchedule->staff)
-                                                Staff: {{ $smsSchedule->staff->username }}
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>{{ $smsSchedule->subscription ? $smsSchedule->subscription->name : '-' }}</td>
-                                        <td>{{ $smsSchedule->followerList ? $smsSchedule->followerList->name : '-' }}</td>
-                                        <td>
-                                            @if($smsSchedule->id_sms_pool)
-                                                <a href="{{ route('sms-pool.show', $smsSchedule->id_sms_pool) }}">
-                                                    {{ $statuses[$smsSchedule->status] ?? $smsSchedule->status }}
-                                                </a>
-                                            @else
-                                                {{ $statuses[$smsSchedule->status] ?? $smsSchedule->status }}
-                                            @endif
-                                        </td>
-                                        <td>{{ Str::limit($smsSchedule->body, 50) }}</td>
-                                        <td>{{ $smsSchedule->sended_at ? $smsSchedule->sended_at->format('M d, Y H:i') : '-' }}</td>
-                                        <td>{{ $smsSchedule->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $smsSchedule->updated_at->format('M d, Y') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('sms-schedule.show', $smsSchedule) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="11" class="text-center">No SMS schedules found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $smsSchedules->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Message Schedules'" 
+                        :data="$smsSchedules"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::selectColumn('Purpose', $purposes),
+                            TableFilterHelper::textColumn('Sender'),
+                            TableFilterHelper::textColumn('Subscription'),
+                            TableFilterHelper::textColumn('Private Feed'),
+                            TableFilterHelper::selectColumn('Status', $statuses),
+                            TableFilterHelper::textColumn('Body'),
+                            TableFilterHelper::textColumn('Sended At'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::textColumn('Updated At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                        ]"
+                    >
+                        @forelse($smsSchedules as $smsSchedule)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $smsSchedule->id }}</td>
+                                <td @dataColumn(1) @dataValue((string) $smsSchedule->purpose)>{{ $purposes[$smsSchedule->purpose] ?? $smsSchedule->purpose }}</td>
+                                <td @dataColumn(2)>
+                                    @if($smsSchedule->user)
+                                        User: {{ $smsSchedule->user->first_name }} {{ $smsSchedule->user->last_name }}
+                                    @elseif($smsSchedule->staff)
+                                        Staff: {{ $smsSchedule->staff->username }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>{{ $smsSchedule->subscription ? $smsSchedule->subscription->name : '-' }}</td>
+                                <td @dataColumn(4)>{{ $smsSchedule->followerList ? $smsSchedule->followerList->name : '-' }}</td>
+                                <td @dataColumn(5) @dataValue((string) $smsSchedule->status)>
+                                    @if($smsSchedule->id_sms_pool)
+                                        <a href="{{ route('sms-pool.show', $smsSchedule->id_sms_pool) }}">
+                                            {{ $statuses[$smsSchedule->status] ?? $smsSchedule->status }}
+                                        </a>
+                                    @else
+                                        {{ $statuses[$smsSchedule->status] ?? $smsSchedule->status }}
+                                    @endif
+                                </td>
+                                <td @dataColumn(6)>{{ Str::limit($smsSchedule->body, 50) }}</td>
+                                <td @dataColumn(7)>{{ $smsSchedule->sended_at ? $smsSchedule->sended_at->format('M d, Y H:i') : '-' }}</td>
+                                <td @dataColumn(8)>{{ $smsSchedule->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(9)>{{ $smsSchedule->updated_at->format('M d, Y') }}</td>
+                                <td @dataColumn(10)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('sms-schedule.show', $smsSchedule) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="11" class="text-center">No SMS schedules found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

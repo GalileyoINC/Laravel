@@ -11,75 +11,41 @@
                     <h3 class="panel-title">Admin Message Log</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($adminMessageLogs->total() > 0)
-                            Showing <b>{{ $adminMessageLogs->firstItem() }}-{{ $adminMessageLogs->lastItem() }}</b> of <b>{{ $adminMessageLogs->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('admin-message-log.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered detail-view">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Object Type</th>
-                                    <th>Object ID</th>
-                                    <th>Message</th>
-                                    <th>Sent</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search messages..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="objType" class="form-control" form="filters-form" placeholder="Object Type" value="{{ request('objType') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="objId" class="form-control" form="filters-form" placeholder="Object ID" value="{{ request('objId') }}">
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <div class="d-flex" style="gap:6px;">
-                                            <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                            <input type="date" name="created_at_to" class="form-control" form="filters-form" value="{{ request('created_at_to') }}">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($adminMessageLogs as $log)
-                                    <tr>
-                                        <td>{{ $log->id }}</td>
-                                        <td>{{ $log->obj_type ?? '-' }}</td>
-                                        <td>{{ $log->obj_id ?? '-' }}</td>
-                                        <td>{{ $log->body }}</td>
-                                        <td>{{ $log->created_at->format('M d, Y H:i') }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No admin message logs found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $adminMessageLogs->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Admin Message Log'" 
+                        :data="$adminMessageLogs"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('Object Type'),
+                            TableFilterHelper::textColumn('Object ID'),
+                            TableFilterHelper::textColumn('Message'),
+                            TableFilterHelper::textColumn('Sent'),
+                        ]"
+                    >
+                        @forelse($adminMessageLogs as $log)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $log->id }}</td>
+                                <td @dataColumn(1)>{{ $log->obj_type ?? '-' }}</td>
+                                <td @dataColumn(2)>{{ $log->obj_id ?? '-' }}</td>
+                                <td @dataColumn(3)>{{ $log->body }}</td>
+                                <td @dataColumn(4)>{{ $log->created_at->format('M d, Y H:i') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No admin message logs found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

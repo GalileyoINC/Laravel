@@ -88,120 +88,76 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($promocodes->total() > 0)
-                            Showing <b>{{ $promocodes->firstItem() }}-{{ $promocodes->lastItem() }}</b> of <b>{{ $promocodes->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
-
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Type</th>
-                                    <th>Text</th>
-                                    <th>Discount</th>
-                                    <th>Is Active</th>
-                                    <th>Active From</th>
-                                    <th>Active To</th>
-                                    <th class="action-column-2">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <form method="GET" id="filters-form"></form>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <select name="type" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="discount" {{ request('type') == 'discount' ? 'selected' : '' }}>Discount</option>
-                                            <option value="trial" {{ request('type') == 'trial' ? 'selected' : '' }}>Trial</option>
-                                            <option value="influencer" {{ request('type') == 'influencer' ? 'selected' : '' }}>Influencer</option>
-                                            <option value="test" {{ request('type') == 'test' ? 'selected' : '' }}>Test</option>
-                                        </select>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <select name="is_active" id="is_active" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                                            <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="date" name="active_from_from" class="form-control" form="filters-form" value="{{ request('active_from_from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="active_to_to" class="form-control" form="filters-form" value="{{ request('active_to_to') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('promocode.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($promocodes as $promocode)
-                                    <tr>
-                                        <td>{{ $promocode->id }}</td>
-                                        <td>
-                                            @if($promocode->type === 'discount')
-                                                <span class="label label-primary">Discount</span>
-                                            @elseif($promocode->type === 'trial')
-                                                <span class="label label-info">Trial</span>
-                                            @elseif($promocode->type === 'influencer')
-                                                <span class="label label-warning">Influencer</span>
-                                            @elseif($promocode->type === 'test')
-                                                <span class="label label-default">Test</span>
-                                            @else
-                                                <span class="label label-default">{{ ucfirst($promocode->type) }}</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $promocode->text }}</td>
-                                        <td>{{ $promocode->discount }}%</td>
-                                        <td>
-                                            @if($promocode->is_active)
-                                                <span class="label label-success">Active</span>
-                                            @else
-                                                <span class="label label-danger">Inactive</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $promocode->active_from->format('M d, Y') }}</td>
-                                        <td>{{ $promocode->active_to->format('M d, Y') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('promocode.edit', $promocode) }}" class="btn btn-xs btn-success JS__load_in_modal">
-                                                    <i class="fas fa-pen-fancy fa-fw"></i>
-                                                </a>
-                                                <form method="POST" action="{{ route('promocode.destroy', $promocode) }}" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this promocode?')">
-                                                        <i class="fas fa-trash fa-fw"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="8" class="text-center">No promocodes found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $promocodes->appends(request()->query())->links() }}
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
+                    <x-table-filter 
+                        :title="'Promocodes'" 
+                        :data="$promocodes"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::selectColumn('Type', [
+                                'discount' => 'Discount',
+                                'trial' => 'Trial',
+                                'influencer' => 'Influencer',
+                                'test' => 'Test',
+                            ]),
+                            TableFilterHelper::textColumn('Text'),
+                            TableFilterHelper::textColumn('Discount'),
+                            TableFilterHelper::selectColumn('Is Active', ['1' => 'Active', '0' => 'Inactive']),
+                            TableFilterHelper::textColumn('Active From'),
+                            TableFilterHelper::textColumn('Active To'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-2'),
+                        ]"
+                    >
+                        @forelse($promocodes as $promocode)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $promocode->id }}</td>
+                                <td @dataColumn(1) @dataValue($promocode->type)>
+                                    @if($promocode->type === 'discount')
+                                        <span class="label label-primary">Discount</span>
+                                    @elseif($promocode->type === 'trial')
+                                        <span class="label label-info">Trial</span>
+                                    @elseif($promocode->type === 'influencer')
+                                        <span class="label label-warning">Influencer</span>
+                                    @elseif($promocode->type === 'test')
+                                        <span class="label label-default">Test</span>
+                                    @else
+                                        <span class="label label-default">{{ ucfirst($promocode->type) }}</span>
+                                    @endif
+                                </td>
+                                <td @dataColumn(2)>{{ $promocode->text }}</td>
+                                <td @dataColumn(3)>{{ $promocode->discount }}%</td>
+                                <td @dataColumn(4) @dataValue($promocode->is_active ? '1' : '0')>
+                                    @if($promocode->is_active)
+                                        <span class="label label-success">Active</span>
+                                    @else
+                                        <span class="label label-danger">Inactive</span>
+                                    @endif
+                                </td>
+                                <td @dataColumn(5)>{{ $promocode->active_from->format('M d, Y') }}</td>
+                                <td @dataColumn(6)>{{ $promocode->active_to->format('M d, Y') }}</td>
+                                <td @dataColumn(7)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('promocode.edit', $promocode) }}" class="btn btn-xs btn-success JS__load_in_modal">
+                                            <i class="fas fa-pen-fancy fa-fw"></i>
+                                        </a>
+                                        <form method="POST" action="{{ route('promocode.destroy', $promocode) }}" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this promocode?')">
+                                                <i class="fas fa-trash fa-fw"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center">No promocodes found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

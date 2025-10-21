@@ -11,182 +11,123 @@
                     <h3 class="panel-title">Devices</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($devices instanceof \Illuminate\Contracts\Pagination\Paginator && $devices->total() > 0)
-                            Showing <b>{{ $devices->firstItem() }}-{{ $devices->lastItem() }}</b> of <b>{{ $devices->total() }}</b> items.
-                        @elseif(is_array($devices) && count($devices) > 0)
-                            Showing <b>1-{{ count($devices) }}</b> of <b>{{ count($devices) }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('device.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>User Email</th>
-                                    <th>Push Turn On</th>
-                                    <th>UUID</th>
-                                    <th>OS</th>
-                                    <th>Push Token</th>
-                                    <th>Access Token</th>
-                                    <th>Updated At</th>
-                                    <th class="action-column-3">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <select name="push_turn_on" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="1" {{ request('push_turn_on') == '1' ? 'selected' : '' }}>Turn On</option>
-                                            <option value="0" {{ request('push_turn_on') == '0' ? 'selected' : '' }}>Turn Off</option>
-                                        </select>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <select name="os" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="ios" {{ request('os') == 'ios' ? 'selected' : '' }}>iOS</option>
-                                            <option value="android" {{ request('os') == 'android' ? 'selected' : '' }}>Android</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex" style="gap:6px;">
-                                            <input type="text" name="push_token" class="form-control" form="filters-form" placeholder="Push Token" value="{{ request('push_token') }}" style="max-width:200px;">
-                                            <select name="push_token_fill" class="form-control" form="filters-form" style="max-width:140px;">
-                                                <option value=""></option>
-                                                <option value="0" {{ request('push_token_fill') == '0' ? 'selected' : '' }}>Empty</option>
-                                                <option value="1" {{ request('push_token_fill') == '1' ? 'selected' : '' }}>Fill</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('device.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($devices as $device)
-                                    <tr>
-                                        <td>{{ is_array($device) ? ($device['id'] ?? '') : ($device->id ?? '') }}</td>
-                                        <td>
-                                            @php $user = is_array($device) ? ($device['user'] ?? null) : ($device->user ?? null); @endphp
-                                            @if(is_object($user))
-                                                <a href="{{ route('user.show', $user) }}" class="JS__load_in_modal">
-                                                    {{ $user->email }}
-                                                </a>
-                                                @if(auth()->user()->isSuper())
-                                                    <span class="text-admin"> (ID {{ $user->id }})</span>
-                                                @endif
-                                            @elseif(is_array($user))
-                                                {{ $user['email'] ?? '-' }}
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @php $pushOn = is_array($device) ? ($device['push_turn_on'] ?? false) : ($device->push_turn_on ?? false); @endphp
-                                            @if($pushOn)
-                                                <i class="fas fa-check text-success"></i>
-                                            @else
-                                                <i class="fas fa-times text-danger"></i>
-                                            @endif
-                                        </td>
-                                        <td>{{ is_array($device) ? ($device['uuid'] ?? '') : ($device->uuid ?? '') }}</td>
-                                        <td>
-                                            @php $os = is_array($device) ? ($device['os'] ?? '') : ($device->os ?? ''); @endphp
-                                            {{ ucfirst($os) }}
-                                        </td>
-                                        <td>
-                                            @php $pushToken = is_array($device) ? ($device['push_token'] ?? '') : ($device->push_token ?? ''); @endphp
-                                            @if($pushToken)
-                                                <span>{{ strlen($pushToken) > 28 ? substr($pushToken, 0, 12) . '...' . substr($pushToken, -10) : $pushToken }}</span>
-                                                <button class="btn btn-success btn-sm align-baseline JS__copy_title_to_clipboard" title="{{ $device->push_token }}">
-                                                    <i class="fas fa-paste"></i>
-                                                </button>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @php $accessToken = is_array($device) ? ($device['access_token'] ?? '') : ($device->access_token ?? ''); @endphp
-                                            @if($accessToken)
-                                                <span>{{ strlen($accessToken) > 28 ? substr($accessToken, 0, 12) . '...' . substr($accessToken, -10) : $accessToken }}</span>
-                                                <button class="btn btn-success btn-sm align-baseline JS__copy_title_to_clipboard" title="{{ $device->access_token }}">
-                                                    <i class="fas fa-paste"></i>
-                                                </button>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @php $uAt = is_array($device) ? ($device['updated_at'] ?? null) : ($device->updated_at ?? null); @endphp
-                                            @if($uAt instanceof \Illuminate\Support\Carbon)
-                                                {{ $uAt->format('M d, Y H:i') }}
-                                            @elseif(!empty($uAt))
-                                                {{ \Illuminate\Support\Carbon::parse($uAt)->format('M d, Y H:i') }}
-                                            @else
-                                                
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                @php $deviceId = is_array($device) ? ($device['id'] ?? null) : ($device->id ?? null); @endphp
-                                                @if($deviceId)
-                                                <a href="{{ route('device.show', ['device' => $deviceId]) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                                <form method="POST" action="{{ route('device.destroy', ['device' => $deviceId]) }}" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this device?')">
-                                                        <i class="fas fa-trash fa-fw"></i>
-                                                    </button>
-                                                </form>
-                                                @if($pushToken)
-                                                    <a href="{{ route('device.push', ['device' => $deviceId]) }}" class="btn btn-xs btn-admin">
-                                                        <i class="far fa-paper-plane fa-fw"></i>
-                                                    </a>
-                                                @endif
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No devices found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    @if($devices instanceof \Illuminate\Contracts\Pagination\Paginator)
-                        <div class="d-flex justify-content-center">
-                            {{ $devices->appends(request()->query())->links() }}
-                        </div>
-                    @endif
+                    <x-table-filter 
+                        :title="'Devices'" 
+                        :data="$devices"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('User Email'),
+                            TableFilterHelper::selectColumn('Push Turn On', ['1' => 'Turn On', '0' => 'Turn Off']),
+                            TableFilterHelper::textColumn('UUID'),
+                            TableFilterHelper::selectColumn('OS', ['ios' => 'iOS', 'android' => 'Android']),
+                            TableFilterHelper::selectColumn('Push Token Fill', ['fill' => 'Fill', 'empty' => 'Empty']),
+                            TableFilterHelper::textColumn('Access Token'),
+                            TableFilterHelper::textColumn('Updated At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-3'),
+                        ]"
+                    >
+                        @forelse($devices as $device)
+                            @php
+                                $user = is_array($device) ? ($device['user'] ?? null) : ($device->user ?? null);
+                                $pushOn = is_array($device) ? ($device['push_turn_on'] ?? false) : ($device->push_turn_on ?? false);
+                                $os = is_array($device) ? ($device['os'] ?? '') : ($device->os ?? '');
+                                $pushToken = is_array($device) ? ($device['push_token'] ?? '') : ($device->push_token ?? '');
+                                $accessToken = is_array($device) ? ($device['access_token'] ?? '') : ($device->access_token ?? '');
+                                $deviceId = is_array($device) ? ($device['id'] ?? null) : ($device->id ?? null);
+                            @endphp
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ is_array($device) ? ($device['id'] ?? '') : ($device->id ?? '') }}</td>
+                                <td @dataColumn(1)>
+                                    @if(is_object($user))
+                                        <a href="{{ route('user.show', $user) }}" class="JS__load_in_modal">
+                                            {{ $user->email }}
+                                        </a>
+                                        @if(auth()->user()->isSuper())
+                                            <span class="text-admin"> (ID {{ $user->id }})</span>
+                                        @endif
+                                    @elseif(is_array($user))
+                                        {{ $user['email'] ?? '-' }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(2) @dataValue($pushOn ? '1' : '0')>
+                                    @if($pushOn)
+                                        <i class="fas fa-check text-success"></i>
+                                    @else
+                                        <i class="fas fa-times text-danger"></i>
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>{{ is_array($device) ? ($device['uuid'] ?? '') : ($device->uuid ?? '') }}</td>
+                                <td @dataColumn(4) @dataValue(strtolower($os))>{{ ucfirst($os) }}</td>
+                                <td @dataColumn(5) @dataValue($pushToken ? 'fill' : 'empty')>
+                                    @if($pushToken)
+                                        <span>{{ strlen($pushToken) > 28 ? substr($pushToken, 0, 12) . '...' . substr($pushToken, -10) : $pushToken }}</span>
+                                        <button class="btn btn-success btn-sm align-baseline JS__copy_title_to_clipboard" title="{{ $device->push_token }}">
+                                            <i class="fas fa-paste"></i>
+                                        </button>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(6)>
+                                    @if($accessToken)
+                                        <span>{{ strlen($accessToken) > 28 ? substr($accessToken, 0, 12) . '...' . substr($accessToken, -10) : $accessToken }}</span>
+                                        <button class="btn btn-success btn-sm align-baseline JS__copy_title_to_clipboard" title="{{ $device->access_token }}">
+                                            <i class="fas fa-paste"></i>
+                                        </button>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(7)>
+                                    @php $uAt = is_array($device) ? ($device['updated_at'] ?? null) : ($device->updated_at ?? null); @endphp
+                                    @if($uAt instanceof \Illuminate\Support\Carbon)
+                                        {{ $uAt->format('M d, Y H:i') }}
+                                    @elseif(!empty($uAt))
+                                        {{ \Illuminate\Support\Carbon::parse($uAt)->format('M d, Y H:i') }}
+                                    @else
+                                        
+                                    @endif
+                                </td>
+                                <td @dataColumn(8)>
+                                    <div class="btn-group">
+                                        @if($deviceId)
+                                        <a href="{{ route('device.show', ['device' => $deviceId]) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                        <form method="POST" action="{{ route('device.destroy', ['device' => $deviceId]) }}" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this device?')">
+                                                <i class="fas fa-trash fa-fw"></i>
+                                            </button>
+                                        </form>
+                                        @if($pushToken)
+                                            <a href="{{ route('device.push', ['device' => $deviceId]) }}" class="btn btn-xs btn-admin">
+                                                <i class="far fa-paper-plane fa-fw"></i>
+                                            </a>
+                                        @endif
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="text-center">No devices found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

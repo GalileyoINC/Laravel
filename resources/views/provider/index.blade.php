@@ -11,109 +11,68 @@
                     <h3 class="panel-title">Providers</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($providers->total() > 0)
-                            Showing <b>{{ $providers->firstItem() }}-{{ $providers->lastItem() }}</b> of <b>{{ $providers->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Create Button -->
-                    <div class="mb-3">
-                        <a href="{{ route('provider.create') }}" class="btn btn-success">
-                            <i class="fas fa-plus"></i> Create Provider
-                        </a>
-                        <a href="{{ route('provider.export', request()->query()) }}" class="btn btn-info">
-                            <i class="fas fa-download"></i> Export CSV
-                        </a>
-                    </div>
+                    <x-table-filter 
+                        :title="'Providers'" 
+                        :data="$providers"
+                        :columns="[
+                            TableFilterHelper::textColumn('Name'),
+                            TableFilterHelper::textColumn('Email'),
+                            TableFilterHelper::selectColumn('Is Satellite', ['1' => 'Satellite', '0' => 'Not Satellite']),
+                            TableFilterHelper::textColumn('Country'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-3'),
+                        ]"
+                    >
+                        <x-slot name="headerActions">
+                            <a href="{{ route('provider.create') }}" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Create Provider
+                            </a>
+                            <a href="{{ route('provider.export', request()->query()) }}" class="btn btn-info">
+                                <i class="fas fa-download"></i> Export CSV
+                            </a>
+                        </x-slot>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Is Satellite</th>
-                                    <th>Country</th>
-                                    <th>Created At</th>
-                                    <th class="action-column-3">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="name" class="form-control" form="filters-form" value="{{ request('name') }}" placeholder="Name">
-                                    </td>
-                                    <td>
-                                        <input type="email" name="email" class="form-control" form="filters-form" value="{{ request('email') }}" placeholder="Email">
-                                    </td>
-                                    <td>
-                                        <select name="is_satellite" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="1" {{ request('is_satellite') == '1' ? 'selected' : '' }}>Satellite</option>
-                                            <option value="0" {{ request('is_satellite') == '0' ? 'selected' : '' }}>Not Satellite</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="country" class="form-control" form="filters-form" value="{{ request('country') }}" placeholder="Country">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('provider.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($providers as $provider)
-                                    <tr>
-                                        <td>{{ $provider->name }}</td>
-                                        <td>{{ $provider->email ?? '-' }}</td>
-                                        <td>
-                                            @if($provider->is_satellite)
-                                                <i class="fas fa-check text-success"></i>
-                                            @else
-                                                <i class="fas fa-times text-danger"></i>
-                                            @endif
-                                        </td>
-                                        <td>{{ $provider->country ?? '-' }}</td>
-                                        <td>{{ $provider->created_at->format('M d, Y') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('provider.show', $provider) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                                <a href="{{ route('provider.edit', $provider) }}" class="btn btn-xs btn-primary">
-                                                    <i class="fas fa-edit fa-fw"></i>
-                                                </a>
-                                                <form method="POST" action="{{ route('provider.destroy', $provider) }}" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this provider?')">
-                                                        <i class="fas fa-trash fa-fw"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No providers found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $providers->appends(request()->query())->links() }}
-                    </div>
+                        @forelse($providers as $provider)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $provider->name }}</td>
+                                <td @dataColumn(1)>{{ $provider->email ?? '-' }}</td>
+                                <td @dataColumn(2) @dataValue($provider->is_satellite ? '1' : '0')>
+                                    @if($provider->is_satellite)
+                                        <i class="fas fa-check text-success"></i>
+                                    @else
+                                        <i class="fas fa-times text-danger"></i>
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>{{ $provider->country ?? '-' }}</td>
+                                <td @dataColumn(4)>{{ $provider->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(5)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('provider.show', $provider) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                        <a href="{{ route('provider.edit', $provider) }}" class="btn btn-xs btn-primary">
+                                            <i class="fas fa-edit fa-fw"></i>
+                                        </a>
+                                        <form method="POST" action="{{ route('provider.destroy', $provider) }}" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this provider?')">
+                                                <i class="fas fa-trash fa-fw"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">No providers found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

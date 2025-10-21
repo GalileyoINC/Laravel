@@ -11,95 +11,59 @@
                     <h3 class="panel-title">Followers</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($followers->total() > 0)
-                            Showing <b>{{ $followers->firstItem() }}-{{ $followers->lastItem() }}</b> of <b>{{ $followers->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('follower.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>List</th>
-                                    <th>Leader</th>
-                                    <th>Follower</th>
-                                    <th>Created At</th>
-                                    <th>Updated At</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="followerListName" form="filters-form" value="{{ request('followerListName') }}" placeholder="List Name">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="userLeaderName" form="filters-form" value="{{ request('userLeaderName') }}" placeholder="Leader Name">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="userFollowerName" form="filters-form" value="{{ request('userFollowerName') }}" placeholder="Follower Name">
-                                    </td>
-                                    <td>
-                                        <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" class="form-control" name="updated_at" form="filters-form" value="{{ request('updated_at') }}">
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($followers as $follower)
-                                    <tr>
-                                        <td>{{ $follower->id }}</td>
-                                        <td>{{ $follower->followerList ? $follower->followerList->name : '-' }}</td>
-                                        <td>
-                                            @if($follower->userLeader)
-                                                <a href="{{ route('user.show', $follower->userLeader) }}">
-                                                    {{ $follower->userLeader->first_name }} {{ $follower->userLeader->last_name }}
-                                                </a>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($follower->userFollower)
-                                                <a href="{{ route('user.show', $follower->userFollower) }}">
-                                                    {{ $follower->userFollower->first_name }} {{ $follower->userFollower->last_name }}
-                                                </a>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>{{ $follower->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $follower->updated_at->format('M d, Y') }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No followers found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $followers->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Followers'" 
+                        :data="$followers"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('List'),
+                            TableFilterHelper::textColumn('Leader'),
+                            TableFilterHelper::textColumn('Follower'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::textColumn('Updated At'),
+                        ]"
+                    >
+                        @forelse($followers as $follower)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $follower->id }}</td>
+                                <td @dataColumn(1)>{{ $follower->followerList ? $follower->followerList->name : '-' }}</td>
+                                <td @dataColumn(2)>
+                                    @if($follower->userLeader)
+                                        <a href="{{ route('user.show', $follower->userLeader) }}">
+                                            {{ $follower->userLeader->first_name }} {{ $follower->userLeader->last_name }}
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>
+                                    @if($follower->userFollower)
+                                        <a href="{{ route('user.show', $follower->userFollower) }}">
+                                            {{ $follower->userFollower->first_name }} {{ $follower->userFollower->last_name }}
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(4)>{{ $follower->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(5)>{{ $follower->updated_at->format('M d, Y') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">No followers found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

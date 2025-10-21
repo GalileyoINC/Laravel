@@ -518,6 +518,9 @@
         integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2LcG8Hk3QZbLrZ9Eme5E5zjv4lrn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <!-- Admin JavaScript -->
     <script src="{{ asset('js/admin.js') }}"></script>
+    <!-- Live Filter JavaScript -->
+    <script src="{{ asset('js/live-filter.js') }}"></script>
+    @stack('scripts')
 </body>
 
 </html>

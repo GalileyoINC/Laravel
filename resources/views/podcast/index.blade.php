@@ -16,105 +16,71 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($podcasts->total() > 0)
-                            Showing <b>{{ $podcasts->firstItem() }}-{{ $podcasts->lastItem() }}</b> of <b>{{ $podcasts->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('podcast.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th class="action-column-1">Image</th>
-                                    <th>Title</th>
-                                    <th>URL</th>
-                                    <th>Created At</th>
-                                    <th>Type</th>
-                                    <th class="action-column-1">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td><input type="text" class="form-control" name="id" value="{{ request('id') }}" form="filters-form"></td>
-                                    <td>&nbsp;</td>
-                                    <td><input type="text" class="form-control" name="title" value="{{ request('title') }}" form="filters-form"></td>
-                                    <td><input type="text" class="form-control" name="url" value="{{ request('url') }}" form="filters-form"></td>
-                                    <td><input type="date" class="form-control" name="created_at" value="{{ request('created_at') }}" form="filters-form"></td>
-                                    <td>
-                                        <select name="type" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="audio" {{ request('type') == 'audio' ? 'selected' : '' }}>Audio</option>
-                                            <option value="video" {{ request('type') == 'video' ? 'selected' : '' }}>Video</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('podcast.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($podcasts as $podcast)
-                                    <tr>
-                                        <td>{{ $podcast->id }}</td>
-                                        <td>
-                                            @if($podcast->image)
-                                                <img src="{{ Storage::url($podcast->image) }}" alt="{{ $podcast->title }}" style="width: 128px;" class="img-thumbnail">
-                                            @else
-                                                <div class="no-image-placeholder" style="width: 128px; height: 72px; background-color: #f8f9fa; border: 1px solid #dee2e6; display: flex; align-items: center; justify-content: center; color: #6c757d;">
-                                                    No Image
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td>{{ $podcast->title }}</td>
-                                        <td>
-                                            <a href="{{ $podcast->url }}" target="_blank" class="text-break">
-                                                {{ Str::limit($podcast->url, 50) }}
-                                            </a>
-                                        </td>
-                                        <td>{{ $podcast->created_at->format('M d, Y') }}</td>
-                                        <td>
-                                            @if($podcast->type === 'audio')
-                                                <span class="label label-info">Audio</span>
-                                            @elseif($podcast->type === 'video')
-                                                <span class="label label-success">Video</span>
-                                            @else
-                                                <span class="label label-default">{{ ucfirst($podcast->type) }}</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('podcast.edit', $podcast) }}" class="btn btn-xs btn-success">
-                                                    <i class="fas fa-pen-fancy fa-fw"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center">No podcasts found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $podcasts->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Podcasts'" 
+                        :data="$podcasts"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::noFilterColumn('Image', 'action-column-1'),
+                            TableFilterHelper::textColumn('Title'),
+                            TableFilterHelper::textColumn('URL'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::selectColumn('Type', ['audio' => 'Audio', 'video' => 'Video']),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                        ]"
+                    >
+                        @forelse($podcasts as $podcast)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $podcast->id }}</td>
+                                <td @dataColumn(1)>
+                                    @if($podcast->image)
+                                        <img src="{{ Storage::url($podcast->image) }}" alt="{{ $podcast->title }}" style="width: 128px;" class="img-thumbnail">
+                                    @else
+                                        <div class="no-image-placeholder" style="width: 128px; height: 72px; background-color: #f8f9fa; border: 1px solid #dee2e6; display: flex; align-items: center; justify-content: center; color: #6c757d;">
+                                            No Image
+                                        </div>
+                                    @endif
+                                </td>
+                                <td @dataColumn(2)>{{ $podcast->title }}</td>
+                                <td @dataColumn(3)>
+                                    <a href="{{ $podcast->url }}" target="_blank" class="text-break">
+                                        {{ Str::limit($podcast->url, 50) }}
+                                    </a>
+                                </td>
+                                <td @dataColumn(4)>{{ $podcast->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(5) @dataValue($podcast->type)>
+                                    @if($podcast->type === 'audio')
+                                        <span class="label label-info">Audio</span>
+                                    @elseif($podcast->type === 'video')
+                                        <span class="label label-success">Video</span>
+                                    @else
+                                        <span class="label label-default">{{ ucfirst($podcast->type) }}</span>
+                                    @endif
+                                </td>
+                                <td @dataColumn(6)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('podcast.edit', $podcast) }}" class="btn btn-xs btn-success">
+                                            <i class="fas fa-pen-fancy fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">No podcasts found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

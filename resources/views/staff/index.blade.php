@@ -42,121 +42,73 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <!-- Summary -->
-            <div class="summary" style="margin-bottom:10px;">
-                @if($staff->total() > 0)
-                    Showing <b>{{ $staff->firstItem() }}-{{ $staff->lastItem() }}</b> of <b>{{ $staff->total() }}</b> items.
-                @else
-                    Showing <b>0-0</b> of <b>0</b> items.
-                @endif
-            </div>
-
-            <div class="table-responsive">
-                <form action="{{ route('staff.index') }}" method="GET" id="filters-form"></form>
-                <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        @if(Auth::user()->isSuper())
-                            <th class="grid__id bg-admin">ID</th>
-                        @endif
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th class="{{ Auth::user()->isSuper() ? 'action-column-4' : 'action-column-2' }}">Actions</th>
-                    </tr>
-                    <tr class="filters">
-                        @if(Auth::user()->isSuper())
-                            <td>
-                                <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
-                            </td>
-                        @else
-                            <td>
-                                <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
-                            </td>
-                        @endif
-                        <td></td>
-                        <td>
-                            <select name="role" class="form-control" form="filters-form">
-                                <option value=""></option>
-                                <option value="1" {{ ($filters['role'] ?? '') == '1' ? 'selected' : '' }}>Super Admin</option>
-                                <option value="10" {{ ($filters['role'] ?? '') == '10' ? 'selected' : '' }}>Admin</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="status" class="form-control" form="filters-form">
-                                <option value=""></option>
-                                <option value="1" {{ ($filters['status'] ?? '') == '1' ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ ($filters['status'] ?? '') == '0' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="date" name="created_at" class="form-control" form="filters-form" value="{{ $filters['created_at'] ?? '' }}">
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                            <a href="{{ route('staff.index') }}" class="btn btn-default ml-2">Clear</a>
-                        </td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @forelse($staff as $member)
-                        <tr>
-                            @if(Auth::user()->isSuper())
-                                <td class="bg-admin">{{ $member->id }}</td>
+            @php
+            use App\Helpers\TableFilterHelper;
+            @endphp
+            <x-table-filter 
+                :title="'Staff'" 
+                :data="$staff"
+                :columns="[
+                    TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                    TableFilterHelper::textColumn('Username'),
+                    TableFilterHelper::textColumn('Email'),
+                    TableFilterHelper::selectColumn('Role', ['super' => 'Super Admin', 'admin' => 'Admin']),
+                    TableFilterHelper::selectColumn('Status', ['1' => 'Active', '0' => 'Inactive']),
+                    TableFilterHelper::textColumn('Created At'),
+                    TableFilterHelper::clearButtonColumn('Actions', (Auth::user()->isSuper() ? 'action-column-4' : 'action-column-2')),
+                ]"
+            >
+                @forelse($staff as $member)
+                    <tr class="data-row">
+                        <td @dataColumn(0) class="{{ Auth::user()->isSuper() ? 'bg-admin' : '' }}">{{ $member->id }}</td>
+                        <td @dataColumn(1)>{{ $member->username }}</td>
+                        <td @dataColumn(2)>{{ $member->email }}</td>
+                        <td @dataColumn(3) @dataValue($member->role === 1 ? 'super' : 'admin')>
+                            @if($member->role === 1)
+                                <span class="badge badge-danger">Super Admin</span>
+                            @else
+                                <span class="badge badge-info">Admin</span>
                             @endif
-                            <td>{{ $member->username }}</td>
-                            <td>{{ $member->email }}</td>
-                            <td>
-                                @if($member->role === 1)
-                                    <span class="badge badge-danger">Super Admin</span>
-                                @else
-                                    <span class="badge badge-info">Admin</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($member->status === 1)
-                                    <span class="badge badge-success">Active</span>
-                                @else
-                                    <span class="badge badge-warning">Inactive</span>
-                                @endif
-                            </td>
-                            <td>{{ $member->created_at->format('M d, Y') }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('staff.show', $member) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye fa-fw"></i>
-                                    </a>
-                                    <a href="{{ route('staff.edit', $member) }}" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-edit fa-fw"></i>
-                                    </a>
-                                    @if(Auth::user()->isSuper())
-                                        <form action="{{ route('staff.destroy', $member) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this staff?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-admin">
-                                                <i class="fas fa-trash fa-fw"></i>
-                                            </button>
-                                        </form>
-                                        @if(!$member->isSuper())
-                                            <a href="{{ route('staff.login-as', $member) }}" class="btn btn-sm btn-admin" title="Login as {{ $member->username }}">
-                                                <i class="fas fa-sign-in-alt fa-fw"></i>
-                                            </a>
-                                        @endif
+                        </td>
+                        <td @dataColumn(4) @dataValue($member->status === 1 ? '1' : '0')>
+                            @if($member->status === 1)
+                                <span class="badge badge-success">Active</span>
+                            @else
+                                <span class="badge badge-warning">Inactive</span>
+                            @endif
+                        </td>
+                        <td @dataColumn(5)>{{ $member->created_at->format('M d, Y') }}</td>
+                        <td @dataColumn(6)>
+                            <div class="btn-group">
+                                <a href="{{ route('staff.show', $member) }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye fa-fw"></i>
+                                </a>
+                                <a href="{{ route('staff.edit', $member) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit fa-fw"></i>
+                                </a>
+                                @if(Auth::user()->isSuper())
+                                    <form action="{{ route('staff.destroy', $member) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this staff?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-admin">
+                                            <i class="fas fa-trash fa-fw"></i>
+                                        </button>
+                                    </form>
+                                    @if(!$member->isSuper())
+                                        <a href="{{ route('staff.login-as', $member) }}" class="btn btn-sm btn-admin" title="Login as {{ $member->username }}">
+                                            <i class="fas fa-sign-in-alt fa-fw"></i>
+                                        </a>
                                     @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="{{ Auth::user()->isSuper() ? '7' : '6' }}" class="text-center">No staff found.</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-                {{ $staff->links() }}
-            </div>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-center">No staff found.</td>
+                    </tr>
+                @endforelse
+            </x-table-filter>
         </div>
     </div>
 </div>

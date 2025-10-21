@@ -11,106 +11,65 @@
                     <h3 class="panel-title">Private Feeds</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($followerLists->total() > 0)
-                            Showing <b>{{ $followerLists->firstItem() }}-{{ $followerLists->lastItem() }}</b> of <b>{{ $followerLists->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('follower-list.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th class="text-center"></th>
-                                    <th>Name</th>
-                                    <th>User</th>
-                                    <th>Active</th>
-                                    <th>Created At</th>
-                                    <th>Updated At</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}">
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>
-                                        <input type="text" class="form-control" name="name" form="filters-form" value="{{ request('name') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="userName" form="filters-form" value="{{ request('userName') }}">
-                                    </td>
-                                    <td>
-                                        <select class="form-control" name="is_active" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Yes</option>
-                                            <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>No</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" class="form-control" name="updated_at" form="filters-form" value="{{ request('updated_at') }}">
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($followerLists as $followerList)
-                                    <tr>
-                                        <td>{{ $followerList->id }}</td>
-                                        <td class="text-center">
-                                            @if($followerList->image)
-                                                <img src="{{ $followerList->image }}" alt="Image" style="width: 48px; border-radius: 50%;">
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>{{ $followerList->name }}</td>
-                                        <td>
-                                            @if($followerList->user)
-                                                <a href="{{ route('user.show', $followerList->user) }}">
-                                                    {{ $followerList->user->first_name }} {{ $followerList->user->last_name }}
-                                                </a>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            @if($followerList->is_active)
-                                                <span class="text-success"><i class="fas fa-check"></i></span>
-                                            @else
-                                                <span class="text-danger"><i class="fas fa-times"></i></span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $followerList->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $followerList->updated_at->format('M d, Y') }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center">No follower lists found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $followerLists->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Private Feeds'" 
+                        :data="$followerLists"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::noFilterColumn('', 'text-center'),
+                            TableFilterHelper::textColumn('Name'),
+                            TableFilterHelper::textColumn('User'),
+                            TableFilterHelper::selectColumn('Active', ['1' => 'Yes', '0' => 'No']),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::textColumn('Updated At'),
+                        ]"
+                    >
+                        @forelse($followerLists as $followerList)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $followerList->id }}</td>
+                                <td @dataColumn(1) class="text-center">
+                                    @if($followerList->image)
+                                        <img src="{{ $followerList->image }}" alt="Image" style="width: 48px; border-radius: 50%;">
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(2)>{{ $followerList->name }}</td>
+                                <td @dataColumn(3)>
+                                    @if($followerList->user)
+                                        <a href="{{ route('user.show', $followerList->user) }}">
+                                            {{ $followerList->user->first_name }} {{ $followerList->user->last_name }}
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(4) @dataValue($followerList->is_active ? '1' : '0') class="text-center">
+                                    @if($followerList->is_active)
+                                        <span class="text-success"><i class="fas fa-check"></i></span>
+                                    @else
+                                        <span class="text-danger"><i class="fas fa-times"></i></span>
+                                    @endif
+                                </td>
+                                <td @dataColumn(5)>{{ $followerList->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(6)>{{ $followerList->updated_at->format('M d, Y') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">No follower lists found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

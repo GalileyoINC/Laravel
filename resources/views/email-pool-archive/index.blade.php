@@ -11,123 +11,70 @@
                     <h3 class="panel-title">Email Pools Archive</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Archive/Common Toggle -->
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
+
                     <div class="mb-3">
                         <a href="{{ route('email-pool.index') }}" class="btn btn-info">
                             <i class="fas fa-archive"></i> Common
                         </a>
-                    </div>
-
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($emailPoolArchives->total() > 0)
-                            Showing <b>{{ $emailPoolArchives->firstItem() }}-{{ $emailPoolArchives->lastItem() }}</b> of <b>{{ $emailPoolArchives->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
-
-                    <!-- Export Button -->
-                    <div class="mb-3">
                         <a href="{{ route('email-pool-archive.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>Subject</th>
-                                    <th>Created At</th>
-                                    <th>Updated At</th>
-                                    <th class="action-column-2">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" value="{{ request('search') }}" placeholder="Search...">
-                                    </td>
-                                    <td>
-                                        <select name="type" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($sendingTypes as $key => $value)
-                                                <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
-                                                    {{ $value }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="status" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($statuses as $key => $value)
-                                                <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
-                                                    {{ $value }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="email" name="from" class="form-control" form="filters-form" value="{{ request('from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="email" name="to" class="form-control" form="filters-form" value="{{ request('to') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="subject" class="form-control" form="filters-form" value="{{ request('subject') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('email-pool-archive.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($emailPoolArchives as $emailPoolArchive)
-                                    <tr>
-                                        <th class="grid__id">ID</th>
-                                        <th>Type</th>
-                                        <th>Status</th>
-                                        <th>From</th>
-                                        <th>To</th>
-                                        <th>Subject</th>
-                                        <th>Created At</th>
-                                        <th>Updated At</th>
-                                        <th class="action-column-2">Actions</th>
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
-                                                        <i class="fas fa-trash fa-fw"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No archived email pools found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $emailPoolArchives->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Email Pools Archive'" 
+                        :data="$emailPoolArchives"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::selectColumn('Type', $sendingTypes),
+                            TableFilterHelper::selectColumn('Status', $statuses),
+                            TableFilterHelper::textColumn('From'),
+                            TableFilterHelper::textColumn('To'),
+                            TableFilterHelper::textColumn('Subject'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::textColumn('Updated At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-2'),
+                        ]"
+                    >
+                        @forelse($emailPoolArchives as $emailPoolArchive)
+                            @php
+                                $idVal = $emailPoolArchive->id;
+                                $type = $emailPoolArchive->type ?? '';
+                                $status = $emailPoolArchive->status ?? '';
+                            @endphp
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $idVal }}</td>
+                                <td @dataColumn(1) @dataValue($type)>{{ $sendingTypes[$type] ?? ucfirst($type) }}</td>
+                                <td @dataColumn(2) @dataValue($status)>{{ $statuses[$status] ?? ucfirst($status) }}</td>
+                                <td @dataColumn(3)>{{ $emailPoolArchive->from }}</td>
+                                <td @dataColumn(4)>{{ $emailPoolArchive->to }}</td>
+                                <td @dataColumn(5)>{{ Str::limit($emailPoolArchive->subject, 50) }}</td>
+                                <td @dataColumn(6)>{{ $emailPoolArchive->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(7)>{{ $emailPoolArchive->updated_at->format('M d, Y') }}</td>
+                                <td @dataColumn(8)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('email-pool-archive.show', $emailPoolArchive) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                        <form method="POST" action="{{ route('email-pool-archive.destroy', $emailPoolArchive) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this item?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-danger">
+                                                <i class="fas fa-trash fa-fw"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="text-center">No archived email pools found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

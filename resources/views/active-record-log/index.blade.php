@@ -11,142 +11,80 @@
                     <h3 class="panel-title">Active Record Logs</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($activeRecordLogs->total() > 0)
-                            Showing <b>{{ $activeRecordLogs->firstItem() }}-{{ $activeRecordLogs->lastItem() }}</b> of <b>{{ $activeRecordLogs->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('active-record-log.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Created At</th>
-                                    <th>User</th>
-                                    <th>Staff</th>
-                                    <th>Action Type</th>
-                                    <th>Model</th>
-                                    <th>ID Model</th>
-                                    <th>Field</th>
-                                    <th>Changes</th>
-                                    <th class="action-column-2">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <div class="d-flex" style="gap:6px;">
-                                            <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                            <input type="date" name="created_at_to" class="form-control" form="filters-form" value="{{ request('created_at_to') }}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="userName" class="form-control" form="filters-form" placeholder="User" value="{{ request('userName') }}">
-                                    </td>
-                                    <td>
-                                        <select name="staffName" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($staffList as $key => $value)
-                                                <option value="{{ $key }}" {{ request('staffName') == $key ? 'selected' : '' }}>
-                                                    {{ $value }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="action_type" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($actionTypes as $key => $value)
-                                                <option value="{{ $key }}" {{ request('action_type') == $key ? 'selected' : '' }}>
-                                                    {{ $value }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="model" class="form-control" form="filters-form" placeholder="Model" value="{{ request('model') }}">
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <input type="text" name="field" class="form-control" form="filters-form" placeholder="Field" value="{{ request('field') }}">
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('active-record-log.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($activeRecordLogs as $log)
-                                    <tr>
-                                        <td>{{ $log->id }}</td>
-                                        <td>{{ $log->created_at->format('M d, Y H:i') }}</td>
-                                        <td>
-                                            @if($log->user)
-                                                <a href="{{ route('user.show', $log->user) }}">
-                                                    {{ $log->user->getFullName() }} ({{ $log->user->id }})
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($log->staff)
-                                                {{ $log->staff->username }} ({{ $log->staff->id }})
-                                            @endif
-                                        </td>
-                                        <td>{{ $actionTypes[$log->action_type] ?? $log->action_type }}</td>
-                                        <td>{{ $log->model }}</td>
-                                        <td>{{ $log->id_model }}</td>
-                                        <td>{{ $log->field }}</td>
-                                        <td>
-                                            @if(!empty($log->changes))
-                                                @if(count($log->changes) > 2)
-                                                    <div class="shrink_field">
-                                                @else
-                                                    <div>
-                                                @endif
-                                                    <dl class="dl-horizontal" style="margin-bottom:0">
-                                                        @foreach($log->changes as $key => $value)
-                                                            <dt>{{ $key }}</dt>
-                                                            <dd>{{ is_array($value) ? 'JSON' : $value }}</dd>
-                                                        @endforeach
-                                                    </dl>
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <!-- No specific actions for active record logs -->
+                    <x-table-filter 
+                        :title="'Active Record Logs'" 
+                        :data="$activeRecordLogs"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::textColumn('User'),
+                            TableFilterHelper::textColumn('Staff'),
+                            TableFilterHelper::selectColumn('Action Type', $actionTypes),
+                            TableFilterHelper::textColumn('Model'),
+                            TableFilterHelper::textColumn('ID Model'),
+                            TableFilterHelper::textColumn('Field'),
+                            TableFilterHelper::textColumn('Changes'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-2'),
+                        ]"
+                    >
+                        @forelse($activeRecordLogs as $log)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $log->id }}</td>
+                                <td @dataColumn(1)>{{ $log->created_at->format('M d, Y H:i') }}</td>
+                                <td @dataColumn(2)>
+                                    @if($log->user)
+                                        <a href="{{ route('user.show', $log->user) }}">
+                                            {{ $log->user->getFullName() }} ({{ $log->user->id }})
+                                        </a>
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>
+                                    @if($log->staff)
+                                        {{ $log->staff->username }} ({{ $log->staff->id }})
+                                    @endif
+                                </td>
+                                <td @dataColumn(4) @dataValue((string) $log->action_type)>{{ $actionTypes[$log->action_type] ?? $log->action_type }}</td>
+                                <td @dataColumn(5)>{{ $log->model }}</td>
+                                <td @dataColumn(6)>{{ $log->id_model }}</td>
+                                <td @dataColumn(7)>{{ $log->field }}</td>
+                                <td @dataColumn(8)>
+                                    @if(!empty($log->changes))
+                                        @if(count($log->changes) > 2)
+                                            <div class="shrink_field">
+                                        @else
+                                            <div>
+                                        @endif
+                                                <dl class="dl-horizontal" style="margin-bottom:0">
+                                                    @foreach($log->changes as $key => $value)
+                                                        <dt>{{ $key }}</dt>
+                                                        <dd>{{ is_array($value) ? 'JSON' : $value }}</dd>
+                                                    @endforeach
+                                                </dl>
                                             </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="10" class="text-center">No active record logs found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $activeRecordLogs->appends(request()->query())->links() }}
-                    </div>
+                                    @endif
+                                </td>
+                                <td @dataColumn(9)>
+                                    <div class="btn-group">
+                                        <!-- No specific actions for active record logs -->
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="10" class="text-center">No active record logs found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

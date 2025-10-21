@@ -11,99 +11,64 @@
                     <h3 class="panel-title">API Logs</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($apiLogs->total() > 0)
-                            Showing <b>{{ $apiLogs->firstItem() }}-{{ $apiLogs->lastItem() }}</b> of <b>{{ $apiLogs->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('api-log.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Key</th>
-                                    <th>Value</th>
-                                    <th>Created At</th>
-                                    <th class="action-column-2">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="key" class="form-control" form="filters-form" placeholder="Key" value="{{ request('key') }}">
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <div class="d-flex" style="gap:6px;">
-                                            <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                            <input type="date" name="created_at_to" class="form-control" form="filters-form" value="{{ request('created_at_to') }}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('api-log.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($apiLogs as $apiLog)
-                                    <tr>
-                                        <td>{{ $apiLog->id }}</td>
-                                        <td>{{ $apiLog->key }}</td>
-                                        <td>
-                                            @if(in_array($apiLog->key, ['Tsunami_NTWC', 'Tsunami_PTWC']))
-                                                {{ $apiLog->value }}
-                                            @elseif(stripos($apiLog->key, 'Weather') !== false && stripos($apiLog->key, 'Predict') === false)
-                                                @include('api-log._weather_gov', ['json' => json_decode($apiLog->value, true)])
-                                            @else
-                                                {{ Str::limit($apiLog->value, 100) }}
-                                            @endif
-                                        </td>
-                                        <td>{{ $apiLog->created_at->format('M d, Y H:i') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('api-log.show', $apiLog) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                                @if(auth()->user()->isSuper())
-                                                    <form method="POST" action="{{ route('api-log.delete-by-key', $apiLog) }}" style="display: inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-xs btn-admin" onclick="return confirm('Are you sure you want to delete all logs with this key?')">
-                                                            <i class="fas fa-trash fa-fw"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No API logs found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $apiLogs->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'API Logs'" 
+                        :data="$apiLogs"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('Key'),
+                            TableFilterHelper::textColumn('Value'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-2'),
+                        ]"
+                    >
+                        @forelse($apiLogs as $apiLog)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $apiLog->id }}</td>
+                                <td @dataColumn(1)>{{ $apiLog->key }}</td>
+                                <td @dataColumn(2)>
+                                    @if(in_array($apiLog->key, ['Tsunami_NTWC', 'Tsunami_PTWC']))
+                                        {{ $apiLog->value }}
+                                    @elseif(stripos($apiLog->key, 'Weather') !== false && stripos($apiLog->key, 'Predict') === false)
+                                        @include('api-log._weather_gov', ['json' => json_decode($apiLog->value, true)])
+                                    @else
+                                        {{ Str::limit($apiLog->value, 100) }}
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>{{ $apiLog->created_at->format('M d, Y H:i') }}</td>
+                                <td @dataColumn(4)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('api-log.show', $apiLog) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                        @if(auth()->user()->isSuper())
+                                            <form method="POST" action="{{ route('api-log.delete-by-key', $apiLog) }}" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-xs btn-admin" onclick="return confirm('Are you sure you want to delete all logs with this key?')">
+                                                    <i class="fas fa-trash fa-fw"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No API logs found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

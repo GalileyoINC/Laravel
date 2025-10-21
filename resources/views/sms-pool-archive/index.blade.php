@@ -11,119 +11,63 @@
                     <h3 class="panel-title">Messages Pool Archive</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($smsPoolArchives->total() > 0)
-                            Showing <b>{{ $smsPoolArchives->firstItem() }}-{{ $smsPoolArchives->lastItem() }}</b> of <b>{{ $smsPoolArchives->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('sms-pool-archive.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Purpose</th>
-                                    <th>Subscription</th>
-                                    <th>Private Feed</th>
-                                    <th>Sender</th>
-                                    <th>Body</th>
-                                    <th>Created At</th>
-                                    <th>Updated At</th>
-                                    <th class="action-column-1">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <select name="purpose" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($purposes as $key => $value)
-                                                <option value="{{ $key }}" {{ request('purpose') == $key ? 'selected' : '' }}>
-                                                    {{ $value }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="id_subscription" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($subscriptions as $id => $name)
-                                                <option value="{{ $id }}" {{ request('id_subscription') == $id ? 'selected' : '' }}>
-                                                    {{ $name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="followerListName" class="form-control" form="filters-form" value="{{ request('followerListName') }}" placeholder="Private Feed">
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('sms-pool-archive.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($smsPoolArchives as $smsPoolArchive)
-                                    <tr>
-                                        <td>{{ $smsPoolArchive->id }}</td>
-                                        <td>{{ $purposes[$smsPoolArchive->purpose] ?? $smsPoolArchive->purpose }}</td>
-                                        <td>{{ $smsPoolArchive->subscription ? $smsPoolArchive->subscription->name : '-' }}</td>
-                                        <td>{{ $smsPoolArchive->followerList ? $smsPoolArchive->followerList->name : '-' }}</td>
-                                        <td>
-                                            @if($smsPoolArchive->user)
-                                                User: {{ $smsPoolArchive->user->first_name }} {{ $smsPoolArchive->user->last_name }}
-                                            @elseif($smsPoolArchive->staff)
-                                                Staff: {{ $smsPoolArchive->staff->username }}
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>{{ Str::limit($smsPoolArchive->body, 50) }}</td>
-                                        <td>{{ $smsPoolArchive->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $smsPoolArchive->updated_at->format('M d, Y') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('sms-pool-archive.show', $smsPoolArchive) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center">No archived SMS messages found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $smsPoolArchives->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Messages Pool Archive'" 
+                        :data="$smsPoolArchives"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::selectColumn('Purpose', $purposes),
+                            TableFilterHelper::textColumn('Subscription'),
+                            TableFilterHelper::textColumn('Private Feed'),
+                            TableFilterHelper::textColumn('Sender'),
+                            TableFilterHelper::textColumn('Body'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::textColumn('Updated At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                        ]"
+                    >
+                        @forelse($smsPoolArchives as $smsPoolArchive)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $smsPoolArchive->id }}</td>
+                                <td @dataColumn(1) @dataValue((string) $smsPoolArchive->purpose)>{{ $purposes[$smsPoolArchive->purpose] ?? $smsPoolArchive->purpose }}</td>
+                                <td @dataColumn(2)>{{ $smsPoolArchive->subscription ? $smsPoolArchive->subscription->name : '-' }}</td>
+                                <td @dataColumn(3)>{{ $smsPoolArchive->followerList ? $smsPoolArchive->followerList->name : '-' }}</td>
+                                <td @dataColumn(4)>
+                                    @if($smsPoolArchive->user)
+                                        User: {{ $smsPoolArchive->user->first_name }} {{ $smsPoolArchive->user->last_name }}
+                                    @elseif($smsPoolArchive->staff)
+                                        Staff: {{ $smsPoolArchive->staff->username }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td @dataColumn(5)>{{ Str::limit($smsPoolArchive->body, 50) }}</td>
+                                <td @dataColumn(6)>{{ $smsPoolArchive->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(7)>{{ $smsPoolArchive->updated_at->format('M d, Y') }}</td>
+                                <td @dataColumn(8)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('sms-pool-archive.show', $smsPoolArchive) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="text-center">No archived SMS messages found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

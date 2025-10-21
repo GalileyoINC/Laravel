@@ -14,115 +14,70 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <!-- Summary -->
-            <div class="summary" style="margin-bottom:10px;">
-                @if($invoices->total() > 0)
-                    Showing <b>{{ $invoices->firstItem() }}-{{ $invoices->lastItem() }}</b> of <b>{{ $invoices->total() }}</b> items.
-                @else
-                    Showing <b>0-0</b> of <b>0</b> items.
-                @endif
-            </div>
-
-            <div class="table-responsive">
-                <form method="GET" id="filters-form"></form>
-                <table class="table table-striped table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th class="grid__id">ID</th>
-                        <th>User First Name</th>
-                        <th>User Last Name</th>
-                        @if(Auth::user()->isSuper())
-                            <th class="bg-admin">Paid Status</th>
-                        @endif
-                        <th>Total</th>
-                        <th>Created At</th>
-                        <th class="action-column-3">Actions</th>
-                    </tr>
-                    <tr class="filters">
-                        <td>
-                            <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ $filters['search'] ?? '' }}">
+            @php
+            use App\Helpers\TableFilterHelper;
+            @endphp
+            <x-table-filter 
+                :title="'Invoices'" 
+                :data="$invoices"
+                :columns="[
+                    TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                    TableFilterHelper::textColumn('User First Name'),
+                    TableFilterHelper::textColumn('User Last Name'),
+                    TableFilterHelper::selectColumn('Paid Status', ['0' => 'Unpaid', '1' => 'Paid', '2' => 'Refunded']),
+                    TableFilterHelper::textColumn('Total'),
+                    TableFilterHelper::textColumn('Created At'),
+                    TableFilterHelper::clearButtonColumn('Actions', 'action-column-3'),
+                ]"
+            >
+                @forelse($invoices as $invoice)
+                    <tr class="data-row">
+                        <td @dataColumn(0)>{{ $invoice->id }}</td>
+                        <td @dataColumn(1)>
+                            <a href="{{ route('user.show', $invoice->user->id) }}">
+                                {{ $invoice->user->first_name }}
+                            </a>
                         </td>
-                        <td></td>
-                        <td></td>
-                        @if(Auth::user()->isSuper())
-                            <td class="bg-admin">
-                                <select name="paid_status" class="form-control" form="filters-form">
-                                    <option value=""></option>
-                                    <option value="0" {{ ($filters['paid_status'] ?? '') == '0' ? 'selected' : '' }}>Unpaid</option>
-                                    <option value="1" {{ ($filters['paid_status'] ?? '') == '1' ? 'selected' : '' }}>Paid</option>
-                                    <option value="2" {{ ($filters['paid_status'] ?? '') == '2' ? 'selected' : '' }}>Refunded</option>
-                                </select>
-                            </td>
-                        @endif
-                        <td>
-                            <div class="row" style="gap:6px;">
-                                <input type="number" name="total_min" class="form-control" placeholder="Min" value="{{ $filters['total_min'] ?? '' }}" step="0.01" style="max-width:120px;">
-                                <input type="number" name="total_max" class="form-control" placeholder="Max" value="{{ $filters['total_max'] ?? '' }}" step="0.01" style="max-width:120px;">
+                        <td @dataColumn(2)>
+                            <a href="{{ route('user.show', $invoice->user->id) }}">
+                                {{ $invoice->user->last_name }}
+                            </a>
+                        </td>
+                        <td @dataColumn(3) @dataValue((string) $invoice->paid_status) class="{{ Auth::user()->isSuper() ? 'bg-admin' : '' }}">
+                            @if($invoice->paid_status === 0)
+                                <span class="badge badge-warning">Unpaid</span>
+                            @elseif($invoice->paid_status === 1)
+                                <span class="badge badge-success">Paid</span>
+                            @elseif($invoice->paid_status === 2)
+                                <span class="badge badge-danger">Refunded</span>
+                            @endif
+                        </td>
+                        <td @dataColumn(4)>{{ number_format($invoice->total, 2) }} {{ config('app.currency', '$') }}</td>
+                        <td @dataColumn(5)>{{ $invoice->created_at->format('M d, Y') }}</td>
+                        <td @dataColumn(6)>
+                            <div class="btn-group">
+                                <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye fa-fw"></i>
+                                </a>
+                                @if($invoice->total > 0 && $invoice->moneyTransactions->where('is_success', true)->count() === 1)
+                                    @php
+                                        $successTransaction = $invoice->moneyTransactions->where('is_success', true)->first();
+                                    @endphp
+                                    @if($successTransaction && $successTransaction->canBeRefund())
+                                        <a href="{{ route('money-transaction.refund', $successTransaction->id) }}" class="btn btn-sm btn-danger JS__load_in_modal">
+                                            Refund
+                                        </a>
+                                    @endif
+                                @endif
                             </div>
                         </td>
-                        <td>
-                            <input type="date" name="created_at" class="form-control" form="filters-form" value="{{ $filters['created_at'] ?? '' }}">
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                            <a href="{{ route('invoice.index') }}" class="btn btn-default ml-2">Clear</a>
-                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    @forelse($invoices as $invoice)
-                        <tr>
-                            <td>{{ $invoice->id }}</td>
-                            <td>
-                                <a href="{{ route('user.show', $invoice->user->id) }}">
-                                    {{ $invoice->user->first_name }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ route('user.show', $invoice->user->id) }}">
-                                    {{ $invoice->user->last_name }}
-                                </a>
-                            </td>
-                            @if(Auth::user()->isSuper())
-                                <td class="bg-admin">
-                                    @if($invoice->paid_status === 0)
-                                        <span class="badge badge-warning">Unpaid</span>
-                                    @elseif($invoice->paid_status === 1)
-                                        <span class="badge badge-success">Paid</span>
-                                    @elseif($invoice->paid_status === 2)
-                                        <span class="badge badge-danger">Refunded</span>
-                                    @endif
-                                </td>
-                            @endif
-                            <td>{{ number_format($invoice->total, 2) }} {{ config('app.currency', '$') }}</td>
-                            <td>{{ $invoice->created_at->format('M d, Y') }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye fa-fw"></i>
-                                    </a>
-                                    @if($invoice->total > 0 && $invoice->moneyTransactions->where('is_success', true)->count() === 1)
-                                        @php
-                                            $successTransaction = $invoice->moneyTransactions->where('is_success', true)->first();
-                                        @endphp
-                                        @if($successTransaction && $successTransaction->canBeRefund())
-                                            <a href="{{ route('money-transaction.refund', $successTransaction->id) }}" class="btn btn-sm btn-danger JS__load_in_modal">
-                                                Refund
-                                            </a>
-                                        @endif
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="{{ Auth::user()->isSuper() ? '7' : '6' }}" class="text-center">No invoices found.</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-                {{ $invoices->links() }}
-            </div>
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-center">No invoices found.</td>
+                    </tr>
+                @endforelse
+            </x-table-filter>
         </div>
     </div>
 </div>

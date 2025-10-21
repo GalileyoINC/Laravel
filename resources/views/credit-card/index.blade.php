@@ -11,154 +11,100 @@
                     <h3 class="panel-title">Credit Cards</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($creditCards instanceof \Illuminate\Contracts\Pagination\Paginator && $creditCards->total() > 0)
-                            Showing <b>{{ $creditCards->firstItem() }}-{{ $creditCards->lastItem() }}</b> of <b>{{ $creditCards->total() }}</b> items.
-                        @elseif(is_array($creditCards) && count($creditCards) > 0)
-                            Showing <b>1-{{ count($creditCards) }}</b> of <b>{{ count($creditCards) }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('credit-card.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Card Number</th>
-                                    <th>Phone</th>
-                                    <th>Type</th>
-                                    <th>Expiration</th>
-                                    <th>Gateway Profile ID</th>
-                                    <th>Created At</th>
-                                    <th>Updated At</th>
-                                    <th class="action-column-1">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <select name="type" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="Visa" {{ request('type') == 'Visa' ? 'selected' : '' }}>Visa</option>
-                                            <option value="MasterCard" {{ request('type') == 'MasterCard' ? 'selected' : '' }}>MasterCard</option>
-                                            <option value="American Express" {{ request('type') == 'American Express' ? 'selected' : '' }}>American Express</option>
-                                            <option value="Discover" {{ request('type') == 'Discover' ? 'selected' : '' }}>Discover</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="expiration_year" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            @foreach($years as $year)
-                                                <option value="{{ $year }}" {{ request('expiration_year') == $year ? 'selected' : '' }}>
-                                                    {{ $year }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <input type="date" name="created_at_from" class="form-control" form="filters-form" value="{{ request('created_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" name="updated_at_from" class="form-control" form="filters-form" value="{{ request('updated_at_from') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('credit-card.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($creditCards as $card)
-                                    <tr>
-                                        <td>{{ is_array($card) ? ($card['id'] ?? '') : ($card->id ?? '') }}</td>
-                                        <td>
-                                            @php $user = is_array($card) ? ($card['user'] ?? null) : ($card->user ?? null); @endphp
-                                            @if(is_object($user))
-                                                <a href="{{ route('user.show', $user) }}">{{ $user->first_name }}</a>
-                                            @else
-                                                {{ is_array($card) ? ($card['first_name'] ?? '') : ($card->first_name ?? '') }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if(is_object($user))
-                                                <a href="{{ route('user.show', $user) }}">{{ $user->last_name }}</a>
-                                            @else
-                                                {{ is_array($card) ? ($card['last_name'] ?? '') : ($card->last_name ?? '') }}
-                                            @endif
-                                        </td>
-                                        <td>{{ is_array($card) ? ($card['num'] ?? '') : ($card->num ?? '') }}</td>
-                                        <td>{{ is_array($card) ? ($card['phone'] ?? '') : ($card->phone ?? '') }}</td>
-                                        <td>
-                                            <span class="label label-info">{{ is_array($card) ? ($card['type'] ?? '') : ($card->type ?? '') }}</span>
-                                        </td>
-                                        <td>{{ is_array($card) ? ($card['expiration_year'] ?? '') : ($card->expiration_year ?? '') }} / {{ is_array($card) ? ($card['expiration_month'] ?? '') : ($card->expiration_month ?? '') }}</td>
-                                        <td>{{ (is_array($card) ? ($card['anet_customer_payment_profile_id'] ?? '') : ($card->anet_customer_payment_profile_id ?? '')) ?: '-' }}</td>
-                                        <td>
-                                            @php $cAt = is_array($card) ? ($card['created_at'] ?? null) : ($card->created_at ?? null); @endphp
-                                            @if($cAt instanceof \Illuminate\Support\Carbon)
-                                                {{ $cAt->format('M d, Y') }}
-                                            @elseif(!empty($cAt))
-                                                {{ \Illuminate\Support\Carbon::parse($cAt)->format('M d, Y') }}
-                                            @else
-                                                
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @php $uAt = is_array($card) ? ($card['updated_at'] ?? null) : ($card->updated_at ?? null); @endphp
-                                            @if($uAt instanceof \Illuminate\Support\Carbon)
-                                                {{ $uAt->format('M d, Y') }}
-                                            @elseif(!empty($uAt))
-                                                {{ \Illuminate\Support\Carbon::parse($uAt)->format('M d, Y') }}
-                                            @else
-                                                
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                @php $cardId = is_array($card) ? ($card['id'] ?? null) : ($card->id ?? null); @endphp
-                                                @if($cardId)
-                                                <a href="{{ route('credit-card.show', ['credit_card' => $cardId]) }}" class="btn btn-sm btn-info">
-                                                    <i class="fas fa-eye"></i> View
-                                                </a>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="11" class="text-center">No credit cards found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    @if($creditCards instanceof \Illuminate\Contracts\Pagination\Paginator)
-                        <div class="d-flex justify-content-center">
-                            {{ $creditCards->appends(request()->query())->links() }}
-                        </div>
-                    @endif
+                    <x-table-filter 
+                        :title="'Credit Cards'" 
+                        :data="$creditCards"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('First Name'),
+                            TableFilterHelper::textColumn('Last Name'),
+                            TableFilterHelper::textColumn('Card Number'),
+                            TableFilterHelper::textColumn('Phone'),
+                            TableFilterHelper::selectColumn('Type', [
+                                'Visa' => 'Visa',
+                                'MasterCard' => 'MasterCard',
+                                'American Express' => 'American Express',
+                                'Discover' => 'Discover',
+                            ]),
+                            TableFilterHelper::textColumn('Expiration'),
+                            TableFilterHelper::textColumn('Gateway Profile ID'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::textColumn('Updated At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                        ]"
+                    >
+                        @forelse($creditCards as $card)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ is_array($card) ? ($card['id'] ?? '') : ($card->id ?? '') }}</td>
+                                <td @dataColumn(1)>
+                                    @php $user = is_array($card) ? ($card['user'] ?? null) : ($card->user ?? null); @endphp
+                                    @if(is_object($user))
+                                        <a href="{{ route('user.show', $user) }}">{{ $user->first_name }}</a>
+                                    @else
+                                        {{ is_array($card) ? ($card['first_name'] ?? '') : ($card->first_name ?? '') }}
+                                    @endif
+                                </td>
+                                <td @dataColumn(2)>
+                                    @if(is_object($user))
+                                        <a href="{{ route('user.show', $user) }}">{{ $user->last_name }}</a>
+                                    @else
+                                        {{ is_array($card) ? ($card['last_name'] ?? '') : ($card->last_name ?? '') }}
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>{{ is_array($card) ? ($card['num'] ?? '') : ($card->num ?? '') }}</td>
+                                <td @dataColumn(4)>{{ is_array($card) ? ($card['phone'] ?? '') : ($card->phone ?? '') }}</td>
+                                <td @dataColumn(5) @dataValue(is_array($card) ? ($card['type'] ?? '') : ($card->type ?? ''))>
+                                    <span class="label label-info">{{ is_array($card) ? ($card['type'] ?? '') : ($card->type ?? '') }}</span>
+                                </td>
+                                <td @dataColumn(6)>{{ (is_array($card) ? ($card['expiration_year'] ?? '') : ($card->expiration_year ?? '')) }} / {{ (is_array($card) ? ($card['expiration_month'] ?? '') : ($card->expiration_month ?? '')) }}</td>
+                                <td @dataColumn(7)>{{ (is_array($card) ? ($card['anet_customer_payment_profile_id'] ?? '') : ($card->anet_customer_payment_profile_id ?? '')) ?: '-' }}</td>
+                                <td @dataColumn(8)>
+                                    @php $cAt = is_array($card) ? ($card['created_at'] ?? null) : ($card->created_at ?? null); @endphp
+                                    @if($cAt instanceof \Illuminate\Support\Carbon)
+                                        {{ $cAt->format('M d, Y') }}
+                                    @elseif(!empty($cAt))
+                                        {{ \Illuminate\Support\Carbon::parse($cAt)->format('M d, Y') }}
+                                    @else
+                                        
+                                    @endif
+                                </td>
+                                <td @dataColumn(9)>
+                                    @php $uAt = is_array($card) ? ($card['updated_at'] ?? null) : ($card->updated_at ?? null); @endphp
+                                    @if($uAt instanceof \Illuminate\Support\Carbon)
+                                        {{ $uAt->format('M d, Y') }}
+                                    @elseif(!empty($uAt))
+                                        {{ \Illuminate\Support\Carbon::parse($uAt)->format('M d, Y') }}
+                                    @else
+                                        
+                                    @endif
+                                </td>
+                                <td @dataColumn(10)>
+                                    <div class="btn-group">
+                                        @php $cardId = is_array($card) ? ($card['id'] ?? null) : ($card->id ?? null); @endphp
+                                        @if($cardId)
+                                        <a href="{{ route('credit-card.show', ['credit_card' => $cardId]) }}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="11" class="text-center">No credit cards found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

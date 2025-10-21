@@ -42,78 +42,48 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <!-- Summary -->
-            <div class="summary" style="margin-bottom:10px;">
-                @if($pages->total() > 0)
-                    Showing <b>{{ $pages->firstItem() }}-{{ $pages->lastItem() }}</b> of <b>{{ $pages->total() }}</b> items.
-                @else
-                    Showing <b>0-0</b> of <b>0</b> items.
-                @endif
-            </div>
-
-            <div class="table-responsive">
-                <form method="GET" id="filters-form"></form>
-                <table class="table table-striped table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th class="grid__id">ID</th>
-                            <th>Name</th>
-                            <th>Slug</th>
-                            <th>Status</th>
-                            <th>Created At</th>
-                            <th class="action-column-1">Actions</th>
-                        </tr>
-                        <tr class="filters">
-                            <td><input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}"></td>
-                            <td><input type="text" class="form-control" name="name" form="filters-form" value="{{ request('name') }}"></td>
-                            <td><input type="text" class="form-control" name="slug" form="filters-form" value="{{ request('slug') }}"></td>
-                            <td>
-                                <select name="status" class="form-control" form="filters-form">
-                                    <option value=""></option>
-                                    <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Published</option>
-                                    <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Draft</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
-                            </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                <a href="{{ route('page.index') }}" class="btn btn-default ml-2">Clear</a>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @forelse($pages as $page)
-                        <tr>
-                            <td>{{ $page->id }}</td>
-                            <td>{{ $page->name }}</td>
-                            <td>{{ $page->slug }}</td>
-                            <td>
-                                @if($page->status === 1)
-                                    <span class="badge badge-success">Published</span>
-                                @else
-                                    <span class="badge badge-warning">Draft</span>
-                                @endif
-                            </td>
-                            <td>{{ $page->created_at->format('M d, Y') }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('page.edit', $page) }}" class="btn btn-sm btn-success">
-                                        <i class="fas fa-pen-fancy fa-fw"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">No pages found.</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
-                {{ $pages->links() }}
-            </div>
+            @php
+            use App\Helpers\TableFilterHelper;
+            @endphp
+            <x-table-filter 
+                :title="'Pages'" 
+                :data="$pages"
+                :columns="[
+                    TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                    TableFilterHelper::textColumn('Name'),
+                    TableFilterHelper::textColumn('Slug'),
+                    TableFilterHelper::selectColumn('Status', ['1' => 'Published', '0' => 'Draft']),
+                    TableFilterHelper::textColumn('Created At'),
+                    TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                ]"
+            >
+                @forelse($pages as $page)
+                    <tr class="data-row">
+                        <td @dataColumn(0)>{{ $page->id }}</td>
+                        <td @dataColumn(1)>{{ $page->name }}</td>
+                        <td @dataColumn(2)>{{ $page->slug }}</td>
+                        <td @dataColumn(3) @dataValue($page->status === 1 ? '1' : '0')>
+                            @if($page->status === 1)
+                                <span class="badge badge-success">Published</span>
+                            @else
+                                <span class="badge badge-warning">Draft</span>
+                            @endif
+                        </td>
+                        <td @dataColumn(4)>{{ $page->created_at->format('M d, Y') }}</td>
+                        <td @dataColumn(5)>
+                            <div class="btn-group">
+                                <a href="{{ route('page.edit', $page) }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-pen-fancy fa-fw"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">No pages found.</td>
+                    </tr>
+                @endforelse
+            </x-table-filter>
         </div>
     </div>
 </div>

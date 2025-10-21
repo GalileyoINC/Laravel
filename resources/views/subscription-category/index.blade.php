@@ -11,84 +11,50 @@
                     <h3 class="panel-title">Subscription Categories</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($subscriptionCategories->total() > 0)
-                            Showing <b>{{ $subscriptionCategories->firstItem() }}-{{ $subscriptionCategories->lastItem() }}</b> of <b>{{ $subscriptionCategories->total() }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('subscription-category.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Name</th>
-                                    <th>Parent ID</th>
-                                    <th>Position No</th>
-                                    <th class="action-column-2">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" name="search" class="form-control" form="filters-form" placeholder="Search..." value="{{ request('search') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="name" class="form-control" form="filters-form" placeholder="Name" value="{{ request('name') }}">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="id_parent" class="form-control" form="filters-form" placeholder="Parent ID" value="{{ request('id_parent') }}">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="position_no" class="form-control" form="filters-form" placeholder="Position" value="{{ request('position_no') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('subscription-category.index') }}" class="btn btn-default ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($subscriptionCategories as $subscriptionCategory)
-                                    <tr>
-                                        <td>{{ $subscriptionCategory->id }}</td>
-                                        <td>{{ $subscriptionCategory->name }}</td>
-                                        <td>{{ $subscriptionCategory->id_parent ?? '-' }}</td>
-                                        <td>{{ $subscriptionCategory->position_no ?? '-' }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('subscription-category.show', $subscriptionCategory) }}" class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye fa-fw"></i>
-                                                </a>
-                                                <a href="{{ route('subscription-category.edit', $subscriptionCategory) }}" class="btn btn-xs btn-primary">
-                                                    <i class="fas fa-edit fa-fw"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No subscription categories found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $subscriptionCategories->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Subscription Categories'" 
+                        :data="$subscriptionCategories"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::textColumn('Name'),
+                            TableFilterHelper::textColumn('Parent ID'),
+                            TableFilterHelper::textColumn('Position No'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-2'),
+                        ]"
+                    >
+                        @forelse($subscriptionCategories as $subscriptionCategory)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $subscriptionCategory->id }}</td>
+                                <td @dataColumn(1)>{{ $subscriptionCategory->name }}</td>
+                                <td @dataColumn(2)>{{ $subscriptionCategory->id_parent ?? '-' }}</td>
+                                <td @dataColumn(3)>{{ $subscriptionCategory->position_no ?? '-' }}</td>
+                                <td @dataColumn(4)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('subscription-category.show', $subscriptionCategory) }}" class="btn btn-xs btn-info">
+                                            <i class="fas fa-eye fa-fw"></i>
+                                        </a>
+                                        <a href="{{ route('subscription-category.edit', $subscriptionCategory) }}" class="btn btn-xs btn-primary">
+                                            <i class="fas fa-edit fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No subscription categories found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

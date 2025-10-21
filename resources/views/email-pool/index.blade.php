@@ -16,177 +16,115 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <!-- Summary -->
-                    <div class="summary" style="margin-bottom:10px;">
-                        @if($emailPools instanceof \Illuminate\Contracts\Pagination\Paginator && $emailPools->total() > 0)
-                            Showing <b>{{ $emailPools->firstItem() }}-{{ $emailPools->lastItem() }}</b> of <b>{{ $emailPools->total() }}</b> items.
-                        @elseif(is_array($emailPools) && count($emailPools) > 0)
-                            Showing <b>1-{{ count($emailPools) }}</b> of <b>{{ count($emailPools) }}</b> items.
-                        @else
-                            Showing <b>0-0</b> of <b>0</b> items.
-                        @endif
-                    </div>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('email-pool.export', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
+                        <a href="{{ route('email-pool-archive.index') }}" class="btn btn-info">
+                            <i class="fas fa-archive"></i> Archive
+                        </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <form method="GET" id="filters-form"></form>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>Reply</th>
-                                    <th>BCC</th>
-                                    <th>Subject</th>
-                                    <th>Created At</th>
-                                    <th class="action-column-2">Actions</th>
-                                </tr>
-                                <tr class="filters">
-                                    <td>
-                                        <input type="text" class="form-control" name="id" form="filters-form" value="{{ request('id') }}">
-                                    </td>
-                                    <td>
-                                        <select name="type" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="immediate" {{ request('type') == 'immediate' ? 'selected' : '' }}>Immediate</option>
-                                            <option value="later" {{ request('type') == 'later' ? 'selected' : '' }}>Later</option>
-                                            <option value="background" {{ request('type') == 'background' ? 'selected' : '' }}>Background</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="status" class="form-control" form="filters-form">
-                                            <option value=""></option>
-                                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>Sent</option>
-                                            <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
-                                            <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="from" form="filters-form" value="{{ request('from') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="to_addr" form="filters-form" value="{{ request('to_addr') }}" placeholder="To">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="reply" form="filters-form" value="{{ request('reply') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="bcc" form="filters-form" value="{{ request('bcc') }}">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="subject" form="filters-form" value="{{ request('subject') }}">
-                                    </td>
-                                    <td>
-                                        <input type="date" class="form-control" name="created_at" form="filters-form" value="{{ request('created_at') }}">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary" form="filters-form">Filter</button>
-                                        <a href="{{ route('email-pool.index') }}" class="btn btn-secondary ml-2">Clear</a>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($emailPools as $emailPool)
-                                    <tr>
-                                        <td>{{ is_array($emailPool) ? ($emailPool['id'] ?? '') : ($emailPool->id ?? '') }}</td>
-                                        <td>
-                                            @php $type = is_array($emailPool) ? ($emailPool['type'] ?? '') : ($emailPool->type ?? ''); @endphp
-                                            @if($type === 'immediate')
-                                                <span class="label label-success">Immediate</span>
-                                            @elseif($type === 'later')
-                                                <span class="label label-warning">Later</span>
-                                            @elseif($type === 'background')
-                                                <span class="label label-info">Background</span>
-                                            @else
-                                                <span class="label label-default">{{ ucfirst($type) }}</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @php $status = is_array($emailPool) ? ($emailPool['status'] ?? '') : ($emailPool->status ?? ''); @endphp
-                                            @if($status === 'sent')
-                                                <span class="badge badge-success">Sent</span>
-                                            @elseif($status === 'pending')
-                                                <span class="badge badge-warning">Pending</span>
-                                            @elseif($status === 'failed')
-                                                <span class="badge badge-danger">Failed</span>
-                                            @elseif($status === 'cancelled')
-                                                <span class="badge badge-secondary">Cancelled</span>
-                                            @else
-                                                <span class="badge badge-info">{{ ucfirst($status) }}</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ is_array($emailPool) ? ($emailPool['from'] ?? '') : ($emailPool->from ?? '') }}</td>
-                                        <td>
-                                            @php
-                                                $toRaw = is_array($emailPool) ? ($emailPool['to'] ?? '') : ($emailPool->to ?? '');
-                                                $toArray = is_string($toRaw) ? json_decode($toRaw, true) : (is_array($toRaw) ? $toRaw : []);
-                                                $toEmails = is_array($toArray) ? array_keys($toArray) : [];
-                                            @endphp
-                                            {{ implode(', ', array_slice($toEmails, 0, 3)) }}
-                                            @if(count($toEmails) > 3)
-                                                <span class="text-muted">(+{{ count($toEmails) - 3 }} more)</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ (is_array($emailPool) ? ($emailPool['reply'] ?? '') : ($emailPool->reply ?? '')) ?: '-' }}</td>
-                                        <td>{{ (is_array($emailPool) ? ($emailPool['bcc'] ?? '') : ($emailPool->bcc ?? '')) ?: '-' }}</td>
-                                        <td>
-                                            @php $subjectVal = is_array($emailPool) ? ($emailPool['subject'] ?? '') : ($emailPool->subject ?? ''); @endphp
-                                            {{ Str::limit($subjectVal, 50) }}
-                                        </td>
-                                        <td>
-                                            @php $created = is_array($emailPool) ? ($emailPool['created_at'] ?? null) : ($emailPool->created_at ?? null); @endphp
-                                            @if($created instanceof \Illuminate\Support\Carbon)
-                                                {{ $created->format('M d, Y') }}
-                                            @elseif(!empty($created))
-                                                {{ \Illuminate\Support\Carbon::parse($created)->format('M d, Y') }}
-                                            @else
-                                                
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                @php $poolId = is_array($emailPool) ? ($emailPool['id'] ?? null) : ($emailPool->id ?? null); @endphp
-                                                @if($poolId)
-                                                <a href="{{ route('email-pool.show', ['email_pool' => $poolId]) }}" class="btn btn-sm btn-info">
-                                                    <i class="fas fa-eye"></i> View
-                                                </a>
-                                                <form method="POST" action="{{ route('email-pool.destroy', ['email_pool' => $poolId]) }}" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
-                                                        <i class="fas fa-trash"></i> Delete
-                                                    </button>
-                                                </form>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="10" class="text-center">No email pools found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    @if($emailPools instanceof \Illuminate\Contracts\Pagination\Paginator)
-                        <div class="d-flex justify-content-center">
-                            {{ $emailPools->appends(request()->query())->links() }}
-                        </div>
-                    @endif
+                    <x-table-filter 
+                        :title="'Email Pools'" 
+                        :data="$emailPools"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::selectColumn('Type', ['immediate' => 'Immediate', 'later' => 'Later', 'background' => 'Background']),
+                            TableFilterHelper::selectColumn('Status', ['pending' => 'Pending', 'sent' => 'Sent', 'failed' => 'Failed', 'cancelled' => 'Cancelled']),
+                            TableFilterHelper::textColumn('From'),
+                            TableFilterHelper::textColumn('To'),
+                            TableFilterHelper::textColumn('Reply'),
+                            TableFilterHelper::textColumn('BCC'),
+                            TableFilterHelper::textColumn('Subject'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-2'),
+                        ]"
+                    >
+                        @forelse($emailPools as $emailPool)
+                            @php
+                                $idVal = is_array($emailPool) ? ($emailPool['id'] ?? '') : ($emailPool->id ?? '');
+                                $type = is_array($emailPool) ? ($emailPool['type'] ?? '') : ($emailPool->type ?? '');
+                                $status = is_array($emailPool) ? ($emailPool['status'] ?? '') : ($emailPool->status ?? '');
+                                $fromVal = is_array($emailPool) ? ($emailPool['from'] ?? '') : ($emailPool->from ?? '');
+                                $toRaw = is_array($emailPool) ? ($emailPool['to'] ?? '') : ($emailPool->to ?? '');
+                                $toArray = is_string($toRaw) ? json_decode($toRaw, true) : (is_array($toRaw) ? $toRaw : []);
+                                $toEmails = is_array($toArray) ? array_keys($toArray) : [];
+                                $replyVal = is_array($emailPool) ? ($emailPool['reply'] ?? '') : ($emailPool->reply ?? '');
+                                $bccVal = is_array($emailPool) ? ($emailPool['bcc'] ?? '') : ($emailPool->bcc ?? '');
+                                $subjectVal = is_array($emailPool) ? ($emailPool['subject'] ?? '') : ($emailPool->subject ?? '');
+                                $created = is_array($emailPool) ? ($emailPool['created_at'] ?? null) : ($emailPool->created_at ?? null);
+                            @endphp
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $idVal }}</td>
+                                <td @dataColumn(1) @dataValue($type)>
+                                    @if($type === 'immediate')
+                                        <span class="label label-success">Immediate</span>
+                                    @elseif($type === 'later')
+                                        <span class="label label-warning">Later</span>
+                                    @elseif($type === 'background')
+                                        <span class="label label-info">Background</span>
+                                    @else
+                                        <span class="label label-default">{{ ucfirst($type) }}</span>
+                                    @endif
+                                </td>
+                                <td @dataColumn(2) @dataValue($status)>
+                                    @if($status === 'sent')
+                                        <span class="badge badge-success">Sent</span>
+                                    @elseif($status === 'pending')
+                                        <span class="badge badge-warning">Pending</span>
+                                    @elseif($status === 'failed')
+                                        <span class="badge badge-danger">Failed</span>
+                                    @elseif($status === 'cancelled')
+                                        <span class="badge badge-secondary">Cancelled</span>
+                                    @else
+                                        <span class="badge badge-info">{{ ucfirst($status) }}</span>
+                                    @endif
+                                </td>
+                                <td @dataColumn(3)>{{ $fromVal }}</td>
+                                <td @dataColumn(4)>
+                                    {{ implode(', ', array_slice($toEmails, 0, 3)) }}
+                                    @if(count($toEmails) > 3)
+                                        <span class="text-muted">(+{{ count($toEmails) - 3 }} more)</span>
+                                    @endif
+                                </td>
+                                <td @dataColumn(5)>{{ $replyVal ?: '-' }}</td>
+                                <td @dataColumn(6)>{{ $bccVal ?: '-' }}</td>
+                                <td @dataColumn(7)>{{ Str::limit($subjectVal, 50) }}</td>
+                                <td @dataColumn(8)>
+                                    @if($created instanceof \Illuminate\Support\Carbon)
+                                        {{ $created->format('M d, Y') }}
+                                    @elseif(!empty($created))
+                                        {{ \Illuminate\Support\Carbon::parse($created)->format('M d, Y') }}
+                                    @endif
+                                </td>
+                                <td @dataColumn(9)>
+                                    <div class="btn-group">
+                                        @if($idVal)
+                                        <a href="{{ route('email-pool.show', ['email_pool' => $idVal]) }}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <form method="POST" action="{{ route('email-pool.destroy', ['email_pool' => $idVal]) }}" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="10" class="text-center">No email pools found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>
