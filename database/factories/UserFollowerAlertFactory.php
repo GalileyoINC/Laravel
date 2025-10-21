@@ -22,7 +22,11 @@ class UserFollowerAlertFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->numberBetween(1, 100),
+            'total' => $this->faker->numberBetween(1, 100),
+            'used' => $this->faker->numberBetween(0, 50),
+            'begin_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'end_at' => $this->faker->optional()->dateTimeBetween('now', '+1 year'),
         ];
     }
 }

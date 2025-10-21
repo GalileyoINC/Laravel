@@ -53,6 +53,9 @@ class AuthItem extends Model
     /** @phpstan-ignore-line */
     public $incrementing = false;
 
+    /** @phpstan-ignore-line */
+    public $timestamps = false;
+
     protected $table = 'auth_item';
 
     protected $primaryKey = 'name';

@@ -23,17 +23,11 @@ class EmailTemplateFactory extends Factory
     {
         return [
             'name' => $this->faker->words(3, true),
+            'from' => $this->faker->optional()->safeEmail(),
             'subject' => $this->faker->sentence(5),
             'body' => $this->faker->paragraph(5),
-            'template_type' => $this->faker->randomElement(['welcome', 'notification', 'promotional', 'system']),
-            'is_active' => $this->faker->boolean(80),
-            'variables' => json_encode([
-                'user_name' => '{{user_name}}',
-                'app_name' => '{{app_name}}',
-                'unsubscribe_link' => '{{unsubscribe_link}}',
-            ]),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'bodyPlain' => $this->faker->optional()->paragraph(5),
+            'params' => $this->faker->optional()->randomElement(['key1' => 'value1', 'key2' => 'value2']),
         ];
     }
 

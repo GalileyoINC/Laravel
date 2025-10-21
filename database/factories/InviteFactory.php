@@ -22,7 +22,12 @@ class InviteFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->numberBetween(1, 100),
+            'id_follower_list' => $this->faker->numberBetween(1, 40),
+            'email' => $this->faker->safeEmail(),
+            'name' => $this->faker->optional()->name(),
+            'phone_number' => $this->faker->optional()->phoneNumber(),
+            'token' => $this->faker->uuid(),
         ];
     }
 }

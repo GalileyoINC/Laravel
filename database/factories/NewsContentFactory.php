@@ -22,7 +22,11 @@ class NewsContentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_news' => $this->faker->numberBetween(1, 100),
+            'status' => $this->faker->randomElement([0, 1]), // STATUS_TEMP or STATUS_PUBLISH
+            'params' => $this->faker->optional()->randomElements(['key1' => 'value1', 'key2' => 'value2']),
+            'content' => $this->faker->optional()->paragraphs(3, true),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s'),
         ];
     }
 }

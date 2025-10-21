@@ -22,7 +22,10 @@ class AffiliateFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user_parent' => $this->faker->numberBetween(1, 100),
+            'id_user_child' => $this->faker->numberBetween(1, 100),
+            'is_active' => $this->faker->boolean(),
+            'params' => $this->faker->optional()->randomElement(['key1' => 'value1', 'key2' => 'value2']),
         ];
     }
 }

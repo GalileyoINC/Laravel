@@ -22,7 +22,8 @@ class UserPointSettingFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->sentence(3),
+            'price' => $this->faker->numberBetween(1, 1000),
         ];
     }
 }

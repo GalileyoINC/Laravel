@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Database\Factories;
+namespace Database\Factories\Communication;
 
 use App\Models\Communication\EmailPool;
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\EmailPool>
  */
-class CommunicationEmailPoolFactory extends Factory
+class EmailPoolFactory extends Factory
 {
     protected $model = EmailPool::class;
 

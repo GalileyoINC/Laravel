@@ -22,7 +22,9 @@ class SubscriptionWizardFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->optional()->numberBetween(1, 100),
+            'settings' => $this->faker->optional()->randomElement(['key1' => 'value1', 'key2' => 'value2']),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s'),
         ];
     }
 }

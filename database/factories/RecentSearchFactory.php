@@ -22,7 +22,9 @@ class RecentSearchFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->numberBetween(1, 100),
+            'phrase' => $this->faker->optional()->words(2, true), // Shorter phrase
+            'id_search_user' => $this->faker->optional()->numberBetween(1, 100),
         ];
     }
 }

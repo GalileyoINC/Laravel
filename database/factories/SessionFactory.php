@@ -22,7 +22,13 @@ class SessionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'expiresAt' => $this->faker->dateTimeBetween('now', '+1 year'),
+            'token' => $this->faker->uuid(),
+            'createdAt' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updatedAt' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'ipAddress' => $this->faker->optional()->ipv4(),
+            'userAgent' => $this->faker->optional()->userAgent(),
+            'userId' => $this->faker->numberBetween(1, 100), // Remove optional() since it cannot be null
         ];
     }
 }

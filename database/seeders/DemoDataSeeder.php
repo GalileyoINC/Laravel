@@ -45,9 +45,26 @@ class DemoDataSeeder extends Seeder
 
         // Create settings
         $this->command->info('Creating settings...');
-        Setting::factory(20)->create();
-        Setting::factory(5)->boolean()->create();
-        Setting::factory(5)->numeric()->create();
+        $existingSettings = Setting::count();
+        if ($existingSettings < 20) {
+            $settingsToCreate = 20 - $existingSettings;
+            Setting::factory($settingsToCreate)->create();
+            $this->command->info("✅ Created {$settingsToCreate} additional settings");
+        } else {
+            $this->command->info("⏭️  Skipped: Already have {$existingSettings} settings");
+        }
+        
+        if ($existingSettings < 25) {
+            $booleanSettingsToCreate = min(5, 25 - $existingSettings);
+            Setting::factory($booleanSettingsToCreate)->boolean()->create();
+            $this->command->info("✅ Created {$booleanSettingsToCreate} boolean settings");
+        }
+        
+        if ($existingSettings < 30) {
+            $numericSettingsToCreate = min(5, 30 - $existingSettings);
+            Setting::factory($numericSettingsToCreate)->numeric()->create();
+            $this->command->info("✅ Created {$numericSettingsToCreate} numeric settings");
+        }
 
         // Create providers
         $this->command->info('Creating providers...');

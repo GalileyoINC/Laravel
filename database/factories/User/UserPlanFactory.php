@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Database\Factories;
+namespace Database\Factories\User;
 
+use App\Models\User\UserPlan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User\UserPlan>
  */
-class UserUserPlanFactory extends Factory
+class UserPlanFactory extends Factory
 {
+    protected $model = UserPlan::class;
+
     /**
      * Define the model's default state.
      *
@@ -28,7 +31,7 @@ class UserUserPlanFactory extends Factory
             'pay_interval' => $this->faker->randomElement([1, 12]), // Monthly or Annual
             'price_before_prorate' => $this->faker->optional()->randomFloat(2, 10, 100),
             'price_after_prorate' => $this->faker->optional()->randomFloat(2, 10, 100),
-            'settings' => $this->faker->optional()->randomElements(['key1' => 'value1', 'key2' => 'value2']),
+            'settings' => $this->faker->optional()->randomElement(['key1' => 'value1', 'key2' => 'value2']),
             'begin_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'end_at' => $this->faker->optional()->dateTimeBetween('now', '+1 year'),
             'devices' => $this->faker->numberBetween(1, 10),

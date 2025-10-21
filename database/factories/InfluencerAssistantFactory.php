@@ -22,7 +22,8 @@ class InfluencerAssistantFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_influencer' => $this->faker->numberBetween(1, 100),
+            'id_assistant' => $this->faker->numberBetween(1, 100),
         ];
     }
 }

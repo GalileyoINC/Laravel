@@ -22,7 +22,14 @@ class AppleAppTransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'transaction_id' => $this->faker->uuid(),
+            'status' => $this->faker->randomElement(['pending', 'completed', 'failed']),
+            'error' => $this->faker->optional()->sentence(),
+            'id_user' => $this->faker->numberBetween(1, 100),
+            'data' => $this->faker->optional()->randomElements(['key1' => 'value1', 'key2' => 'value2']),
+            'apple_created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'is_process' => $this->faker->boolean(),
         ];
     }
 }

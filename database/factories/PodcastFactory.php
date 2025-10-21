@@ -22,7 +22,10 @@ class PodcastFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'type' => $this->faker->numberBetween(1, 5),
+            'title' => $this->faker->sentence(4),
+            'url' => $this->faker->url(),
+            'image' => $this->faker->optional()->imageUrl(),
         ];
     }
 }

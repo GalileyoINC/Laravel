@@ -22,7 +22,9 @@ class EmergencyTipsRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'first_name' => $this->faker->firstName(),
+            'email' => $this->faker->safeEmail(),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

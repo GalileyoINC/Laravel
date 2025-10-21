@@ -23,14 +23,18 @@ class SmsSheduleFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user' => User::factory(),
-            'phone_number' => $this->faker->phoneNumber(),
-            'message' => $this->faker->sentence(10),
-            'scheduled_at' => $this->faker->dateTimeBetween('now', '+1 month'),
-            'status' => $this->faker->randomElement(['pending', 'sent', 'failed', 'cancelled']),
-            'sent_at' => $this->faker->optional(0.3)->dateTimeBetween('-1 year', 'now'),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'id_user' => $this->faker->optional()->numberBetween(1, 100),
+            'id_staff' => $this->faker->optional()->numberBetween(1, 20),
+            'id_subscription' => $this->faker->optional()->numberBetween(1, 30),
+            'id_follower_list' => $this->faker->optional()->numberBetween(1, 40),
+            'id_sms_pool' => $this->faker->optional()->numberBetween(1, 50),
+            'purpose' => $this->faker->optional()->numberBetween(1, 10),
+            'status' => $this->faker->optional()->numberBetween(0, 4),
+            'body' => $this->faker->sentence(10),
+            'sended_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'id_assistant' => $this->faker->optional()->numberBetween(1, 20),
+            'short_body' => $this->faker->optional()->sentence(5),
+            'url' => $this->faker->optional()->url(),
         ];
     }
 

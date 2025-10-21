@@ -22,7 +22,11 @@ class AffiliateInviteFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->numberBetween(1, 100),
+            'email' => $this->faker->safeEmail(),
+            'phone_number' => $this->faker->optional()->phoneNumber(),
+            'token' => $this->faker->uuid(),
+            'params' => $this->faker->optional()->randomElement(['key1' => 'value1', 'key2' => 'value2']),
         ];
     }
 }

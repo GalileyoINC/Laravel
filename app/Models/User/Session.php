@@ -41,6 +41,9 @@ class Session extends Model
     use HasFactory;
 
     /** @phpstan-ignore-line */
+    public $timestamps = false;
+
+    /** @phpstan-ignore-line */
     protected $table = 'session';
 
     protected $fillable = [

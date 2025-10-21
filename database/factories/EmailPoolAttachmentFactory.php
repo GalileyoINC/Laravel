@@ -23,14 +23,10 @@ class EmailPoolAttachmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_email_pool' => EmailPool::factory(),
-            'filename' => $this->faker->word().'.'.$this->faker->fileExtension(),
-            'original_filename' => $this->faker->word().'.'.$this->faker->fileExtension(),
-            'file_path' => 'email-attachments/'.$this->faker->uuid().'/'.$this->faker->word().'.'.$this->faker->fileExtension(),
-            'file_size' => $this->faker->numberBetween(1024, 5242880), // 1KB to 5MB
-            'mime_type' => $this->faker->mimeType(),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'id_email_pool' => $this->faker->numberBetween(1, 50),
+            'body' => $this->faker->text(1000),
+            'file_name' => $this->faker->word().'.'.$this->faker->fileExtension(),
+            'content_type' => $this->faker->mimeType(),
         ];
     }
 

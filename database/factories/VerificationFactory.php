@@ -22,7 +22,11 @@ class VerificationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'identifier' => $this->faker->uuid(),
+            'value' => $this->faker->randomNumber(6),
+            'expiresAt' => $this->faker->dateTimeBetween('now', '+1 year'),
+            'createdAt' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updatedAt' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

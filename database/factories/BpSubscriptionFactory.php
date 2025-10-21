@@ -22,7 +22,11 @@ class BpSubscriptionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->numberBetween(1, 100),
+            'id_subscription' => $this->faker->uuid(),
+            'id_bill' => $this->faker->uuid(),
+            'status' => $this->faker->numberBetween(0, 3),
+            'email' => $this->faker->safeEmail(),
         ];
     }
 }

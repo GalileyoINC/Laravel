@@ -43,6 +43,9 @@ class AuthRule extends Model
     /** @phpstan-ignore-line */
     public $incrementing = false;
 
+    /** @phpstan-ignore-line */
+    public $timestamps = false;
+
     protected $table = 'auth_rule';
 
     protected $primaryKey = 'name';

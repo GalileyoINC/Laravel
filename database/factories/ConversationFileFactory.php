@@ -24,16 +24,12 @@ class ConversationFileFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_conversation' => Conversation::factory(),
-            'id_user' => User::factory(),
-            'filename' => $this->faker->word().'.'.$this->faker->fileExtension(),
-            'original_filename' => $this->faker->word().'.'.$this->faker->fileExtension(),
-            'file_path' => 'conversations/'.$this->faker->uuid().'/'.$this->faker->word().'.'.$this->faker->fileExtension(),
-            'file_size' => $this->faker->numberBetween(1024, 10485760), // 1KB to 10MB
-            'mime_type' => $this->faker->mimeType(),
-            'uploaded_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'id_conversation' => $this->faker->numberBetween(1, 50),
+            'id_conversation_message' => null, // Set to null to avoid foreign key constraint
+            'folder_name' => $this->faker->optional()->word(),
+            'web_name' => $this->faker->optional()->word().'.'.$this->faker->fileExtension(),
+            'file_name' => $this->faker->word().'.'.$this->faker->fileExtension(),
+            'sizes' => $this->faker->optional()->randomElement(['width' => 800, 'height' => 600]),
         ];
     }
 
