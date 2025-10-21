@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportReferral wherePeriod($value)
  *
  * @mixin \Eloquent
+ *
  * @method static \Database\Factories\ReportReferralFactory factory()
  */
 /**

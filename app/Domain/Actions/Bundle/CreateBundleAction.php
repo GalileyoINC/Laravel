@@ -7,7 +7,6 @@ namespace App\Domain\Actions\Bundle;
 use App\Domain\DTOs\Bundle\BundleCreateRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class CreateBundleAction
@@ -19,7 +18,7 @@ class CreateBundleAction
     /**
      * @param  array<string, mixed>  $data
      */
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): mixed
     {
         try {
             DB::beginTransaction();
@@ -36,19 +35,11 @@ class CreateBundleAction
 
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Bundle created successfully',
-                'data' => $bundle,
-            ]);
+            return $bundle;
 
         } catch (Exception $e) {
             DB::rollBack();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to create bundle: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

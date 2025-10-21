@@ -66,7 +66,7 @@ class EmailTemplate extends Model
      * Place variables in the email body
      */
     /**
-     * @param array<string, string|int|float> $variables
+     * @param  array<string, string|int|float>  $variables
      */
     public function placeBody(array $variables = []): string
     {

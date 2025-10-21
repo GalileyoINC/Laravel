@@ -57,6 +57,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 /**
  * @phpstan-use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\LoggerFactory>
+ *
  * @method static \Database\Factories\LoggerFactory factory()
  */
 class Logger extends Model

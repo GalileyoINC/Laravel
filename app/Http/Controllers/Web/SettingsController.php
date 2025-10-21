@@ -22,6 +22,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View as ViewFacade;
 
+use function method_exists;
+
 class SettingsController extends Controller
 {
     public function __construct(
@@ -47,7 +49,7 @@ class SettingsController extends Controller
     {
         // Check if user can view settings
         $currentUser = Auth::user();
-        $canViewSettings = $currentUser && \method_exists($currentUser, 'showSettings')
+        $canViewSettings = $currentUser && method_exists($currentUser, 'showSettings')
             ? (bool) $currentUser->showSettings()
             : true;
         if (! $currentUser || ! $canViewSettings) {
@@ -78,7 +80,7 @@ class SettingsController extends Controller
     public function updateMain(SettingsMainRequest $request): RedirectResponse
     {
         $currentUser = Auth::user();
-        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+        $isReadOnly = $currentUser && method_exists($currentUser, 'showSettingsRO')
             ? (bool) $currentUser->showSettingsRO()
             : false;
         if ($currentUser && ! $isReadOnly) {
@@ -104,7 +106,7 @@ class SettingsController extends Controller
     public function updateSms(SettingsSmsRequest $request): RedirectResponse
     {
         $currentUser = Auth::user();
-        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+        $isReadOnly = $currentUser && method_exists($currentUser, 'showSettingsRO')
             ? (bool) $currentUser->showSettingsRO()
             : false;
         if ($currentUser && ! $isReadOnly) {
@@ -131,7 +133,7 @@ class SettingsController extends Controller
     public function updateApi(SettingsApiRequest $request): RedirectResponse
     {
         $currentUser = Auth::user();
-        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+        $isReadOnly = $currentUser && method_exists($currentUser, 'showSettingsRO')
             ? (bool) $currentUser->showSettingsRO()
             : false;
         if ($currentUser && ! $isReadOnly) {
@@ -158,7 +160,7 @@ class SettingsController extends Controller
     public function updateApp(SettingsAppRequest $request): RedirectResponse
     {
         $currentUser = Auth::user();
-        $isReadOnly = $currentUser && \method_exists($currentUser, 'showSettingsRO')
+        $isReadOnly = $currentUser && method_exists($currentUser, 'showSettingsRO')
             ? (bool) $currentUser->showSettingsRO()
             : false;
         if ($currentUser && ! $isReadOnly) {

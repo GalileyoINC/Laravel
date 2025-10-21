@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReportArchive whereSort($value)
  *
  * @mixin \Eloquent
+ *
  * @method static \Database\Factories\ReportArchiveFactory factory()
  */
 /**

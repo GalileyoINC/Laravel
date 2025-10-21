@@ -86,7 +86,7 @@ class Contact extends Model
      * Create a new factory instance for the model.
      */
     /**
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\Contact>
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<Contact>
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {

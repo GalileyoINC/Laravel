@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class CreditCardFactory extends Factory
 {
     protected $model = CreditCard::class;
+
     /**
      * Define the model's default state.
      *

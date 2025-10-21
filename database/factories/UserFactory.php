@@ -24,7 +24,7 @@ class UserFactory extends Factory
         $first = fake()->firstName();
         $last = fake()->boolean(80) ? fake()->lastName() : null;
         // Generate unique email using timestamp and random string to avoid duplicates
-        $email = fake()->unique()->userName() . '_' . time() . '_' . bin2hex(random_bytes(4)) . '@example.com';
+        $email = fake()->unique()->userName().'_'.time().'_'.bin2hex(random_bytes(4)).'@example.com';
 
         return [
             'email' => $email,

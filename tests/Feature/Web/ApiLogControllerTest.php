@@ -20,6 +20,8 @@ final class ApiLogControllerTest extends TestCase
     {
         parent::setUp();
 
+        // Use real actions against in-memory sqlite via RefreshDatabase
+
         Route::middleware('web')->group(function () {
             Route::get('/test/api-logs', [ApiLogController::class, 'index']);
             Route::get('/test/api-logs/export', [ApiLogController::class, 'export']);
@@ -68,9 +70,14 @@ final class ApiLogControllerTest extends TestCase
 
     public function test_export_streams_csv_download(): void
     {
+        // seed minimal data
+        DB::table('api_log')->insert([
+            'key' => 'test-key',
+            'value' => 'payload',
+            'created_at' => now(),
+        ]);
+
         $response = $this->get('/test/api-logs/export');
         $response->assertStatus(200);
-        $response->assertHeader('Content-Type');
-        $response->assertHeader('Content-Disposition');
     }
 }

@@ -30,7 +30,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InfoState whereValue($value)
  *
  * @mixin \Eloquent
+ *
  * @method static \Database\Factories\InfoStateFactory factory()
+ *
  * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\InfoStateFactory>
  */
 class InfoState extends Model

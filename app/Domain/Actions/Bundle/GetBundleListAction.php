@@ -7,7 +7,6 @@ namespace App\Domain\Actions\Bundle;
 use App\Domain\DTOs\Bundle\BundleListRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 
 class GetBundleListAction
 {
@@ -18,7 +17,7 @@ class GetBundleListAction
     /**
      * @param  array<string, mixed>  $data
      */
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): mixed
     {
         try {
             $dto = new BundleListRequestDTO(
@@ -30,16 +29,10 @@ class GetBundleListAction
 
             $bundles = $this->bundleService->getList($dto);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $bundles,
-            ]);
+            return $bundles;
 
         } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get bundle list: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

@@ -73,18 +73,18 @@ class ConversationUnviewed extends Model
     }
 
     /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory(): \Database\Factories\ConversationUnviewedFactory
-    {
-        return \Database\Factories\ConversationUnviewedFactory::new();
-    }
-
-    /**
      * @return BelongsTo<ConversationMessage, $this>
      */
     public function conversation_message(): BelongsTo
     {
         return $this->belongsTo(ConversationMessage::class, 'id_conversation_message');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ConversationUnviewedFactory
+    {
+        return \Database\Factories\ConversationUnviewedFactory::new();
     }
 }

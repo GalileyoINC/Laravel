@@ -18,9 +18,14 @@ use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionCategory;
 use App\Models\User\User;
 use App\Models\User\UserSubscription;
+use FilesystemIterator;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
+use Throwable;
 
 class DatabaseSeeder extends Seeder
 {
@@ -208,9 +213,9 @@ class DatabaseSeeder extends Seeder
                 $countToCreate = 10;
 
                 $created = $modelClass::factory()->count($countToCreate)->create();
-                $this->command->info("✅ Seeded ".$created->count()." records for ".$modelClass);
+                $this->command->info('✅ Seeded '.$created->count().' records for '.$modelClass);
                 $seededCount++;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $this->command->warn('⚠️ Skipped '.$modelClass.' (reason: '.$e->getMessage().')');
             }
         }
@@ -230,7 +235,7 @@ class DatabaseSeeder extends Seeder
     /**
      * Discover all model classes under app/Models.
      *
-     * @return array<int, class-string<\Illuminate\Database\Eloquent\Model>>
+     * @return array<int, class-string<Model>>
      */
     private function discoverModelClasses(): array
     {
@@ -241,18 +246,18 @@ class DatabaseSeeder extends Seeder
 
         $classes = [];
 
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($baseDir, \FilesystemIterator::SKIP_DOTS)
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS)
         );
 
-        /** @var \SplFileInfo $file */
+        /** @var SplFileInfo $file */
         foreach ($iterator as $file) {
             if ($file->getExtension() !== 'php') {
                 continue;
             }
 
             $relativePath = str_replace($baseDir.'/', '', $file->getPathname());
-            $relativeNoExt = substr($relativePath, 0, -4); // strip .php
+            $relativeNoExt = mb_substr($relativePath, 0, -4); // strip .php
             $fqcn = 'App\\Models\\'.str_replace(['/', '\\'], '\\', $relativeNoExt);
 
             if (class_exists($fqcn)) {

@@ -16,11 +16,13 @@ class AuthAnyMiddleware
         // Prefer staff if authenticated
         if (Auth::guard('staff')->check()) {
             Auth::shouldUse('staff');
+
             return $next($request);
         }
 
         if (Auth::guard('web')->check()) {
             Auth::shouldUse('web');
+
             return $next($request);
         }
 

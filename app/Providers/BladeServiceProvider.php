@@ -39,19 +39,21 @@ class BladeServiceProvider extends ServiceProvider
 
         // Directive for filter row cell
         Blade::directive('filterCell', function ($expression) {
-            list($column, $type, $options) = array_pad(explode(',', $expression, 3), 3, null);
-            
+            [$column, $type, $options] = array_pad(explode(',', $expression, 3), 3, null);
+
             $column = trim($column);
             $type = trim($type, " '\"");
-            
+
             if ($type === 'text') {
                 return "<?php echo '<td><input type=\"text\" class=\"form-control filter-input\" data-column=\"' . {$column} . '\"></td>'; ?>";
-            } elseif ($type === 'select') {
+            }
+            if ($type === 'select') {
                 return "<?php echo '<td><select class=\"form-control filter-select\" data-column=\"' . {$column} . '\">' . {$options} . '</select></td>'; ?>";
-            } elseif ($type === 'button') {
+            }
+            if ($type === 'button') {
                 return '<?php echo \'<td><button type="button" class="btn btn-sm btn-warning clear-filters-btn"><i class="fas fa-times"></i> Clear</button></td>\'; ?>';
             }
-            
+
             return "<?php echo '<td></td>'; ?>";
         });
     }

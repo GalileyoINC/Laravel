@@ -7,7 +7,6 @@ namespace App\Domain\Actions\Bundle;
 use App\Domain\DTOs\Bundle\BundleUpdateRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class UpdateBundleAction
@@ -19,7 +18,7 @@ class UpdateBundleAction
     /**
      * @param  array<string, mixed>  $data
      */
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): mixed
     {
         try {
             DB::beginTransaction();
@@ -37,19 +36,12 @@ class UpdateBundleAction
 
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Bundle updated successfully',
-                'data' => $bundle,
-            ]);
+            return $bundle;
 
         } catch (Exception $e) {
             DB::rollBack();
 
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to update bundle: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

@@ -66,7 +66,7 @@ class SmsPoolReaction extends Model
     ];
 
     /**
-     * @return BelongsTo<\App\Models\Content\Reaction, $this>
+     * @return BelongsTo<Reaction, $this>
      */
     public function reaction(): BelongsTo
     {
@@ -90,7 +90,7 @@ class SmsPoolReaction extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Communication\SmsPoolReaction>
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<SmsPoolReaction>
      */
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {

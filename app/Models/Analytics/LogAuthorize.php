@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LogAuthorize whereUpdatedAt($value)
  *
  * @mixin \Eloquent
+ *
  * @method static \Database\Factories\LogAuthorizeFactory factory()
  */
 /**

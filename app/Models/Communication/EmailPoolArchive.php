@@ -103,6 +103,7 @@ class EmailPoolArchive extends SmsPool
     {
         /** @var array<int, string> $statuses */
         $statuses = parent::getStatuses();
+
         return $statuses;
     }
 

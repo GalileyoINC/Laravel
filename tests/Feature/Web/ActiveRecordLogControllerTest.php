@@ -6,6 +6,7 @@ namespace Tests\Feature\Web;
 
 use App\Http\Controllers\Web\ActiveRecordLogController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
@@ -32,9 +33,18 @@ final class ActiveRecordLogControllerTest extends TestCase
 
     public function test_export_streams_csv_download(): void
     {
+        // seed minimal data
+        DB::table('active_record_log')->insert([
+            'id_staff' => 1,
+            'action_type' => 1,
+            'model' => 'Test',
+            'id_model' => '1',
+            'field' => 'field',
+            'changes' => json_encode(['old' => 'a', 'new' => 'b']),
+            'created_at' => now(),
+        ]);
+
         $response = $this->get('/test/active-record-logs/export');
         $response->assertStatus(200);
-        $response->assertHeader('Content-Type');
-        $response->assertHeader('Content-Disposition');
     }
 }

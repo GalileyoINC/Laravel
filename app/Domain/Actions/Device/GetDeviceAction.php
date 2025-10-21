@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Device;
 
 use App\Domain\Services\Device\DeviceServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 
 class GetDeviceAction
 {
@@ -17,21 +16,15 @@ class GetDeviceAction
     /**
      * @param  array<string, mixed>  $data
      */
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): mixed
     {
         try {
             $device = $this->deviceService->getById($data['id']);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $device,
-            ]);
+            return $device;
 
         } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get device: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
 
+use function is_object;
+use function property_exists;
+
 class SiteController extends Controller
 {
     /**
@@ -30,8 +33,8 @@ class SiteController extends Controller
         $user = Auth::user();
         $username = $user->username ?? (string) (explode('@', (string) ($user->email ?? 'user@example.com'))[0] ?? 'user');
 
-        $firstName = \is_object($user) && \property_exists($user, 'first_name') ? (string) ($user->first_name ?? '') : '';
-        $lastName = \is_object($user) && \property_exists($user, 'last_name') ? (string) ($user->last_name ?? '') : '';
+        $firstName = is_object($user) && property_exists($user, 'first_name') ? (string) ($user->first_name ?? '') : '';
+        $lastName = is_object($user) && property_exists($user, 'last_name') ? (string) ($user->last_name ?? '') : '';
 
         $staff = (object) [
             'username' => $username,
@@ -61,15 +64,15 @@ class SiteController extends Controller
         }
 
         $data = $request->validated();
-        if (\is_object($user) && \property_exists($user, 'first_name')) {
+        if (is_object($user) && property_exists($user, 'first_name')) {
             /** @phpstan-ignore-next-line */
             $user->first_name = $data['first_name'] ?? $user->first_name;
         }
-        if (\is_object($user) && \property_exists($user, 'last_name')) {
+        if (is_object($user) && property_exists($user, 'last_name')) {
             /** @phpstan-ignore-next-line */
             $user->last_name = $data['last_name'] ?? $user->last_name;
         }
-        if (\is_object($user) && \property_exists($user, 'email')) {
+        if (is_object($user) && property_exists($user, 'email')) {
             /** @phpstan-ignore-next-line */
             $user->email = $data['email'] ?? $user->email;
         }

@@ -7,7 +7,6 @@ namespace App\Domain\Actions\Bundle;
 use App\Domain\DTOs\Bundle\BundleDeviceDataRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
 use Exception;
-use Illuminate\Http\JsonResponse;
 
 class GetBundleDeviceDataAction
 {
@@ -18,7 +17,7 @@ class GetBundleDeviceDataAction
     /**
      * @param  array<string, mixed>  $data
      */
-    public function execute(array $data): JsonResponse
+    public function execute(array $data): mixed
     {
         try {
             $dto = new BundleDeviceDataRequestDTO(
@@ -27,16 +26,10 @@ class GetBundleDeviceDataAction
 
             $result = $this->bundleService->getDeviceData($dto);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
+            return $result;
 
         } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get device data: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 }

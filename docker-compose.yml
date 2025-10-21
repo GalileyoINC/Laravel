@@ -33,6 +33,7 @@ services:
       - PHP_OPCACHE_REVALIDATE_FREQ=2
       - APP_URL=http://localhost
       - VITE_APP_URL=http://localhost
+      - DUSK_DRIVER_URL=http://selenium:4444
 
   db:
     image: mariadb:latest
@@ -93,6 +94,22 @@ services:
     depends_on:
       app:
         condition: service_healthy
+
+  selenium:
+    image: selenium/standalone-chromium:latest
+    container_name: galileyo_selenium
+    restart: unless-stopped
+    shm_size: 2g
+    networks:
+      - galileyo_network
+    ports:
+      - "4444:4444"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
 
 networks:
   galileyo_network:

@@ -11,11 +11,11 @@ use App\Models\System\Staff;
 use App\Models\User\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -46,17 +46,18 @@ class AuthController extends Controller
         }
 
         $credentials = $request->validated();
-        $username = (string)($credentials['username'] ?? '');
-        $password = (string)($credentials['password'] ?? '');
+        $username = (string) ($credentials['username'] ?? '');
+        $password = (string) ($credentials['password'] ?? '');
 
         // 1) Try Staff guard (by username or email)
         $staff = Staff::query()
             ->where('username', $username)
             ->orWhere('email', $username)
             ->first();
-        if ($staff && Hash::check($password, (string)$staff->password_hash)) {
+        if ($staff && Hash::check($password, (string) $staff->password_hash)) {
             Auth::guard('staff')->login($staff, false);
             session()->regenerate();
+
             return Redirect::to(route('site.index'));
         }
 
@@ -70,10 +71,11 @@ class AuthController extends Controller
         $data = $result->getData(true);
 
         if ($result->getStatusCode() === 200 && isset($data['user_id'])) {
-            $user = User::find((int)$data['user_id']);
+            $user = User::find((int) $data['user_id']);
             if ($user) {
                 Auth::guard('web')->login($user, false);
                 session()->regenerate();
+
                 return Redirect::to(route('site.index'));
             }
         }

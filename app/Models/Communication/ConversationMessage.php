@@ -91,14 +91,6 @@ class ConversationMessage extends Model
     }
 
     /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory(): \Database\Factories\ConversationMessageFactory
-    {
-        return \Database\Factories\ConversationMessageFactory::new();
-    }
-
-    /**
      * @return HasMany<ConversationFile, $this>
      */
     public function conversation_files(): HasMany
@@ -112,5 +104,13 @@ class ConversationMessage extends Model
     public function conversation_unvieweds(): HasMany
     {
         return $this->hasMany(ConversationUnviewed::class, 'id_conversation_message');
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): \Database\Factories\ConversationMessageFactory
+    {
+        return \Database\Factories\ConversationMessageFactory::new();
     }
 }

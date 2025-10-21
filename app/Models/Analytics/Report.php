@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Report query()
  *
  * @mixin \Eloquent
+ *
  * @method static \Database\Factories\ReportFactory factory()
  */
 /**
