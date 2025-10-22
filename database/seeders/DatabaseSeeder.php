@@ -157,7 +157,7 @@ class DatabaseSeeder extends Seeder
         }
         $this->command->info('✅ Created SMS pool reactions');
 
-        // Create additional demo users
+a         // Create additional demo users
         $this->command->info('👤 Creating additional demo users...');
 
         // Test user

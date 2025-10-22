@@ -1,8 +1,8 @@
 <template>
   <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-sm transition-colors dark:border-slate-800 dark:bg-slate-950/95">
-    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 py-8 sm:px-6 lg:px-8 overflow-hidden">
       <!-- Left side -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0">
         <!-- Mobile Menu Button (TODO) -->
         <button
           class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-9 w-9 p-1 lg:hidden text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800"
@@ -27,7 +27,7 @@
       </div>
       
       <!-- Middle area - Navigation for public users -->
-      <div v-if="!isAuthenticated" class="flex items-center gap-3">
+      <div v-if="!isAuthenticated" class="flex items-center gap-3 shrink-0">
         <div class="flex items-center gap-6">
           <nav class="relative z-10 flex max-w-max flex-1 items-center justify-center max-md:hidden">
             <ul class="group flex flex-1 list-none items-center justify-center space-x-1 gap-2">
@@ -52,14 +52,14 @@
       </div>
       
       <!-- Middle area - Search for authenticated users -->
-      <div v-else class="grow">
-        <div class="relative mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+      <div v-else class="grow min-w-0">
+        <div class="relative mx-auto w-full max-w-full sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden min-w-0">
           <CommandMenu />
         </div>
       </div>
       
       <!-- Right side -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0">
         <!-- Public Navigation (not logged in) -->
         <template v-if="!isAuthenticated">
           <!-- Theme Toggle -->

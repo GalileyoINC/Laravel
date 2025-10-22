@@ -27,9 +27,8 @@
         var $sidebar = $('.sidebar');
         var $wrapper = $('.wrapper');
 
-        // Mobile: slide-in/out sidebar
+        // Mobile: handled by Bootstrap Offcanvas via data-bs-* attributes
         if (window.innerWidth <= 767) {
-            $wrapper.toggleClass('sidebar-open');
             return;
         }
 
@@ -53,6 +52,14 @@
                 _token: $('meta[name="csrf-token"]').attr('content')
             });
         }
+    });
+
+    // Ensure offcanvas sidebar is full (not mini) on mobile open
+    $(document).on('show.bs.offcanvas', '#adminSidebar', function() {
+        var $sidebar = $('.sidebar');
+        var $wrapper = $('.wrapper');
+        $sidebar.removeClass('sidebar-mini');
+        $wrapper.removeClass('wrapper-sidebar_mini');
     });
 
     // Sidebar Menu Toggle

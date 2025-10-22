@@ -66,7 +66,7 @@
             </a>
 
             <div class="pull-left">
-                <button type="button" name="button" class="JS__sidebar_toggler btn btn-primary"><i
+                <button type="button" name="button" class="JS__sidebar_toggler btn btn-primary d-inline d-md-none" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar"><i
                         class="fas fa-bars"></i></button>
             </div>
 
@@ -85,7 +85,18 @@
             </div>
         </header>
 
-        <aside class="sidebar">
+        <aside
+            class="sidebar offcanvas offcanvas-start offcanvas-md"
+            tabindex="-1"
+            id="adminSidebar"
+            aria-labelledby="adminSidebarLabel"
+            style="--bs-offcanvas-width: min(82vw, 500px); width: var(--bs-offcanvas-width) !important; z-index: 1065;"
+        >
+            <div class="offcanvas-header d-md-none">
+                <h5 class="offcanvas-title" id="adminSidebarLabel">Menu</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body p-0">
             <ul id="w1" class="sidebar-menu" dropdowncaret="<span class=&quot;fa fa-chevron-down&quot;></span>">
                 <li class="current-page">
                     <a href="{{ route('contact.index') }}">
@@ -438,6 +449,7 @@
                     </ul>
                 </li>
             </ul>
+            </div>
         </aside>
 
         <div class="alert-destination">
