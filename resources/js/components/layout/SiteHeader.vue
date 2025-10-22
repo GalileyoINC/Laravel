@@ -1,6 +1,6 @@
 <template>
   <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-sm transition-colors dark:border-slate-800 dark:bg-slate-950/95">
-    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 py-8 sm:px-6 lg:px-8 overflow-hidden">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 py-8 sm:px-6 lg:px-8">
       <!-- Left side -->
       <div class="flex items-center gap-3 shrink-0">
         <!-- Mobile Menu Button (TODO) -->
@@ -17,7 +17,7 @@
             <path v-else d="M6 6l12 12M18 6l-12 12"></path>
           </svg>
         </button>
-        
+
         <!-- Logo -->
         <div class="flex items-center gap-6">
           <router-link to="/" class="flex w-20">
@@ -25,7 +25,7 @@
           </router-link>
         </div>
       </div>
-      
+
       <!-- Middle area - Navigation for public users -->
       <div v-if="!isAuthenticated" class="flex items-center gap-3 shrink-0">
         <div class="flex items-center gap-6">
@@ -50,21 +50,21 @@
           </nav>
         </div>
       </div>
-      
+
       <!-- Middle area - Search for authenticated users -->
       <div v-else class="grow min-w-0">
         <div class="relative mx-auto w-full max-w-full sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden min-w-0">
           <CommandMenu />
         </div>
       </div>
-      
+
       <!-- Right side -->
       <div class="flex items-center gap-3 shrink-0">
         <!-- Public Navigation (not logged in) -->
         <template v-if="!isAuthenticated">
           <!-- Theme Toggle -->
           <ThemeToggle />
-          
+
           <!-- Sign In Button -->
           <router-link
             to="/login"
@@ -73,7 +73,7 @@
             Sign In
           </router-link>
         </template>
-        
+
         <!-- Authenticated Navigation (logged in) -->
         <template v-else>
           <!-- Map Button -->
@@ -84,10 +84,10 @@
           >
             <MapIcon class="h-5 w-5" />
           </router-link>
-          
+
           <!-- Theme Toggle -->
           <ThemeToggle />
-          
+
           <!-- Create Post Button -->
           <button
             @click="openCreatePost"
@@ -96,7 +96,7 @@
             <PlusIcon class="h-4 w-4" />
             <span class="hidden sm:inline">Post</span>
           </button>
-          
+
           <!-- User Menu -->
           <UserMenu :user="clientUser" @create-post="openCreatePost" />
         </template>
