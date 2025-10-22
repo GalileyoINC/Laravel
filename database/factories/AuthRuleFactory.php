@@ -22,7 +22,7 @@ class AuthRuleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word() . '_rule_' . $this->faker->randomNumber(3),
+            'name' => $this->faker->unique()->word().'_rule_'.$this->faker->randomNumber(3),
             'data' => $this->faker->optional()->randomElement(['key1' => 'value1', 'key2' => 'value2']),
             'created_at' => time(),
             'updated_at' => time(),

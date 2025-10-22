@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// Create axios instance
+// Use relative /api so it works with Vite proxy in dev and Nginx in Docker/prod
 const api = axios.create({
   baseURL: '/api',
   headers: {

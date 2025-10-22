@@ -53,13 +53,13 @@ class DemoDataSeeder extends Seeder
         } else {
             $this->command->info("⏭️  Skipped: Already have {$existingSettings} settings");
         }
-        
+
         if ($existingSettings < 25) {
             $booleanSettingsToCreate = min(5, 25 - $existingSettings);
             Setting::factory($booleanSettingsToCreate)->boolean()->create();
             $this->command->info("✅ Created {$booleanSettingsToCreate} boolean settings");
         }
-        
+
         if ($existingSettings < 30) {
             $numericSettingsToCreate = min(5, 30 - $existingSettings);
             Setting::factory($numericSettingsToCreate)->numeric()->create();

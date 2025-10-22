@@ -36,7 +36,6 @@ class DeviceFactory extends Factory
             'uuid' => Str::uuid(),
             'os' => $os,
             'push_token' => fake()->boolean(80) ? Str::random(64) : null,
-            'access_token' => Str::random(32),
             'params' => json_encode([
                 'device_model' => fake()->randomElement(['iPhone 15', 'Samsung Galaxy S24', 'Google Pixel 8', 'iPad Pro', 'MacBook Pro']),
                 'os_version' => fake()->randomElement(['17.0', '14.0', '11.0', '13.0', 'Ubuntu 22.04']),

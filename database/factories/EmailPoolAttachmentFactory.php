@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Communication\EmailPool;
 use App\Models\Communication\EmailPoolAttachment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

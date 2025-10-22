@@ -63,7 +63,6 @@ class Device extends Model
 
     protected $hidden = [
         'push_token',
-        'access_token',
     ];
 
     protected $fillable = [
@@ -71,7 +70,6 @@ class Device extends Model
         'uuid',
         'os',
         'push_token',
-        'access_token',
         'params',
         'push_turn_on',
     ];

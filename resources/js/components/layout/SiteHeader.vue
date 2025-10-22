@@ -4,11 +4,17 @@
       <!-- Left side -->
       <div class="flex items-center gap-3">
         <!-- Mobile Menu Button (TODO) -->
-        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground size-8 md:hidden" type="button">
-          <svg class="pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 12L20 12"></path>
-            <path d="M4 12H20"></path>
-            <path d="M4 12H20"></path>
+        <button
+          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-9 w-9 p-1 lg:hidden text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800"
+          type="button"
+          @click="isMobileNavOpen = !isMobileNavOpen"
+          :aria-expanded="isMobileNavOpen ? 'true' : 'false'"
+          aria-controls="mobile-nav"
+          aria-label="Toggle navigation"
+        >
+          <svg class="pointer-events-none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path v-if="!isMobileNavOpen" d="M3 6h18M3 12h18M3 18h18"></path>
+            <path v-else d="M6 6l12 12M18 6l-12 12"></path>
           </svg>
         </button>
         
@@ -47,7 +53,7 @@
       
       <!-- Middle area - Search for authenticated users -->
       <div v-else class="grow">
-        <div class="relative mx-auto w-full max-w-xs">
+        <div class="relative mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
           <CommandMenu />
         </div>
       </div>
@@ -106,10 +112,56 @@
       />
     </Teleport>
   </header>
+  <!-- Mobile Drawer Nav -->
+  <Teleport to="body">
+    <div v-if="isMobileNavOpen" class="fixed inset-0 z-[60] md:hidden">
+      <div class="absolute inset-0 bg-black/40" @click="isMobileNavOpen = false"></div>
+      <aside
+        class="absolute left-0 top-0 h-full w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 shadow-xl p-4 transform transition-transform duration-200 ease-out -translate-x-full"
+        :class="{ 'translate-x-0': isMobileNavOpen }"
+      >
+        <div class="mb-4 flex items-center justify-between">
+          <span class="text-sm font-medium text-slate-500">Menu</span>
+          <button class="rounded p-2 hover:bg-slate-100 dark:hover:bg-slate-800" @click="isMobileNavOpen = false" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6l12 12M18 6l-12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <nav>
+          <ul class="flex flex-col gap-1">
+            <li>
+              <router-link @click="isMobileNavOpen = false" to="/" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">Home</router-link>
+            </li>
+            <template v-if="!isAuthenticated">
+              <li>
+                <router-link @click="isMobileNavOpen = false" to="/faq" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">FAQ</router-link>
+              </li>
+              <li>
+                <router-link @click="isMobileNavOpen = false" to="/contact" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">Contact</router-link>
+              </li>
+            </template>
+            <template v-else>
+              <li>
+                <router-link @click="isMobileNavOpen = false" to="/dashboard" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">Dashboard</router-link>
+              </li>
+              <li>
+                <router-link @click="isMobileNavOpen = false" to="/profile" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">Profile</router-link>
+              </li>
+              <li>
+                <router-link @click="isMobileNavOpen = false" to="/alerts-map" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">Alerts Map</router-link>
+              </li>
+            </template>
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </Teleport>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { MapIcon, PlusIcon } from 'lucide-vue-next'
 import CommandMenu from './CommandMenu.vue'
 import ThemeToggle from './ThemeToggle.vue'
@@ -125,8 +177,10 @@ const props = defineProps({
 })
 
 const authStore = useAuthStore()
+const router = useRouter()
 const clientUser = ref(null)
 const isCreatePostOpen = ref(false)
+const isMobileNavOpen = ref(false)
 
 const isAuthenticated = computed(() => {
   return !!authStore.token
@@ -146,6 +200,23 @@ onMounted(() => {
         console.error('Error parsing user profile:', error)
       }
     }
+  }
+  // Close drawer on route change
+  router.afterEach(() => {
+    isMobileNavOpen.value = false
+  })
+})
+
+// Lock body scroll when drawer is open
+watch(isMobileNavOpen, (open) => {
+  if (typeof document !== 'undefined') {
+    document.body.classList.toggle('overflow-hidden', open)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('overflow-hidden')
   }
 })
 

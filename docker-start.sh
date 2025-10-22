@@ -31,13 +31,9 @@ docker compose exec app npm run build
 echo "🔑 Generating application key..."
 docker compose exec app php artisan key:generate
 
-# Run database migrations
-echo "🗄️ Running database migrations..."
-docker compose exec app php artisan migrate --force
-
-# Seed database if needed
-echo "🌱 Seeding database..."
-docker compose exec app php artisan db:seed --force
+# Run fresh database migrations and seeding
+echo "🗄️ Running fresh database migrations and seeding..."
+docker compose exec app php artisan migrate:fresh --seed --force
 
 # Set proper permissions (storage dirs already created in Dockerfile)
 echo "🔐 Setting permissions..."

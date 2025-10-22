@@ -22,7 +22,7 @@ class AuthItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word() . '_' . $this->faker->randomNumber(3),
+            'name' => $this->faker->unique()->word().'_'.$this->faker->randomNumber(3),
             'type' => $this->faker->randomElement([1, 2]), // 1 = Role, 2 = Permission
             'description' => $this->faker->optional()->sentence(),
             'rule_name' => null, // Set to null to avoid foreign key constraint

@@ -17,12 +17,12 @@
                 Trusted by Thousands Worldwide Since 2020.
               </div>
 
-              <h1 class="mb-6 text-4xl font-bold leading-tight text-slate-900 dark:text-white lg:text-5xl">
+              <h1 class="mb-6 text-3xl font-bold leading-tight text-slate-900 dark:text-white sm:text-4xl lg:text-5xl">
               <!-- animated question -->
               <span class="relative inline-block align-baseline">
                 <span
                   :key="currentQuestionIndex"
-                  class="anim-swap inline-block whitespace-nowrap will-change-transform"
+                  class="anim-swap inline-block whitespace-normal will-change-transform sm:whitespace-nowrap break-words"
                   :style="{ '--cycle': cycleMs + 'ms' }"
                   @animationend="nextQuestion"
                 >
@@ -111,11 +111,9 @@
             <div class="relative">
               <PhoneMockup>
                 <video
-                  class="max-w-full rounded-xl shadow-lg"
+                  class="h-full w-full rounded-xl object-cover shadow-lg"
                   src="/galileyo-mobile-video.mp4"
                   poster="/galileyo-mobile-poster.jpg"
-                  width="272"
-                  height="504"
                   playsinline
                   muted
                   autoplay
@@ -126,7 +124,7 @@
               </PhoneMockup>
 
               <div
-                class="absolute -left-32 top-16 max-w-xs rounded-xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/95"
+                class="absolute -left-32 top-16 hidden max-w-xs rounded-xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/95 md:block"
               >
                 <div class="flex items-center gap-3">
                   <div class="h-3 w-3 animate-pulse rounded-full bg-cyan-500"></div>
@@ -141,7 +139,7 @@
               </div>
 
               <div
-                class="absolute -right-40 top-64 max-w-xs rounded-xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/95"
+                class="absolute -right-40 top-64 hidden max-w-xs rounded-xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/95 md:block"
               >
                 <div class="flex items-center gap-3">
                   <div class="h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
@@ -156,7 +154,7 @@
               </div>
 
               <div
-                class="absolute -left-36 bottom-32 max-w-xs rounded-xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/95"
+                class="absolute -left-36 bottom-32 hidden max-w-xs rounded-xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm dark:border-slate-700 dark:bg-slate-800/95 md:block"
               >
                 <div class="flex items-center gap-3">
                   <div class="h-3 w-3 animate-pulse rounded-full bg-purple-500"></div>
@@ -200,7 +198,7 @@
             v-for="(feature, index) in features"
             :key="index"
             :style="{ backgroundImage: `url(${feature.image})`, backgroundSize: 'cover' }"
-            class="group flex h-[300px] w-[200px] items-end rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-slate-300 hover:bg-white dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+            class="group relative flex h-64 w-full sm:h-72 items-end rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-slate-300 hover:bg-white dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-slate-600 dark:hover:bg-slate-800"
           >
             <div class="pointer-events-none absolute inset-0 bg-black/70 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
             <div class="absolute inset-x-0 bottom-0 translate-y-2 p-4 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">

@@ -36,7 +36,26 @@ class DatabaseSeeder extends Seeder
     {
         $this->command->info('🌱 Starting database seeding...');
 
-        // Run the demo data seeder first
+        // Create admin user FIRST - always ensure admin exists
+        $this->command->info('👑 Creating admin user...');
+        $adminUser = User::updateOrCreate(
+            ['email' => 'admin@galileyo.com'],
+            [
+                'first_name' => 'Admin',
+                'last_name' => 'User',
+                'email' => 'admin@galileyo.com',
+                'password_hash' => Hash::make('password'),
+                'role' => 1, // Admin role
+                'status' => 1, // Active
+                'is_valid_email' => true,
+                'auth_key' => \Illuminate\Support\Str::random(32),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+        $this->command->info("✅ Admin user created/updated: {$adminUser->email}");
+
+        // Run the demo data seeder
         $this->call(DemoDataSeeder::class);
 
         // Continue with existing seeding logic
@@ -138,23 +157,8 @@ class DatabaseSeeder extends Seeder
         }
         $this->command->info('✅ Created SMS pool reactions');
 
-        // Create some specific demo users
-        $this->command->info('👤 Creating demo users...');
-
-        // Admin user
-        User::updateOrCreate(
-            ['email' => 'admin@galileyo.com'],
-            array_merge(
-                User::factory()->make([
-                    'first_name' => 'Admin',
-                    'last_name' => 'User',
-                    'role' => 1,
-                    'is_valid_email' => true,
-                    'status' => 1,
-                ])->toArray(),
-                ['password_hash' => Hash::make('password')]
-            )
-        );
+        // Create additional demo users
+        $this->command->info('👤 Creating additional demo users...');
 
         // Test user
         User::updateOrCreate(
@@ -184,7 +188,7 @@ class DatabaseSeeder extends Seeder
             )
         );
 
-        $this->command->info('✅ Created demo users');
+        $this->command->info('✅ Created additional demo users');
 
         // Seed any remaining models that have factories but empty tables
         $this->command->info('🧩 Seeding remaining models with factories (only if their tables are empty)...');
@@ -224,8 +228,11 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('🎉 Database seeding completed successfully!');
         $this->command->info('');
-        $this->command->info('Demo users created:');
-        $this->command->info('👤 Admin: admin@galileyo.com');
+        $this->command->info('🔐 Login Credentials (Admin Panel):');
+        $this->command->info('📧 Email: admin@galileyo.com');
+        $this->command->info('🔑 Password: password');
+        $this->command->info('');
+        $this->command->info('👥 Additional Demo Users:');
         $this->command->info('👤 Test: test@galileyo.com');
         $this->command->info('🌟 Influencer: influencer@galileyo.com');
         $this->command->info('');

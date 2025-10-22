@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Communication\Conversation;
 use App\Models\Communication\ConversationUser;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;

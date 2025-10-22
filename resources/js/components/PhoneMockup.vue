@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-center">
     <!-- iPhone 15 Container -->
-    <div class="relative h-[504px] w-72 rounded-[45px] border-8 border-zinc-900 shadow-[0_0_2px_2px_rgba(255,255,255,0.1)]">
+    <div class="relative w-[16rem] sm:w-72 max-w-full aspect-[9/16] rounded-[45px] border-8 border-zinc-900 shadow-[0_0_2px_2px_rgba(255,255,255,0.1)]">
       <!-- Dynamic Island -->
       <div class="absolute left-1/2 top-2 z-20 h-[22px] w-[90px] -translate-x-1/2 transform rounded-full bg-black"></div>
 
@@ -17,16 +17,16 @@
 
       <!-- Left Side Buttons -->
       <!-- Silent Switch -->
-      <div class="absolute left-[-12px] top-20 h-8 w-[6px] rounded-l-md bg-zinc-900 shadow-md"></div>
+      <div class="absolute left-[-12px] top-20 h-8 w-[6px] rounded-l-md bg-zinc-900 shadow-md hidden sm:block"></div>
 
       <!-- Volume Up -->
-      <div class="absolute left-[-12px] top-36 h-12 w-[6px] rounded-l-md bg-zinc-900 shadow-md"></div>
+      <div class="absolute left-[-12px] top-36 h-12 w-[6px] rounded-l-md bg-zinc-900 shadow-md hidden sm:block"></div>
 
       <!-- Volume Down -->
-      <div class="absolute left-[-12px] top-52 h-12 w-[6px] rounded-l-md bg-zinc-900 shadow-md"></div>
+      <div class="absolute left-[-12px] top-52 h-12 w-[6px] rounded-l-md bg-zinc-900 shadow-md hidden sm:block"></div>
 
       <!-- Right Side Button (Power) -->
-      <div class="absolute right-[-12px] top-36 h-16 w-[6px] rounded-r-md bg-zinc-900 shadow-md"></div>
+      <div class="absolute right-[-12px] top-36 h-16 w-[6px] rounded-r-md bg-zinc-900 shadow-md hidden sm:block"></div>
     </div>
   </div>
 </template>

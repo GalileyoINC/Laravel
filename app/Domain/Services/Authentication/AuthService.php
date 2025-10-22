@@ -10,7 +10,6 @@ use App\Models\Device\Device;
 use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 /**
  * Authentication service implementation
@@ -37,14 +36,13 @@ class AuthService implements AuthServiceInterface
                 return null;
             }
 
-            // Generate access token
-            $accessToken = Str::random(64);
+            // Create Sanctum token
+            $token = $user->createToken('api-token', ['*'], now()->addHours(24));
 
-            // Create or update device record
+            // Create or update device record (without access_token)
             $device = Device::updateOrCreate(
                 ['id_user' => $user->id],
                 [
-                    'access_token' => $accessToken,
                     'uuid' => $loginDto->device['device_uuid'] ?? 'unknown',
                     'os' => $loginDto->device['device_os'] ?? 'unknown',
                     'params' => json_encode($loginDto->device),
@@ -55,7 +53,7 @@ class AuthService implements AuthServiceInterface
             // Return authentication response
             return new AuthResponseDTO(
                 user_id: $user->id,
-                access_token: $accessToken,
+                access_token: $token->plainTextToken,
                 refresh_token: '', // Refresh tokens can be added later
                 expires_in: 3600,  // Default expiration
                 user_profile: [
@@ -89,11 +87,11 @@ class AuthService implements AuthServiceInterface
     public function logout(string $accessToken): bool
     {
         try {
-            // Find device by token and delete it
-            $device = Device::where('access_token', $accessToken)->first();
+            // Find token by plain text token and revoke it
+            $token = \Laravel\Sanctum\PersonalAccessToken::findToken($accessToken);
 
-            if ($device) {
-                $device->delete();
+            if ($token) {
+                $token->delete();
 
                 return true;
             }

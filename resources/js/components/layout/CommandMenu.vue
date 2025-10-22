@@ -6,8 +6,8 @@
         v-model="searchQuery"
         @keydown.enter="handleSearch"
         type="text"
-        placeholder="Search posts, users, topics..."
-        class="ml-2 flex-1 bg-transparent text-sm text-slate-900 placeholder-slate-500 focus:outline-none dark:text-white dark:placeholder-slate-400"
+        placeholder="Search..."
+        class="ml-2 flex-1 bg-transparent text-sm text-slate-900 placeholder-slate-500 focus:outline-none dark:text-white dark:placeholder-slate-400 min-w-0"
       />
       <kbd class="hidden rounded bg-slate-100 px-2 py-1 text-xs text-slate-600 dark:bg-slate-700 dark:text-slate-400 sm:inline-flex">
         ⌘K
