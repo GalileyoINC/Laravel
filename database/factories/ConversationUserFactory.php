@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Communication\ConversationUser;
+use App\Models\Communication\Conversation;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,8 +23,14 @@ class ConversationUserFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure Conversation exists, create if not
+        $conversation = Conversation::first();
+        if (!$conversation) {
+            $conversation = Conversation::factory()->create();
+        }
+
         return [
-            'id_conversation' => $this->faker->numberBetween(1, 50), // Use existing conversation IDs from DemoDataSeeder
+            'id_conversation' => $conversation->id,
             'id_user' => $this->faker->numberBetween(1, 100),
         ];
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Finance\SpsContract;
+use App\Models\User\UserPlan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,10 +22,16 @@ class SpsContractFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure UserPlan exists, create if not
+        $userPlan = UserPlan::first();
+        if (!$userPlan) {
+            $userPlan = UserPlan::factory()->create();
+        }
+
         return [
             'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
             'id_contract' => $this->faker->unique()->numberBetween(1000, 9999),
-            'id_plan' => $this->faker->optional()->numberBetween(1, 30), // Use existing user plan IDs
+            'id_plan' => $userPlan->id,
             'id_service' => $this->faker->numberBetween(1, 25),
             'alert' => $this->faker->numberBetween(1, 10),
             'max_phone_cnt' => $this->faker->numberBetween(1, 10),

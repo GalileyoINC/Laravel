@@ -23,8 +23,14 @@ class ConversationMessageFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure Conversation exists, create if not
+        $conversation = Conversation::first();
+        if (!$conversation) {
+            $conversation = Conversation::factory()->create();
+        }
+
         return [
-            'id_conversation' => $this->faker->numberBetween(1, 50), // Use existing conversation IDs from DemoDataSeeder
+            'id_conversation' => $conversation->id,
             'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
             'message' => $this->faker->paragraph(),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),

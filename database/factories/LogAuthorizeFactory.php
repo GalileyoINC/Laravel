@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Analytics\LogAuthorize;
+use App\Models\Finance\MoneyTransaction;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,9 +23,15 @@ class LogAuthorizeFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure MoneyTransaction exists, create if not
+        $moneyTransaction = MoneyTransaction::first();
+        if (!$moneyTransaction) {
+            $moneyTransaction = MoneyTransaction::factory()->create();
+        }
+
         return [
             'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
-            'id_money_transaction' => $this->faker->optional()->numberBetween(1, 50), // Use existing money transaction IDs
+            'id_money_transaction' => $moneyTransaction->id,
             'name' => $this->faker->optional()->randomElement(['login', 'logout', 'register', 'password_reset', 'email_verify']),
             'request' => $this->faker->optional()->randomElements(['ip' => $this->faker->ipv4(), 'user_agent' => $this->faker->userAgent()]),
             'response' => $this->faker->optional()->randomElements(['success' => $this->faker->boolean(85), 'message' => $this->faker->sentence()]),

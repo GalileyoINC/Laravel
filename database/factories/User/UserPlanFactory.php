@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories\User;
 
 use App\Models\User\UserPlan;
+use App\Models\Finance\InvoiceLine;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,10 +22,16 @@ class UserPlanFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure InvoiceLine exists, create if not
+        $invoiceLine = InvoiceLine::first();
+        if (!$invoiceLine) {
+            $invoiceLine = InvoiceLine::factory()->create();
+        }
+
         return [
             'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
             'id_service' => $this->faker->numberBetween(1, 25),
-            'id_invoice_line' => $this->faker->numberBetween(1, 50), // Use existing invoice line IDs from DemoDataSeeder
+            'id_invoice_line' => $invoiceLine->id,
             'is_primary' => $this->faker->boolean(),
             'alert' => $this->faker->optional()->numberBetween(1, 10),
             'max_phone_cnt' => $this->faker->optional()->numberBetween(1, 5),

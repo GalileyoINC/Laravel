@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\User\InviteAffiliate;
+use App\Models\Finance\Invoice;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,10 +22,16 @@ class InviteAffiliateFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure Invoice exists, create if not
+        $invoice = Invoice::first();
+        if (!$invoice) {
+            $invoice = Invoice::factory()->create();
+        }
+
         return [
             'id_inviter' => $this->faker->numberBetween(1, 100),
             'id_invited' => $this->faker->numberBetween(1, 100),
-            'id_invite_invoice' => $this->faker->numberBetween(1, 50), // Use existing invoice IDs from DemoDataSeeder
+            'id_invite_invoice' => $invoice->id,
             'id_reward_invoice' => $this->faker->optional()->numberBetween(1, 50),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s'),
         ];

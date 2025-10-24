@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Communication\EmailPoolAttachment;
+use App\Models\Communication\EmailPool;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,8 +22,14 @@ class EmailPoolAttachmentFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure EmailPool exists, create if not
+        $emailPool = EmailPool::first();
+        if (!$emailPool) {
+            $emailPool = EmailPool::factory()->create();
+        }
+
         return [
-            'id_email_pool' => $this->faker->numberBetween(1, 150), // Use existing email pool IDs from DemoDataSeeder
+            'id_email_pool' => $emailPool->id,
             'body' => $this->faker->text(1000),
             'file_name' => $this->faker->word().'.'.$this->faker->fileExtension(),
             'content_type' => $this->faker->mimeType(),

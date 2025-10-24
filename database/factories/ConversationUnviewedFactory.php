@@ -23,9 +23,15 @@ class ConversationUnviewedFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure Conversation exists, create if not
+        $conversation = Conversation::first();
+        if (!$conversation) {
+            $conversation = Conversation::factory()->create();
+        }
+
         return [
             'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
-            'id_conversation' => $this->faker->numberBetween(1, 50), // Use existing conversation IDs from DemoDataSeeder
+            'id_conversation' => $conversation->id,
             'id_conversation_message' => $this->faker->optional()->numberBetween(1, 100),
         ];
     }

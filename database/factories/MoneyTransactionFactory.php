@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Finance\MoneyTransaction;
+use App\Models\Finance\Invoice;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,9 +22,15 @@ class MoneyTransactionFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure Invoice exists, create if not
+        $invoice = Invoice::first();
+        if (!$invoice) {
+            $invoice = Invoice::factory()->create();
+        }
+
         return [
             'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
-            'id_invoice' => $this->faker->optional()->numberBetween(1, 50), // Use existing invoice IDs from DemoDataSeeder
+            'id_invoice' => $invoice->id,
             'id_credit_card' => $this->faker->optional()->numberBetween(1, 75),
             'transaction_type' => $this->faker->numberBetween(1, 5),
             'transaction_id' => $this->faker->optional()->uuid(),

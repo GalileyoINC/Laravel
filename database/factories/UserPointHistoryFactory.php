@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\User\UserPointHistory;
+use App\Models\User\UserPointSetting;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,9 +22,15 @@ class UserPointHistoryFactory extends Factory
      */
     public function definition(): array
     {
+        // Ensure UserPointSetting exists, create if not
+        $userPointSetting = UserPointSetting::first();
+        if (!$userPointSetting) {
+            $userPointSetting = UserPointSetting::factory()->create();
+        }
+
         return [
             'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
-            'id_user_point_settings' => $this->faker->numberBetween(1, 10), // Use existing UserPointSetting IDs from DemoDataSeeder
+            'id_user_point_settings' => $userPointSetting->id,
             'id_sms_pool' => $this->faker->optional()->numberBetween(1, 150),
             'id_comment' => $this->faker->optional()->numberBetween(1, 200),
             'quantity' => $this->faker->numberBetween(1, 100),
