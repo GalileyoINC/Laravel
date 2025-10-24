@@ -4,42 +4,61 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\Device;
 
-use App\Domain\DTOs\Device\DeviceListRequestDTO;
 use App\Domain\DTOs\Device\DevicePushRequestDTO;
 use App\Models\Device\Device;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class DeviceService implements DeviceServiceInterface
 {
     /**
      * @return array<string, mixed>
      */
-    public function getList(DeviceListRequestDTO $dto): array
+    public function getList(int $page, int $limit, ?string $search, ?int $userId, ?string $os, ?bool $pushTokenFill, ?string $pushToken, ?bool $pushTurnOn, ?string $updatedAtFrom, ?string $updatedAtTo): array
     {
         $query = Device::query()->with(['user']);
 
-        if ($dto->search) {
-            $query->where(function ($q) use ($dto) {
-                $q->where('uuid', 'like', '%'.$dto->search.'%')
-                    ->orWhere('os', 'like', '%'.$dto->search.'%')
-                    ->orWhereHas('user', function ($userQuery) use ($dto) {
-                        $userQuery->where('first_name', 'like', '%'.$dto->search.'%')
-                            ->orWhere('last_name', 'like', '%'.$dto->search.'%')
-                            ->orWhere('email', 'like', '%'.$dto->search.'%');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('uuid', 'like', '%'.$search.'%')
+                    ->orWhere('os', 'like', '%'.$search.'%')
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('first_name', 'like', '%'.$search.'%')
+                            ->orWhere('last_name', 'like', '%'.$search.'%')
+                            ->orWhere('email', 'like', '%'.$search.'%');
                     });
             });
         }
 
-        if ($dto->user_id) {
-            $query->where('id_user', $dto->user_id);
+        if ($userId) {
+            $query->where('id_user', $userId);
         }
 
-        if ($dto->os) {
-            $query->where('os', $dto->os);
+        if ($os) {
+            $query->where('os', $os);
+        }
+
+        if ($pushTokenFill !== null) {
+            $query->where('push_token', '!=', '');
+        }
+
+        if ($pushToken) {
+            $query->where('push_token', 'like', '%'.$pushToken.'%');
+        }
+
+        if ($pushTurnOn !== null) {
+            $query->where('push_turn_on', $pushTurnOn);
+        }
+
+        if ($updatedAtFrom) {
+            $query->where('updated_at', '>=', $updatedAtFrom);
+        }
+
+        if ($updatedAtTo) {
+            $query->where('updated_at', '<=', $updatedAtTo);
         }
 
         $devices = $query->orderBy('created_at', 'desc')
-            ->paginate($dto->limit, ['*'], 'page', $dto->page);
+            ->paginate($limit, ['*'], 'page', $page);
 
         return [
             'data' => $devices->items(),

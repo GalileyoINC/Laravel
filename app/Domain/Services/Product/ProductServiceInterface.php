@@ -6,7 +6,6 @@ namespace App\Domain\Services\Product;
 
 use App\Domain\DTOs\Product\ApplePurchaseRequestDTO;
 use App\Domain\DTOs\Product\ProductAlertsRequestDTO;
-use App\Domain\DTOs\Product\ProductListRequestDTO;
 use App\Models\User\User;
 
 /**
@@ -19,7 +18,7 @@ interface ProductServiceInterface
      *
      * @return array<string, mixed>
      */
-    public function getProductList(ProductListRequestDTO $dto, ?User $user): array;
+    public function getProductList(int $page, int $limit, ?string $search, ?string $category, ?int $status, string $sortBy, string $sortOrder, ?User $user): array;
 
     /**
      * Get product alerts

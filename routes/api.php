@@ -131,6 +131,7 @@ Route::prefix('v1/influencer')->middleware('auth:sanctum')->group(function () {
     // Influencer routes
     Route::get('index', [InfluencerController::class, 'index']);
     Route::post('create', [InfluencerController::class, 'create']);
+    Route::get('list', [InfluencerController::class, 'listInfluencers']);
 });
 
 // Routes from api-legacy.php
@@ -199,6 +200,15 @@ Route::prefix('v1/news')->middleware('auth:sanctum')->group(function () {
     Route::post('report', [NewsController::class, 'report']);
     Route::post('mute', [NewsController::class, 'mute']);
     Route::post('unmute', [NewsController::class, 'unmute']);
+});
+
+// Posts CRUD API routes - reusing existing methods
+Route::prefix('v1/posts')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [NewsController::class, 'last']); // Reuse existing last method
+    Route::post('/', [NewsController::class, 'create']); // Reuse existing create method
+    Route::get('{id}', [NewsController::class, 'getPost']);
+    Route::put('{id}', [NewsController::class, 'updatePost']);
+    Route::delete('{id}', [NewsController::class, 'deletePost']);
 });
 
 // Routes from api-order.php

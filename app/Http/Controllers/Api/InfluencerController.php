@@ -6,7 +6,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Domain\Actions\Influencer\CreateInfluencerFeedAction;
 use App\Domain\Actions\Influencer\GetInfluencerFeedListAction;
+use App\Domain\Actions\Influencer\GetInfluencersListAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Influencer\InfluencersListRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -18,7 +20,8 @@ class InfluencerController extends Controller
 {
     public function __construct(
         private readonly GetInfluencerFeedListAction $getInfluencerFeedListAction,
-        private readonly CreateInfluencerFeedAction $createInfluencerFeedAction
+        private readonly CreateInfluencerFeedAction $createInfluencerFeedAction,
+        private readonly GetInfluencersListAction $getInfluencersListAction
     ) {}
 
     /**
@@ -35,5 +38,13 @@ class InfluencerController extends Controller
     public function create(Request $request): JsonResponse
     {
         return $this->createInfluencerFeedAction->execute($request->all());
+    }
+
+    /**
+     * List all influencer users (GET /api/v1/influencer/list)
+     */
+    public function listInfluencers(InfluencersListRequest $request): JsonResponse
+    {
+        return $this->getInfluencersListAction->execute($request->validated());
     }
 }

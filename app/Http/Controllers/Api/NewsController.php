@@ -12,7 +12,11 @@ use App\Domain\Actions\News\MuteSubscriptionAction;
 use App\Domain\Actions\News\RemoveReactionAction;
 use App\Domain\Actions\News\ReportNewsAction;
 use App\Domain\Actions\News\SetReactionAction;
+use App\Domain\Actions\Posts\DeletePostAction;
+use App\Domain\Actions\Posts\GetPostAction;
+use App\Domain\Actions\Posts\UpdatePostAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Posts\PostUpdateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,7 +33,10 @@ class NewsController extends Controller
         private readonly ReportNewsAction $reportNewsAction,
         private readonly MuteSubscriptionAction $muteSubscriptionAction,
         private readonly GetNewsByFollowerListAction $getNewsByFollowerListAction,
-        private readonly CreateNewsAction $createNewsAction
+        private readonly CreateNewsAction $createNewsAction,
+        private readonly GetPostAction $getPostAction,
+        private readonly UpdatePostAction $updatePostAction,
+        private readonly DeletePostAction $deletePostAction
     ) {}
 
     /**
@@ -111,5 +118,34 @@ class NewsController extends Controller
     public function create(Request $request): JsonResponse
     {
         return $this->createNewsAction->execute($request->all());
+    }
+
+    // ===== POSTS CRUD METHODS =====
+
+    /**
+     * Get a specific post (GET /api/v1/posts/{id})
+     */
+    public function getPost(int $id): JsonResponse
+    {
+        return $this->getPostAction->execute(['id' => $id]);
+    }
+
+    /**
+     * Update a post (PUT /api/v1/posts/{id})
+     */
+    public function updatePost(PostUpdateRequest $request, int $id): JsonResponse
+    {
+        $data = $request->validated();
+        $data['id'] = $id;
+
+        return $this->updatePostAction->execute($data);
+    }
+
+    /**
+     * Delete a post (DELETE /api/v1/posts/{id})
+     */
+    public function deletePost(int $id): JsonResponse
+    {
+        return $this->deletePostAction->execute(['id' => $id]);
     }
 }

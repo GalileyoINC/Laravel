@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Product;
 
-use App\Domain\DTOs\Product\ProductListRequestDTO;
 use App\Domain\Services\Product\ProductServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -23,16 +22,16 @@ class GetProductListAction
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = ProductListRequestDTO::fromArray($data);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid product list request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
+            $page = $data['page'] ?? 1;
+            $limit = $data['limit'] ?? 20;
+            $search = $data['search'] ?? null;
+            $category = $data['category'] ?? null;
+            $status = $data['status'] ?? null;
+            $sortBy = $data['sort_by'] ?? 'created_at';
+            $sortOrder = $data['sort_order'] ?? 'desc';
 
             $user = Auth::user();
-            $products = $this->productService->getProductList($dto, $user);
+            $products = $this->productService->getProductList($page, $limit, $search, $category, $status, $sortBy, $sortOrder, $user);
 
             return response()->json($products);
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\ContractLine;
 
-use App\Domain\DTOs\ContractLine\ContractLineListRequestDTO;
 use App\Domain\Services\ContractLine\ContractLineServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -21,16 +20,14 @@ class GetUnpaidContractsAction
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = new ContractLineListRequestDTO(
-                page: $data['page'] ?? 1,
-                limit: $data['limit'] ?? 20,
-                search: $data['search'] ?? null,
-                user_id: $data['user_id'] ?? null,
-                service_id: $data['service_id'] ?? null,
-                status: $data['status'] ?? 'unpaid'
-            );
+            $page = $data['page'] ?? 1;
+            $limit = $data['limit'] ?? 20;
+            $search = $data['search'] ?? null;
+            $userId = $data['user_id'] ?? null;
+            $serviceId = $data['service_id'] ?? null;
+            $status = $data['status'] ?? 'unpaid';
 
-            $contracts = $this->contractLineService->getUnpaidContracts($dto);
+            $contracts = $this->contractLineService->getUnpaidContracts($page, $limit, $search, $userId, $serviceId, $status);
 
             return response()->json([
                 'status' => 'success',

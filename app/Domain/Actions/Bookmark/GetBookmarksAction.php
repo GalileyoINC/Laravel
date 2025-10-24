@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Bookmark;
 
-use App\Domain\DTOs\Bookmark\BookmarkListRequestDTO;
 use App\Domain\Services\Bookmark\BookmarkServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -23,17 +22,14 @@ class GetBookmarksAction
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = BookmarkListRequestDTO::fromArray($data);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'status' => 'error',
-                    'errors' => ['Invalid bookmark list request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
+            $page = $data['page'] ?? 1;
+            $limit = $data['limit'] ?? 20;
+            $search = $data['search'] ?? null;
+            $sortBy = $data['sort_by'] ?? 'created_at';
+            $sortOrder = $data['sort_order'] ?? 'desc';
 
             $user = Auth::user();
-            $results = $this->bookmarkService->getBookmarks($dto, $user);
+            $results = $this->bookmarkService->getBookmarks($page, $limit, $search, $sortBy, $sortOrder, $user);
 
             return response()->json([
                 'status' => 'success',

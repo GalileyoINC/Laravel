@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\Bookmark;
 
-use App\Domain\DTOs\Bookmark\BookmarkListRequestDTO;
 use App\Domain\DTOs\Bookmark\BookmarkRequestDTO;
 use App\Models\Communication\SmsPool;
 use App\Models\User\User;
@@ -21,18 +20,15 @@ class BookmarkService implements BookmarkServiceInterface
      *
      * @return array<string, mixed>
      */
-    /**
-     * @return array<string, mixed>
-     */
-    public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user): array
+    public function getBookmarks(int $page, int $limit, ?string $search, string $sortBy, string $sortOrder, ?User $user): array
     {
         try {
             if (! $user) {
                 return [
                     'list' => [],
                     'count' => 0,
-                    'page' => $dto->page,
-                    'page_size' => $dto->pageSize,
+                    'page' => $page,
+                    'page_size' => $limit,
                     'total_pages' => 0,
                 ];
             }
@@ -42,15 +38,21 @@ class BookmarkService implements BookmarkServiceInterface
                     $q->where('user_id', $user->id);
                 });
 
-            // Apply type filter
-            if ($dto->type) {
-                $query->where('purpose', $dto->type);
+            // Apply search filter
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('message', 'like', '%'.$search.'%')
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('first_name', 'like', '%'.$search.'%')
+                                ->orWhere('last_name', 'like', '%'.$search.'%');
+                        });
+                });
             }
 
-            $offset = ($dto->page - 1) * $dto->pageSize;
+            $offset = ($page - 1) * $limit;
 
-            $results = $query->orderBy('created_at', 'desc')
-                ->limit($dto->pageSize ?? 20)
+            $results = $query->orderBy($sortBy, $sortOrder)
+                ->limit($limit)
                 ->offset($offset)
                 ->get();
 
@@ -97,9 +99,9 @@ class BookmarkService implements BookmarkServiceInterface
             return [
                 'list' => $results->toArray(),
                 'count' => $totalCount,
-                'page' => $dto->page,
-                'page_size' => $dto->pageSize,
-                'total_pages' => ceil($totalCount / $dto->pageSize),
+                'page' => $page,
+                'page_size' => $limit,
+                'total_pages' => ceil($totalCount / $limit),
             ];
 
         } catch (Exception $e) {

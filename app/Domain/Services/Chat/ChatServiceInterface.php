@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\Chat;
 
-use App\Domain\DTOs\Chat\ChatListRequestDTO;
 use App\Domain\DTOs\Chat\ChatMessagesRequestDTO;
 use App\Models\User\User;
 
@@ -18,7 +17,7 @@ interface ChatServiceInterface
      *
      * @return mixed
      */
-    public function getConversationList(ChatListRequestDTO $dto, User $user);
+    public function getConversationList(int $page, int $limit, ?string $search, string $sortBy, string $sortOrder, User $user);
 
     /**
      * Get messages for a conversation

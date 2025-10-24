@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\EmailTemplate;
 
-use App\Domain\DTOs\EmailTemplate\EmailTemplateListRequestDTO;
 use App\Domain\DTOs\EmailTemplate\EmailTemplateSendRequestDTO;
 use App\Domain\DTOs\EmailTemplate\EmailTemplateUpdateRequestDTO;
 use App\Models\Communication\EmailTemplate;
@@ -15,23 +14,23 @@ class EmailTemplateService implements EmailTemplateServiceInterface
     /**
      * @return array<string, mixed>
      */
-    public function getList(EmailTemplateListRequestDTO $dto): array
+    public function getList(int $page, int $limit, ?string $search, ?int $status): array
     {
         $query = EmailTemplate::query();
 
-        if ($dto->search) {
-            $query->where(function ($q) use ($dto) {
-                $q->where('name', 'like', '%'.$dto->search.'%')
-                    ->orWhere('subject', 'like', '%'.$dto->search.'%');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('subject', 'like', '%'.$search.'%');
             });
         }
 
-        if ($dto->status !== null) {
-            $query->where('status', $dto->status);
+        if ($status !== null) {
+            $query->where('status', $status);
         }
 
         $templates = $query->orderBy('created_at', 'desc')
-            ->paginate($dto->limit, ['*'], 'page', $dto->page);
+            ->paginate($limit, ['*'], 'page', $page);
 
         return [
             'data' => $templates->items(),

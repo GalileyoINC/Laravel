@@ -6,7 +6,6 @@ namespace App\Domain\Services\Comment;
 
 use App\Domain\DTOs\Comment\CommentCreateRequestDTO;
 use App\Domain\DTOs\Comment\CommentDeleteRequestDTO;
-use App\Domain\DTOs\Comment\CommentListRequestDTO;
 use App\Domain\DTOs\Comment\CommentUpdateRequestDTO;
 use App\Models\User\User;
 
@@ -20,7 +19,7 @@ interface CommentServiceInterface
      *
      * @return mixed
      */
-    public function getCommentsForNews(CommentListRequestDTO $dto);
+    public function getCommentsForNews(int $newsId, int $page, int $limit, string $sortBy, string $sortOrder);
 
     /**
      * Get comment replies

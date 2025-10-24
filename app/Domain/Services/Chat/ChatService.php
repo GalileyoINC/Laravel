@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\Chat;
 
-use App\Domain\DTOs\Chat\ChatListRequestDTO;
 use App\Domain\DTOs\Chat\ChatMessagesRequestDTO;
 use App\Models\Communication\Conversation;
 use App\Models\Communication\ConversationMessage;
@@ -20,24 +19,30 @@ class ChatService implements ChatServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function getConversationList(ChatListRequestDTO $dto, User $user)
+    public function getConversationList(int $page, int $limit, ?string $search, string $sortBy, string $sortOrder, User $user)
     {
         try {
             $query = Conversation::whereHas('users', function ($q) use ($user) {
                 $q->where('id_user', $user->id);
             });
 
-            // Apply filters if any
-            if (! empty($dto->filter)) {
-                // Add filter logic here
+            // Apply search filter
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%'.$search.'%')
+                        ->orWhereHas('users', function ($userQuery) use ($search) {
+                            $userQuery->where('first_name', 'like', '%'.$search.'%')
+                                ->orWhere('last_name', 'like', '%'.$search.'%');
+                        });
+                });
             }
 
             $conversations = $query->with(['users', 'conversation_messages' => function ($q) {
                 $q->latest()->limit(1);
             }])
-                ->orderBy('updated_at', 'desc')
-                ->limit($dto->limit ?? 20)
-                ->offset($dto->offset ?? 0)
+                ->orderBy($sortBy, $sortOrder)
+                ->limit($limit)
+                ->offset(($page - 1) * $limit)
                 ->get();
 
             return $conversations;

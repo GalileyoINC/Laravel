@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\Device;
 
-use App\Domain\DTOs\Device\DeviceListRequestDTO;
 use App\Domain\DTOs\Device\DevicePushRequestDTO;
 use App\Models\Device\Device;
 
@@ -13,7 +12,7 @@ interface DeviceServiceInterface
     /**
      * @return array<string, mixed>
      */
-    public function getList(DeviceListRequestDTO $dto): array;
+    public function getList(int $page, int $limit, ?string $search, ?int $userId, ?string $os, ?bool $pushTokenFill, ?string $pushToken, ?bool $pushTurnOn, ?string $updatedAtFrom, ?string $updatedAtTo): array;
 
     public function getById(int $id): Device;
 

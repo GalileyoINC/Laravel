@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Users;
 
-use App\Domain\DTOs\Users\UsersListRequestDTO;
 use App\Domain\Services\Users\UsersServiceInterface;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -24,15 +23,18 @@ class GetUsersListAction
     public function execute(array $data): LengthAwarePaginator
     {
         try {
-            $dto = UsersListRequestDTO::fromArray($data);
-            if (! $dto->validate()) {
-                // Fallback to empty paginator on invalid input
-                return $this->usersService->getUsersList(UsersListRequestDTO::fromArray(['page' => 1, 'page_size' => 1]), null);
-            }
+            $page = $data['page'] ?? 1;
+            $pageSize = $data['page_size'] ?? 20;
+            $search = $data['search'] ?? null;
+            $status = $data['status'] ?? null;
+            $role = $data['role'] ?? null;
+            $isInfluencer = $data['is_influencer'] ?? null;
+            $sortBy = $data['sort_by'] ?? 'created_at';
+            $sortOrder = $data['sort_order'] ?? 'desc';
 
             $user = Auth::user();
 
-            return $this->usersService->getUsersList($dto, $user);
+            return $this->usersService->getUsersList($page, $pageSize, $search, $status, $role, $isInfluencer, $sortBy, $sortOrder, $user);
 
         } catch (Exception $e) {
             Log::error('GetUsersListAction error: '.$e->getMessage());

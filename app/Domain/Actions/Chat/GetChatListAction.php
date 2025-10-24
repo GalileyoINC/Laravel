@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Chat;
 
-use App\Domain\DTOs\Chat\ChatListRequestDTO;
 use App\Domain\Services\Chat\ChatServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -23,13 +22,11 @@ class GetChatListAction
     public function execute(array $data): JsonResponse
     {
         try {
-            $dto = ChatListRequestDTO::fromArray($data);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid chat list request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
+            $page = $data['page'] ?? 1;
+            $limit = $data['limit'] ?? 20;
+            $search = $data['search'] ?? null;
+            $sortBy = $data['sort_by'] ?? 'updated_at';
+            $sortOrder = $data['sort_order'] ?? 'desc';
 
             $user = Auth::user();
             if (! $user) {
@@ -39,7 +36,7 @@ class GetChatListAction
                 ], 401);
             }
 
-            $conversationList = $this->chatService->getConversationList($dto, $user);
+            $conversationList = $this->chatService->getConversationList($page, $limit, $search, $sortBy, $sortOrder, $user);
 
             return response()->json($conversationList->toArray());
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\EmailPool;
 
-use App\Domain\DTOs\EmailPool\EmailPoolListRequestDTO;
 use App\Models\Communication\EmailPool;
 use App\Models\Communication\EmailPoolAttachment;
 
@@ -13,7 +12,7 @@ interface EmailPoolServiceInterface
     /**
      * @return array<string, mixed>
      */
-    public function getList(EmailPoolListRequestDTO $dto): array;
+    public function getList(int $page, int $limit, ?string $search, ?int $status, ?string $to): array;
 
     public function getById(int $id): EmailPool;
 

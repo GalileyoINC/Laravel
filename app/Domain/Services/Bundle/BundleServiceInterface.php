@@ -6,7 +6,6 @@ namespace App\Domain\Services\Bundle;
 
 use App\Domain\DTOs\Bundle\BundleCreateRequestDTO;
 use App\Domain\DTOs\Bundle\BundleDeviceDataRequestDTO;
-use App\Domain\DTOs\Bundle\BundleListRequestDTO;
 use App\Domain\DTOs\Bundle\BundleUpdateRequestDTO;
 use App\Models\Finance\Bundle;
 
@@ -15,7 +14,7 @@ interface BundleServiceInterface
     /**
      * @return array<string, mixed>
      */
-    public function getList(BundleListRequestDTO $dto): array;
+    public function getList(int $page, int $limit, ?string $search, ?int $status): array;
 
     public function create(BundleCreateRequestDTO $dto): Bundle;
 

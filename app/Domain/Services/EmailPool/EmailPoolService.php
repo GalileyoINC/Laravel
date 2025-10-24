@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\EmailPool;
 
-use App\Domain\DTOs\EmailPool\EmailPoolListRequestDTO;
 use App\Models\Communication\EmailPool;
 use App\Models\Communication\EmailPoolAttachment;
 use Illuminate\Support\Facades\Mail;
@@ -14,28 +13,28 @@ class EmailPoolService implements EmailPoolServiceInterface
     /**
      * @return array<string, mixed>
      */
-    public function getList(EmailPoolListRequestDTO $dto): array
+    public function getList(int $page, int $limit, ?string $search, ?int $status, ?string $to): array
     {
         $query = EmailPool::query();
 
-        if ($dto->search) {
-            $query->where(function ($q) use ($dto) {
-                $q->where('subject', 'like', '%'.$dto->search.'%')
-                    ->orWhere('to', 'like', '%'.$dto->search.'%')
-                    ->orWhere('from', 'like', '%'.$dto->search.'%');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('subject', 'like', '%'.$search.'%')
+                    ->orWhere('to', 'like', '%'.$search.'%')
+                    ->orWhere('from', 'like', '%'.$search.'%');
             });
         }
 
-        if ($dto->status) {
-            $query->where('status', $dto->status);
+        if ($status) {
+            $query->where('status', $status);
         }
 
-        if ($dto->to) {
-            $query->where('to', 'like', '%'.$dto->to.'%');
+        if ($to) {
+            $query->where('to', 'like', '%'.$to.'%');
         }
 
         $emails = $query->orderBy('created_at', 'desc')
-            ->paginate($dto->limit, ['*'], 'page', $dto->page);
+            ->paginate($limit, ['*'], 'page', $page);
 
         return [
             'data' => $emails->items(),

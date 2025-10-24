@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\ContractLine;
 
-use App\Domain\DTOs\ContractLine\ContractLineListRequestDTO;
 use App\Models\Finance\ContractLine;
 
 class ContractLineService implements ContractLineServiceInterface
@@ -12,36 +11,33 @@ class ContractLineService implements ContractLineServiceInterface
     /**
      * @return array<string, mixed>
      */
-    /**
-     * @return array<string, mixed>
-     */
-    public function getUnpaidContracts(ContractLineListRequestDTO $dto): array
+    public function getUnpaidContracts(int $page, int $limit, ?string $search, ?int $userId, ?int $serviceId, string $status): array
     {
         $query = ContractLine::query()
             ->with(['user', 'service'])
             ->whereNull('paid_at')
             ->where('status', '!=', 'cancelled');
 
-        if ($dto->search) {
-            $query->where(function ($q) use ($dto) {
-                $q->whereHas('user', function ($userQuery) use ($dto) {
-                    $userQuery->where('first_name', 'like', '%'.$dto->search.'%')
-                        ->orWhere('last_name', 'like', '%'.$dto->search.'%')
-                        ->orWhere('email', 'like', '%'.$dto->search.'%');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where('first_name', 'like', '%'.$search.'%')
+                        ->orWhere('last_name', 'like', '%'.$search.'%')
+                        ->orWhere('email', 'like', '%'.$search.'%');
                 });
             });
         }
 
-        if ($dto->user_id) {
-            $query->where('id_user', $dto->user_id);
+        if ($userId) {
+            $query->where('id_user', $userId);
         }
 
-        if ($dto->service_id) {
-            $query->where('id_service', $dto->service_id);
+        if ($serviceId) {
+            $query->where('id_service', $serviceId);
         }
 
         $contracts = $query->orderBy('created_at', 'desc')
-            ->paginate($dto->limit, ['*'], 'page', $dto->page);
+            ->paginate($limit, ['*'], 'page', $page);
 
         return [
             'data' => $contracts->items(),

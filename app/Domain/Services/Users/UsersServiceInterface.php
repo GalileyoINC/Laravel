@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Services\Users;
 
 use App\Domain\DTOs\Users\CreateUserDTO;
-use App\Domain\DTOs\Users\UsersListRequestDTO;
 use App\Models\User\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -16,7 +15,7 @@ interface UsersServiceInterface
      *
      * @return LengthAwarePaginator<int, User>
      */
-    public function getUsersList(UsersListRequestDTO $dto, ?User $user): LengthAwarePaginator;
+    public function getUsersList(int $page, int $pageSize, ?string $search, ?int $status, ?string $role, ?bool $isInfluencer, string $sortBy, string $sortOrder, ?User $user): LengthAwarePaginator;
 
     /**
      * Create a new user

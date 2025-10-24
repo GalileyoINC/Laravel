@@ -4,28 +4,27 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\Contact;
 
-use App\Domain\DTOs\Contact\ContactListRequestDTO;
 use App\Domain\DTOs\Contact\CreateContactDTO;
 use App\Models\Communication\Contact;
 
 class ContactService implements ContactServiceInterface
 {
-    public function getList(ContactListRequestDTO $dto): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function getList(int $page, int $limit, ?string $search, int $status): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $query = Contact::query();
 
-        if ($dto->search) {
-            $query->where(function ($q) use ($dto) {
-                $q->where('name', 'like', '%'.$dto->search.'%')
-                    ->orWhere('email', 'like', '%'.$dto->search.'%')
-                    ->orWhere('subject', 'like', '%'.$dto->search.'%');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('subject', 'like', '%'.$search.'%');
             });
         }
 
-        $query->where('status', $dto->status);
+        $query->where('status', $status);
 
         return $query->orderBy('created_at', 'desc')
-            ->paginate($dto->limit, ['*'], 'page', $dto->page);
+            ->paginate($limit, ['*'], 'page', $page);
     }
 
     public function getById(int $id): Contact

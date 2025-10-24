@@ -6,7 +6,6 @@ namespace App\Domain\Services\Comment;
 
 use App\Domain\DTOs\Comment\CommentCreateRequestDTO;
 use App\Domain\DTOs\Comment\CommentDeleteRequestDTO;
-use App\Domain\DTOs\Comment\CommentListRequestDTO;
 use App\Domain\DTOs\Comment\CommentUpdateRequestDTO;
 use App\Models\Content\Comment;
 use App\Models\User\User;
@@ -21,21 +20,16 @@ class CommentService implements CommentServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function getCommentsForNews(CommentListRequestDTO $dto)
+    public function getCommentsForNews(int $newsId, int $page, int $limit, string $sortBy, string $sortOrder)
     {
         try {
-            $query = Comment::where('id_news', $dto->newsId)
+            $query = Comment::where('id_news', $newsId)
                 ->whereNull('id_parent') // Only top-level comments
                 ->with(['user', 'replies.user']);
 
-            // Apply filters if any
-            if (! empty($dto->filter)) {
-                // Add filter logic here
-            }
-
-            $comments = $query->orderBy('created_at', 'desc')
-                ->limit($dto->limit ?? 20)
-                ->offset($dto->offset ?? 0)
+            $comments = $query->orderBy($sortBy, $sortOrder)
+                ->limit($limit)
+                ->offset(($page - 1) * $limit)
                 ->get();
 
             return $comments;

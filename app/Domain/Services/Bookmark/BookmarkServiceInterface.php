@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Services\Bookmark;
 
-use App\Domain\DTOs\Bookmark\BookmarkListRequestDTO;
 use App\Domain\DTOs\Bookmark\BookmarkRequestDTO;
 use App\Models\User\User;
 
@@ -15,7 +14,7 @@ interface BookmarkServiceInterface
      *
      * @return array<string, mixed>
      */
-    public function getBookmarks(BookmarkListRequestDTO $dto, ?User $user): array;
+    public function getBookmarks(int $page, int $limit, ?string $search, string $sortBy, string $sortOrder, ?User $user): array;
 
     /**
      * Create bookmark

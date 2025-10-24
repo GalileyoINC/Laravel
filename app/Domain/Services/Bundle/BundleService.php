@@ -6,7 +6,6 @@ namespace App\Domain\Services\Bundle;
 
 use App\Domain\DTOs\Bundle\BundleCreateRequestDTO;
 use App\Domain\DTOs\Bundle\BundleDeviceDataRequestDTO;
-use App\Domain\DTOs\Bundle\BundleListRequestDTO;
 use App\Domain\DTOs\Bundle\BundleUpdateRequestDTO;
 use App\Models\Finance\Bundle;
 use App\Models\Finance\Service;
@@ -16,19 +15,19 @@ class BundleService implements BundleServiceInterface
     /**
      * @return array<string, mixed>
      */
-    public function getList(BundleListRequestDTO $dto): array
+    public function getList(int $page, int $limit, ?string $search, ?int $status): array
     {
         $query = Bundle::query();
 
-        if ($dto->search) {
-            $query->where('name', 'like', '%'.$dto->search.'%');
+        if ($search) {
+            $query->where('name', 'like', '%'.$search.'%');
         }
 
-        if ($dto->status !== null) {
-            $query->where('is_active', $dto->status);
+        if ($status !== null) {
+            $query->where('is_active', $status);
         }
 
-        $bundles = $query->paginate($dto->limit, ['*'], 'page', $dto->page);
+        $bundles = $query->paginate($limit, ['*'], 'page', $page);
 
         return [
             'data' => $bundles->items(),

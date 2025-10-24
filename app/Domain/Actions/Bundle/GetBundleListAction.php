@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Bundle;
 
-use App\Domain\DTOs\Bundle\BundleListRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
 use Exception;
 
@@ -20,14 +19,12 @@ class GetBundleListAction
     public function execute(array $data): mixed
     {
         try {
-            $dto = new BundleListRequestDTO(
-                page: $data['page'] ?? 1,
-                limit: $data['limit'] ?? 20,
-                search: $data['search'] ?? null,
-                status: $data['status'] ?? null
-            );
+            $page = $data['page'] ?? 1;
+            $limit = $data['limit'] ?? 20;
+            $search = $data['search'] ?? null;
+            $status = $data['status'] ?? null;
 
-            $bundles = $this->bundleService->getList($dto);
+            $bundles = $this->bundleService->getList($page, $limit, $search, $status);
 
             return $bundles;
 

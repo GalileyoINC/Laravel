@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Services\Users;
 
 use App\Domain\DTOs\Users\CreateUserDTO;
-use App\Domain\DTOs\Users\UsersListRequestDTO;
 use App\Models\User\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
@@ -20,31 +19,35 @@ class UsersService implements UsersServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsersList(UsersListRequestDTO $dto, ?User $user): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function getUsersList(int $page, int $pageSize, ?string $search, ?int $status, ?string $role, ?bool $isInfluencer, string $sortBy, string $sortOrder, ?User $user): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         try {
             $query = User::query()->with(['phoneNumbers']);
 
             // Apply filters
-            if ($dto->validEmailOnly) {
-                $query->where('is_valid_email', true);
-            }
-
-            if ($dto->role !== null) {
-                $query->where('role', $dto->role);
-            }
-
-            if ($dto->search) {
-                $query->where(function ($q) use ($dto) {
-                    $q->where('first_name', 'like', '%'.$dto->search.'%')
-                        ->orWhere('last_name', 'like', '%'.$dto->search.'%')
-                        ->orWhere('email', 'like', '%'.$dto->search.'%');
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('first_name', 'like', '%'.$search.'%')
+                        ->orWhere('last_name', 'like', '%'.$search.'%')
+                        ->orWhere('email', 'like', '%'.$search.'%');
                 });
             }
 
+            if ($role !== null) {
+                $query->where('role', $role);
+            }
+
+            if ($status !== null) {
+                $query->where('status', $status);
+            }
+
+            if ($isInfluencer !== null) {
+                $query->where('is_influencer', $isInfluencer);
+            }
+
             // Apply pagination and return paginator
-            return $query->orderBy('first_name')
-                ->paginate($dto->pageSize, ['*'], 'page', $dto->page);
+            return $query->orderBy($sortBy, $sortOrder)
+                ->paginate($pageSize, ['*'], 'page', $page);
 
         } catch (Exception $e) {
             Log::error('UsersService getUsersList error: '.$e->getMessage());
