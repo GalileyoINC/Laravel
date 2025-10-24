@@ -509,6 +509,13 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
 });
 
 // ========================================
+// SWAGGER DOCS ROUTE
+// ========================================
+Route::get('/docs/api-docs.json', function () {
+    return response()->file(storage_path('api-docs/api-docs.json'));
+});
+
+// ========================================
 // VUE SPA CATCH-ALL (exclude admin and api)
 // ========================================
-Route::view('/{any}', 'app')->where('any', '^(?!admin|api)(.*)$');
+Route::view('/{any}', 'app')->where('any', '^(?!admin|api|docs)(.*)$');
