@@ -23,7 +23,7 @@ class ConversationUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_conversation' => $this->faker->numberBetween(1, 50),
+            'id_conversation' => $this->faker->numberBetween(1, 50), // Use existing conversation IDs from DemoDataSeeder
             'id_user' => $this->faker->numberBetween(1, 100),
         ];
     }

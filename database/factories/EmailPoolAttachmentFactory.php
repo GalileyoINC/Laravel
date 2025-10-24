@@ -22,7 +22,7 @@ class EmailPoolAttachmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_email_pool' => $this->faker->numberBetween(1, 50),
+            'id_email_pool' => $this->faker->numberBetween(1, 150), // Use existing email pool IDs from DemoDataSeeder
             'body' => $this->faker->text(1000),
             'file_name' => $this->faker->word().'.'.$this->faker->fileExtension(),
             'content_type' => $this->faker->mimeType(),

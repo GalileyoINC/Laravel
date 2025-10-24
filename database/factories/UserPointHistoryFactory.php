@@ -22,10 +22,10 @@ class UserPointHistoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user' => $this->faker->numberBetween(1, 100),
-            'id_user_point_settings' => $this->faker->numberBetween(1, 10), // Use existing IDs from UserPointSetting
-            'id_sms_pool' => $this->faker->optional()->numberBetween(1, 50),
-            'id_comment' => $this->faker->optional()->numberBetween(1, 50),
+            'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
+            'id_user_point_settings' => $this->faker->numberBetween(1, 10), // Use existing UserPointSetting IDs from DemoDataSeeder
+            'id_sms_pool' => $this->faker->optional()->numberBetween(1, 150),
+            'id_comment' => $this->faker->optional()->numberBetween(1, 200),
             'quantity' => $this->faker->numberBetween(1, 100),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s'),
         ];

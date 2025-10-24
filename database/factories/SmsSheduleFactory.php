@@ -23,10 +23,10 @@ class SmsSheduleFactory extends Factory
     {
         return [
             'id_user' => $this->faker->optional()->numberBetween(1, 100),
-            'id_staff' => $this->faker->optional()->numberBetween(1, 20),
+            'id_staff' => $this->faker->numberBetween(1, 15), // Use existing staff IDs from DemoDataSeeder
             'id_subscription' => $this->faker->optional()->numberBetween(1, 30),
             'id_follower_list' => $this->faker->optional()->numberBetween(1, 40),
-            'id_sms_pool' => $this->faker->optional()->numberBetween(1, 50),
+            'id_sms_pool' => $this->faker->optional()->numberBetween(1, 150),
             'purpose' => $this->faker->optional()->numberBetween(1, 10),
             'status' => $this->faker->optional()->numberBetween(0, 4),
             'body' => $this->faker->sentence(10),

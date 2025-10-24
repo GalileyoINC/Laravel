@@ -22,7 +22,9 @@ class ApiLogFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'key' => $this->faker->word() . '_' . $this->faker->randomNumber(3),
+            'value' => $this->faker->optional()->paragraph(),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

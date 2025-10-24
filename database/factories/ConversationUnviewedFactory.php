@@ -24,12 +24,9 @@ class ConversationUnviewedFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_conversation' => Conversation::factory(),
-            'id_user' => User::factory(),
-            'unviewed_count' => $this->faker->numberBetween(1, 10),
-            'last_message_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
+            'id_conversation' => $this->faker->numberBetween(1, 50), // Use existing conversation IDs from DemoDataSeeder
+            'id_conversation_message' => $this->faker->optional()->numberBetween(1, 100),
         ];
     }
 

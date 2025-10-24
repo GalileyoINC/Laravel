@@ -22,7 +22,8 @@ class WeatherGovProcessFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'api_id' => $this->faker->unique()->uuid(),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

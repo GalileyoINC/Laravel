@@ -22,14 +22,15 @@ class InfoStateFactory extends Factory
     public function definition(): array
     {
         return [
-            'state' => $this->faker->randomElement(['active', 'inactive', 'pending', 'suspended']),
-            'description' => $this->faker->sentence(),
-            'metadata' => json_encode([
+            'key' => $this->faker->unique()->word() . '_' . $this->faker->randomNumber(3),
+            'value' => json_encode([
+                'state' => $this->faker->randomElement(['active', 'inactive', 'pending', 'suspended']),
+                'description' => $this->faker->sentence(),
                 'last_updated' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s'),
                 'source' => $this->faker->randomElement(['api', 'web', 'mobile', 'system']),
             ]),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 

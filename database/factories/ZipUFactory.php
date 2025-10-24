@@ -22,7 +22,12 @@ class ZipUFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'zip' => $this->faker->postcode(),
+            'geopoint' => $this->faker->optional()->latitude() . ',' . $this->faker->optional()->longitude(),
+            'city' => $this->faker->optional()->city(),
+            'state' => $this->faker->optional()->stateAbbr(),
+            'timezone' => $this->faker->optional()->timezone(),
+            'daylight_savings_time_flag' => $this->faker->optional()->randomElement(['Y', 'N']),
         ];
     }
 }

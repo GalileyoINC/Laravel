@@ -22,7 +22,20 @@ class MoneyTransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
+            'id_invoice' => $this->faker->optional()->numberBetween(1, 50), // Use existing invoice IDs from DemoDataSeeder
+            'id_credit_card' => $this->faker->optional()->numberBetween(1, 75),
+            'transaction_type' => $this->faker->numberBetween(1, 5),
+            'transaction_id' => $this->faker->optional()->uuid(),
+            'is_success' => $this->faker->boolean(80), // 80% success rate
+            'total' => $this->faker->randomFloat(2, 0, 1000),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
+            'is_void' => $this->faker->boolean(5), // 5% void rate
+            'id_refund' => $this->faker->optional()->numberBetween(1, 50),
+            'is_test' => $this->faker->boolean(10), // 10% test transactions
+            'error' => $this->faker->optional()->sentence(),
+            'note' => $this->faker->optional()->paragraph(),
         ];
     }
 }

@@ -22,7 +22,11 @@ class AdminMessageLogFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_staff' => $this->faker->numberBetween(1, 15), // Use existing staff IDs
+            'obj_type' => $this->faker->optional()->numberBetween(1, 5),
+            'obj_id' => $this->faker->optional()->randomNumber(5),
+            'body' => $this->faker->optional()->paragraph(),
+            'created_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

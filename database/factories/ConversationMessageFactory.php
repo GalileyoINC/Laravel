@@ -24,13 +24,13 @@ class ConversationMessageFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_conversation' => Conversation::factory(),
-            'id_user' => User::factory(),
+            'id_conversation' => $this->faker->numberBetween(1, 50), // Use existing conversation IDs from DemoDataSeeder
+            'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
             'message' => $this->faker->paragraph(),
-            'message_type' => $this->faker->randomElement(['text', 'image', 'file', 'system']),
-            'is_read' => $this->faker->boolean(70),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
+            'received_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
+            'token' => $this->faker->optional()->uuid(),
         ];
     }
 

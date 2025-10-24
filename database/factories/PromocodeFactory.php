@@ -22,7 +22,15 @@ class PromocodeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'type' => $this->faker->numberBetween(1, 3),
+            'text' => strtoupper($this->faker->unique()->lexify('??????')),
+            'discount' => $this->faker->numberBetween(5, 50),
+            'is_active' => $this->faker->boolean(80), // 80% active
+            'active_from' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'active_to' => $this->faker->dateTimeBetween('now', '+1 year'),
+            'trial_period' => $this->faker->optional()->numberBetween(7, 30),
+            'show_on_frontend' => $this->faker->boolean(30), // 30% show on frontend
+            'description' => $this->faker->optional()->sentence(),
         ];
     }
 }

@@ -22,7 +22,7 @@ class ConversationFileFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_conversation' => $this->faker->numberBetween(1, 50),
+            'id_conversation' => $this->faker->numberBetween(1, 50), // Use existing conversation IDs from DemoDataSeeder
             'id_conversation_message' => null, // Set to null to avoid foreign key constraint
             'folder_name' => $this->faker->optional()->word(),
             'web_name' => $this->faker->optional()->word().'.'.$this->faker->fileExtension(),

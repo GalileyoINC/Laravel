@@ -22,7 +22,14 @@ class MarketstackIndxFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->company() . ' Index',
+            'symbol' => $this->faker->unique()->lexify('????'),
+            'country' => $this->faker->optional()->countryCode(),
+            'currency' => $this->faker->optional()->currencyCode(),
+            'has_intraday' => $this->faker->boolean(60), // 60% have intraday
+            'has_eod' => $this->faker->boolean(80), // 80% have end of day
+            'is_active' => $this->faker->boolean(85), // 85% active
+            'full' => $this->faker->optional()->randomElements(['exchange' => $this->faker->word(), 'mic' => $this->faker->word()]),
         ];
     }
 }

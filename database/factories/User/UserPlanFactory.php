@@ -22,9 +22,9 @@ class UserPlanFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user' => $this->faker->numberBetween(1, 100),
+            'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
             'id_service' => $this->faker->numberBetween(1, 25),
-            'id_invoice_line' => $this->faker->optional()->numberBetween(1, 50),
+            'id_invoice_line' => $this->faker->numberBetween(1, 50), // Use existing invoice line IDs from DemoDataSeeder
             'is_primary' => $this->faker->boolean(),
             'alert' => $this->faker->optional()->numberBetween(1, 10),
             'max_phone_cnt' => $this->faker->optional()->numberBetween(1, 5),

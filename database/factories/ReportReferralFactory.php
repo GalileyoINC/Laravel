@@ -23,13 +23,15 @@ class ReportReferralFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user' => User::factory(),
-            'referral_code' => $this->faker->unique()->regexify('[A-Z0-9]{8}'),
-            'referral_count' => $this->faker->numberBetween(0, 50),
-            'total_earnings' => $this->faker->randomFloat(2, 0, 1000),
-            'status' => $this->faker->randomElement(['active', 'inactive', 'suspended']),
+            'period' => $this->faker->unique()->date('Y-m'),
+            'influencer_percent' => $this->faker->numberBetween(0, 100),
+            'data' => json_encode([
+                'referral_code' => $this->faker->regexify('[A-Z0-9]{8}'),
+                'referral_count' => $this->faker->numberBetween(0, 50),
+                'total_earnings' => $this->faker->randomFloat(2, 0, 1000),
+                'status' => $this->faker->randomElement(['active', 'inactive', 'suspended']),
+            ]),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 

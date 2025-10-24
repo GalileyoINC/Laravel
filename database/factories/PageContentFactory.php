@@ -22,7 +22,7 @@ class PageContentFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_page' => $this->faker->numberBetween(1, 50),
+            'id_page' => $this->faker->numberBetween(1, 20), // Use existing page IDs from DemoDataSeeder
             'status' => $this->faker->randomElement([0, 1]), // STATUS_TEMP or STATUS_PUBLISH
             'params' => $this->faker->optional()->randomElements(['key1' => 'value1', 'key2' => 'value2']),
             'content' => $this->faker->optional()->paragraphs(3, true),

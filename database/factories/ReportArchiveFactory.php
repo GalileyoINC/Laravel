@@ -22,9 +22,8 @@ class ReportArchiveFactory extends Factory
     public function definition(): array
     {
         return [
-            'report_type' => $this->faker->randomElement(['monthly', 'quarterly', 'yearly', 'custom']),
-            'period_start' => $this->faker->dateTimeBetween('-2 years', '-1 year'),
-            'period_end' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'report_id' => $this->faker->unique()->uuid(),
+            'name' => $this->faker->randomElement(['monthly', 'quarterly', 'yearly', 'custom']) . '_report',
             'data' => json_encode([
                 'total_users' => $this->faker->numberBetween(100, 10000),
                 'active_users' => $this->faker->numberBetween(50, 5000),
@@ -35,6 +34,7 @@ class ReportArchiveFactory extends Factory
                 ],
             ]),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'sort' => $this->faker->optional()->randomElement(['asc', 'desc', 'date', 'name']),
         ];
     }
 

@@ -31,9 +31,8 @@ class AuthController extends Controller
      */
     #[OA\Post(
         path: '/api/v1/auth/login',
-        summary: 'User login',
         description: 'Authenticate user and return Sanctum token',
-        tags: ['Authentication'],
+        summary: 'User login',
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -44,6 +43,7 @@ class AuthController extends Controller
                 ]
             )
         ),
+        tags: ['Authentication'],
         responses: [
             new OA\Response(
                 response: 200,
@@ -55,14 +55,14 @@ class AuthController extends Controller
                         new OA\Property(property: 'access_token', type: 'string', example: '1|abcdef123456'),
                         new OA\Property(
                             property: 'user_profile',
-                            type: 'object',
                             properties: [
                                 new OA\Property(property: 'id', type: 'integer', example: 1),
                                 new OA\Property(property: 'email', type: 'string', example: 'user@example.com'),
                                 new OA\Property(property: 'first_name', type: 'string', example: 'John'),
                                 new OA\Property(property: 'last_name', type: 'string', example: 'Doe'),
                                 new OA\Property(property: 'role', type: 'string', example: 'user'),
-                            ]
+                            ],
+                            type: 'object'
                         ),
                     ]
                 )
@@ -135,8 +135,8 @@ class AuthController extends Controller
      */
     #[OA\Get(
         path: '/api/v1/auth/test',
-        summary: 'Test authentication module',
         description: 'Test endpoint to verify authentication module is working',
+        summary: 'Test authentication module',
         tags: ['Authentication'],
         responses: [
             new OA\Response(
@@ -145,12 +145,12 @@ class AuthController extends Controller
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'status', type: 'string', example: 'success'),
-                        new OA\Property(property: 'data', type: 'object', properties: [
+                        new OA\Property(property: 'data', properties: [
                             new OA\Property(property: 'message', type: 'string', example: 'Authentication module is working!'),
                             new OA\Property(property: 'time', type: 'string', example: '2024-01-15 10:30:00'),
                             new OA\Property(property: 'module', type: 'string', example: 'Authentication'),
                             new OA\Property(property: 'version', type: 'string', example: '1.0'),
-                        ]),
+                        ], type: 'object'),
                     ]
                 )
             ),

@@ -22,7 +22,13 @@ class InvoiceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->numberBetween(1, 100), // Use existing user IDs
+            'id_bp_subscribe' => $this->faker->optional()->numberBetween(1, 20), // Use existing bp_subscription IDs
+            'paid_status' => $this->faker->boolean(70), // 70% paid
+            'total' => $this->faker->randomFloat(2, 10, 1000),
+            'description' => $this->faker->optional()->sentence(),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

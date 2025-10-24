@@ -22,7 +22,12 @@ class ServiceCustomFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'phone_price' => $this->faker->randomFloat(2, 0.01, 100),
+            'feed_price' => $this->faker->randomFloat(2, 0.01, 50),
+            'phone_min' => $this->faker->numberBetween(1, 10),
+            'phone_max' => $this->faker->numberBetween(10, 100),
+            'feed_min' => $this->faker->numberBetween(1, 5),
+            'feed_max' => $this->faker->numberBetween(5, 50),
         ];
     }
 }
