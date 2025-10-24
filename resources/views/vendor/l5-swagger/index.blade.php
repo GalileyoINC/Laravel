@@ -126,7 +126,9 @@
         const urls = [];
 
         @foreach($urlsToDocs as $title => $url)
-            urls.push({name: "{{ $title }}", url: "{{ $url }}"});
+            // Fix the URL format for Swagger UI
+            var fixedUrl = "{{ $url }}".replace('docs?api-docs.json', 'docs/api-docs.json');
+            urls.push({name: "{{ $title }}", url: fixedUrl});
         @endforeach
 
         // Build a system

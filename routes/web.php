@@ -49,6 +49,13 @@ use App\Http\Controllers\Web\UserPlanController;
 use Illuminate\Support\Facades\Route;
 
 // ========================================
+// SWAGGER DOCS ROUTE (Must be before l5-swagger routes)
+// ========================================
+Route::get('/docs/api-docs.json', function () {
+    return response()->file(storage_path('api-docs/api-docs.json'));
+});
+
+// ========================================
 // WEB ROUTES (Authenticated)
 // ========================================
 
@@ -506,13 +513,6 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
     Route::put('news/{news}', [NewsController::class, 'update'])->name('news.update');
     Route::delete('news/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
     Route::get('news/export/csv', [NewsController::class, 'export'])->name('news.export');
-});
-
-// ========================================
-// SWAGGER DOCS ROUTE
-// ========================================
-Route::get('/docs/api-docs.json', function () {
-    return response()->file(storage_path('api-docs/api-docs.json'));
 });
 
 // ========================================
