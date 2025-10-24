@@ -10,12 +10,14 @@ use App\Http\Requests\Authentication\LoginRequest;
 use App\Http\Resources\SuccessResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 /**
  * Authentication controller with DDD structure
  *
  * Now controllers only handle HTTP concerns
  */
+#[OA\Tag(name: 'Authentication', description: 'Authentication endpoints')]
 class AuthController extends Controller
 {
     public function __construct(
@@ -27,6 +29,65 @@ class AuthController extends Controller
      *
      * POST /api/v1/auth/login
      */
+    #[OA\Post(
+        path: '/api/v1/auth/login',
+        summary: 'User login',
+        description: 'Authenticate user and return Sanctum token',
+        tags: ['Authentication'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['email', 'password'],
+                properties: [
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'user@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Login successful',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'user_id', type: 'integer', example: 1),
+                        new OA\Property(property: 'access_token', type: 'string', example: '1|abcdef123456'),
+                        new OA\Property(
+                            property: 'user_profile',
+                            type: 'object',
+                            properties: [
+                                new OA\Property(property: 'id', type: 'integer', example: 1),
+                                new OA\Property(property: 'email', type: 'string', example: 'user@example.com'),
+                                new OA\Property(property: 'first_name', type: 'string', example: 'John'),
+                                new OA\Property(property: 'last_name', type: 'string', example: 'Doe'),
+                                new OA\Property(property: 'role', type: 'string', example: 'user'),
+                            ]
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Invalid credentials',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'error', type: 'string', example: 'Invalid credentials'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'The given data was invalid.'),
+                        new OA\Property(property: 'errors', type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function login(LoginRequest $request): JsonResponse
     {
         return $this->loginAction->execute($request->validated());
@@ -72,6 +133,29 @@ class AuthController extends Controller
      *
      * GET /api/v1/auth/test
      */
+    #[OA\Get(
+        path: '/api/v1/auth/test',
+        summary: 'Test authentication module',
+        description: 'Test endpoint to verify authentication module is working',
+        tags: ['Authentication'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Test successful',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'data', type: 'object', properties: [
+                            new OA\Property(property: 'message', type: 'string', example: 'Authentication module is working!'),
+                            new OA\Property(property: 'time', type: 'string', example: '2024-01-15 10:30:00'),
+                            new OA\Property(property: 'module', type: 'string', example: 'Authentication'),
+                            new OA\Property(property: 'version', type: 'string', example: '1.0'),
+                        ]),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function test(): JsonResponse
     {
         return response()->json(new SuccessResource([

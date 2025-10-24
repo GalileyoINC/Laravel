@@ -70,6 +70,7 @@ class Device extends Model
         'uuid',
         'os',
         'push_token',
+        'access_token',
         'params',
         'push_turn_on',
     ];

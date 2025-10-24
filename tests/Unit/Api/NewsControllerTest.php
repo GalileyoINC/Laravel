@@ -12,6 +12,9 @@ use App\Domain\Actions\News\MuteSubscriptionAction;
 use App\Domain\Actions\News\RemoveReactionAction;
 use App\Domain\Actions\News\ReportNewsAction;
 use App\Domain\Actions\News\SetReactionAction;
+use App\Domain\Actions\Posts\DeletePostAction;
+use App\Domain\Actions\Posts\GetPostAction;
+use App\Domain\Actions\Posts\UpdatePostAction;
 use App\Http\Controllers\Api\NewsController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,6 +41,12 @@ class NewsControllerTest extends TestCase
 
     private CreateNewsAction $createNewsAction;
 
+    private GetPostAction $getPostAction;
+
+    private UpdatePostAction $updatePostAction;
+
+    private DeletePostAction $deletePostAction;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +59,9 @@ class NewsControllerTest extends TestCase
         $this->muteSubscriptionAction = Mockery::mock(MuteSubscriptionAction::class);
         $this->getNewsByFollowerListAction = Mockery::mock(GetNewsByFollowerListAction::class);
         $this->createNewsAction = Mockery::mock(CreateNewsAction::class);
+        $this->getPostAction = Mockery::mock(GetPostAction::class);
+        $this->updatePostAction = Mockery::mock(UpdatePostAction::class);
+        $this->deletePostAction = Mockery::mock(DeletePostAction::class);
 
         $this->controller = new NewsController(
             $this->getLastNewsAction,
@@ -59,7 +71,10 @@ class NewsControllerTest extends TestCase
             $this->reportNewsAction,
             $this->muteSubscriptionAction,
             $this->getNewsByFollowerListAction,
-            $this->createNewsAction
+            $this->createNewsAction,
+            $this->getPostAction,
+            $this->updatePostAction,
+            $this->deletePostAction
         );
     }
 

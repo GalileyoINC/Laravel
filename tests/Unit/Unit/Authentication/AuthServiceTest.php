@@ -190,9 +190,16 @@ class AuthServiceTest extends TestCase
     public function test_logout_removes_device_record(): void
     {
         // Arrange
+        $user = User::factory()->create();
         $device = Device::factory()->create([
+            'id_user' => $user->id,
             'access_token' => 'test-token-123',
         ]);
+
+        // Create Sanctum token
+        $token = $user->createToken('test-token');
+        $token->accessToken->token = hash('sha256', 'test-token-123');
+        $token->accessToken->save();
 
         // Act
         $result = $this->authService->logout('test-token-123');

@@ -39,10 +39,11 @@ class AuthService implements AuthServiceInterface
             // Create Sanctum token
             $token = $user->createToken('api-token', ['*'], now()->addHours(24));
 
-            // Create or update device record (without access_token)
+            // Create or update device record with access_token
             $device = Device::updateOrCreate(
                 ['id_user' => $user->id],
                 [
+                    'access_token' => $token->plainTextToken,
                     'uuid' => $loginDto->device['device_uuid'] ?? 'unknown',
                     'os' => $loginDto->device['device_os'] ?? 'unknown',
                     'params' => json_encode($loginDto->device),
@@ -91,6 +92,10 @@ class AuthService implements AuthServiceInterface
             $token = \Laravel\Sanctum\PersonalAccessToken::findToken($accessToken);
 
             if ($token) {
+                // Delete device record
+                Device::where('access_token', $accessToken)->delete();
+                
+                // Delete Sanctum token
                 $token->delete();
 
                 return true;

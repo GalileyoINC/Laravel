@@ -19,10 +19,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\PostUpdateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 /**
  * Refactored News Controller using DDD Actions
  */
+#[OA\Tag(name: 'Posts', description: 'Posts and news management endpoints')]
 class NewsController extends Controller
 {
     public function __construct(
@@ -125,6 +127,96 @@ class NewsController extends Controller
     /**
      * Get a specific post (GET /api/v1/posts/{id})
      */
+    #[OA\Get(
+        path: '/api/v1/posts/{id}',
+        summary: 'Get a specific post',
+        description: 'Retrieve details of a specific post by ID',
+        tags: ['Posts'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Post ID',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer', example: 1)
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Post retrieved successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'object',
+                            properties: [
+                                new OA\Property(property: 'id', type: 'integer', example: 1),
+                                new OA\Property(property: 'content', type: 'string', example: 'This is a sample post content'),
+                                new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
+                                new OA\Property(
+                                    property: 'images',
+                                    type: 'array',
+                                    items: new OA\Items(
+                                        properties: [
+                                            new OA\Property(property: 'id', type: 'integer', example: 1),
+                                            new OA\Property(property: 'url', type: 'string', example: 'https://example.com/image.jpg'),
+                                            new OA\Property(property: 'thumbnail', type: 'string', example: 'https://example.com/thumb.jpg'),
+                                        ]
+                                    )
+                                ),
+                                new OA\Property(
+                                    property: 'reactions',
+                                    type: 'array',
+                                    items: new OA\Items(
+                                        properties: [
+                                            new OA\Property(property: 'id', type: 'integer', example: 1),
+                                            new OA\Property(property: 'type', type: 'string', example: 'like'),
+                                            new OA\Property(property: 'count', type: 'integer', example: 5),
+                                            new OA\Property(property: 'is_user_reacted', type: 'boolean', example: false),
+                                        ]
+                                    )
+                                ),
+                                new OA\Property(
+                                    property: 'user_info',
+                                    type: 'object',
+                                    properties: [
+                                        new OA\Property(property: 'id', type: 'integer', example: 1),
+                                        new OA\Property(property: 'first_name', type: 'string', example: 'John'),
+                                        new OA\Property(property: 'last_name', type: 'string', example: 'Doe'),
+                                        new OA\Property(property: 'avatar', type: 'string', example: 'https://example.com/avatar.jpg'),
+                                    ]
+                                ),
+                                new OA\Property(property: 'is_bookmarked', type: 'boolean', example: false),
+                                new OA\Property(property: 'is_liked', type: 'boolean', example: false),
+                            ]
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'error', type: 'string', example: 'Post not found'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Unauthenticated.'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function getPost(int $id): JsonResponse
     {
         return $this->getPostAction->execute(['id' => $id]);
@@ -133,6 +225,81 @@ class NewsController extends Controller
     /**
      * Update a post (PUT /api/v1/posts/{id})
      */
+    #[OA\Put(
+        path: '/api/v1/posts/{id}',
+        summary: 'Update a post',
+        description: 'Update an existing post by ID',
+        tags: ['Posts'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Post ID',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer', example: 1)
+            ),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['content'],
+                properties: [
+                    new OA\Property(property: 'content', type: 'string', example: 'Updated post content'),
+                    new OA\Property(property: 'images', type: 'array', items: new OA\Items(type: 'string'), example: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg']),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Post updated successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Post updated successfully'),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'object',
+                            properties: [
+                                new OA\Property(property: 'id', type: 'integer', example: 1),
+                                new OA\Property(property: 'content', type: 'string', example: 'Updated post content'),
+                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
+                            ]
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'error', type: 'string', example: 'Post not found'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Unauthenticated.'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'The given data was invalid.'),
+                        new OA\Property(property: 'errors', type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function updatePost(PostUpdateRequest $request, int $id): JsonResponse
     {
         $data = $request->validated();
@@ -144,6 +311,52 @@ class NewsController extends Controller
     /**
      * Delete a post (DELETE /api/v1/posts/{id})
      */
+    #[OA\Delete(
+        path: '/api/v1/posts/{id}',
+        summary: 'Delete a post',
+        description: 'Delete a post by ID',
+        tags: ['Posts'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Post ID',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer', example: 1)
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Post deleted successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Post deleted successfully'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'error', type: 'string', example: 'Post not found'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Unauthenticated.'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function deletePost(int $id): JsonResponse
     {
         return $this->deletePostAction->execute(['id' => $id]);

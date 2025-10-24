@@ -14,45 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Posts service interface
- */
-interface PostsServiceInterface
-{
-    /**
-     * Get posts list
-     *
-     * @return array<string, mixed>
-     */
-    public function getPostsList(int $perPage, int $page, ?int $userId): array;
-
-    /**
-     * Get single post
-     *
-     * @return array<string, mixed>
-     */
-    public function getPost(int $id): array;
-
-    /**
-     * Create post
-     *
-     * @return array<string, mixed>
-     */
-    public function createPost(PostCreateRequestDTO $dto): array;
-
-    /**
-     * Update post
-     *
-     * @return array<string, mixed>
-     */
-    public function updatePost(PostUpdateRequestDTO $dto): array;
-
-    /**
-     * Delete post
-     */
-    public function deletePost(int $id): void;
-}
-
-/**
  * Posts service implementation
  */
 class PostsService implements PostsServiceInterface
@@ -100,28 +61,43 @@ class PostsService implements PostsServiceInterface
     public function getPost(int $id): array
     {
         try {
-            $post = SmsPool::with(['user:id,first_name,last_name,email'])
-                ->where('id', $id)
-                ->where('purpose', 1)
-                ->first();
+            $post = SmsPool::with(['user', 'reactions', 'photos'])
+                ->where('purpose', 1) // Posts purpose
+                ->findOrFail($id);
 
-            if (! $post) {
-                throw new Exception('Post not found');
-            }
+            // Transform post data to include images, reactions, and user info
+            $post->setAttribute('images', $post->photos->map(function (\App\Models\Communication\SmsPoolPhoto $photo): array {
+                return [
+                    'id' => $photo->getAttribute('id'),
+                    'url' => $photo->getAttribute('url'),
+                    'thumbnail' => $photo->getAttribute('thumbnail_url') ?? $photo->getAttribute('url'),
+                ];
+            })->toArray());
 
-            // Get media files for this post
-            $media = DB::table('sms_pool_photo')
-                ->where('id_sms_pool', $id)
-                ->get();
+            $post->setAttribute('reactions', $post->reactions->map(function (\App\Models\Content\Reaction $reaction): array {
+                return [
+                    'id' => $reaction->getAttribute('id'),
+                    'type' => $reaction->getAttribute('type'),
+                    'count' => $reaction->getAttribute('count'),
+                    'is_user_reacted' => (bool) ($reaction->getAttribute('is_user_reacted') ?? false),
+                ];
+            })->toArray());
 
-            return [
-                'id' => $post->id,
-                'content' => $post->body,
-                'user' => $post->user,
-                'created_at' => $post->created_at,
-                'updated_at' => $post->updated_at,
-                'media' => $media,
-            ];
+            $post->setAttribute('user_info', [
+                'id' => $post->user?->id,
+                'first_name' => $post->user?->first_name,
+                'last_name' => $post->user?->last_name,
+                'avatar' => $post->user?->avatar,
+            ]);
+
+            // Add bookmark status
+            $user = Auth::user();
+            $post->setAttribute('is_bookmarked', $user ? $user->bookmarks()->where('post_id', $post->id)->exists() : false);
+
+            // Add like status
+            $post->setAttribute('is_liked', $user ? $user->reactions()->where('post_id', $post->id)->exists() : false);
+
+            return $post->toArray();
 
         } catch (Exception $e) {
             Log::error('PostsService getPost error: '.$e->getMessage());
@@ -134,14 +110,9 @@ class PostsService implements PostsServiceInterface
      *
      * @return array<string, mixed>
      */
-    public function createPost(PostCreateRequestDTO $dto): array
+    public function createPost(PostCreateRequestDTO $dto, User $user): SmsPool
     {
         try {
-            $user = Auth::user();
-            if (! $user) {
-                throw new Exception('User not authenticated');
-            }
-
             DB::beginTransaction();
 
             // Create the post
@@ -180,12 +151,7 @@ class PostsService implements PostsServiceInterface
 
             DB::commit();
 
-            return [
-                'id' => $post->id,
-                'content' => $post->body,
-                'user_id' => $post->id_user,
-                'created_at' => $post->created_at,
-            ];
+            return $post;
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -196,17 +162,10 @@ class PostsService implements PostsServiceInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return array<string, mixed>
      */
-    public function updatePost(PostUpdateRequestDTO $dto): array
+    public function updatePost(PostUpdateRequestDTO $dto, User $user): SmsPool
     {
         try {
-            $user = Auth::user();
-            if (! $user) {
-                throw new Exception('User not authenticated');
-            }
-
             $post = SmsPool::where('id', $dto->id)
                 ->where('purpose', 1)
                 ->first();
@@ -224,11 +183,7 @@ class PostsService implements PostsServiceInterface
             $post->updated_at = now();
             $post->save();
 
-            return [
-                'id' => $post->id,
-                'content' => $post->body,
-                'updated_at' => $post->updated_at,
-            ];
+            return $post;
 
         } catch (Exception $e) {
             Log::error('PostsService updatePost error: '.$e->getMessage());
@@ -239,14 +194,9 @@ class PostsService implements PostsServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function deletePost(int $id): void
+    public function deletePost(int $id, User $user): void
     {
         try {
-            $user = Auth::user();
-            if (! $user) {
-                throw new Exception('User not authenticated');
-            }
-
             $post = SmsPool::where('id', $id)
                 ->where('purpose', 1)
                 ->first();

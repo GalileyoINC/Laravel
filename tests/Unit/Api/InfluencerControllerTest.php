@@ -6,6 +6,7 @@ namespace Tests\Unit\Api;
 
 use App\Domain\Actions\Influencer\CreateInfluencerFeedAction;
 use App\Domain\Actions\Influencer\GetInfluencerFeedListAction;
+use App\Domain\Actions\Influencer\GetInfluencersListAction;
 use App\Http\Controllers\Api\InfluencerController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,16 +21,20 @@ class InfluencerControllerTest extends TestCase
 
     private CreateInfluencerFeedAction $createInfluencerFeedAction;
 
+    private GetInfluencersListAction $getInfluencersListAction;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->getInfluencerFeedListAction = Mockery::mock(GetInfluencerFeedListAction::class);
         $this->createInfluencerFeedAction = Mockery::mock(CreateInfluencerFeedAction::class);
+        $this->getInfluencersListAction = Mockery::mock(GetInfluencersListAction::class);
 
         $this->controller = new InfluencerController(
             $this->getInfluencerFeedListAction,
-            $this->createInfluencerFeedAction
+            $this->createInfluencerFeedAction,
+            $this->getInfluencersListAction
         );
     }
 
