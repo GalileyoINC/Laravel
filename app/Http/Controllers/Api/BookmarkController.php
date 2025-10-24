@@ -94,7 +94,7 @@ class BookmarkController extends Controller
      * POST /api/bookmark/create
      */
     #[OA\Post(
-        path: '/api/bookmark/create',
+        path: '/api/v1/bookmark/create',
         description: 'Create a new bookmark',
         summary: 'Create bookmark',
         security: [['sanctum' => []]],
@@ -149,7 +149,7 @@ class BookmarkController extends Controller
      * DELETE /api/bookmark/delete
      */
     #[OA\Delete(
-        path: '/api/bookmark/delete',
+        path: '/api/v1/bookmark/delete',
         description: 'Delete a bookmark',
         summary: 'Delete bookmark',
         security: [['sanctum' => []]],

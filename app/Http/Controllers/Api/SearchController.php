@@ -26,7 +26,7 @@ class SearchController extends Controller
      * POST /api/search/index
      */
     #[OA\Post(
-        path: '/api/search/index',
+        path: '/api/v1/search/index',
         description: 'Search for content across the platform',
         summary: 'Search content',
         requestBody: new OA\RequestBody(

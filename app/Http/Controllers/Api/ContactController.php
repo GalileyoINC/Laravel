@@ -22,7 +22,7 @@ class ContactController extends Controller
      * GET /api/contacts
      */
     #[OA\Get(
-        path: '/api/contacts',
+        path: '/api/v1/contacts',
         description: 'Get paginated list of contacts',
         summary: 'List contacts',
         parameters: [
@@ -62,7 +62,7 @@ class ContactController extends Controller
      * GET /api/contacts/{id}
      */
     #[OA\Get(
-        path: '/api/contacts/{id}',
+        path: '/api/v1/contacts/{id}',
         description: 'Get single contact by ID',
         summary: 'Get contact',
         parameters: [
@@ -99,7 +99,7 @@ class ContactController extends Controller
      * DELETE /api/contacts/{id}
      */
     #[OA\Delete(
-        path: '/api/contacts/{id}',
+        path: '/api/v1/contacts/{id}',
         description: 'Delete contact by ID',
         summary: 'Delete contact',
         parameters: [

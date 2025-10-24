@@ -24,7 +24,7 @@ class UsersController extends Controller
      * GET /api/users
      */
     #[OA\Get(
-        path: '/api/users',
+        path: '/api/v1/users',
         description: 'Get paginated list of users',
         summary: 'List users',
         parameters: [
@@ -76,7 +76,7 @@ class UsersController extends Controller
      * GET /api/users/{id}
      */
     #[OA\Get(
-        path: '/api/users/{id}',
+        path: '/api/v1/users/{id}',
         description: 'Get user details by ID',
         summary: 'Get user',
         parameters: [
@@ -121,7 +121,7 @@ class UsersController extends Controller
      * GET /api/users/export-csv
      */
     #[OA\Get(
-        path: '/api/users/export-csv',
+        path: '/api/v1/users/export-csv',
         description: 'Export all users to CSV format',
         summary: 'Export users CSV',
         tags: ['Users'],
