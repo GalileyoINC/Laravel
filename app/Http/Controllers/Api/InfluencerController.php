@@ -29,6 +29,36 @@ class InfluencerController extends Controller
     /**
      * Get influencer feed list (POST /api/v1/influencer/index)
      */
+    #[OA\Post(
+        path: '/api/v1/influencer/index',
+        description: 'Get influencer feed list',
+        summary: 'Get influencer feeds',
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'page', type: 'integer', example: 1),
+                    new OA\Property(property: 'per_page', type: 'integer', example: 10),
+                    new OA\Property(property: 'influencer_id', type: 'integer', example: 1),
+                ]
+            )
+        ),
+        tags: ['Influencers'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Influencer feeds retrieved successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'data', type: 'array', items: new OA\Items(type: 'object')),
+                        new OA\Property(property: 'pagination', type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function index(Request $request): JsonResponse
     {
         return $this->getInfluencerFeedListAction->execute($request->all());
@@ -37,6 +67,37 @@ class InfluencerController extends Controller
     /**
      * Create influencer feed (POST /api/v1/influencer/create)
      */
+    #[OA\Post(
+        path: '/api/v1/influencer/create',
+        description: 'Create new influencer feed',
+        summary: 'Create influencer feed',
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['content'],
+                properties: [
+                    new OA\Property(property: 'content', type: 'string', example: 'This is my new influencer post content'),
+                    new OA\Property(property: 'images', type: 'array', items: new OA\Items(type: 'string'), example: ['https://example.com/image1.jpg']),
+                    new OA\Property(property: 'tags', type: 'array', items: new OA\Items(type: 'string'), example: ['travel', 'lifestyle']),
+                ]
+            )
+        ),
+        tags: ['Influencers'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Influencer feed created successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Feed created successfully'),
+                        new OA\Property(property: 'data', type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function create(Request $request): JsonResponse
     {
         return $this->createInfluencerFeedAction->execute($request->all());
