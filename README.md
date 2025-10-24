@@ -1,61 +1,340 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Galileyo Laravel Application
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<img src="public/galileyo_new_logo.png" width="200" alt="Galileyo Logo">
 </p>
 
-## About Laravel
+<p align="center">
+<a href="https://github.com/KalimeroMK/GalileyoLaravel/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## About Galileyo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Galileyo is a comprehensive Laravel application built with modern architecture patterns, featuring a robust API backend with complete Swagger documentation, Vue.js frontend, and Docker containerization for seamless development and deployment.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🏗️ Architecture & Patterns
 
-## Learning Laravel
+### Domain-Driven Design (DDD)
+The application follows **Domain-Driven Design** principles with clear separation of concerns:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Domain Layer**: Contains business logic, actions, DTOs, and services
+- **Application Layer**: HTTP controllers, requests, and resources
+- **Infrastructure Layer**: Database, external services, and configurations
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Key Architectural Components
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+app/
+├── Domain/
+│   ├── Actions/          # Business logic actions
+│   ├── DTOs/            # Data Transfer Objects
+│   ├── Services/        # Domain services
+│   └── Exceptions/      # Domain exceptions
+├── Http/
+│   ├── Controllers/     # API controllers
+│   ├── Requests/        # Form validation
+│   └── Resources/       # API resources
+└── Models/              # Eloquent models
+```
 
-## Laravel Sponsors
+### Technology Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend**: Laravel 12 with PHP 8.3
+- **Frontend**: Vue.js 3 with Tailwind CSS 4
+- **Database**: MySQL with Redis for caching
+- **API Documentation**: Swagger/OpenAPI 3.0
+- **Containerization**: Docker with Docker Compose
+- **Testing**: PHPUnit with comprehensive test coverage
 
-### Premium Partners
+## 🚀 Quick Start
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Prerequisites
 
-## Contributing
+- Docker and Docker Compose
+- Git
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Installation & Setup
 
-## Code of Conduct
+1. **Clone the repository**
+```bash
+git clone https://github.com/KalimeroMK/GalileyoLaravel.git
+cd GalileyoLaravel
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Start Docker environment**
+```bash
+./docker-start.sh
+```
 
-## Security Vulnerabilities
+3. **Install dependencies**
+```bash
+docker exec galileyo-app composer install
+docker exec galileyo-app npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Build frontend assets**
+```bash
+docker exec galileyo-app npm run build
+```
 
-## License
+5. **Run database migrations and seeders**
+```bash
+docker exec galileyo-app php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🐳 Docker Configuration
+
+### Services & Ports
+
+| Service | Port | Description |
+|---------|------|-------------|
+| **Nginx** | 80 | Web server |
+| **MySQL** | 3306 | Database |
+| **Redis** | 6379 | Cache & sessions |
+| **Laravel App** | 9000 | PHP-FPM |
+
+### Docker Commands
+
+```bash
+# Start all services
+./docker-start.sh
+
+# Stop all services
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Access application container
+docker exec -it galileyo-app bash
+
+# Run Artisan commands
+docker exec galileyo-app php artisan [command]
+```
+
+## 🔐 Authentication & Access
+
+### Test User Credentials
+
+| Role | Email | Password | Description |
+|------|-------|----------|-------------|
+| **Admin** | admin@galileyo.com | password | Full system access |
+| **User** | test@galileyo.com | password | Regular user access |
+| **Influencer** | influencer@galileyo.com | password | Influencer account |
+
+### API Access
+
+- **Base URL**: `http://localhost/api/v1/`
+- **Authentication**: Laravel Sanctum tokens
+- **Content-Type**: `application/json`
+
+## 📚 API Documentation
+
+### Swagger UI Access
+
+**URL**: http://localhost/api/documentation
+
+The application features **complete Swagger documentation** for all 28 API controllers with:
+
+- ✅ **27 documented endpoints**
+- ✅ **Real authentication examples**
+- ✅ **Request/response schemas**
+- ✅ **Error handling examples**
+- ✅ **Interactive testing interface**
+
+### API Endpoints Overview
+
+| Controller | Endpoints | Description |
+|------------|-----------|-------------|
+| **AuthController** | 4 | Authentication & user management |
+| **NewsController** | 12 | News & content management |
+| **SubscriptionController** | 9 | Feed subscriptions |
+| **DeviceController** | 4 | Device management |
+| **OrderController** | 3 | Order & payment processing |
+| **ReportController** | 6 | Analytics & reporting |
+| **SettingsController** | 5 | System settings |
+| **StaffController** | 5 | Staff management |
+| **+ 20 more controllers** | 50+ | Complete API coverage |
+
+## 🎨 Frontend Technology
+
+### Vue.js 3 Frontend
+- **Framework**: Vue.js 3 with Composition API
+- **Styling**: Tailwind CSS 4
+- **Build Tool**: Vite
+- **State Management**: Vuex/Pinia (as needed)
+
+### Blade Templates
+- **Backend Views**: Laravel Blade with Bootstrap 5
+- **Admin Panel**: Custom admin interface
+- **Responsive Design**: Mobile-first approach
+
+### Frontend Development
+
+```bash
+# Development mode with hot reload
+docker exec galileyo-app npm run dev
+
+# Production build
+docker exec galileyo-app npm run build
+
+# Watch for changes
+docker exec galileyo-app npm run watch
+```
+
+## 🗄️ Database
+
+### Database Configuration
+- **Engine**: MySQL 8.0
+- **Database**: `galileyo`
+- **Charset**: `utf8mb4_unicode_ci`
+
+### Key Features
+- **Migrations**: Version-controlled schema changes
+- **Seeders**: Pre-populated test data
+- **Factories**: Model factories for testing
+- **Eloquent ORM**: Advanced relationships and queries
+
+### Database Commands
+
+```bash
+# Run migrations
+docker exec galileyo-app php artisan migrate
+
+# Rollback migrations
+docker exec galileyo-app php artisan migrate:rollback
+
+# Seed database
+docker exec galileyo-app php artisan db:seed
+
+# Fresh migration with seeding
+docker exec galileyo-app php artisan migrate:fresh --seed
+```
+
+## 🧪 Testing
+
+### Test Configuration
+- **Framework**: PHPUnit 11
+- **Coverage**: Unit and Feature tests
+- **Browser Testing**: Laravel Dusk
+
+### Running Tests
+
+```bash
+# Run all tests
+docker exec galileyo-app php artisan test
+
+# Run specific test file
+docker exec galileyo-app php artisan test tests/Feature/AuthTest.php
+
+# Run with coverage
+docker exec galileyo-app php artisan test --coverage
+```
+
+## 🔧 Development Tools
+
+### Code Quality
+- **Linting**: Laravel Pint (PSR-12)
+- **Static Analysis**: PHPStan
+- **Code Formatting**: Automatic formatting on save
+
+### Useful Commands
+
+```bash
+# Format code
+docker exec galileyo-app vendor/bin/pint
+
+# Clear caches
+docker exec galileyo-app php artisan optimize:clear
+
+# Generate Swagger docs
+docker exec galileyo-app php artisan l5-swagger:generate
+
+# Queue processing
+docker exec galileyo-app php artisan queue:work
+```
+
+## 📁 Project Structure
+
+```
+GalileyoLaravel/
+├── app/
+│   ├── Domain/              # DDD Domain layer
+│   ├── Http/                # HTTP layer
+│   ├── Models/              # Eloquent models
+│   └── Services/            # Application services
+├── database/
+│   ├── factories/           # Model factories
+│   ├── migrations/          # Database migrations
+│   └── seeders/             # Database seeders
+├── resources/
+│   ├── js/                  # Vue.js components
+│   ├── css/                 # Stylesheets
+│   └── views/               # Blade templates
+├── routes/
+│   ├── api.php              # API routes
+│   └── web.php              # Web routes
+├── tests/                   # Test suites
+├── docker-compose.yml       # Docker configuration
+└── docker-start.sh         # Docker startup script
+```
+
+## 🌐 Environment Configuration
+
+### Key Environment Variables
+
+```env
+APP_NAME=Galileyo
+APP_URL=http://localhost
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=galileyo
+REDIS_HOST=redis
+REDIS_PORT=6379
+```
+
+## 📈 Performance & Optimization
+
+### Caching Strategy
+- **Redis**: Session storage and caching
+- **Laravel Cache**: Application-level caching
+- **Database**: Query optimization with indexes
+
+### Production Considerations
+- **Queue Workers**: Background job processing
+- **CDN**: Static asset delivery
+- **Database**: Read replicas for scaling
+- **Monitoring**: Application performance tracking
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow PSR-12 coding standards
+- Write tests for new features
+- Update documentation as needed
+- Use meaningful commit messages
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+- **Documentation**: Check Swagger UI at http://localhost/api/documentation
+- **Issues**: Create an issue on GitHub
+- **Email**: Contact the development team
+
+---
+
+**Built with ❤️ using Laravel 12, Vue.js 3, and Docker**
