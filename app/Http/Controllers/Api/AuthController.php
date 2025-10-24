@@ -16,8 +16,13 @@ use OpenApi\Attributes as OA;
  * Authentication controller with DDD structure
  *
  * Now controllers only handle HTTP concerns
+ * 
+ * Available Test Credentials:
+ * - Admin: admin@galileyo.com / password
+ * - Test User: test@galileyo.com / password  
+ * - Influencer: influencer@galileyo.com / password
  */
-#[OA\Tag(name: 'Authentication', description: 'Authentication endpoints')]
+#[OA\Tag(name: 'Authentication', description: 'Authentication endpoints - Available credentials: admin@galileyo.com/password, test@galileyo.com/password, influencer@galileyo.com/password')]
 class AuthController extends Controller
 {
     public function __construct(
@@ -38,8 +43,8 @@ class AuthController extends Controller
             content: new OA\JsonContent(
                 required: ['email', 'password'],
                 properties: [
-                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'user@example.com'),
-                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'admin@galileyo.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password'),
                 ]
             )
         ),
@@ -57,10 +62,10 @@ class AuthController extends Controller
                             property: 'user_profile',
                             properties: [
                                 new OA\Property(property: 'id', type: 'integer', example: 1),
-                                new OA\Property(property: 'email', type: 'string', example: 'user@example.com'),
-                                new OA\Property(property: 'first_name', type: 'string', example: 'John'),
-                                new OA\Property(property: 'last_name', type: 'string', example: 'Doe'),
-                                new OA\Property(property: 'role', type: 'string', example: 'user'),
+                                new OA\Property(property: 'email', type: 'string', example: 'admin@galileyo.com'),
+                                new OA\Property(property: 'first_name', type: 'string', example: 'Admin'),
+                                new OA\Property(property: 'last_name', type: 'string', example: 'User'),
+                                new OA\Property(property: 'role', type: 'string', example: 'admin'),
                             ],
                             type: 'object'
                         ),
@@ -107,8 +112,8 @@ class AuthController extends Controller
             content: new OA\JsonContent(
                 required: ['email', 'password'],
                 properties: [
-                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'user@example.com'),
-                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'admin@galileyo.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password'),
                 ]
             )
         ),
@@ -126,10 +131,10 @@ class AuthController extends Controller
                             property: 'user_profile',
                             properties: [
                                 new OA\Property(property: 'id', type: 'integer', example: 1),
-                                new OA\Property(property: 'email', type: 'string', example: 'user@example.com'),
-                                new OA\Property(property: 'first_name', type: 'string', example: 'John'),
-                                new OA\Property(property: 'last_name', type: 'string', example: 'Doe'),
-                                new OA\Property(property: 'role', type: 'string', example: 'user'),
+                                new OA\Property(property: 'email', type: 'string', example: 'admin@galileyo.com'),
+                                new OA\Property(property: 'first_name', type: 'string', example: 'Admin'),
+                                new OA\Property(property: 'last_name', type: 'string', example: 'User'),
+                                new OA\Property(property: 'role', type: 'string', example: 'admin'),
                             ],
                             type: 'object'
                         ),
@@ -229,10 +234,10 @@ class AuthController extends Controller
             content: new OA\JsonContent(
                 required: ['email', 'password', 'first_name', 'last_name'],
                 properties: [
-                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'user@example.com'),
-                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
-                    new OA\Property(property: 'first_name', type: 'string', example: 'John'),
-                    new OA\Property(property: 'last_name', type: 'string', example: 'Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'test@galileyo.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password'),
+                    new OA\Property(property: 'first_name', type: 'string', example: 'Test'),
+                    new OA\Property(property: 'last_name', type: 'string', example: 'User'),
                     new OA\Property(property: 'phone', type: 'string', example: '+1234567890'),
                 ]
             )
