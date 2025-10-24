@@ -18,11 +18,12 @@ Galileyo is a comprehensive Laravel application built with modern architecture p
 ## 🏗️ Architecture & Patterns
 
 ### Domain-Driven Design (DDD)
+
 The application follows **Domain-Driven Design** principles with clear separation of concerns:
 
-- **Domain Layer**: Contains business logic, actions, DTOs, and services
-- **Application Layer**: HTTP controllers, requests, and resources
-- **Infrastructure Layer**: Database, external services, and configurations
+-   **Domain Layer**: Contains business logic, actions, DTOs, and services
+-   **Application Layer**: HTTP controllers, requests, and resources
+-   **Infrastructure Layer**: Database, external services, and configurations
 
 ### Key Architectural Components
 
@@ -42,45 +43,50 @@ app/
 
 ### Technology Stack
 
-- **Backend**: Laravel 12 with PHP 8.3
-- **Frontend**: Vue.js 3 with Tailwind CSS 4
-- **Database**: MySQL with Redis for caching
-- **API Documentation**: Swagger/OpenAPI 3.0
-- **Containerization**: Docker with Docker Compose
-- **Testing**: PHPUnit with comprehensive test coverage
+-   **Backend**: Laravel 12 with PHP 8.3
+-   **Frontend**: Vue.js 3 with Tailwind CSS 4
+-   **Database**: MySQL with Redis for caching
+-   **API Documentation**: Swagger/OpenAPI 3.0
+-   **Containerization**: Docker with Docker Compose
+-   **Testing**: PHPUnit with comprehensive test coverage
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Docker and Docker Compose
-- Git
+-   Docker and Docker Compose
+-   Git
 
 ### Installation & Setup
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/KalimeroMK/GalileyoLaravel.git
 cd GalileyoLaravel
 ```
 
 2. **Start Docker environment**
+
 ```bash
 ./docker-start.sh
 ```
 
 3. **Install dependencies**
+
 ```bash
 docker exec galileyo-app composer install
 docker exec galileyo-app npm install
 ```
 
 4. **Build frontend assets**
+
 ```bash
 docker exec galileyo-app npm run build
 ```
 
 5. **Run database migrations and seeders**
+
 ```bash
 docker exec galileyo-app php artisan migrate --seed
 ```
@@ -89,12 +95,12 @@ docker exec galileyo-app php artisan migrate --seed
 
 ### Services & Ports
 
-| Service | Port | Description |
-|---------|------|-------------|
-| **Nginx** | 80 | Web server |
-| **MySQL** | 3306 | Database |
-| **Redis** | 6379 | Cache & sessions |
-| **Laravel App** | 9000 | PHP-FPM |
+| Service         | Port | Description      |
+| --------------- | ---- | ---------------- |
+| **Nginx**       | 80   | Web server       |
+| **MySQL**       | 3306 | Database         |
+| **Redis**       | 6379 | Cache & sessions |
+| **Laravel App** | 9000 | PHP-FPM          |
 
 ### Docker Commands
 
@@ -119,17 +125,17 @@ docker exec galileyo-app php artisan [command]
 
 ### Test User Credentials
 
-| Role | Email | Password | Description |
-|------|-------|----------|-------------|
-| **Admin** | admin@galileyo.com | password | Full system access |
-| **User** | test@galileyo.com | password | Regular user access |
-| **Influencer** | influencer@galileyo.com | password | Influencer account |
+| Role           | Email                   | Password | Description         |
+| -------------- | ----------------------- | -------- | ------------------- |
+| **Admin**      | admin@galileyo.com      | password | Full system access  |
+| **User**       | test@galileyo.com       | password | Regular user access |
+| **Influencer** | influencer@galileyo.com | password | Influencer account  |
 
 ### API Access
 
-- **Base URL**: `http://localhost/api/v1/`
-- **Authentication**: Laravel Sanctum tokens
-- **Content-Type**: `application/json`
+-   **Base URL**: `http://localhost/api/v1/`
+-   **Authentication**: Laravel Sanctum tokens
+-   **Content-Type**: `application/json`
 
 ## 📚 API Documentation
 
@@ -139,38 +145,40 @@ docker exec galileyo-app php artisan [command]
 
 The application features **complete Swagger documentation** for all 28 API controllers with:
 
-- ✅ **27 documented endpoints**
-- ✅ **Real authentication examples**
-- ✅ **Request/response schemas**
-- ✅ **Error handling examples**
-- ✅ **Interactive testing interface**
+-   ✅ **27 documented endpoints**
+-   ✅ **Real authentication examples**
+-   ✅ **Request/response schemas**
+-   ✅ **Error handling examples**
+-   ✅ **Interactive testing interface**
 
 ### API Endpoints Overview
 
-| Controller | Endpoints | Description |
-|------------|-----------|-------------|
-| **AuthController** | 4 | Authentication & user management |
-| **NewsController** | 12 | News & content management |
-| **SubscriptionController** | 9 | Feed subscriptions |
-| **DeviceController** | 4 | Device management |
-| **OrderController** | 3 | Order & payment processing |
-| **ReportController** | 6 | Analytics & reporting |
-| **SettingsController** | 5 | System settings |
-| **StaffController** | 5 | Staff management |
-| **+ 20 more controllers** | 50+ | Complete API coverage |
+| Controller                 | Endpoints | Description                      |
+| -------------------------- | --------- | -------------------------------- |
+| **AuthController**         | 4         | Authentication & user management |
+| **NewsController**         | 12        | News & content management        |
+| **SubscriptionController** | 9         | Feed subscriptions               |
+| **DeviceController**       | 4         | Device management                |
+| **OrderController**        | 3         | Order & payment processing       |
+| **ReportController**       | 6         | Analytics & reporting            |
+| **SettingsController**     | 5         | System settings                  |
+| **StaffController**        | 5         | Staff management                 |
+| **+ 20 more controllers**  | 50+       | Complete API coverage            |
 
 ## 🎨 Frontend Technology
 
 ### Vue.js 3 Frontend
-- **Framework**: Vue.js 3 with Composition API
-- **Styling**: Tailwind CSS 4
-- **Build Tool**: Vite
-- **State Management**: Vuex/Pinia (as needed)
+
+-   **Framework**: Vue.js 3 with Composition API
+-   **Styling**: Tailwind CSS 4
+-   **Build Tool**: Vite
+-   **State Management**: Vuex/Pinia (as needed)
 
 ### Blade Templates
-- **Backend Views**: Laravel Blade with Bootstrap 5
-- **Admin Panel**: Custom admin interface
-- **Responsive Design**: Mobile-first approach
+
+-   **Backend Views**: Laravel Blade with Bootstrap 5
+-   **Admin Panel**: Custom admin interface
+-   **Responsive Design**: Mobile-first approach
 
 ### Frontend Development
 
@@ -188,15 +196,17 @@ docker exec galileyo-app npm run watch
 ## 🗄️ Database
 
 ### Database Configuration
-- **Engine**: MySQL 8.0
-- **Database**: `galileyo`
-- **Charset**: `utf8mb4_unicode_ci`
+
+-   **Engine**: MySQL 8.0
+-   **Database**: `galileyo`
+-   **Charset**: `utf8mb4_unicode_ci`
 
 ### Key Features
-- **Migrations**: Version-controlled schema changes
-- **Seeders**: Pre-populated test data
-- **Factories**: Model factories for testing
-- **Eloquent ORM**: Advanced relationships and queries
+
+-   **Migrations**: Version-controlled schema changes
+-   **Seeders**: Pre-populated test data
+-   **Factories**: Model factories for testing
+-   **Eloquent ORM**: Advanced relationships and queries
 
 ### Database Commands
 
@@ -217,9 +227,10 @@ docker exec galileyo-app php artisan migrate:fresh --seed
 ## 🧪 Testing
 
 ### Test Configuration
-- **Framework**: PHPUnit 11
-- **Coverage**: Unit and Feature tests
-- **Browser Testing**: Laravel Dusk
+
+-   **Framework**: PHPUnit 11
+-   **Coverage**: Unit and Feature tests
+-   **Browser Testing**: Laravel Dusk
 
 ### Running Tests
 
@@ -237,9 +248,10 @@ docker exec galileyo-app php artisan test --coverage
 ## 🔧 Development Tools
 
 ### Code Quality
-- **Linting**: Laravel Pint (PSR-12)
-- **Static Analysis**: PHPStan
-- **Code Formatting**: Automatic formatting on save
+
+-   **Linting**: Laravel Pint (PSR-12)
+-   **Static Analysis**: PHPStan
+-   **Code Formatting**: Automatic formatting on save
 
 ### Useful Commands
 
@@ -300,15 +312,17 @@ REDIS_PORT=6379
 ## 📈 Performance & Optimization
 
 ### Caching Strategy
-- **Redis**: Session storage and caching
-- **Laravel Cache**: Application-level caching
-- **Database**: Query optimization with indexes
+
+-   **Redis**: Session storage and caching
+-   **Laravel Cache**: Application-level caching
+-   **Database**: Query optimization with indexes
 
 ### Production Considerations
-- **Queue Workers**: Background job processing
-- **CDN**: Static asset delivery
-- **Database**: Read replicas for scaling
-- **Monitoring**: Application performance tracking
+
+-   **Queue Workers**: Background job processing
+-   **CDN**: Static asset delivery
+-   **Database**: Read replicas for scaling
+-   **Monitoring**: Application performance tracking
 
 ## 🤝 Contributing
 
@@ -319,10 +333,11 @@ REDIS_PORT=6379
 5. Open a Pull Request
 
 ### Development Guidelines
-- Follow PSR-12 coding standards
-- Write tests for new features
-- Update documentation as needed
-- Use meaningful commit messages
+
+-   Follow PSR-12 coding standards
+-   Write tests for new features
+-   Update documentation as needed
+-   Use meaningful commit messages
 
 ## 📄 License
 
@@ -331,9 +346,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 For support and questions:
-- **Documentation**: Check Swagger UI at http://localhost/api/documentation
-- **Issues**: Create an issue on GitHub
-- **Email**: Contact the development team
+
+-   **Documentation**: Check Swagger UI at http://localhost/api/documentation
+-   **Issues**: Create an issue on GitHub
+-   **Email**: Contact the development team
 
 ---
 
