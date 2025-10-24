@@ -11,11 +11,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
+use OpenApi\Attributes as OA;
 
 /**
  * Refactored Chat Controller using DDD Actions
  * Handles all chat functionality: conversations, messages, file uploads, groups
  */
+#[OA\Tag(name: 'Chat', description: 'Chat and messaging endpoints')]
 class ChatController extends Controller
 {
     public function __construct(
@@ -23,16 +25,86 @@ class ChatController extends Controller
     ) {}
 
     /**
-     * Get conversation list (POST /api/v1/chat/list)
+     * Get conversation list
+     *
+     * POST /api/v1/chat/list
      */
+    #[OA\Post(
+        path: '/api/v1/chat/list',
+        description: 'Get paginated list of conversations',
+        summary: 'List conversations',
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'page', type: 'integer', example: 1),
+                    new OA\Property(property: 'per_page', type: 'integer', example: 15),
+                    new OA\Property(property: 'type', type: 'string', example: 'all', enum: ['all', 'private', 'group']),
+                ]
+            )
+        ),
+        tags: ['Chat'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Conversations list',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'data', type: 'array', items: new OA\Items(type: 'object')),
+                        new OA\Property(property: 'meta', properties: [
+                            new OA\Property(property: 'current_page', type: 'integer', example: 1),
+                            new OA\Property(property: 'last_page', type: 'integer', example: 5),
+                            new OA\Property(property: 'per_page', type: 'integer', example: 15),
+                            new OA\Property(property: 'total', type: 'integer', example: 75),
+                        ], type: 'object'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function list(Request $request): JsonResponse
     {
         return $this->getChatListAction->execute($request->all());
     }
 
     /**
-     * Get conversation messages (POST /api/v1/chat/chat-messages)
+     * Get conversation messages
+     *
+     * POST /api/v1/chat/chat-messages
      */
+    #[OA\Post(
+        path: '/api/v1/chat/chat-messages',
+        description: 'Get messages for a conversation',
+        summary: 'Get chat messages',
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['conversation_id'],
+                properties: [
+                    new OA\Property(property: 'conversation_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'page', type: 'integer', example: 1),
+                    new OA\Property(property: 'per_page', type: 'integer', example: 20),
+                ]
+            )
+        ),
+        tags: ['Chat'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Chat messages',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'data', type: 'array', items: new OA\Items(type: 'object')),
+                        new OA\Property(property: 'message', type: 'string', example: 'Chat messages endpoint not implemented yet'),
+                    ]
+                )
+            ),
+        ]
+    )]
     public function chatMessages(Request $request): JsonResponse
     {
         // Implementation for getting chat messages
