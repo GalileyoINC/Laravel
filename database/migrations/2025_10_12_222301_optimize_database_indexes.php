@@ -17,11 +17,15 @@ return new class extends Migration
 
         // personal_access_tokens table - add missing indexes
         Schema::table('personal_access_tokens', function (Blueprint $table) {
-            // Add index for last_used_at (for token cleanup)
-            $table->index('last_used_at', 'idx_tokens_last_used_at');
+            // Add index for last_used_at (for token cleanup) - only if it doesn't exist
+            if (!$this->indexExists('personal_access_tokens', 'idx_tokens_last_used_at')) {
+                $table->index('last_used_at', 'idx_tokens_last_used_at');
+            }
 
-            // Add composite index for tokenable queries
-            $table->index(['tokenable_type', 'tokenable_id', 'expires_at'], 'idx_tokens_tokenable_expires');
+            // Add composite index for tokenable queries - only if it doesn't exist
+            if (!$this->indexExists('personal_access_tokens', 'idx_tokens_tokenable_expires')) {
+                $table->index(['tokenable_type', 'tokenable_id', 'expires_at'], 'idx_tokens_tokenable_expires');
+            }
         });
 
         // bookmarks table - add missing indexes
@@ -194,5 +198,36 @@ return new class extends Migration
             $table->dropIndex('idx_report_archive_name_created');
             $table->dropIndex('idx_report_archive_report_id');
         });
+    }
+
+    /**
+     * Check if an index exists on a table
+     */
+    private function indexExists(string $table, string $indexName): bool
+    {
+        try {
+            if (\DB::getDriverName() === 'sqlite') {
+                // SQLite syntax
+                $indexes = \DB::select("PRAGMA index_list({$table})");
+                foreach ($indexes as $index) {
+                    if ($index->name === $indexName) {
+                        return true;
+                    }
+                }
+            } else {
+                // MySQL syntax
+                $indexes = \DB::select("SHOW INDEX FROM {$table}");
+                foreach ($indexes as $index) {
+                    if ($index->Key_name === $indexName) {
+                        return true;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // If we can't check, assume it doesn't exist
+            return false;
+        }
+        
+        return false;
     }
 };

@@ -151,6 +151,9 @@
               <li>
                 <router-link @click="isMobileNavOpen = false" to="/alerts-map" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">Alerts Map</router-link>
               </li>
+              <li>
+                <router-link @click="isMobileNavOpen = false" to="/payment" class="block rounded px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-800">Payment</router-link>
+              </li>
             </template>
           </ul>
         </nav>

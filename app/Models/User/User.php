@@ -447,13 +447,6 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
 
-    /**
-     * @return HasMany<\App\Models\Finance\CreditCard, $this>
-     */
-    public function creditCards(): HasMany
-    {
-        return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
-    }
 
     /**
      * @return HasMany<\App\Models\Device\Device, $this>
@@ -646,6 +639,30 @@ class User extends Authenticatable
     public function user_follower_alerts(): HasMany
     {
         return $this->hasMany(\App\Models\Notification\UserFollowerAlert::class, 'id_user');
+    }
+
+    /**
+     * @return HasMany<\App\Models\CreditCard, $this>
+     */
+    public function creditCards(): HasMany
+    {
+        return $this->hasMany(\App\Models\CreditCard::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasMany<\App\Models\UserSubscription, $this>
+     */
+    public function paymentSubscriptions(): HasMany
+    {
+        return $this->hasMany(\App\Models\UserSubscription::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasMany<\App\Models\PaymentHistory, $this>
+     */
+    public function paymentHistories(): HasMany
+    {
+        return $this->hasMany(\App\Models\PaymentHistory::class, 'user_id', 'id');
     }
 
     /**

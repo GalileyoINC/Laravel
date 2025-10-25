@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('money_transaction', function (Blueprint $table) {
-            $table->foreign(['id_credit_card'], 'fk-money_transaction-id_credit_card')->references(['id'])->on('credit_card')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign(['id_credit_card'], 'fk-money_transaction-id_credit_card')->references(['id'])->on('credit_cards')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign(['id_invoice'], 'fk-money_transaction-id_invoice')->references(['id'])->on('invoice')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign(['id_refund'], 'fk-money_transaction-id_refund')->references(['id'])->on('money_transaction')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign(['id_user'], 'fk-money_transaction-id_user')->references(['id'])->on('user')->onUpdate('cascade')->onDelete('cascade');

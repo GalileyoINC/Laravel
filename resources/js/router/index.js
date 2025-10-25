@@ -12,6 +12,7 @@ import PrivacyPolicyPage from '../components/views/PrivacyPolicyPage.vue';
 import TermsOfServicePage from '../components/views/TermsOfServicePage.vue';
 import ProfileSettingsPage from '../components/views/ProfileSettingsPage.vue';
 import AlertsMapPage from '../components/views/AlertsMapPage.vue';
+import PaymentPage from '../components/views/PaymentPage.vue';
 
 const routes = [
   {
@@ -88,6 +89,12 @@ const routes = [
     path: '/alerts-map',
     name: 'AlertsMap',
     component: AlertsMapPage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/payment',
+    name: 'Payment',
+    component: PaymentPage,
     meta: { requiresAuth: true }
   }
 ];

@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\MaintenanceController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PhoneController;
 use App\Http\Controllers\Api\PrivateFeedController;
 use App\Http\Controllers\Api\ProductController;
@@ -356,4 +357,13 @@ Route::prefix('v1/bookmark')->middleware('auth:sanctum')->group(function () {
 // Maintenance Controller - System maintenance
 Route::prefix('v1/maintenance')->middleware('auth:sanctum')->group(function () {
     Route::post('summarize', [MaintenanceController::class, 'summarize']);
+});
+
+// Payment Controller - Credit card management
+Route::prefix('v1/payment')->middleware('auth:sanctum')->group(function () {
+    Route::get('credit-cards', [PaymentController::class, 'getCreditCards']);
+    Route::post('credit-cards', [PaymentController::class, 'createCreditCard']);
+    Route::put('credit-cards', [PaymentController::class, 'updateCreditCard']);
+    Route::post('credit-cards/set-preferred', [PaymentController::class, 'setPreferredCard']);
+    Route::delete('credit-cards', [PaymentController::class, 'deleteCreditCard']);
 });

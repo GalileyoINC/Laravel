@@ -44,6 +44,8 @@ use App\Domain\Services\Posts\PostsService;
 use App\Domain\Services\Posts\PostsServiceInterface;
 use App\Domain\Services\PrivateFeed\PrivateFeedService;
 use App\Domain\Services\PrivateFeed\PrivateFeedServiceInterface;
+use App\Domain\Services\Payment\PaymentService;
+use App\Domain\Services\Payment\PaymentServiceInterface;
 use App\Domain\Services\Product\ProductAlertMapService;
 use App\Domain\Services\Product\ProductAlertMapServiceInterface;
 use App\Domain\Services\Product\ProductService;
@@ -133,6 +135,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             PrivateFeedServiceInterface::class,
             PrivateFeedService::class
+        );
+
+        // Register Payment services
+        $this->app->bind(
+            PaymentServiceInterface::class,
+            PaymentService::class
         );
 
         // Register Product services
