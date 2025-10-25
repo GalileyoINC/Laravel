@@ -240,6 +240,7 @@ Route::prefix('v1/product')->middleware('auth:sanctum')->group(function () {
     // Product routes
     Route::post('list', [ProductController::class, 'list']);
     Route::post('alerts', [ProductController::class, 'alerts']);
+    Route::post('alerts/map', [ProductController::class, 'alertsWithMap']);
     Route::post('purchase', [ProductController::class, 'purchase']);
 });
 

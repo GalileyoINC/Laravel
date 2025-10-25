@@ -40,14 +40,20 @@ use App\Domain\Services\Order\OrderService;
 use App\Domain\Services\Order\OrderServiceInterface;
 use App\Domain\Services\Phone\PhoneService;
 use App\Domain\Services\Phone\PhoneServiceInterface;
+use App\Domain\Services\Posts\PostsService;
+use App\Domain\Services\Posts\PostsServiceInterface;
 use App\Domain\Services\PrivateFeed\PrivateFeedService;
 use App\Domain\Services\PrivateFeed\PrivateFeedServiceInterface;
+use App\Domain\Services\Product\ProductAlertMapService;
+use App\Domain\Services\Product\ProductAlertMapServiceInterface;
 use App\Domain\Services\Product\ProductService;
 use App\Domain\Services\Product\ProductServiceInterface;
 use App\Domain\Services\PublicFeed\PublicFeedService;
 use App\Domain\Services\PublicFeed\PublicFeedServiceInterface;
 use App\Domain\Services\Report\ReportService;
 use App\Domain\Services\Report\ReportServiceInterface;
+use App\Domain\Services\Search\SearchService;
+use App\Domain\Services\Search\SearchServiceInterface;
 use App\Domain\Services\Settings\SettingsService;
 use App\Domain\Services\Settings\SettingsServiceInterface;
 use App\Domain\Services\Subscription\SubscriptionService;
@@ -117,6 +123,12 @@ class AppServiceProvider extends ServiceProvider
             PhoneService::class
         );
 
+        // Register Posts services
+        $this->app->bind(
+            PostsServiceInterface::class,
+            PostsService::class
+        );
+
         // Register PrivateFeed services
         $this->app->bind(
             PrivateFeedServiceInterface::class,
@@ -127,6 +139,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ProductServiceInterface::class,
             ProductService::class
+        );
+
+        // Register ProductAlertMap services
+        $this->app->bind(
+            ProductAlertMapServiceInterface::class,
+            ProductAlertMapService::class
         );
 
         // Register PublicFeed services
@@ -201,6 +219,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ReportServiceInterface::class,
             ReportService::class
+        );
+
+        // Register Search services
+        $this->app->bind(
+            SearchServiceInterface::class,
+            SearchService::class
         );
 
         // Register Settings services

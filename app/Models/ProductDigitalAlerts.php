@@ -33,14 +33,24 @@ class ProductDigitalAlerts extends Model
         'title',
         'description',
         'alert_data',
+        'latitude',
+        'longitude',
+        'address',
+        'severity',
+        'category',
+        'affected_radius',
+        'source',
+        'expires_at',
         'created_at',
         'updated_at',
     ];
 
     protected $casts = [
-        'type' => 'int',
-        'status' => 'int',
         'alert_data' => 'json',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
+        'affected_radius' => 'decimal:2',
+        'expires_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

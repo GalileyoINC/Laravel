@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Domain\Actions\Product\GetProductAlertsAction;
+use App\Domain\Actions\Product\GetProductAlertsWithMapAction;
 use App\Domain\Actions\Product\GetProductListAction;
 use App\Domain\Actions\Product\ProcessApplePurchaseAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductAlertMapRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -22,6 +24,7 @@ class ProductController extends Controller
     public function __construct(
         private readonly GetProductListAction $getProductListAction,
         private readonly GetProductAlertsAction $getProductAlertsAction,
+        private readonly GetProductAlertsWithMapAction $getProductAlertsWithMapAction,
         private readonly ProcessApplePurchaseAction $processApplePurchaseAction
     ) {}
 
@@ -145,5 +148,70 @@ class ProductController extends Controller
     public function purchase(Request $request): JsonResponse
     {
         return $this->processApplePurchaseAction->execute($request->all());
+    }
+
+    /**
+     * Get product alerts with map data (POST /api/v1/product/alerts/map)
+     */
+    #[OA\Post(
+        path: '/api/v1/product/alerts/map',
+        description: 'Get product alerts with geographic map data',
+        summary: 'Get alerts for map display',
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: false,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'limit', type: 'integer', example: 20),
+                    new OA\Property(property: 'offset', type: 'integer', example: 0),
+                    new OA\Property(property: 'severity', type: 'string', example: 'high', enum: ['critical', 'high', 'medium', 'low']),
+                    new OA\Property(property: 'category', type: 'string', example: 'emergency'),
+                    new OA\Property(property: 'bounds', type: 'object', properties: [
+                        new OA\Property(property: 'north', type: 'number', example: 40.7589),
+                        new OA\Property(property: 'south', type: 'number', example: 40.7489),
+                        new OA\Property(property: 'east', type: 'number', example: -73.9857),
+                        new OA\Property(property: 'west', type: 'number', example: -73.9957),
+                    ]),
+                    new OA\Property(property: 'filter', type: 'object', properties: [
+                        new OA\Property(property: 'type', type: 'integer', example: 1),
+                        new OA\Property(property: 'status', type: 'integer', example: 1),
+                        new OA\Property(property: 'active_only', type: 'boolean', example: true),
+                    ]),
+                ]
+            )
+        ),
+        tags: ['Products'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Map alerts retrieved successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'success'),
+                        new OA\Property(property: 'data', type: 'array', items: new OA\Items(type: 'object')),
+                        new OA\Property(property: 'meta', properties: [
+                            new OA\Property(property: 'total', type: 'integer', example: 15),
+                            new OA\Property(property: 'limit', type: 'integer', example: 20),
+                            new OA\Property(property: 'offset', type: 'integer', example: 0),
+                        ], type: 'object'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Invalid request parameters',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'status', type: 'string', example: 'error'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Invalid request parameters'),
+                        new OA\Property(property: 'errors', type: 'array', items: new OA\Items(type: 'string')),
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function alertsWithMap(ProductAlertMapRequest $request): JsonResponse
+    {
+        return $this->getProductAlertsWithMapAction->execute($request->validated());
     }
 }
