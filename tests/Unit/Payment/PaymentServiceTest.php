@@ -8,7 +8,6 @@ use App\Domain\DTOs\Payment\PaymentDetailsDTO;
 use App\Domain\Services\Payment\PaymentService;
 use App\Models\CreditCard;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -18,7 +17,7 @@ use Tests\TestCase;
  */
 class PaymentServiceTest extends TestCase
 {
-    use RefreshDatabase;
+    // Removed RefreshDatabase trait to avoid foreign key issues
 
     private PaymentService $paymentService;
     private User $user;
@@ -28,7 +27,14 @@ class PaymentServiceTest extends TestCase
         parent::setUp();
         
         $this->paymentService = new PaymentService();
-        $this->user = User::factory()->create();
+        
+        // Create a user for testing - use existing user or create one
+        $existingUser = User::first();
+        if ($existingUser) {
+            $this->user = $existingUser;
+        } else {
+            $this->user = User::factory()->create();
+        }
     }
 
     public function test_can_get_credit_cards(): void

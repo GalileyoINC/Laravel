@@ -31,7 +31,11 @@ return new class extends Migration
 
             $table->foreign('id_user')->references('id')->on('user');
             $table->foreign('id_product')->references('id')->on('service');
-            $table->foreign('id_credit_card')->references('id')->on('credit_card');
+            
+            // Only add credit card foreign key if credit_cards table exists
+            if (Schema::hasTable('credit_cards')) {
+                $table->foreign('id_credit_card')->references('id')->on('credit_cards');
+            }
         });
     }
 

@@ -48,10 +48,14 @@ return new class extends Migration
         });
 
         // user_subscription table - add missing indexes
-        Schema::table('user_subscription', function (Blueprint $table) {
-            // Add composite index for user subscriptions
-            $table->index(['id_user', 'id_subscription'], 'idx_user_subscription_user_subscription');
-        });
+        if (Schema::hasTable('user_subscription')) {
+            Schema::table('user_subscription', function (Blueprint $table) {
+                // Add composite index for user subscriptions - only if it doesn't exist
+                if (!$this->indexExists('user_subscription', 'idx_user_subscription_user_subscription')) {
+                    $table->index(['id_user', 'id_subscription'], 'idx_user_subscription_user_subscription');
+                }
+            });
+        }
 
         // follower table - add missing indexes
         Schema::table('follower', function (Blueprint $table) {
