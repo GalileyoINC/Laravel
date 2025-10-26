@@ -569,11 +569,12 @@
     <!-- Live Filter JavaScript -->
     <script src="{{ asset('js/live-filter.js') }}"></script>
     
-    <!-- Admin Live Chat Widget -->
+    <!-- Admin Live Chat Widget - Temporary disabled -->
     {{-- @include('components.admin-chat-widget') --}}
     
-    <!-- Chat Badge Update Script -->
-    {{-- <script>
+    <!-- Chat Badge Update Script - Temporary disabled -->
+    {{-- 
+    <script>
         function updateChatBadge() {
             fetch('/api/v1/admin/chat/unread-count')
                 .then(response => response.json())
@@ -593,7 +594,8 @@
         setInterval(updateChatBadge, 30000);
         // Update immediately on page load
         updateChatBadge();
-    </script> --}}
+    </script>
+    --}}
     
     @stack('scripts')
 </body>
