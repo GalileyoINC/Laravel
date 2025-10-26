@@ -54,9 +54,6 @@ fi
 
 echo ""
 echo "🔧 Step 3: Verifying data import..."
-
-# Step 4: Verify import
-echo "🔧 Step 4: Verifying data import..."
 docker-compose exec mysql mysql -u $DB_USER -p$DB_PASS $DB_NAME -e "
 SELECT 
     'users' as table_name, COUNT(*) as count FROM user
@@ -80,7 +77,7 @@ docker-compose exec app php artisan optimize:clear
 echo "✅ Cache cleared"
 echo ""
 
-echo "🎉 Migration completed!"
+echo "🎉 Migration completed successfully!"
 echo ""
 echo "Next steps:"
 echo "1. Test the application in the browser"
