@@ -47,6 +47,8 @@ use App\Domain\Services\PrivateFeed\PrivateFeedServiceInterface;
 use App\Domain\Services\Payment\PaymentService;
 use App\Domain\Services\Payment\PaymentServiceInterface;
 use App\Domain\Services\Product\ProductAlertMapService;
+use App\Domain\Services\Push\PushService;
+use App\Domain\Services\Push\PushServiceInterface;
 use App\Domain\Services\Product\ProductAlertMapServiceInterface;
 use App\Domain\Services\Product\ProductService;
 use App\Domain\Services\Product\ProductServiceInterface;
@@ -245,6 +247,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             MaintenanceServiceInterface::class,
             MaintenanceService::class
+        );
+
+        // Register Push services
+        $this->app->bind(
+            PushServiceInterface::class,
+            PushService::class
         );
     }
 

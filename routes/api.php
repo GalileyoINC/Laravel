@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PhoneController;
+use App\Http\Controllers\Api\PushController;
 use App\Http\Controllers\Api\PrivateFeedController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PublicFeedController;
@@ -387,4 +388,10 @@ Route::prefix('v1/payment')->middleware('auth:sanctum')->group(function () {
     // Path-param variants for compatibility with tests
     Route::post('credit-cards/set-preferred/{id}', [PaymentController::class, 'setPreferredCardById']);
     Route::delete('credit-cards/{id}', [PaymentController::class, 'deleteCreditCardById']);
+});
+
+// Push Notifications Controller
+Route::prefix('v1/push')->middleware('auth:sanctum')->group(function () {
+    Route::post('subscribe', [PushController::class, 'subscribe']);
+    Route::post('unsubscribe', [PushController::class, 'unsubscribe']);
 });

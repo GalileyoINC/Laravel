@@ -306,6 +306,43 @@ docker exec galileyo-app php artisan test tests/Unit/Payment/ tests/Feature/Paym
 docker exec galileyo-app php artisan test --coverage
 ```
 
+### Push Notifications System
+
+The application features **Web Push Notifications** for real-time alerts and updates:
+
+#### Push Notification Features
+
+-   **Service Worker Integration** - Background notification handling
+-   **VAPID Authentication** - Secure push message encryption
+-   **User Subscriptions** - Per-user notification preferences
+-   **Broadcast Messaging** - Send notifications to all users
+-   **Notification Center** - In-app notification management
+
+#### Push API Endpoints
+
+| Method | Endpoint                   | Description                     |
+| ------ | -------------------------- | ------------------------------- |
+| `POST` | `/api/v1/push/subscribe`   | Subscribe to push notifications |
+| `POST` | `/api/v1/push/unsubscribe` | Unsubscribe from notifications  |
+
+#### Configuration
+
+Add to your `.env` file:
+
+```env
+VAPID_EMAIL=mailto:info@galileyo.com
+VAPID_PUBLIC_KEY=your_public_key_here
+VAPID_PRIVATE_KEY=your_private_key_here
+```
+
+Generate VAPID keys using:
+
+```bash
+docker exec galileyo-app vendor/bin/generate-vapid-keys
+```
+
+Or use online generator: https://web-push-codelab.glitch.me/
+
 ### Payment System Test Coverage
 
 The Payment System includes comprehensive test coverage:

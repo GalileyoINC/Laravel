@@ -41,4 +41,10 @@ return [
         'api_key' => env('OPENAI_API_KEY'),
     ],
 
+    'push' => [
+        'vapid_email' => env('VAPID_EMAIL', 'mailto:info@galileyo.com'),
+        'vapid_public_key' => env('VAPID_PUBLIC_KEY'),
+        'vapid_private_key' => env('VAPID_PRIVATE_KEY'),
+    ],
+
 ];

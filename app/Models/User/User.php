@@ -666,6 +666,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany<\App\Models\PushSubscription, $this>
+     */
+    public function pushSubscriptions(): HasMany
+    {
+        return $this->hasMany(\App\Models\PushSubscription::class, 'user_id', 'id');
+    }
+
+    /**
      * @return HasMany<UserFriend, $this>
      */
     public function user_friends(): HasMany
