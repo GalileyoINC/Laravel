@@ -75,11 +75,13 @@
                     <a href="{{ route('site.reset') }}" class="btn btn-admin">RESET</a>
                 @endif
 
-                <!-- Chat Button with Badge -->
-                {{-- <a href="/admin/chat" class="btn btn-success" title="View Messages" style="position: relative;">
+                <!-- Chat Button with Badge - Disabled for today -->
+                {{--
+                <a href="/admin/chat" class="btn btn-success" title="View Messages" style="position: relative;">
                     <i class="fas fa-comments"></i> Chat
                     <span id="chat-badge" class="badge badge-warning" style="position: absolute; top: -5px; right: -5px; display: none;">0</span>
-                </a> --}}
+                </a>
+                --}}
 
                 <a href="{{ route('site.self') }}" class="btn btn-info JS__load_in_modal">
                     <i class="fas fa-user-alt"></i> {{ Auth::user()->username ?? 'User' }}
@@ -569,8 +571,10 @@
     <!-- Live Filter JavaScript -->
     <script src="{{ asset('js/live-filter.js') }}"></script>
     
-    <!-- Admin Live Chat Widget - Temporary disabled -->
-    {{-- @include('components.admin-chat-widget') --}}
+    <!-- Admin Live Chat Widget - Disabled for today, will be enabled tomorrow -->
+    {{--
+    @include('components.admin-chat-widget')
+    --}}
     
     <!-- Chat Badge Update Script - Temporary disabled -->
     {{-- 
