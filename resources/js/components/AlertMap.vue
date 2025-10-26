@@ -563,5 +563,15 @@ onMounted(() => {
   width: 100%;
   overflow: hidden;
   border-radius: 8px;
+  background: transparent !important;
+}
+
+/* Ensure map tiles are visible */
+:deep(.leaflet-container) {
+  background: transparent !important;
+}
+
+:deep(.leaflet-tile-container) {
+  opacity: 1 !important;
 }
 </style>
