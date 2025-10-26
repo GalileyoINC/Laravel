@@ -49,10 +49,11 @@
       "item": [
         {"name": "list","request": {"method": "POST","url": "{{base_url}}/v1/chat/list"}},
         {"name": "chat-messages","request": {"method": "POST","url": "{{base_url}}/v1/chat/chat-messages"}},
+        {"name": "send","request": {"method": "POST","url": "{{base_url}}/v1/chat/send","body": {"mode": "raw","raw": "{\n  \"conversation_id\": 1,\n  \"message\": \"Hello, this is a test message\"\n}"},"header": [{"key":"Content-Type","value":"application/json"}]}},
         {"name": "view","request": {"method": "POST","url": "{{base_url}}/v1/chat/view"}},
         {"name": "upload","request": {"method": "POST","url": "{{base_url}}/v1/chat/upload"}},
         {"name": "create-group","request": {"method": "POST","url": "{{base_url}}/v1/chat/create-group"}},
-        {"name": "get-friend-chat","request": {"method": "POST","url": "{{base_url}}/v1/chat/get-friend-chat"}},
+        {"name": "get-friend-chat","request": {"method": "POST","url": "{{base_url}}/v1/chat/get-friend-chat","body": {"mode": "raw","raw": "{\n  \"friend_id\": 1\n}"},"header": [{"key":"Content-Type","value":"application/json"}]}},
         {"name": "get-file","request": {"method": "GET","url": "{{base_url}}/v1/chat/get-file/1"}}
       ]
     },
