@@ -50,7 +50,7 @@
       <div 
         ref="mapContainer" 
         class="map-container h-96 w-full rounded-lg border border-gray-300 dark:border-gray-600"
-        style="height: 400px; width: 100%; position: relative; z-index: 1;"
+        style="height: 400px; width: 100%; position: relative; z-index: 1; background: transparent;"
       >
         <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80">
           <div class="text-gray-500 dark:text-gray-400">Loading map...</div>
@@ -566,12 +566,17 @@ onMounted(() => {
   background: transparent !important;
 }
 
-/* Ensure map tiles are visible */
+/* Ensure map tiles are visible - CRITICAL */
 :deep(.leaflet-container) {
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 :deep(.leaflet-tile-container) {
+  opacity: 1 !important;
+}
+
+:deep(.leaflet-tile) {
   opacity: 1 !important;
 }
 </style>
