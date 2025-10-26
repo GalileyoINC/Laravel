@@ -26,7 +26,7 @@ class AlertMapSampleDataSeeder extends Seeder
         $sampleAlerts = [
             [
                 'type' => 1,
-                'status' => 1,
+                'status' => 'active',
                 'title' => 'Severe Weather Warning',
                 'description' => 'Heavy rainfall and strong winds expected in the area. Please stay indoors and avoid unnecessary travel.',
                 'alert_data' => json_encode(['weather_type' => 'storm', 'wind_speed' => '45 mph']),
@@ -159,7 +159,7 @@ class AlertMapSampleDataSeeder extends Seeder
 
             $additionalAlerts[] = [
                 'type' => fake()->randomElement($types),
-                'status' => 1,
+                'status' => 'active',
                 'title' => fake()->sentence(3),
                 'description' => fake()->paragraph(2),
                 'alert_data' => json_encode([

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\ProductDigitalAlerts;
@@ -21,12 +23,11 @@ class ProductDigitalAlertsFactory extends Factory
     {
         $severities = ['critical', 'high', 'medium', 'low'];
         $categories = ['emergency', 'weather', 'security', 'traffic', 'medical', 'fire', 'police'];
-        $statuses = ['active', 'inactive', 'expired'];
         $types = ['weather', 'traffic', 'security', 'medical', 'fire', 'police'];
 
         return [
             'type' => $this->faker->randomElement($types),
-            'status' => $this->faker->randomElement($statuses),
+            'status' => 'active',
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(2),
             'alert_data' => json_encode([
