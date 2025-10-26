@@ -14,6 +14,15 @@ class AlertMapSampleDataSeeder extends Seeder
      */
     public function run(): void
     {
+        // Skip if alerts already exist
+        if (ProductDigitalAlerts::count() > 0) {
+            $this->command->info('⏭️  Skipped: Alert map data already exists');
+
+            return;
+        }
+
+        $this->command->info('Creating alert map sample data...');
+
         $sampleAlerts = [
             [
                 'type' => 1,
@@ -137,10 +146,45 @@ class AlertMapSampleDataSeeder extends Seeder
             ],
         ];
 
-        foreach ($sampleAlerts as $alert) {
+        // Create additional alerts with random coordinates across different areas
+        $additionalAlerts = [];
+        for ($i = 0; $i < 50; $i++) {
+            $types = [1, 2, 3, 4, 5, 6, 7, 8];
+            $severities = ['critical', 'high', 'medium', 'low'];
+            $categories = ['weather', 'traffic', 'security', 'medical', 'fire', 'police', 'construction', 'emergency', 'utility'];
+
+            // Random coordinates across US (varied locations)
+            $lat = fake()->latitude(25.0, 49.0); // US latitude range
+            $lng = fake()->longitude(-125.0, -66.0); // US longitude range
+
+            $additionalAlerts[] = [
+                'type' => fake()->randomElement($types),
+                'status' => 1,
+                'title' => fake()->sentence(3),
+                'description' => fake()->paragraph(2),
+                'alert_data' => json_encode([
+                    'source' => fake()->company,
+                    'confidence' => fake()->numberBetween(1, 100),
+                    'affected_area' => fake()->city,
+                ]),
+                'latitude' => $lat,
+                'longitude' => $lng,
+                'address' => fake()->address,
+                'severity' => fake()->randomElement($severities),
+                'category' => fake()->randomElement($categories),
+                'affected_radius' => fake()->numberBetween(100, 5000),
+                'source' => fake()->company,
+                'expires_at' => fake()->dateTimeBetween('now', '+1 week'),
+            ];
+        }
+
+        // Combine sample and additional alerts
+        $allAlerts = array_merge($sampleAlerts, $additionalAlerts);
+
+        foreach ($allAlerts as $alert) {
             ProductDigitalAlerts::create($alert);
         }
 
-        $this->command->info('Sample alert map data created successfully!');
+        $this->command->info('✅ Sample alert map data created successfully! (Total: '.count($allAlerts).' alerts)');
     }
 }

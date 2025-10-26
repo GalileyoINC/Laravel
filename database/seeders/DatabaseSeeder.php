@@ -9,15 +9,15 @@ use App\Models\Communication\SmsPoolReaction;
 use App\Models\Content\Comment;
 use App\Models\Content\News;
 use App\Models\Content\Reaction;
-use App\Models\Device\Device;
 use App\Models\CreditCard;
+use App\Models\Device\Device;
 use App\Models\Subscription\Follower;
 use App\Models\Subscription\FollowerList;
 use App\Models\Subscription\InfluencerPage;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionCategory;
 use App\Models\User\User;
-use App\Models\User\UserSubscription;
+use Exception;
 use FilesystemIterator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
@@ -163,8 +163,8 @@ class DatabaseSeeder extends Seeder
                 }
             }
             $this->command->info('✅ Created user subscriptions');
-        } catch (\Exception $e) {
-            $this->command->warn('⚠️ Skipped user subscriptions: ' . $e->getMessage());
+        } catch (Exception $e) {
+            $this->command->warn('⚠️ Skipped user subscriptions: '.$e->getMessage());
         }
 
         // Create followers
@@ -179,6 +179,10 @@ class DatabaseSeeder extends Seeder
             }
         }
         $this->command->info('✅ Created followers');
+
+        // Create alert map data
+        $this->command->info('🗺️ Creating alert map data...');
+        $this->call(AlertMapSampleDataSeeder::class);
 
         // Create reactions
         $this->command->info('👍 Creating reactions...');
