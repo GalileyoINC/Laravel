@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('push_subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            // Use bigInteger to match user.id type (NOT unsigned)
+            $table->bigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->string('endpoint')->unique();
             $table->string('public_key');
             $table->string('auth_token');

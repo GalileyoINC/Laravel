@@ -55,6 +55,45 @@ class DatabaseSeeder extends Seeder
         );
         $this->command->info("✅ Admin user created/updated: {$adminUser->email}");
 
+        // Create a regular user (role 2)
+        $this->command->info('👤 Creating regular user...');
+        $regularUser = User::updateOrCreate(
+            ['email' => 'user@galileyo.com'],
+            [
+                'first_name' => 'Regular',
+                'last_name' => 'User',
+                'email' => 'user@galileyo.com',
+                'password_hash' => Hash::make('password'),
+                'role' => 2, // Regular user
+                'status' => 1,
+                'is_valid_email' => true,
+                'auth_key' => \Illuminate\Support\Str::random(32),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+        $this->command->info("✅ Regular user created/updated: {$regularUser->email}");
+
+        // Create an influencer user (role 2, is_influencer = true)
+        $this->command->info('🌟 Creating influencer user...');
+        $influencerUser = User::updateOrCreate(
+            ['email' => 'influencer@galileyo.com'],
+            [
+                'first_name' => 'Influencer',
+                'last_name' => 'User',
+                'email' => 'influencer@galileyo.com',
+                'password_hash' => Hash::make('password'),
+                'role' => 2, // Regular user role but influencer
+                'status' => 1,
+                'is_valid_email' => true,
+                'is_influencer' => true,
+                'auth_key' => \Illuminate\Support\Str::random(32),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+        $this->command->info("✅ Influencer user created/updated: {$influencerUser->email}");
+
         // Run the demo data seeder
         $this->call(DemoDataSeeder::class);
 
@@ -110,16 +149,23 @@ class DatabaseSeeder extends Seeder
 
         // Create user subscriptions
         $this->command->info('🔗 Creating user subscriptions...');
-        foreach ($users->take(30) as $user) {
-            $userSubscriptions = $subscriptions->random(random_int(1, 5));
-            foreach ($userSubscriptions as $subscription) {
-                UserSubscription::factory()->create([
-                    'id_user' => $user->id,
-                    'id_subscription' => $subscription->id,
-                ]);
+        try {
+            foreach ($users->take(30) as $user) {
+                $products = \App\Models\Product::take(5)->get();
+                foreach ($products->random(min(3, $products->count())) as $product) {
+                    \App\Models\UserSubscription::factory()->create([
+                        'user_id' => $user->id,
+                        'product_id' => $product->id,
+                        'status' => 'active',
+                        'price' => fake()->randomFloat(2, 9.99, 99.99),
+                        'start_date' => now(),
+                    ]);
+                }
             }
+            $this->command->info('✅ Created user subscriptions');
+        } catch (\Exception $e) {
+            $this->command->warn('⚠️ Skipped user subscriptions: ' . $e->getMessage());
         }
-        $this->command->info('✅ Created user subscriptions');
 
         // Create followers
         $this->command->info('👥 Creating followers...');

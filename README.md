@@ -128,7 +128,7 @@ docker exec galileyo-app php artisan [command]
 | Role           | Email                   | Password | Description         |
 | -------------- | ----------------------- | -------- | ------------------- |
 | **Admin**      | admin@galileyo.com      | password | Full system access  |
-| **User**       | test@galileyo.com       | password | Regular user access |
+| **User**       | user@galileyo.com       | password | Regular user access |
 | **Influencer** | influencer@galileyo.com | password | Influencer account  |
 
 ### API Access

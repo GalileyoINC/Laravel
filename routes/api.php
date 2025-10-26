@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', fn (Request $request) => $request->user());
+Route::middleware('auth:sanctum')->get('/v1/user', fn (Request $request) => $request->user());
 
 // Routes from api-allsendform.php
 Route::prefix('v1/all-send-form')->middleware('auth:sanctum')->group(function () {
@@ -82,6 +82,7 @@ Route::prefix('v1/chat')->middleware('auth:sanctum')->group(function () {
     // Chat routes
     Route::post('list', [ChatController::class, 'list']);
     Route::post('chat-messages', [ChatController::class, 'chatMessages']);
+    Route::post('send', [ChatController::class, 'send']);
     Route::post('view', [ChatController::class, 'view']);
     Route::post('upload', [ChatController::class, 'upload']);
     Route::post('create-group', [ChatController::class, 'createGroup']);

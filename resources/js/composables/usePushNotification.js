@@ -110,22 +110,30 @@ export function usePushNotification() {
     // Save subscription to backend
     async function saveSubscription(sub) {
         try {
+            // Get auth token from localStorage
+            const token = localStorage.getItem('auth_token');
+            
             const response = await fetch('/api/v1/push/subscribe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
                 },
                 body: JSON.stringify(sub.toJSON()),
             });
 
             if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error('Failed to save subscription:', errorData);
                 throw new Error('Failed to save subscription to backend');
             }
 
-            console.log('Subscription saved to backend');
+            const result = await response.json();
+            console.log('Subscription saved to backend:', result);
         } catch (error) {
             console.error('Error saving subscription:', error);
+            throw error;
         }
     }
 
@@ -138,11 +146,15 @@ export function usePushNotification() {
                 return;
             }
 
+            // Get auth token from localStorage
+            const token = localStorage.getItem('auth_token');
+
             const response = await fetch('/api/v1/push/unsubscribe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
                 },
                 body: JSON.stringify({ endpoint }),
             });

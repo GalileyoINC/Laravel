@@ -130,11 +130,12 @@ router.beforeEach(async (to, from, next) => {
     
     try {
       const { api } = await import('../api');
-      await api.get('/user'); // Test if token is valid
+      await api.get('/v1/user'); // Test if token is valid
       console.log('Token is valid, allowing access');
       next();
       return;
     } catch (error) {
+      console.error('Auth check error:', error);
       console.log('Token invalid, clearing auth and redirecting to login');
       authStore.logout();
       next({ name: 'Login', query: { redirect: to.fullPath } });
@@ -153,7 +154,7 @@ router.beforeEach(async (to, from, next) => {
     // Verify token is still valid before redirecting
     try {
       const { api } = await import('../api');
-      await api.get('/user'); // Test if token is valid
+      await api.get('/v1/user'); // Test if token is valid
       console.log('Token is valid, redirecting to dashboard');
       next({ name: 'Dashboard' });
       return;

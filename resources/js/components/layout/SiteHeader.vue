@@ -88,6 +88,9 @@
           <!-- Theme Toggle -->
           <ThemeToggle />
 
+          <!-- Push Notification Toggle (for testing) -->
+          <PushNotificationToggle />
+
           <!-- Create Post Button -->
           <button
             @click="openCreatePost"
@@ -160,6 +163,11 @@
       </aside>
     </div>
   </Teleport>
+
+  <!-- Chat Widget (Floating) -->
+  <Teleport to="body">
+    <ChatWidget v-if="isAuthenticated" />
+  </Teleport>
 </template>
 
 <script setup>
@@ -170,6 +178,8 @@ import CommandMenu from './CommandMenu.vue'
 import ThemeToggle from './ThemeToggle.vue'
 import UserMenu from './UserMenu.vue'
 import CreatePostModal from '../feed/CreatePostModal.vue'
+import PushNotificationToggle from './PushNotificationToggle.vue'
+import ChatWidget from '../chat/ChatWidget.vue'
 import { useAuthStore } from '../../stores/auth'
 
 const props = defineProps({
