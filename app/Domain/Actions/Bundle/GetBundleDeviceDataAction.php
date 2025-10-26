@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Bundle;
 
 use App\Domain\DTOs\Bundle\BundleDeviceDataRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
-use Exception;
 
 class GetBundleDeviceDataAction
 {
@@ -19,17 +18,12 @@ class GetBundleDeviceDataAction
      */
     public function execute(array $data): mixed
     {
-        try {
-            $dto = new BundleDeviceDataRequestDTO(
-                idDevice: $data['idDevice']
-            );
+        $dto = new BundleDeviceDataRequestDTO(
+            idDevice: $data['idDevice']
+        );
 
-            $result = $this->bundleService->getDeviceData($dto);
+        $result = $this->bundleService->getDeviceData($dto);
 
-            return $result;
-
-        } catch (Exception $e) {
-            throw $e;
-        }
+        return $result;
     }
 }

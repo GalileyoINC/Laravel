@@ -87,7 +87,7 @@ class ConversationMessage extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(\App\Models\User\User::class, 'id_user');
     }
 
     /**

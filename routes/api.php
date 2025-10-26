@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use App\Http\Controllers\Api\AllSendFormController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookmarkController;
@@ -21,16 +22,16 @@ use App\Http\Controllers\Api\MaintenanceController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PaymentHistoryController as ApiPaymentHistoryController;
 use App\Http\Controllers\Api\PhoneController;
-use App\Http\Controllers\Api\PushController;
 use App\Http\Controllers\Api\PrivateFeedController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PublicFeedController;
+use App\Http\Controllers\Api\PushController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\StaffController;
-use App\Http\Controllers\Api\PaymentHistoryController as ApiPaymentHistoryController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UsersController;
 use Illuminate\Http\Request;
@@ -88,6 +89,19 @@ Route::prefix('v1/chat')->middleware('auth:sanctum')->group(function () {
     Route::post('create-group', [ChatController::class, 'createGroup']);
     Route::post('get-friend-chat', [ChatController::class, 'getFriendChat']);
     Route::get('get-file/{id}/{type?}', [ChatController::class, 'getFile']);
+});
+
+// Admin Chat API - allow both web session and sanctum
+Route::middleware(['auth:sanctum', 'auth.any'])->group(function () {
+    Route::prefix('v1/admin/chat')->group(function () {
+        Route::get('unread-count', [AdminChatController::class, 'getUnreadCount']);
+    });
+
+    // Allow admin to access chat API with web session
+    Route::prefix('v1/chat')->group(function () {
+        Route::post('chat-messages', [ChatController::class, 'chatMessages']);
+        Route::post('send', [ChatController::class, 'send']);
+    });
 });
 
 // Routes from api-comment.php

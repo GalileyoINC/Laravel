@@ -6,10 +6,8 @@ namespace App\Domain\Actions\Influencer;
 
 use App\Domain\DTOs\Influencer\InfluencerFeedCreateRequestDTO;
 use App\Domain\Services\Influencer\InfluencerServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class CreateInfluencerFeedAction
 {
@@ -22,34 +20,24 @@ class CreateInfluencerFeedAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $dto = InfluencerFeedCreateRequestDTO::fromArray($data);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid influencer feed create request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $user = Auth::user();
-            if (! $user || ! $user->is_influencer) {
-                return response()->json([
-                    'error' => 'Access denied. User must be an influencer.',
-                    'code' => 403,
-                ], 403);
-            }
-
-            $feed = $this->influencerService->createInfluencerFeed($dto, $user);
-
-            return response()->json($feed->toArray());
-
-        } catch (Exception $e) {
-            Log::error('CreateInfluencerFeedAction error: '.$e->getMessage());
-
+        $dto = InfluencerFeedCreateRequestDTO::fromArray($data);
+        if (! $dto->validate()) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'errors' => ['Invalid influencer feed create request'],
+                'message' => 'Invalid request parameters',
+            ], 400);
         }
+
+        $user = Auth::user();
+        if (! $user || ! $user->is_influencer) {
+            return response()->json([
+                'error' => 'Access denied. User must be an influencer.',
+                'code' => 403,
+            ], 403);
+        }
+
+        $feed = $this->influencerService->createInfluencerFeed($dto, $user);
+
+        return response()->json($feed->toArray());
     }
 }

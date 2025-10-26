@@ -13,22 +13,20 @@ class GetDeviceListAction
     ) {}
 
     /**
-     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public function execute(array $data): array
-    {
-        $page = $data['page'] ?? 1;
-        $limit = $data['limit'] ?? 20;
-        $search = $data['search'] ?? null;
-        $userId = $data['user_id'] ?? null;
-        $os = $data['os'] ?? null;
-        $pushTokenFill = $data['push_token_fill'] ?? null;
-        $pushToken = $data['push_token'] ?? null;
-        $pushTurnOn = $data['push_turn_on'] ?? null;
-        $updatedAtFrom = $data['updated_at_from'] ?? null;
-        $updatedAtTo = $data['updated_at_to'] ?? null;
-
+    public function execute(
+        int $page = 1,
+        int $limit = 20,
+        ?string $search = null,
+        ?int $userId = null,
+        ?string $os = null,
+        ?string $pushTokenFill = null,
+        ?string $pushToken = null,
+        ?string $pushTurnOn = null,
+        ?string $updatedAtFrom = null,
+        ?string $updatedAtTo = null
+    ): array {
         return $this->deviceService->getList($page, $limit, $search, $userId, $os, $pushTokenFill, $pushToken, $pushTurnOn, $updatedAtFrom, $updatedAtTo);
     }
 }

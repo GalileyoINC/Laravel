@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Device;
 
 use App\Domain\Services\Device\DeviceServiceInterface;
-use Exception;
 
 class GetDeviceAction
 {
@@ -18,13 +17,8 @@ class GetDeviceAction
      */
     public function execute(array $data): mixed
     {
-        try {
-            $device = $this->deviceService->getById($data['id']);
+        $device = $this->deviceService->getById($data['id']);
 
-            return $device;
-
-        } catch (Exception $e) {
-            throw $e;
-        }
+        return $device;
     }
 }

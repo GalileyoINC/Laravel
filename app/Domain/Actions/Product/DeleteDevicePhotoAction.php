@@ -7,7 +7,6 @@ namespace App\Domain\Actions\Product;
 use App\Domain\DTOs\Product\DevicePhotoDeleteDTO;
 use App\Models\Content\ProductPhoto;
 use Illuminate\Support\Facades\Storage;
-use Throwable;
 
 final class DeleteDevicePhotoAction
 {
@@ -42,12 +41,8 @@ final class DeleteDevicePhotoAction
         }
 
         foreach (array_unique($paths) as $path) {
-            try {
-                if ($path && ! str_starts_with($path, 'http')) {
-                    Storage::disk($disk)->delete($path);
-                }
-            } catch (Throwable) {
-                $deletedFiles = false; // continue, but report overall false if any delete failed
+            if ($path && ! str_starts_with($path, 'http')) {
+                Storage::disk($disk)->delete($path);
             }
         }
 

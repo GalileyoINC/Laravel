@@ -14,16 +14,14 @@ class GetContactListAction
     ) {}
 
     /**
-     * @param  array<string, mixed>  $data
      * @return LengthAwarePaginator<int, mixed>
      */
-    public function execute(array $data): LengthAwarePaginator
-    {
-        $page = $data['page'] ?? 1;
-        $limit = $data['limit'] ?? 20;
-        $search = $data['search'] ?? null;
-        $status = $data['status'] ?? 1;
-
+    public function execute(
+        int $page = 1,
+        int $limit = 20,
+        ?string $search = null,
+        int $status = 1
+    ): LengthAwarePaginator {
         return $this->contactService->getList($page, $limit, $search, $status);
     }
 }

@@ -21,19 +21,12 @@ class DeleteCreditCardAction
     public function execute(int $cardId): JsonResponse
     {
         $user = Auth::user();
-        
-        try {
-            $this->paymentService->deleteCreditCard($user, $cardId);
-            
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Credit card deleted successfully',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 400);
-        }
+
+        $this->paymentService->deleteCreditCard($user, $cardId);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Credit card deleted successfully',
+        ]);
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Actions\EmailPool;
 
 use App\Domain\Services\EmailPool\EmailPoolServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class GetEmailAttachmentAction
@@ -19,19 +18,11 @@ class GetEmailAttachmentAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $attachment = $this->emailPoolService->getAttachment($data['id']);
+        $attachment = $this->emailPoolService->getAttachment($data['id']);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $attachment,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get attachment: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $attachment,
+        ]);
     }
 }

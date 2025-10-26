@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Domain\Actions\Chat\CreateGroupConversationAction;
 use App\Domain\Actions\Chat\GetChatListAction;
+use App\Domain\Actions\Chat\GetConversationAction;
+use App\Domain\Actions\Chat\GetConversationMessagesAction;
+use App\Domain\Actions\Chat\GetFriendChatAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Chat\GetFriendChatRequest;
+use App\Http\Resources\ConversationResource;
 use App\Models\Communication\ConversationFile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\Response;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Refactored Chat Controller using DDD Actions
@@ -22,7 +28,11 @@ use OpenApi\Attributes as OA;
 class ChatController extends Controller
 {
     public function __construct(
-        private readonly GetChatListAction $getChatListAction
+        private readonly GetChatListAction $getChatListAction,
+        private readonly GetFriendChatAction $getFriendChatAction,
+        private readonly GetConversationMessagesAction $getConversationMessagesAction,
+        private readonly GetConversationAction $getConversationAction,
+        private readonly CreateGroupConversationAction $createGroupConversationAction,
     ) {}
 
     /**
@@ -67,7 +77,24 @@ class ChatController extends Controller
     )]
     public function list(Request $request): JsonResponse
     {
-        return $this->getChatListAction->execute($request->all());
+        $conversations = $this->getChatListAction->execute(
+            page: (int) $request->input('page', 1),
+            limit: (int) $request->input('per_page', 20),
+            search: $request->input('search'),
+            sortBy: $request->input('sort_by', 'updated_at'),
+            sortOrder: $request->input('sort_order', 'desc')
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $conversations->items(),
+            'meta' => [
+                'current_page' => $conversations->currentPage(),
+                'last_page' => $conversations->lastPage(),
+                'per_page' => $conversations->perPage(),
+                'total' => $conversations->total(),
+            ],
+        ]);
     }
 
     /**
@@ -113,14 +140,11 @@ class ChatController extends Controller
             'per_page' => 'nullable|integer|min:1|max:100',
         ]);
 
-        $conversationId = $request->input('conversation_id');
-        $perPage = $request->input('per_page', 20);
-        $page = $request->input('page', 1);
-
-        $messages = \App\Models\Communication\ConversationMessage::where('id_conversation', $conversationId)
-            ->with(['user:id,first_name,last_name'])
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', $page);
+        $messages = $this->getConversationMessagesAction->execute(
+            conversationId: (int) $request->input('conversation_id'),
+            perPage: (int) $request->input('per_page', 20),
+            page: (int) $request->input('page', 1)
+        );
 
         return response()->json([
             'status' => 'success',
@@ -144,17 +168,9 @@ class ChatController extends Controller
         ]);
 
         $user = Auth::user();
-        $conversationId = $request->input('conversation_id');
+        $conversation = $this->getConversationAction->execute((int) $request->input('conversation_id'));
 
-        $conversation = \App\Models\Communication\Conversation::with([
-            'users:id,first_name,last_name',
-            'conversation_messages' => function ($q) {
-                $q->latest()->limit(20);
-            },
-            'conversation_messages.user:id,first_name,last_name',
-        ])->find($conversationId);
-
-        if (!$conversation) {
+        if (! $conversation) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Conversation not found',
@@ -163,7 +179,7 @@ class ChatController extends Controller
 
         // Check if user is participant
         $isParticipant = $conversation->users->contains('id', $user->id);
-        if (!$isParticipant) {
+        if (! $isParticipant) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Access denied',
@@ -195,21 +211,10 @@ class ChatController extends Controller
             'user_ids.*' => 'integer|exists:user,id',
         ]);
 
-        $user = Auth::user();
-        $userIds = $request->input('user_ids');
-
-        // Add current user to participants
-        $userIds[] = $user->id;
-        $userIds = array_unique($userIds);
-
-        // Create conversation
-        $conversation = \App\Models\Communication\Conversation::create();
-
-        // Attach users to conversation
-        $conversation->users()->attach($userIds);
-
-        // Load with users
-        $conversation->load('users:id,first_name,last_name');
+        $conversation = $this->createGroupConversationAction->execute(
+            name: (string) $request->input('name'),
+            userIds: $request->input('user_ids')
+        );
 
         return response()->json([
             'status' => 'success',
@@ -221,38 +226,14 @@ class ChatController extends Controller
     /**
      * Get friend chat conversation (POST /api/v1/chat/get-friend-chat)
      */
-    public function getFriendChat(Request $request): JsonResponse
+    public function getFriendChat(GetFriendChatRequest $request): JsonResponse
     {
-        $request->validate([
-            'friend_id' => 'required|integer|exists:user,id',
-        ]);
-
-        $user = Auth::user();
-        $friendId = $request->input('friend_id');
-
-        // Find existing conversation between users
-        $conversation = \App\Models\Communication\Conversation::whereHas('users', function ($q) use ($user, $friendId) {
-            $q->where('id_user', $user->id);
-        })->whereHas('users', function ($q) use ($friendId) {
-            $q->where('id_user', $friendId);
-        })->whereHas('users', function ($q) {
-            $q->havingRaw('COUNT(DISTINCT id_user) = 2');
-        })->first();
-
-        // If no conversation exists, create one
-        if (!$conversation) {
-            $conversation = \App\Models\Communication\Conversation::create();
-            $conversation->users()->attach([$user->id, $friendId]);
-        }
-
-        $conversation->load([
-            'users:id,first_name,last_name',
-            'conversation_messages.user:id,first_name,last_name',
-        ]);
+        $validated = $request->validated();
+        $conversation = $this->getFriendChatAction->execute((int) $validated['friend_id']);
 
         return response()->json([
             'status' => 'success',
-            'data' => $conversation,
+            'data' => new ConversationResource($conversation),
         ]);
     }
 
@@ -277,10 +258,30 @@ class ChatController extends Controller
         $action = new \App\Domain\Actions\Chat\SendMessageAction();
         $message = $action->execute($dto);
 
+        // Load user relationship with proper column selection
+        $message->load('user');
+
+        // Format response data
+        $messageData = [
+            'id' => $message->id,
+            'id_conversation' => $message->id_conversation,
+            'id_user' => $message->id_user,
+            'message' => $message->message,
+            'created_at' => $message->created_at,
+            'user' => $message->user ? [
+                'id' => $message->user->id,
+                'first_name' => $message->user->first_name,
+                'last_name' => $message->user->last_name,
+            ] : null,
+        ];
+
+        // Broadcast to admin panel
+        event(new \App\Events\NewLiveChatMessage($messageData));
+
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent successfully',
-            'data' => $message->load('user:id,first_name,last_name'),
+            'data' => $messageData,
         ], 201);
     }
 

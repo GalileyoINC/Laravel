@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Bundle;
 
 use App\Domain\DTOs\Bundle\BundleCreateRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class CreateBundleAction
@@ -20,26 +19,20 @@ class CreateBundleAction
      */
     public function execute(array $data): mixed
     {
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            $dto = new BundleCreateRequestDTO(
-                name: $data['name'],
-                description: $data['description'] ?? null,
-                price: $data['price'],
-                services: $data['services'] ?? [],
-                is_active: $data['is_active'] ?? true
-            );
+        $dto = new BundleCreateRequestDTO(
+            name: $data['name'],
+            description: $data['description'] ?? null,
+            price: $data['price'],
+            services: $data['services'] ?? [],
+            is_active: $data['is_active'] ?? true
+        );
 
-            $bundle = $this->bundleService->create($dto);
+        $bundle = $this->bundleService->create($dto);
 
-            DB::commit();
+        DB::commit();
 
-            return $bundle;
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return $bundle;
     }
 }

@@ -7,10 +7,8 @@ namespace App\Domain\Actions\Posts;
 use App\Domain\DTOs\Posts\PostUpdateRequestDTO;
 use App\Domain\Services\Posts\PostsServiceInterface;
 use App\Models\User\User;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Update post action
@@ -28,32 +26,22 @@ class UpdatePostAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $dto = PostUpdateRequestDTO::fromArray($data);
-            $user = Auth::user();
-            
-            if (!$user instanceof User) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
+        $dto = PostUpdateRequestDTO::fromArray($data);
+        $user = Auth::user();
 
-            $result = $this->postsService->updatePost($dto, $user);
-
+        if (! $user instanceof User) {
             return response()->json([
-                'status' => 'success',
-                'message' => 'Post updated successfully',
-                'data' => $result,
-            ]);
-
-        } catch (Exception $e) {
-            Log::error('UpdatePostAction error: '.$e->getMessage());
-
-            return response()->json([
-                'error' => 'Failed to update post',
-                'code' => 500,
-            ], 500);
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
         }
+
+        $result = $this->postsService->updatePost($dto, $user);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Post updated successfully',
+            'data' => $result,
+        ]);
     }
 }

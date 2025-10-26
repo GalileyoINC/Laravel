@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Web;
 use App\Domain\Actions\Bundle\CreateBundleAction;
 use App\Domain\Actions\Bundle\GetBundleListAction;
 use App\Domain\Actions\Bundle\UpdateBundleAction;
-use App\Domain\DTOs\Bundle\BundleListRequestDTO;
 use App\Domain\DTOs\Bundle\CreateBundleDTO;
 use App\Domain\DTOs\Bundle\UpdateBundleDTO;
 use App\Http\Controllers\Controller;
@@ -34,16 +33,13 @@ class BundleController extends Controller
     public function index(BundleIndexRequest $request): View
     {
         $validated = $request->validated();
-        $dto = new BundleListRequestDTO(
+
+        $bundles = $this->getBundleListAction->execute(
             page: (int) ($validated['page'] ?? 1),
             limit: 20,
             search: $validated['search'] ?? null,
             status: array_key_exists('status', $validated) ? (int) $validated['status'] : null,
         );
-
-        $response = $this->getBundleListAction->execute($dto->toArray());
-        $payload = $response->getData(true);
-        $bundles = $payload['data'] ?? [];
 
         return ViewFacade::make('bundle.index', [
             'bundles' => $bundles,

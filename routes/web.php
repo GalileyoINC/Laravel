@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Web\ActiveRecordLogController;
 use App\Http\Controllers\Web\AdminMessageLogController;
 use App\Http\Controllers\Web\ApiLogController;
@@ -54,7 +55,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/docs/api-docs.json', function () {
     return response()->file(storage_path('api-docs/api-docs.json'));
 });
-
 
 // ========================================
 // WEB ROUTES (Authenticated)
@@ -504,6 +504,12 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
     Route::get('contact/export/csv', [ContactController::class, 'export'])->name('contact.export');
     Route::post('contact/{contact}/toggle-status', [ContactController::class, 'toggleStatus'])->name('contact.toggle-status');
     Route::post('contact/{contact}/mark-replied', [ContactController::class, 'markAsReplied'])->name('contact.mark-replied');
+
+    // Chat Routes
+    Route::get('chat', [ChatController::class, 'index'])->name('chat.admin');
+    Route::get('chat/messages/{conversationId}', [ChatController::class, 'getMessages']);
+    Route::get('chat/recent-messages', [ChatController::class, 'getRecentMessages']);
+    Route::post('chat/send', [ChatController::class, 'sendMessage']);
 
     // News Routes
     Route::get('news', [NewsController::class, 'index'])->name('news.index');

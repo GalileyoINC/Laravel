@@ -23,16 +23,17 @@
       </div>
       
       <div class="chat-body">
-        <div v-if="!selectedConversationId" class="chat-list-container">
+        <div class="chat-list-container">
           <ChatList 
             @select="handleSelectConversation"
           />
         </div>
-        <div v-else class="chat-window-container">
+        <div class="chat-window-container">
           <ChatWindow 
             :conversation-id="selectedConversationId"
             :current-user-id="currentUserId"
             @back="selectedConversationId = null"
+            @select-conversation="handleSelectConversation"
           />
         </div>
       </div>
@@ -113,7 +114,7 @@ const handleSelectConversation = (id) => {
   position: absolute;
   bottom: 80px;
   right: 0;
-  width: 380px;
+  width: 750px;
   height: 650px;
   background: white;
   border-radius: 16px;
@@ -122,6 +123,7 @@ const handleSelectConversation = (id) => {
   flex-direction: column;
   overflow: hidden;
   border: 1px solid #e5e7eb;
+  z-index: 1001;
 }
 
 .chat-header {
@@ -161,13 +163,22 @@ const handleSelectConversation = (id) => {
   flex: 1;
   overflow: hidden;
   display: flex;
+  min-height: 0;
 }
 
-.chat-list-container,
+.chat-list-container {
+  flex: 0 0 370px;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+  border-right: 1px solid #e5e7eb;
+}
+
 .chat-window-container {
   flex: 1;
-  min-height: 0; /* critical for nested flex scrolling */
+  min-height: 0;
   display: flex;
+  overflow: hidden;
 }
 </style>
 

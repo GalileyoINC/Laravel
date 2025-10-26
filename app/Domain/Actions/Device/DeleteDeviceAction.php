@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Device;
 
 use App\Domain\Services\Device\DeviceServiceInterface;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class DeleteDeviceAction
@@ -14,21 +13,13 @@ class DeleteDeviceAction
         private readonly DeviceServiceInterface $deviceService
     ) {}
 
-    /**
-     * @param  array<string, mixed>  $data
-     */
-    public function execute(array $data): bool
+    public function execute(int $id): bool
     {
         DB::beginTransaction();
 
-        try {
-            $this->deviceService->delete($data['id']);
-            DB::commit();
+        $this->deviceService->delete($id);
+        DB::commit();
 
-            return true;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return true;
     }
 }

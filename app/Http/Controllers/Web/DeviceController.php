@@ -8,7 +8,6 @@ use App\Domain\Actions\Device\DeleteDeviceAction;
 use App\Domain\Actions\Device\ExportDevicesToCsvAction;
 use App\Domain\Actions\Device\GetDeviceListAction;
 use App\Domain\Actions\Device\SendPushNotificationAction;
-use App\Domain\DTOs\Device\DeviceListRequestDTO;
 use App\Domain\DTOs\Device\DevicePushRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\Web\DeviceIndexRequest;
@@ -34,11 +33,12 @@ class DeviceController extends Controller
     public function index(DeviceIndexRequest $request): View
     {
         $filters = $request->validated();
-        $dto = new DeviceListRequestDTO(
+
+        $devices = $this->getDeviceListAction->execute(
             page: $filters['page'] ?? 1,
             limit: $filters['limit'] ?? 20,
             search: $filters['search'] ?? null,
-            user_id: $filters['user_id'] ?? null,
+            userId: $filters['user_id'] ?? null,
             os: $filters['os'] ?? null,
             pushTokenFill: $filters['push_token_fill'] ?? null,
             pushToken: $filters['push_token'] ?? null,
@@ -46,8 +46,6 @@ class DeviceController extends Controller
             updatedAtFrom: $filters['updated_at_from'] ?? null,
             updatedAtTo: $filters['updated_at_to'] ?? null,
         );
-
-        $devices = $this->getDeviceListAction->execute($dto->toArray());
 
         return ViewFacade::make('device.index', [
             'devices' => $devices,
@@ -70,11 +68,7 @@ class DeviceController extends Controller
      */
     public function destroy(Device $device): RedirectResponse
     {
-        $dto = new \App\Domain\DTOs\Device\DeviceDeleteRequestDTO(
-            id: $device->id
-        );
-
-        $this->deleteDeviceAction->execute($dto->toArray());
+        $this->deleteDeviceAction->execute($device->id);
 
         return redirect()->route('device.index')
             ->with('success', 'Device deleted successfully.');

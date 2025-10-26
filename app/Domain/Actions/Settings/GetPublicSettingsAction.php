@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Settings;
 
 use App\Domain\DTOs\Settings\SettingsPublicRequestDTO;
 use App\Domain\Services\Settings\SettingsServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class GetPublicSettingsAction
@@ -20,24 +19,16 @@ class GetPublicSettingsAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $dto = new SettingsPublicRequestDTO(
-                user_point_settings: $data['user_point_settings'] ?? null,
-                safe_settings: $data['safe_settings'] ?? null
-            );
+        $dto = new SettingsPublicRequestDTO(
+            user_point_settings: $data['user_point_settings'] ?? null,
+            safe_settings: $data['safe_settings'] ?? null
+        );
 
-            $result = $this->settingsService->getPublicSettings($dto);
+        $result = $this->settingsService->getPublicSettings($dto);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get public settings: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 }

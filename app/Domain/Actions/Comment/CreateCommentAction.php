@@ -6,10 +6,8 @@ namespace App\Domain\Actions\Comment;
 
 use App\Domain\DTOs\Comment\CommentCreateRequestDTO;
 use App\Domain\Services\Comment\CommentServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class CreateCommentAction
 {
@@ -22,34 +20,24 @@ class CreateCommentAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $dto = CommentCreateRequestDTO::fromArray($data);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'errors' => ['Invalid comment create request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $comment = $this->commentService->createComment($dto, $user);
-
-            return response()->json($comment->toArray());
-
-        } catch (Exception $e) {
-            Log::error('CreateCommentAction error: '.$e->getMessage());
-
+        $dto = CommentCreateRequestDTO::fromArray($data);
+        if (! $dto->validate()) {
             return response()->json([
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'errors' => ['Invalid comment create request'],
+                'message' => 'Invalid request parameters',
+            ], 400);
         }
+
+        $user = Auth::user();
+        if (! $user) {
+            return response()->json([
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
+        }
+
+        $comment = $this->commentService->createComment($dto, $user);
+
+        return response()->json($comment->toArray());
     }
 }

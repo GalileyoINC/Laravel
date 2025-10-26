@@ -1,0 +1,137 @@
+# Galileyo Project Rules
+
+## Architecture & DDD Pattern
+
+-   We use **Domain-Driven Design (DDD)** architecture
+-   Controllers handle HTTP requests/responses only
+-   **Controllers are MINIMAL** - typically single-line calls to Actions
+-   **Controllers have NO business logic, NO try-catch, NO Eloquent queries**
+-   Business logic goes in **Domain Actions**
+-   Data validation uses **Request classes**
+-   API responses use **Resource classes**
+
+## Domain Actions Pattern
+
+-   **Actions** should return data only (models, arrays), NEVER JSON/HTTP responses
+-   Actions are reusable across API and Web controllers
+-   Use Actions for all business logic operations
+-   Actions throw Exceptions for errors, never return error responses
+-   **NO try-catch blocks in Actions** - let exceptions bubble up naturally
+-   **NO responses in Actions** - Controllers decide API (JSON) or Web (Views) format
+-   Controllers handle exception catching and response formatting
+
+## Request Classes
+
+-   Use **FormRequest classes** for all validation
+-   Validation logic belongs in Request classes, not Controllers
+-   Create Request classes in `app/Http/Requests/{Module}/` folders
+
+## Resource Classes
+
+-   Use **Resource classes** for formatting API responses
+-   Resources transform models to API format
+-   Controllers wrap resources in JSON responses
+
+## DTO Pattern
+
+-   **DTOs** are used ONLY for insert/update operations (Create/Update)
+-   DTOs are NOT used for read operations (Get, List, etc.)
+-   Read operations use direct parameters in Action execute() method
+
+## Code Structure
+
+```
+Controller -> validates with Request -> calls Action -> wraps result in Resource
+Controller: HTTP only (validation, response formatting)
+Action: Business logic (returns data models/arrays)
+Resource: Data transformation (models -> API format)
+Request: Validation rules
+```
+
+## Models & Relationships
+
+-   Always use **FULL namespace** for models in relationships (e.g., `\App\Models\User\User::class`)
+-   Do not use shorthand class names in model relationships
+-   This prevents "Class not found" errors
+
+## Controller Rules
+
+-   **Controllers are MINIMAL** - no business logic, no Eloquent queries
+-   Controllers ONLY call Actions - single line: `$this->action->execute(...)`
+-   Controllers NEVER call `$model->update()`, `$model->delete()`, `$model->save()` directly
+-   All model operations MUST go through Actions
+-   Route Model Binding is allowed for reading (`Contact $contact` in method params)
+
+## Indentation & Formatting
+
+-   Always use Laravel Pint before committing
+-   Run `vendor/bin/pint [file]` after making changes
+-   Follow Laravel coding standards
+-   No comments in code unless absolutely necessary - prefer PHPDoc
+
+## Example Structure
+
+### Correct Action Pattern:
+
+```php
+// app/Domain/Actions/Chat/GetFriendChatAction.php
+class GetFriendChatAction
+{
+    public function execute(int $friendId): Conversation
+    {
+        // NO try-catch - let exceptions bubble up
+        $user = Auth::user();
+
+        if (!$user) {
+            throw new Exception('User not found');
+        }
+
+        // Business logic here
+        return $conversation; // Returns model, NOT JSON
+    }
+}
+```
+
+### Correct Controller Pattern:
+
+```php
+// app/Http/Controllers/Api/ChatController.php
+public function getFriendChat(GetFriendChatRequest $request): JsonResponse
+{
+    $validated = $request->validated();
+    $conversation = $this->action->execute((int) $validated['friend_id']);
+
+    return response()->json([
+        'status' => 'success',
+        'data' => new ConversationResource($conversation),
+    ]);
+}
+```
+
+**Controllers are MINIMAL - single line calls to Actions, NO try-catch, NO business logic**
+
+### NEVER do this:
+
+```php
+// ❌ WRONG - Action returning JSON/Response
+public function execute(...): JsonResponse
+{
+    return response()->json([...]); // BAD!
+}
+
+// ❌ WRONG - Action with try-catch
+public function execute(...)
+{
+    try {
+        // business logic
+    } catch (Exception $e) {
+        return response()->json(['error' => ...]); // BAD!
+    }
+}
+
+// ❌ WRONG - No Request class in Controller
+public function method(Request $request): JsonResponse
+{
+    $request->validate([...]); // BAD!
+}
+```

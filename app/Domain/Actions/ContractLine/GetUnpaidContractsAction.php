@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Actions\ContractLine;
 
 use App\Domain\Services\ContractLine\ContractLineServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class GetUnpaidContractsAction
@@ -19,26 +18,18 @@ class GetUnpaidContractsAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $page = $data['page'] ?? 1;
-            $limit = $data['limit'] ?? 20;
-            $search = $data['search'] ?? null;
-            $userId = $data['user_id'] ?? null;
-            $serviceId = $data['service_id'] ?? null;
-            $status = $data['status'] ?? 'unpaid';
+        $page = $data['page'] ?? 1;
+        $limit = $data['limit'] ?? 20;
+        $search = $data['search'] ?? null;
+        $userId = $data['user_id'] ?? null;
+        $serviceId = $data['service_id'] ?? null;
+        $status = $data['status'] ?? 'unpaid';
 
-            $contracts = $this->contractLineService->getUnpaidContracts($page, $limit, $search, $userId, $serviceId, $status);
+        $contracts = $this->contractLineService->getUnpaidContracts($page, $limit, $search, $userId, $serviceId, $status);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $contracts,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get unpaid contracts: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $contracts,
+        ]);
     }
 }

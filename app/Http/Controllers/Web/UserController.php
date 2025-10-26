@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Finance\TerminateContractLineAction;
+use App\Domain\Actions\Promocode\DeletePromocodeAction;
 use App\Domain\Actions\Users\ApplyUserCreditAction;
 use App\Domain\Actions\Users\CreateUserAction;
 use App\Domain\Actions\Users\DeleteUserAction;
@@ -21,7 +23,6 @@ use App\Domain\DTOs\Users\CreateUserDTO;
 use App\Domain\DTOs\Users\ExportUsersRequestDTO;
 use App\Domain\DTOs\Users\SetFeedVisibilityDTO;
 use App\Domain\DTOs\Users\UpdateUserDTO;
-use App\Domain\DTOs\Users\UsersListRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\Web\UserRequest;
 use App\Models\Finance\ContractLine;
@@ -37,7 +38,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Throwable;
 
 class UserController extends Controller
 {
@@ -55,6 +55,8 @@ class UserController extends Controller
         private readonly RemoveUserCreditAction $removeUserCreditAction,
         private readonly \App\Domain\Actions\Users\VerifyInfluencerAction $verifyInfluencerAction,
         private readonly RefuseInfluencerAction $refuseInfluencerAction,
+        private readonly DeletePromocodeAction $deletePromocodeAction,
+        private readonly TerminateContractLineAction $terminateContractLineAction,
     ) {}
 
     /**
@@ -62,15 +64,17 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $dto = new UsersListRequestDTO(
+        $users = $this->getUsersListAction->execute(
             page: (int) $request->query('page', 1),
-            pageSize: (int) $request->query('page_size', 1000), // Increased for client-side filtering
+            pageSize: (int) $request->query('page_size', 1000),
             search: $request->query('search'),
+            status: $request->has('status') ? (int) $request->query('status') : null,
             role: $request->has('role') ? (int) $request->query('role') : null,
+            isInfluencer: $request->has('is_influencer') ? $request->boolean('is_influencer') : null,
+            sortBy: $request->query('sort_by', 'created_at'),
+            sortOrder: $request->query('sort_order', 'desc'),
             validEmailOnly: $request->boolean('valid_email_only', false)
         );
-
-        $users = $this->getUsersListAction->execute($dto->toArray());
 
         return ViewFacade::make('user.index', [
             'users' => $users,
@@ -200,11 +204,7 @@ class UserController extends Controller
      */
     public function loginAsUser(User $user): RedirectResponse
     {
-        try {
-            $result = $this->loginAsUserAction->execute((int) Auth::id(), $user->id);
-        } catch (Throwable $e) {
-            return Redirect::back()->withErrors(['error' => $e->getMessage()]);
-        }
+        $result = $this->loginAsUserAction->execute((int) Auth::id(), $user->id);
 
         return Redirect::to('https://galileyo.com/super-login?snnd=vg_f43rr$433&t='.$result['token'])
             ->with('success', 'Logged in as user: '.$user->first_name.' '.$user->last_name);
@@ -347,7 +347,7 @@ class UserController extends Controller
      */
     public function deleteSaleInfluencerPromocode(Promocode $promocode): RedirectResponse
     {
-        $promocode->delete();
+        $this->deletePromocodeAction->execute($promocode);
 
         return Redirect::route('user.promocode')
             ->with('success', 'Promocode deleted successfully.');
@@ -398,8 +398,7 @@ class UserController extends Controller
     public function terminate(ContractLine $contractLine): View|RedirectResponse
     {
         if (request()->isMethod('post')) {
-            $contractLine->terminated_at = now();
-            $contractLine->save();
+            $this->terminateContractLineAction->execute($contractLine);
 
             return Redirect::route('user.show', $contractLine->id_user)
                 ->with('success', 'Contract terminated successfully.');

@@ -6,7 +6,6 @@ namespace App\Domain\Actions\CreditCard;
 
 use App\Domain\DTOs\CreditCard\CreditCardListRequestDTO;
 use App\Domain\Services\CreditCard\CreditCardServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class GetCreditCardListAction
@@ -20,27 +19,19 @@ class GetCreditCardListAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $dto = new CreditCardListRequestDTO(
-                page: $data['page'] ?? 1,
-                limit: $data['limit'] ?? 20,
-                search: $data['search'] ?? null,
-                user_id: $data['user_id'] ?? null,
-                is_active: $data['is_active'] ?? null
-            );
+        $dto = new CreditCardListRequestDTO(
+            page: $data['page'] ?? 1,
+            limit: $data['limit'] ?? 20,
+            search: $data['search'] ?? null,
+            user_id: $data['user_id'] ?? null,
+            is_active: $data['is_active'] ?? null
+        );
 
-            $creditCards = $this->creditCardService->getList($dto);
+        $creditCards = $this->creditCardService->getList($dto);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $creditCards,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get credit card list: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $creditCards,
+        ]);
     }
 }

@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Users;
 
 use App\Domain\DTOs\Users\CreateUserDTO;
 use App\Domain\Services\Users\UsersServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class CreateUserAction
@@ -17,20 +16,12 @@ class CreateUserAction
 
     public function execute(CreateUserDTO $dto): JsonResponse
     {
-        try {
-            $user = $this->usersService->create($dto);
+        $user = $this->usersService->create($dto);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'User created successfully',
-                'data' => $user,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create user: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully',
+            'data' => $user,
+        ]);
     }
 }

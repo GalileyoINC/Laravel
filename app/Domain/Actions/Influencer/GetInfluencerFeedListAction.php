@@ -6,10 +6,8 @@ namespace App\Domain\Actions\Influencer;
 
 use App\Domain\DTOs\Influencer\InfluencerFeedListRequestDTO;
 use App\Domain\Services\Influencer\InfluencerServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class GetInfluencerFeedListAction
 {
@@ -22,45 +20,34 @@ class GetInfluencerFeedListAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $dto = InfluencerFeedListRequestDTO::fromArray($data);
-            if (! $dto->validate()) {
-                return response()->json([
-                    'status' => 'error',
-                    'errors' => ['Invalid influencer feed list request'],
-                    'message' => 'Invalid request parameters',
-                ], 400);
-            }
-
-            $user = Auth::user();
-            if (! $user) {
-                return response()->json([
-                    'status' => 'error',
-                    'error' => 'User not authenticated',
-                    'code' => 401,
-                ], 401);
-            }
-
-            $feeds = $this->influencerService->getInfluencerFeeds($dto, $user);
-
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'list' => $feeds->toArray(),
-                    'count' => $feeds->count(),
-                    'page' => 1,
-                    'page_size' => $feeds->count(),
-                ],
-            ]);
-
-        } catch (Exception $e) {
-            Log::error('GetInfluencerFeedListAction error: '.$e->getMessage());
-
+        $dto = InfluencerFeedListRequestDTO::fromArray($data);
+        if (! $dto->validate()) {
             return response()->json([
                 'status' => 'error',
-                'error' => 'An internal server error occurred.',
-                'code' => 500,
-            ], 500);
+                'errors' => ['Invalid influencer feed list request'],
+                'message' => 'Invalid request parameters',
+            ], 400);
         }
+
+        $user = Auth::user();
+        if (! $user) {
+            return response()->json([
+                'status' => 'error',
+                'error' => 'User not authenticated',
+                'code' => 401,
+            ], 401);
+        }
+
+        $feeds = $this->influencerService->getInfluencerFeeds($dto, $user);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'list' => $feeds->toArray(),
+                'count' => $feeds->count(),
+                'page' => 1,
+                'page_size' => $feeds->count(),
+            ],
+        ]);
     }
 }

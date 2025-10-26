@@ -66,7 +66,7 @@
             </a>
 
             <div class="pull-left">
-                <button type="button" name="button" class="JS__sidebar_toggler btn btn-primary d-inline d-md-none" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar"><i
+                <button type="button" name="button" class="JS__sidebar_toggler_mobile btn btn-primary d-inline d-md-none"><i
                         class="fas fa-bars"></i></button>
             </div>
 
@@ -74,6 +74,12 @@
                 @if (session('loginFromSuper'))
                     <a href="{{ route('site.reset') }}" class="btn btn-admin">RESET</a>
                 @endif
+
+                <!-- Chat Button with Badge -->
+                <a href="/admin/chat" class="btn btn-success" title="View Messages" style="position: relative;">
+                    <i class="fas fa-comments"></i> Chat
+                    <span id="chat-badge" class="badge badge-warning" style="position: absolute; top: -5px; right: -5px; display: none;">0</span>
+                </a>
 
                 <a href="{{ route('site.self') }}" class="btn btn-info JS__load_in_modal">
                     <i class="fas fa-user-alt"></i> {{ Auth::user()->username ?? 'User' }}
@@ -86,15 +92,12 @@
         </header>
 
         <aside
-            class="sidebar offcanvas offcanvas-start offcanvas-md"
-            tabindex="-1"
+            class="sidebar"
             id="adminSidebar"
-            aria-labelledby="adminSidebarLabel"
-            style="--bs-offcanvas-width: min(82vw, 500px); width: var(--bs-offcanvas-width) !important; z-index: 1065;"
         >
-            <div class="offcanvas-header d-md-none">
-                <h5 class="offcanvas-title" id="adminSidebarLabel">Menu</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <div class="sidebar-header d-md-none" style="padding: 10px 15px; background: #0d4d61; display: flex; justify-content: space-between; align-items: center;">
+                <h5 style="margin: 0; color: #fff;">Menu</h5>
+                <button type="button" class="btn-close text-reset" style="background: #fff; opacity: 1;" id="closeSidebarBtn"></button>
             </div>
             <div class="offcanvas-body p-0">
             <ul id="w1" class="sidebar-menu" dropdowncaret="<span class=&quot;fa fa-chevron-down&quot;></span>">
@@ -504,7 +507,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar toggle functionality
+            // Desktop sidebar toggle (mini/expand functionality)
             const sidebarToggler = document.querySelector('.JS__sidebar_toggler');
             if (sidebarToggler) {
                 sidebarToggler.addEventListener('click', function() {
@@ -521,6 +524,38 @@
                 });
             }
 
+            // Mobile sidebar toggle (show/hide functionality)
+            const mobileToggler = document.querySelector('.JS__sidebar_toggler_mobile');
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function() {
+                    const wrapper = document.querySelector('.wrapper');
+                    wrapper.classList.toggle('sidebar-open');
+                });
+            }
+
+            // Close sidebar on mobile when clicking outside
+            document.addEventListener('click', function(e) {
+                const wrapper = document.querySelector('.wrapper');
+                const sidebar = document.querySelector('.sidebar');
+                const mobileToggler = document.querySelector('.JS__sidebar_toggler_mobile');
+                
+                if (window.innerWidth <= 767 && wrapper.classList.contains('sidebar-open')) {
+                    // Check if click is outside sidebar
+                    if (!sidebar.contains(e.target) && !mobileToggler.contains(e.target)) {
+                        wrapper.classList.remove('sidebar-open');
+                    }
+                }
+            });
+
+            // Close sidebar button handler
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', function() {
+                    const wrapper = document.querySelector('.wrapper');
+                    wrapper.classList.remove('sidebar-open');
+                });
+            }
+
             // Note: submenu toggle is handled in public/js/admin.js using 'active' class
         });
     </script>
@@ -534,6 +569,33 @@
     <script src="{{ asset('js/admin.js') }}"></script>
     <!-- Live Filter JavaScript -->
     <script src="{{ asset('js/live-filter.js') }}"></script>
+    
+    <!-- Admin Live Chat Widget -->
+    @include('components.admin-chat-widget')
+    
+    <!-- Chat Badge Update Script -->
+    <script>
+        function updateChatBadge() {
+            fetch('/api/v1/admin/chat/unread-count')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('chat-badge');
+                    if (badge && data.unread_count > 0) {
+                        badge.textContent = data.unread_count;
+                        badge.style.display = 'block';
+                    } else if (badge) {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error fetching unread count:', error));
+        }
+        
+        // Update badge every 30 seconds
+        setInterval(updateChatBadge, 30000);
+        // Update immediately on page load
+        updateChatBadge();
+    </script>
+    
     @stack('scripts')
 </body>
 

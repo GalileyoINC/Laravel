@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Auth\GetStaffByCredentialsAction;
+use App\Domain\Actions\Auth\GetSuperStaffAction;
+use App\Domain\Actions\Auth\GetUserByIdAction;
 use App\Domain\Actions\Authentication\LoginAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\Web\LoginRequest;
@@ -20,7 +23,10 @@ use Illuminate\Support\Facades\View as ViewFacade;
 class AuthController extends Controller
 {
     public function __construct(
-        private readonly LoginAction $loginAction
+        private readonly LoginAction $loginAction,
+        private readonly GetStaffByCredentialsAction $getStaffByCredentialsAction,
+        private readonly GetSuperStaffAction $getSuperStaffAction,
+        private readonly GetUserByIdAction $getUserByIdAction,
     ) {}
 
     /**
@@ -50,10 +56,7 @@ class AuthController extends Controller
         $password = (string) ($credentials['password'] ?? '');
 
         // 1) Try Staff guard (by username or email)
-        $staff = Staff::query()
-            ->where('username', $username)
-            ->orWhere('email', $username)
-            ->first();
+        $staff = $this->getStaffByCredentialsAction->execute($username);
         if ($staff && Hash::check($password, (string) $staff->password_hash)) {
             Auth::guard('staff')->login($staff, false);
             session()->regenerate();
@@ -71,7 +74,7 @@ class AuthController extends Controller
         $data = $result->getData(true);
 
         if ($result->getStatusCode() === 200 && isset($data['user_id'])) {
-            $user = User::find((int) $data['user_id']);
+            $user = $this->getUserByIdAction->execute((int) $data['user_id']);
             if ($user) {
                 Auth::guard('web')->login($user, false);
                 session()->regenerate();
@@ -113,7 +116,7 @@ class AuthController extends Controller
                 Auth::guard('staff')->logout();
             }
 
-            $super = Staff::find(Staff::ID_SUPER);
+            $super = $this->getSuperStaffAction->execute();
             if ($super) {
                 Auth::guard('staff')->login($super, true);
             }

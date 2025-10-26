@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Web;
 use App\Domain\Actions\Contact\CreateContactAction;
 use App\Domain\Actions\Contact\DeleteContactAction;
 use App\Domain\Actions\Contact\GetContactListAction;
-use App\Domain\DTOs\Contact\ContactListRequestDTO;
+use App\Domain\Actions\Contact\MarkContactAsRepliedAction;
+use App\Domain\Actions\Contact\ToggleContactStatusAction;
+use App\Domain\Actions\Contact\UpdateContactAction;
 use App\Domain\DTOs\Contact\CreateContactDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\Web\ContactRequest;
@@ -23,7 +25,10 @@ class ContactController extends Controller
     public function __construct(
         private readonly CreateContactAction $createContactAction,
         private readonly GetContactListAction $getContactListAction,
-        private readonly DeleteContactAction $deleteContactAction
+        private readonly DeleteContactAction $deleteContactAction,
+        private readonly UpdateContactAction $updateContactAction,
+        private readonly ToggleContactStatusAction $toggleContactStatusAction,
+        private readonly MarkContactAsRepliedAction $markContactAsRepliedAction,
     ) {}
 
     /**
@@ -31,14 +36,12 @@ class ContactController extends Controller
      */
     public function index(Request $request): View
     {
-        $dto = new ContactListRequestDTO(
+        $contacts = $this->getContactListAction->execute(
             page: (int) $request->query('page', 1),
             limit: (int) $request->query('limit', 20),
             search: $request->query('search'),
             status: (int) $request->query('status', 1)
         );
-
-        $contacts = $this->getContactListAction->execute($dto->toArray());
 
         return ViewFacade::make('contact.index', [
             'contacts' => $contacts,
@@ -103,7 +106,7 @@ class ContactController extends Controller
      */
     public function update(ContactRequest $request, Contact $contact): RedirectResponse
     {
-        $contact->update($request->validated());
+        $this->updateContactAction->execute($contact, $request->validated());
 
         return Redirect::to(route('contact.index'))
             ->with('success', 'Contact updated successfully.');
@@ -129,8 +132,7 @@ class ContactController extends Controller
      */
     public function toggleStatus(Contact $contact): RedirectResponse
     {
-        $newStatus = $contact->status === 1 ? 2 : 1;
-        $contact->update(['status' => $newStatus]);
+        $newStatus = $this->toggleContactStatusAction->execute($contact);
 
         $status = $newStatus === 1 ? 'marked as active' : 'marked as viewed';
 
@@ -143,7 +145,7 @@ class ContactController extends Controller
      */
     public function markAsReplied(Contact $contact): RedirectResponse
     {
-        $contact->update(['status' => 2]);
+        $this->markContactAsRepliedAction->execute($contact);
 
         return Redirect::back()
             ->with('success', 'Contact marked as replied successfully.');

@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Settings;
 
 use App\Domain\DTOs\Settings\SettingsUpdateRequestDTO;
 use App\Domain\Services\Settings\SettingsServiceInterface;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class UpdateSettingsAction
@@ -23,22 +22,17 @@ class UpdateSettingsAction
     {
         DB::beginTransaction();
 
-        try {
-            $dto = new SettingsUpdateRequestDTO(
-                settings: $data['settings'] ?? [],
-                sms_settings: $data['sms_settings'] ?? null,
-                main_settings: $data['main_settings'] ?? null,
-                api_settings: $data['api_settings'] ?? null,
-                app_settings: $data['app_settings'] ?? null
-            );
+        $dto = new SettingsUpdateRequestDTO(
+            settings: $data['settings'] ?? [],
+            sms_settings: $data['sms_settings'] ?? null,
+            main_settings: $data['main_settings'] ?? null,
+            api_settings: $data['api_settings'] ?? null,
+            app_settings: $data['app_settings'] ?? null
+        );
 
-            $result = $this->settingsService->updateSettings($dto);
-            DB::commit();
+        $result = $this->settingsService->updateSettings($dto);
+        DB::commit();
 
-            return $result;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return $result;
     }
 }

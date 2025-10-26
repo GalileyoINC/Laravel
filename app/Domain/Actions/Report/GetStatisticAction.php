@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Report;
 
 use App\Domain\DTOs\Report\ReportStatisticRequestDTO;
 use App\Domain\Services\Report\ReportServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class GetStatisticAction
@@ -20,25 +19,17 @@ class GetStatisticAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $dto = new ReportStatisticRequestDTO(
-                date: $data['date'] ?? null,
-                page: $data['page'] ?? 1,
-                limit: $data['limit'] ?? 20
-            );
+        $dto = new ReportStatisticRequestDTO(
+            date: $data['date'] ?? null,
+            page: $data['page'] ?? 1,
+            limit: $data['limit'] ?? 20
+        );
 
-            $result = $this->reportService->getStatistic($dto);
+        $result = $this->reportService->getStatistic($dto);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get statistic: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 }

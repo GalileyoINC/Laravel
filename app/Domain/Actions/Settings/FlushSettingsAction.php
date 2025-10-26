@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Settings;
 
 use App\Domain\Services\Settings\SettingsServiceInterface;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class FlushSettingsAction
@@ -21,14 +20,9 @@ class FlushSettingsAction
     {
         DB::beginTransaction();
 
-        try {
-            $this->settingsService->flushSettings();
-            DB::commit();
+        $this->settingsService->flushSettings();
+        DB::commit();
 
-            return true;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return true;
     }
 }

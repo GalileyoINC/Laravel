@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Actions\CreditCard;
 
 use App\Domain\Services\CreditCard\CreditCardServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class GetCreditCardAction
@@ -19,19 +18,11 @@ class GetCreditCardAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $creditCard = $this->creditCardService->getById($data['id']);
+        $creditCard = $this->creditCardService->getById($data['id']);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $creditCard,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get credit card: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $creditCard,
+        ]);
     }
 }

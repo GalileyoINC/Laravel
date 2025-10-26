@@ -6,7 +6,6 @@ namespace App\Domain\Actions\Bundle;
 
 use App\Domain\DTOs\Bundle\BundleUpdateRequestDTO;
 use App\Domain\Services\Bundle\BundleServiceInterface;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class UpdateBundleAction
@@ -20,28 +19,21 @@ class UpdateBundleAction
      */
     public function execute(array $data): mixed
     {
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            $dto = new BundleUpdateRequestDTO(
-                id: $data['id'],
-                name: $data['name'] ?? null,
-                description: $data['description'] ?? null,
-                price: $data['price'] ?? null,
-                services: $data['services'] ?? null,
-                is_active: $data['is_active'] ?? null
-            );
+        $dto = new BundleUpdateRequestDTO(
+            id: $data['id'],
+            name: $data['name'] ?? null,
+            description: $data['description'] ?? null,
+            price: $data['price'] ?? null,
+            services: $data['services'] ?? null,
+            is_active: $data['is_active'] ?? null
+        );
 
-            $bundle = $this->bundleService->update($dto);
+        $bundle = $this->bundleService->update($dto);
 
-            DB::commit();
+        DB::commit();
 
-            return $bundle;
-
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            throw $e;
-        }
+        return $bundle;
     }
 }

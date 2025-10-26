@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Settings;
 
 use App\Domain\Services\Settings\SettingsServiceInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 class GetSettingsAction
@@ -19,19 +18,11 @@ class GetSettingsAction
      */
     public function execute(array $data): JsonResponse
     {
-        try {
-            $result = $this->settingsService->getAllSettings();
+        $result = $this->settingsService->getAllSettings();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $result,
-            ]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to get settings: '.$e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $result,
+        ]);
     }
 }
