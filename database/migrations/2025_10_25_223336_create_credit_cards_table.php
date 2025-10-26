@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('credit_cards', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->bigInteger('id', true);
+            // Match legacy 'user.id' type (BIGINT signed)
+            $table->bigInteger('user_id')->index();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('num'); // Masked card number
@@ -36,6 +37,9 @@ return new class extends Migration
             // Indexes
             $table->index(['user_id', 'is_active']);
             $table->index(['user_id', 'is_preferred']);
+
+            // FK with matching signedness
+            $table->foreign('user_id', 'fk-credit_cards-user_id')->references('id')->on('user')->onDelete('cascade');
         });
     }
 

@@ -34,7 +34,7 @@ class PaymentService implements PaymentServiceInterface
             'count' => $total,
             'page' => $page,
             'page_size' => $limit,
-            'list' => $cards->toArray(),
+            'list' => $cards,
         ];
     }
 
@@ -145,11 +145,9 @@ class PaymentService implements PaymentServiceInterface
      */
     private function maskCardNumber(string $cardNumber): string
     {
-        if (strlen($cardNumber) <= 4) {
-            return $cardNumber;
-        }
-        
-        return str_repeat('*', strlen($cardNumber) - 4) . substr($cardNumber, -4);
+        $digitsOnly = preg_replace('/\D/', '', $cardNumber) ?? '';
+        $last4 = strlen($digitsOnly) >= 4 ? substr($digitsOnly, -4) : $digitsOnly;
+        return '****' . $last4;
     }
 
     /**

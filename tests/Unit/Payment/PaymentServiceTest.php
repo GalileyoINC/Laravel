@@ -35,6 +35,9 @@ class PaymentServiceTest extends TestCase
         } else {
             $this->user = User::factory()->create();
         }
+
+        // Ensure no lingering credit cards for this user between tests
+        \App\Models\CreditCard::where('user_id', $this->user->id)->delete();
     }
 
     public function test_can_get_credit_cards(): void

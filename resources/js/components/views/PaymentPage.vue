@@ -64,9 +64,9 @@
 
 <script>
 import { ref } from 'vue'
-import PaymentMethods from './payment/PaymentMethods.vue'
-import Membership from './payment/Membership.vue'
-import PaymentHistory from './payment/PaymentHistory.vue'
+import PaymentMethods from '../payment/PaymentMethods.vue'
+import Membership from '../payment/Membership.vue'
+import PaymentHistory from '../payment/PaymentHistory.vue'
 
 // Icons
 const CreditCardIcon = {

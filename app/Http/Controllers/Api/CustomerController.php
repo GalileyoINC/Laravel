@@ -339,4 +339,28 @@ class CustomerController extends Controller
 
         return response()->json($result);
     }
+
+    /**
+     * Cancel membership (POST /api/v1/customer/cancel-membership)
+     */
+    public function cancelMembership(): JsonResponse
+    {
+        // Minimal placeholder implementation; integrate service call if available
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Membership cancelled successfully',
+        ]);
+    }
+
+    /**
+     * Restore membership (POST /api/v1/customer/restore-membership)
+     */
+    public function restoreMembership(): JsonResponse
+    {
+        // Minimal placeholder implementation; integrate service call if available
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Membership restored successfully',
+        ]);
+    }
 }

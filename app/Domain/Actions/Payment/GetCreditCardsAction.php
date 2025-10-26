@@ -33,6 +33,7 @@ class GetCreditCardsAction
         return response()->json([
             'status' => 'success',
             'data' => new CreditCardListResource($result),
+            'message' => 'Credit cards retrieved successfully',
         ]);
     }
 }

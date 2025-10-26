@@ -260,7 +260,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { paymentApi } from '../api'
+import { paymentApi } from '../../api'
 
 export default {
   name: 'PaymentMethods',

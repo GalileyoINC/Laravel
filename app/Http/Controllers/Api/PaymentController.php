@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\PaymentDetailsRequest;
 use App\Http\Requests\Payment\PaymentListRequest;
+use App\Http\Requests\Payment\PaymentIdRequest;
 use App\Domain\DTOs\Payment\PaymentDetailsDTO;
 use App\Domain\DTOs\Payment\PaymentListRequestDTO;
 use App\Domain\Actions\Payment\CreateCreditCardAction;
@@ -60,7 +61,7 @@ class PaymentController extends Controller
     /**
      * Set a credit card as preferred
      */
-    public function setPreferredCard(PaymentDetailsRequest $request): JsonResponse
+    public function setPreferredCard(PaymentIdRequest $request): JsonResponse
     {
         $cardId = $request->input('id');
         return $this->setPreferredCardAction->execute($cardId);
@@ -69,9 +70,25 @@ class PaymentController extends Controller
     /**
      * Delete a credit card
      */
-    public function deleteCreditCard(PaymentDetailsRequest $request): JsonResponse
+    public function deleteCreditCard(PaymentIdRequest $request): JsonResponse
     {
         $cardId = $request->input('id');
         return $this->deleteCreditCardAction->execute($cardId);
+    }
+
+    /**
+     * Set a credit card as preferred (path param variant)
+     */
+    public function setPreferredCardById(int $id): JsonResponse
+    {
+        return $this->setPreferredCardAction->execute($id);
+    }
+
+    /**
+     * Delete a credit card (path param variant)
+     */
+    public function deleteCreditCardById(int $id): JsonResponse
+    {
+        return $this->deleteCreditCardAction->execute($id);
     }
 }

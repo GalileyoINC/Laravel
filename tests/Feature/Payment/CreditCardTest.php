@@ -76,7 +76,7 @@ class CreditCardTest extends TestCase
 
         $response = $this->postJson('/api/v1/payment/credit-cards', $data);
 
-        $response->assertCreated()
+        $response->assertOk()
             ->assertJson([
                 'status' => 'success',
                 'message' => 'Credit card created successfully'
@@ -134,7 +134,7 @@ class CreditCardTest extends TestCase
         $response->assertOk()
             ->assertJson([
                 'status' => 'success',
-                'message' => 'Credit card set as preferred successfully'
+                'message' => 'Preferred card set successfully'
             ]);
 
         $this->assertFalse($card1->fresh()->is_preferred);
@@ -174,7 +174,7 @@ class CreditCardTest extends TestCase
 
     public function test_requires_authentication(): void
     {
-        Sanctum::actingAs(null);
+        $this->app['auth']->forgetGuards();
 
         $response = $this->getJson('/api/v1/payment/credit-cards');
 

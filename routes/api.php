@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\StaffController;
+use App\Http\Controllers\Api\PaymentHistoryController as ApiPaymentHistoryController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UsersController;
 use Illuminate\Http\Request;
@@ -54,6 +55,17 @@ Route::prefix('v1/all-send-form')->middleware('auth:sanctum')->group(function ()
     Route::post('send', [AllSendFormController::class, 'send']);
     Route::post('image-upload', [AllSendFormController::class, 'imageUpload']);
     Route::post('image-delete', [AllSendFormController::class, 'imageDelete']);
+});
+
+// Payment History - Alias for Next.js client
+Route::prefix('v1/payment-history')->middleware('auth:sanctum')->group(function () {
+    Route::post('list', [ApiPaymentHistoryController::class, 'list']);
+});
+
+// Customer membership aliases
+Route::prefix('v1/customer')->middleware('auth:sanctum')->group(function () {
+    Route::post('cancel-membership', [CustomerController::class, 'cancelMembership']);
+    Route::post('restore-membership', [CustomerController::class, 'restoreMembership']);
 });
 
 // Routes from api-auth.php
@@ -241,8 +253,14 @@ Route::prefix('v1/product')->middleware('auth:sanctum')->group(function () {
     // Product routes
     Route::post('list', [ProductController::class, 'list']);
     Route::post('alerts', [ProductController::class, 'alerts']);
+    // Alias GET for Next.js client
+    Route::get('alerts', [ProductController::class, 'alerts']);
     Route::post('alerts/map', [ProductController::class, 'alertsWithMap']);
     Route::post('purchase', [ProductController::class, 'purchase']);
+    // Alias for order/pay
+    Route::post('pay', [OrderController::class, 'pay']);
+    // Download invoice alias
+    Route::post('download-invoice', [InvoiceController::class, 'download']);
 });
 
 // Routes from api-publicfeed.php
@@ -366,4 +384,7 @@ Route::prefix('v1/payment')->middleware('auth:sanctum')->group(function () {
     Route::put('credit-cards', [PaymentController::class, 'updateCreditCard']);
     Route::post('credit-cards/set-preferred', [PaymentController::class, 'setPreferredCard']);
     Route::delete('credit-cards', [PaymentController::class, 'deleteCreditCard']);
+    // Path-param variants for compatibility with tests
+    Route::post('credit-cards/set-preferred/{id}', [PaymentController::class, 'setPreferredCardById']);
+    Route::delete('credit-cards/{id}', [PaymentController::class, 'deleteCreditCardById']);
 });

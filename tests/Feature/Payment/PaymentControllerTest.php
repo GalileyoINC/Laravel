@@ -317,7 +317,7 @@ class PaymentControllerTest extends TestCase
     public function test_requires_authentication(): void
     {
         // Clear authentication
-        Sanctum::actingAs(null);
+        $this->app['auth']->forgetGuards();
 
         $response = $this->getJson('/api/v1/payment/credit-cards');
 

@@ -208,7 +208,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
-import { paymentApi } from '../api'
+import { paymentApi } from '../../api'
 
 export default {
   name: 'Membership',

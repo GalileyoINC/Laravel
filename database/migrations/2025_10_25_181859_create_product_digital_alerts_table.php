@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('product_digital_alerts', function (Blueprint $table) {
             $table->id();
-            $table->integer('type');
-            $table->integer('status');
+            $table->string('type');
+            $table->string('status');
             $table->string('title');
             $table->text('description')->nullable();
             $table->json('alert_data')->nullable();

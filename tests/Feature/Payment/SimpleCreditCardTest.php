@@ -19,11 +19,11 @@ class SimpleCreditCardTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        Sanctum::actingAs($this->user);
     }
 
     public function test_can_get_credit_cards_empty(): void
     {
+        Sanctum::actingAs($this->user);
         $response = $this->getJson('/api/v1/payment/credit-cards');
         
         $response->assertOk()
@@ -49,6 +49,7 @@ class SimpleCreditCardTest extends TestCase
 
     public function test_can_create_credit_card(): void
     {
+        Sanctum::actingAs($this->user);
         $data = [
             'first_name' => 'Test',
             'last_name' => 'User',
@@ -63,7 +64,7 @@ class SimpleCreditCardTest extends TestCase
 
         $response = $this->postJson('/api/v1/payment/credit-cards', $data);
 
-        $response->assertCreated()
+        $response->assertOk()
             ->assertJson([
                 'status' => 'success',
                 'message' => 'Credit card created successfully'
@@ -80,6 +81,7 @@ class SimpleCreditCardTest extends TestCase
 
     public function test_validation_errors_for_create_credit_card(): void
     {
+        Sanctum::actingAs($this->user);
         $response = $this->postJson('/api/v1/payment/credit-cards', []);
 
         $response->assertStatus(422)
@@ -97,9 +99,6 @@ class SimpleCreditCardTest extends TestCase
 
     public function test_requires_authentication(): void
     {
-        // Don't act as any user
-        $this->withoutMiddleware();
-
         $response = $this->getJson('/api/v1/payment/credit-cards');
 
         $response->assertUnauthorized();

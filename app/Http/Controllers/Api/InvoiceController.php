@@ -94,4 +94,20 @@ class InvoiceController extends Controller
 
         return InvoiceResource::make($result)->response();
     }
+
+    /**
+     * Download invoice PDF (POST /api/v1/product/download-invoice)
+     */
+    public function download(\Illuminate\Http\Request $request)
+    {
+        $invoiceId = $request->input('invoice_id');
+
+        // Placeholder PDF content (empty). Replace with real file streaming.
+        $pdfContent = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF';
+
+        return response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="invoice-'.$invoiceId.'.pdf"',
+        ]);
+    }
 }

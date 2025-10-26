@@ -10,7 +10,7 @@ use App\Models\Content\Comment;
 use App\Models\Content\News;
 use App\Models\Content\Reaction;
 use App\Models\Device\Device;
-use App\Models\Finance\CreditCard;
+use App\Models\CreditCard;
 use App\Models\Subscription\Follower;
 use App\Models\Subscription\FollowerList;
 use App\Models\Subscription\InfluencerPage;

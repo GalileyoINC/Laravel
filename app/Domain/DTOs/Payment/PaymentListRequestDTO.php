@@ -20,8 +20,8 @@ class PaymentListRequestDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            limit: $data['limit'] ?? 100,
-            page: $data['page'] ?? 1,
+            limit: isset($data['limit']) ? (int) $data['limit'] : 100,
+            page: isset($data['page']) ? (int) $data['page'] : 1,
             type: $data['type'] ?? null,
             is_success: $data['is_success'] ?? null,
         );
