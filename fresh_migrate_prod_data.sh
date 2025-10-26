@@ -24,12 +24,11 @@ if [ "$confirm" != "yes" ]; then
     exit 1
 fi
 
-# Step 1: Drop existing database and create new
+# Step 1: Run Laravel migrate:fresh to drop and recreate database
 echo ""
-echo "🗑️  Step 1: Dropping existing database..."
-docker-compose exec mysql mysql -u $DB_USER -p$DB_PASS -e "DROP DATABASE IF EXISTS $DB_NAME;"
-docker-compose exec mysql mysql -u $DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-echo "✅ Database dropped and recreated"
+echo "🗑️  Step 1: Running migrate:fresh (drops all tables and re-runs migrations)..."
+docker-compose exec app php artisan migrate:fresh --force
+echo "✅ Database recreated with fresh Laravel schema"
 echo ""
 
 # Step 2: Import full database
