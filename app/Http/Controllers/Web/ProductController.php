@@ -231,11 +231,13 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified device
      */
-    public function editDevice(Device $device): View
+    public function editDevice(Service $device): View
     {
-        $device->load(['photos', 'devicePlans']);
+        $device->load(['product_photos', 'device_plans']);
 
-        $activePlans = DevicePlan::where('is_active', 1)->paginate(20);
+        $activePlans = Service::where('type', Service::TYPE_DEVICE_PLAN)
+            ->where('is_active', true)
+            ->paginate(20);
 
         return ViewFacade::make('product.edit-device', [
             'device' => $device,
@@ -246,7 +248,7 @@ class ProductController extends Controller
     /**
      * Update the specified device
      */
-    public function updateDevice(ProductDeviceRequest $request, Device $device): RedirectResponse
+    public function updateDevice(ProductDeviceRequest $request, Service $device): RedirectResponse
     {
         $validated = $request->validated();
         $dto = new DeviceUpdateDTO(
@@ -268,9 +270,9 @@ class ProductController extends Controller
     /**
      * Display device photos
      */
-    public function photos(Device $device): View
+    public function photos(Service $device): View
     {
-        $device->load('photos');
+        $device->load('product_photos');
 
         return ViewFacade::make('product._photos', [
             'device' => $device,
@@ -304,7 +306,7 @@ class ProductController extends Controller
     /**
      * Upload device photo
      */
-    public function uploadPhoto(Request $request, Device $device): JsonResponse
+    public function uploadPhoto(Request $request, Service $device): JsonResponse
     {
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -330,7 +332,21 @@ class ProductController extends Controller
     public function plan(ProductDevicePlanIndexRequest $request): View
     {
         $filters = $request->validated();
-        $plans = $this->getDevicePlanListAction->execute($filters, 20);
+
+        $query = Service::where('type', Service::TYPE_DEVICE_PLAN);
+
+        if (! empty($filters['search'])) {
+            $search = (string) $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+        if (isset($filters['is_active'])) {
+            $query->where('is_active', (int) $filters['is_active']);
+        }
+
+        $plans = $query->orderBy('id')->paginate(20);
 
         return ViewFacade::make('product.device-plan', [
             'plans' => $plans,
@@ -368,7 +384,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified device plan
      */
-    public function editPlan(DevicePlan $plan): View
+    public function editPlan(Service $plan): View
     {
         return ViewFacade::make('product.edit-device-plan', [
             'plan' => $plan,
@@ -378,7 +394,7 @@ class ProductController extends Controller
     /**
      * Update the specified device plan
      */
-    public function updatePlan(ProductDevicePlanRequest $request, DevicePlan $plan): RedirectResponse
+    public function updatePlan(ProductDevicePlanRequest $request, Service $plan): RedirectResponse
     {
         $validated = $request->validated();
         $dto = new DevicePlanUpdateDTO(
@@ -398,7 +414,7 @@ class ProductController extends Controller
     /**
      * Attach plan to device
      */
-    public function attachPlan(Request $request, DevicePlan $plan, Device $device): RedirectResponse
+    public function attachPlan(Request $request, DevicePlan $plan, Service $device): RedirectResponse
     {
         $validated = $request->validate([
             'price' => ['nullable', 'numeric', 'min:0'],
@@ -420,7 +436,7 @@ class ProductController extends Controller
     /**
      * Detach plan from device
      */
-    public function detachPlan(DevicePlan $plan, Device $device): RedirectResponse
+    public function detachPlan(DevicePlan $plan, Service $device): RedirectResponse
     {
         $dto = new DetachPlanFromDeviceDTO(deviceId: $device->id, planId: $plan->id);
         $_ = $this->detachPlanFromDeviceAction->execute($dto);

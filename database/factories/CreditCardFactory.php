@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\CreditCard;
+use App\Models\Finance\CreditCard;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,11 +26,11 @@ class CreditCardFactory extends Factory
             'user_id' => User::factory(),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
-            'num' => '****' . fake()->numerify('####'),
+            'num' => '****'.fake()->numerify('####'),
             'cvv' => encrypt(fake()->numerify('###')),
             'type' => fake()->randomElement(['Visa', 'MasterCard', 'American Express']),
-            'expiration_year' => now()->addYears(rand(1, 5))->format('Y'),
-            'expiration_month' => fake()->numerify('##'),
+            'expiration_year' => (int) now()->addYears(rand(1, 5))->format('Y'),
+            'expiration_month' => rand(1, 12),
             'zip' => fake()->postcode(),
             'phone' => fake()->e164PhoneNumber(),
             'is_active' => true,

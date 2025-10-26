@@ -48,14 +48,14 @@
                                 <td @dataColumn(3)>{{ $apiLog->created_at->format('M d, Y H:i') }}</td>
                                 <td @dataColumn(4)>
                                     <div class="btn-group">
-                                        <a href="{{ route('api-log.show', $apiLog) }}" class="btn btn-xs btn-info">
+                                        <a href="{{ route('api-log.show', $apiLog) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye fa-fw"></i>
                                         </a>
                                         @if(auth()->user()->isSuper())
                                             <form method="POST" action="{{ route('api-log.delete-by-key', $apiLog) }}" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-xs btn-admin" onclick="return confirm('Are you sure you want to delete all logs with this key?')">
+                                                <button type="submit" class="btn btn-sm btn-admin" onclick="return confirm('Are you sure you want to delete all logs with this key?')">
                                                     <i class="fas fa-trash fa-fw"></i>
                                                 </button>
                                             </form>

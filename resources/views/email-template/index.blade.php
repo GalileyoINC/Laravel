@@ -26,8 +26,8 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Subject</th>
-                        <th>Type</th>
-                        <th>Active</th>
+                        <th>From</th>
+                        <th>Created At</th>
                         <th>Updated At</th>
                         <th>Actions</th>
                     </tr>
@@ -35,48 +35,20 @@
                 <tbody>
                     @forelse($templates as $template)
                         <tr>
-                            <td>{{ is_array($template) ? ($template['id'] ?? '') : ($template->id ?? '') }}</td>
-                            <td>{{ is_array($template) ? ($template['name'] ?? '') : ($template->name ?? '') }}</td>
-                            <td>{{ is_array($template) ? ($template['subject'] ?? '') : ($template->subject ?? '') }}</td>
-                            <td>{{ is_array($template) ? ($template['type_name'] ?? 'N/A') : ($template->type_name ?? 'N/A') }}</td>
-                            <td>
-                                @php $active = is_array($template) ? ($template['is_active'] ?? false) : ($template->is_active ?? false); @endphp
-                                @if($active)
-                                    <span class="badge bg-success">Active</span>
-                                @else
-                                    <span class="badge bg-danger">Inactive</span>
-                                @endif
-                            </td>
-                            <td>
-                                @php
-                                    $updatedAt = is_array($template) ? ($template['updated_at'] ?? null) : ($template->updated_at ?? null);
-                                @endphp
-                                @if($updatedAt instanceof \Illuminate\Support\Carbon)
-                                    {{ $updatedAt->format('M d, Y') }}
-                                @elseif(!empty($updatedAt))
-                                    {{ \Illuminate\Support\Carbon::parse($updatedAt)->format('M d, Y') }}
-                                @else
-                                    
-                                @endif
-                            </td>
+                            <td>{{ $template->id }}</td>
+                            <td>{{ $template->name }}</td>
+                            <td>{{ $template->subject }}</td>
+                            <td>{{ $template->from ?? '-' }}</td>
+                            <td>{{ $template->created_at->format('M d, Y') }}</td>
+                            <td>{{ $template->updated_at?->format('M d, Y') ?? '-' }}</td>
                             <td>
                                 <div class="btn-group">
-                                    @php $templateId = is_array($template) ? ($template['id'] ?? null) : ($template->id ?? null); @endphp
-                                    @if($templateId)
-                                    <a href="{{ route('email-template.show', ['email_template' => $templateId]) }}" class="btn btn-sm btn-info" title="View">
+                                    <a href="{{ route('email-template.show', $template) }}" class="btn btn-sm btn-info" title="View">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('email-template.edit', ['email_template' => $templateId]) }}" class="btn btn-sm btn-primary" title="Edit">
+                                    <a href="{{ route('email-template.edit', $template) }}" class="btn btn-sm btn-primary" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <form action="{{ route('email-template.destroy', ['email_template' => $templateId]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                    @endif
                                 </div>
                             </td>
                         </tr>

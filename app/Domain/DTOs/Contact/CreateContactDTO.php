@@ -12,6 +12,7 @@ readonly class CreateContactDTO
         public ?string $subject,
         public string $body,
         public ?int $idUser = null,
+        public ?string $phone = null,
         public ?int $status = 1
     ) {}
 }

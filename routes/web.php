@@ -134,6 +134,7 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
     Route::get('register/signups', [RegisterController::class, 'signups'])->name('register.signups');
     Route::get('register/export/csv', [RegisterController::class, 'toCsv'])->name('register.to-csv');
     Route::get('register/export/csv-unique', [RegisterController::class, 'toCsvUnique'])->name('register.to-csv-unique');
+    Route::post('register/{register}/toggle-unsubscribe', [RegisterController::class, 'toggleUnsubscribe'])->name('register.toggle-unsubscribe');
 
     // Invoice Routes
     Route::get('invoice', [InvoiceController::class, 'index'])->name('invoice.index');
@@ -141,12 +142,12 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
 
     // Money Transaction Routes
     Route::get('money-transaction', [MoneyTransactionController::class, 'index'])->name('money-transaction.index');
-    Route::get('money-transaction/{transaction}', [MoneyTransactionController::class, 'show'])->name('money-transaction.show');
+    Route::get('money-transaction/report', [MoneyTransactionController::class, 'report'])->name('money-transaction.report');
+    Route::get('money-transaction/export/csv', [MoneyTransactionController::class, 'toCsv'])->name('money-transaction.to-csv');
+    Route::get('money-transaction/{transaction}/details', [MoneyTransactionController::class, 'getTransactionDetails'])->name('money-transaction.details');
     Route::post('money-transaction/{transaction}/void', [MoneyTransactionController::class, 'void'])->name('money-transaction.void');
     Route::post('money-transaction/{transaction}/refund', [MoneyTransactionController::class, 'refund'])->name('money-transaction.refund');
-    Route::get('money-transaction/{transaction}/details', [MoneyTransactionController::class, 'getTransactionDetails'])->name('money-transaction.details');
-    Route::get('money-transaction/export/csv', [MoneyTransactionController::class, 'toCsv'])->name('money-transaction.to-csv');
-    Route::get('money-transaction/report', [MoneyTransactionController::class, 'report'])->name('money-transaction.report');
+    Route::get('money-transaction/{transaction}', [MoneyTransactionController::class, 'show'])->name('money-transaction.show');
 
     // SMS Pool Routes
     Route::get('sms-pool', [SmsPoolController::class, 'index'])->name('sms-pool.index');
@@ -291,6 +292,7 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
     // IEX Routes
     Route::get('iex/webhooks', [IEXController::class, 'webhooks'])->name('iex.webhooks');
     Route::get('iex/webhook/{webhook}', [IEXController::class, 'showWebhook'])->name('iex.webhook-show');
+    Route::delete('iex/webhook/{webhook}', [IEXController::class, 'destroy'])->name('iex.webhook-destroy');
     Route::get('iex/webhooks/export/csv', [IEXController::class, 'exportWebhooks'])->name('iex.export-webhooks');
     Route::get('iex/marketstack', [IEXController::class, 'marketstack'])->name('iex.marketstack');
     Route::get('iex/marketstack/create', [IEXController::class, 'createMarketstack'])->name('iex.create-marketstack');
@@ -335,6 +337,7 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
     Route::put('news/{news}', [NewsController::class, 'update'])->name('news.update');
     Route::delete('news/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
     Route::get('news/{news}/content', [NewsController::class, 'content'])->name('news.content');
+    Route::get('news/export/csv', [NewsController::class, 'export'])->name('news.export');
 
     // Phone Number Routes
     Route::get('phone-number', [PhoneNumberController::class, 'index'])->name('phone-number.index');
@@ -511,15 +514,6 @@ Route::prefix('admin')->middleware(['auth.any'])->group(function () {
     Route::get('chat/recent-messages', [ChatController::class, 'getRecentMessages']);
     Route::post('chat/send', [ChatController::class, 'sendMessage']);
 
-    // News Routes
-    Route::get('news', [NewsController::class, 'index'])->name('news.index');
-    Route::get('news/create', [NewsController::class, 'create'])->name('news.create');
-    Route::post('news', [NewsController::class, 'store'])->name('news.store');
-    Route::get('news/{news}', [NewsController::class, 'show'])->name('news.show');
-    Route::get('news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
-    Route::put('news/{news}', [NewsController::class, 'update'])->name('news.update');
-    Route::delete('news/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
-    Route::get('news/export/csv', [NewsController::class, 'export'])->name('news.export');
 });
 
 // ========================================

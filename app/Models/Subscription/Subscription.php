@@ -203,13 +203,13 @@ class Subscription extends Model
     public static function getUserStatistics(int $mode = self::ACTIVE_ONLY): array
     {
         try {
-            $rows = DB::table('user_subscription_address')
-                ->join('user', 'user_subscription_address.id_user', '=', 'user.id')
-                ->select('user_subscription_address.id_subscription as id_subscription', DB::raw('COUNT(*) as cnt'))
+            $rows = DB::table('user_satellite_subscription')
+                ->join('user', 'user_satellite_subscription.id_user', '=', 'user.id')
+                ->select('user_satellite_subscription.id_subscription as id_subscription', DB::raw('COUNT(*) as cnt'))
                 ->when($mode === self::ACTIVE_ONLY, function ($q) {
                     $q->where('user.status', 1);
                 })
-                ->groupBy('user_subscription_address.id_subscription')
+                ->groupBy('user_satellite_subscription.id_subscription')
                 ->get();
 
             return $rows->map(fn ($r) => [
@@ -286,8 +286,7 @@ class Subscription extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
-            ->withPivot('id', 'zip');
+        return $this->belongsToMany(\App\Models\User\User::class, 'user_satellite_subscription', 'id_subscription', 'id_user');
     }
 
     // Alias expected by controllers for counting/queries
@@ -296,8 +295,7 @@ class Subscription extends Model
      */
     public function userSubscriptions(): BelongsToMany
     {
-        return $this->belongsToMany(\App\Models\User\User::class, 'user_subscription_address', 'id_subscription', 'id_user')
-            ->withPivot('id', 'zip');
+        return $this->belongsToMany(\App\Models\User\User::class, 'user_satellite_subscription', 'id_subscription', 'id_user');
     }
 
     protected static function newFactory(): RootSubscriptionFactory

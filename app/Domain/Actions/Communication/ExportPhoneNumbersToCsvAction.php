@@ -20,7 +20,7 @@ final class ExportPhoneNumbersToCsvAction
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('phone_number', 'like', "%{$search}%")
+                $q->where('number', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($userQuery) use ($search) {
                         $userQuery->where('first_name', 'like', "%{$search}%")
                             ->orWhere('last_name', 'like', "%{$search}%")
@@ -35,7 +35,7 @@ final class ExportPhoneNumbersToCsvAction
                     ->orWhere('last_name', 'like', "%{$name}%");
             });
         }
-        foreach (['phone_number', 'type'] as $field) {
+        foreach (['number', 'type'] as $field) {
             if (! empty($filters[$field])) {
                 $query->where($field, 'like', "%{$filters[$field]}%");
             }
@@ -80,7 +80,7 @@ final class ExportPhoneNumbersToCsvAction
                 $phoneNumber->id,
                 $userName,
                 $userEmail,
-                (string) $phoneNumber->getAttribute('phone_number'),
+                (string) $phoneNumber->number,
                 $phoneNumber->is_valid ? 'Yes' : 'No',
                 $phoneNumber->type ?? '',
                 $phoneNumber->is_primary ? 'Yes' : 'No',

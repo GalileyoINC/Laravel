@@ -44,7 +44,7 @@
                                 <td @dataColumn(2)>
                                     @if($log->user)
                                         <a href="{{ route('user.show', $log->user) }}">
-                                            {{ $log->user->getFullName() }} ({{ $log->user->id }})
+                                            {{ $log->user->first_name }} {{ $log->user->last_name }} ({{ $log->user->id }})
                                         </a>
                                     @endif
                                 </td>

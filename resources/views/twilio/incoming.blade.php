@@ -61,8 +61,24 @@
                                 @forelse($incoming as $message)
                                     <tr>
                                         <td>{{ $message->id }}</td>
-                                        <td>{{ $message->number }}</td>
-                                        <td>{{ Str::limit($message->body, 50) }}</td>
+                                        <td>
+                                            @if($message->number)
+                                                {{ $message->number }}
+                                            @elseif($message->message && isset($message->message['From']))
+                                                {{ $message->message['From'] }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($message->body)
+                                                {{ Str::limit($message->body, 50) }}
+                                            @elseif($message->message && isset($message->message['Body']))
+                                                {{ Str::limit($message->message['Body'], 50) }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
                                         <td>{{ $message->created_at->format('Y-m-d') }}</td>
                                         <td>
                                             <div class="btn-group">

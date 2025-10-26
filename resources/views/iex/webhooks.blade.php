@@ -67,9 +67,16 @@
                                         <td>{{ $webhook->updated_at->format('Y-m-d') }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('iex.webhook-show', $webhook) }}" class="btn btn-sm btn-info">
+                                                <a href="{{ route('iex.webhook-show', ['webhook' => $webhook->id]) }}" class="btn btn-sm btn-info">
                                                     <i class="fas fa-eye"></i> View
                                                 </a>
+                                                <form action="{{ route('iex.webhook-destroy', ['webhook' => $webhook->id]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this webhook?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -82,6 +89,12 @@
                         </table>
                     </div>
 
+                    <!-- Pagination -->
+                    @if(method_exists($webhooks, 'links'))
+                    <div class="d-flex justify-content-center">
+                        {{ $webhooks->appends(request()->query())->links() }}
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

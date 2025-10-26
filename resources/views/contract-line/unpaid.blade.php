@@ -81,7 +81,7 @@
                                         <td>{{ $contractLine->end_at ? $contractLine->end_at->format('Y-m-d') : '' }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('user.show', $contractLine->id_user) }}" class="btn btn-xs btn-info" target="_blank">
+                                                <a href="{{ route('user.show', $contractLine->id_user) }}" class="btn btn-sm btn-info" target="_blank">
                                                     <i class="far fa-eye fa-fw"></i>
                                                 </a>
                                             </div>

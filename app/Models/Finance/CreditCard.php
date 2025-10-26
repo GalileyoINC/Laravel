@@ -76,10 +76,10 @@ class CreditCard extends Model
     use HasFactory; /** @phpstan-ignore-line */
 
     /** @phpstan-ignore-line */
-    protected $table = 'credit_card';
+    protected $table = 'credit_cards';
 
     protected $casts = [
-        'id_user' => 'int',
+        'user_id' => 'int',
         'expiration_year' => 'int',
         'expiration_month' => 'int',
         'is_active' => 'bool',
@@ -90,7 +90,7 @@ class CreditCard extends Model
     ];
 
     protected $fillable = [
-        'id_user',
+        'user_id',
         'first_name',
         'last_name',
         'num',
@@ -106,10 +106,6 @@ class CreditCard extends Model
         'zip',
         'is_agree_to_receive',
         'billing_address',
-        'card_number',
-        'cardholder_name',
-        'expiry_month',
-        'expiry_year',
     ];
 
     /**
@@ -117,7 +113,7 @@ class CreditCard extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**

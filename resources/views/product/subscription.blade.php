@@ -135,9 +135,8 @@
                                 <div class="btn-group">
                                     @if($subscription->isNewSubscription())
                                         <a href="{{ route('product.edit-subscription', $subscription) }}" 
-                                           class="btn btn-sm btn-success JS__load_in_modal" 
-                                           title="Update" 
-                                           target="_blank">
+                                           class="btn btn-sm btn-success" 
+                                           title="Update">
                                             <i class="fas fa-pen-fancy fa-fw"></i>
                                         </a>
                                     @endif

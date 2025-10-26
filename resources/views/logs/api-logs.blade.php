@@ -79,13 +79,13 @@
                                         <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('logs.show-api-log', $log) }}" class="btn btn-xs btn-info">
+                                                <a href="{{ route('logs.show-api-log', $log) }}" class="btn btn-sm btn-info">
                                                     <i class="fas fa-eye fa-fw"></i>
                                                 </a>
                                                 @if(auth()->user()->isSuper())
                                                     <form method="POST" action="{{ route('logs.delete-by-key', $log->key) }}" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-xs btn-admin" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                        <button type="submit" class="btn btn-sm btn-admin" onclick="return confirm('Are you sure you want to delete this item?')">
                                                             <i class="fas fa-trash fa-fw"></i>
                                                         </button>
                                                     </form>

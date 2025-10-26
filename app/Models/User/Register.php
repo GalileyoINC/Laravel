@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $first_name
  * @property string|null $last_name
  * @property int|null $is_unfinished_signup
+ * @property bool|null $is_unsubscribed
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
@@ -47,6 +48,7 @@ class Register extends Model
 
     protected $casts = [
         'is_unfinished_signup' => 'int',
+        'is_unsubscribed' => 'bool',
     ];
 
     protected $fillable = [
@@ -54,6 +56,7 @@ class Register extends Model
         'first_name',
         'last_name',
         'is_unfinished_signup',
+        'is_unsubscribed',
     ];
 
     /**

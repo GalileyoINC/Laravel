@@ -3,10 +3,10 @@
 @section('content')
 <div class="box">
     <div class="box-header with-border">
-        <h3 class="box-title">Edit Email Template #{{ $template->id }}</h3>
+        <h3 class="box-title">Edit Email Template #{{ $emailTemplate->id }}</h3>
     </div>
     
-    <form action="{{ route('email-template.update', $template) }}" method="POST">
+    <form action="{{ route('email-template.update', $emailTemplate) }}" method="POST">
         @csrf
         @method('PUT')
         @include('email-template._form')

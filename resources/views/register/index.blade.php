@@ -42,7 +42,15 @@
                         <td @dataColumn(4)>{{ $register->created_at->format('M d, Y') }}</td>
                         <td @dataColumn(5)>
                             <div class="btn-group">
-                                <!-- No actions for register records -->
+                                <button 
+                                    class="btn btn-sm {{ $register->is_unsubscribed ? 'btn-danger' : 'btn-success' }}" 
+                                    onclick="toggleUnsubscribe({{ $register->id }}, this)"
+                                    data-id="{{ $register->id }}"
+                                    title="{{ $register->is_unsubscribed ? 'Click to subscribe' : 'Click to unsubscribe' }}"
+                                >
+                                    <i class="fas fa-{{ $register->is_unsubscribed ? 'ban' : 'check-circle' }}"></i>
+                                    {{ $register->is_unsubscribed ? 'Unsubscribed' : 'Subscribed' }}
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -61,7 +69,73 @@
     width: 60px;
 }
 .action-column-1 {
-    width: 100px;
+    width: 150px;
 }
 </style>
+
+<script>
+function toggleUnsubscribe(id, button) {
+    // Disable button and show loading
+    const originalHTML = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    
+    fetch(`{{ url('admin/register') }}/${id}/toggle-unsubscribe`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Update button appearance based on new status
+            if (data.is_unsubscribed) {
+                button.className = 'btn btn-sm btn-danger';
+                button.innerHTML = '<i class="fas fa-ban"></i> Unsubscribed';
+                button.title = 'Click to subscribe';
+            } else {
+                button.className = 'btn btn-sm btn-success';
+                button.innerHTML = '<i class="fas fa-check-circle"></i> Subscribed';
+                button.title = 'Click to unsubscribe';
+            }
+            
+            // Re-enable button
+            button.disabled = false;
+            
+            // Show success message
+            const message = data.is_unsubscribed ? 'User unsubscribed from newsletter' : 'User subscribed to newsletter';
+            showNotification(message, 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        showNotification('Error updating subscription status', 'danger');
+    });
+}
+
+function showNotification(message, type) {
+    // Create a simple notification
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="close" data-dismiss="alert" onclick="this.parentElement.remove()">
+            <span>&times;</span>
+        </button>
+    `;
+    document.body.appendChild(notification);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+</script>
 @endsection

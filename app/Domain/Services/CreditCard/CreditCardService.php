@@ -33,7 +33,7 @@ class CreditCardService implements CreditCardServiceInterface
         }
 
         if ($dto->user_id) {
-            $query->where('id_user', $dto->user_id);
+            $query->where('user_id', $dto->user_id);
         }
 
         if ($dto->is_active !== null) {

@@ -38,9 +38,10 @@ class ContactService implements ContactServiceInterface
             'id_user' => $dto->idUser,
             'name' => $dto->name,
             'email' => $dto->email,
+            'phone' => $dto->phone,
             'subject' => $dto->subject,
             'body' => $dto->body,
-            'status' => 1,
+            'status' => $dto->status ?? 1,
         ]);
     }
 

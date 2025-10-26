@@ -4,34 +4,45 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\CreditCard;
 
-use App\Domain\DTOs\CreditCard\CreditCardListRequestDTO;
-use App\Domain\Services\CreditCard\CreditCardServiceInterface;
-use Illuminate\Http\JsonResponse;
+use App\Models\Finance\CreditCard;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-class GetCreditCardListAction
+final class GetCreditCardListAction
 {
-    public function __construct(
-        private readonly CreditCardServiceInterface $creditCardService
-    ) {}
-
     /**
-     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, CreditCard>
      */
-    public function execute(array $data): JsonResponse
+    public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        $dto = new CreditCardListRequestDTO(
-            page: $data['page'] ?? 1,
-            limit: $data['limit'] ?? 20,
-            search: $data['search'] ?? null,
-            user_id: $data['user_id'] ?? null,
-            is_active: $data['is_active'] ?? null
-        );
+        $query = CreditCard::with(['user']);
 
-        $creditCards = $this->creditCardService->getList($dto);
+        if (! empty($filters['search'])) {
+            $search = (string) $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('num', 'like', "%{$search}%")
+                    ->orWhere('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+            });
+        }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $creditCards,
-        ]);
+        if (! empty($filters['user_id'])) {
+            $query->where('user_id', (int) $filters['user_id']);
+        }
+
+        if (! empty($filters['is_active'])) {
+            $query->where('is_active', (bool) $filters['is_active']);
+        }
+
+        if (! empty($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 }

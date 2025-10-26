@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Bundle;
 
 use App\Domain\Services\Bundle\BundleServiceInterface;
+use App\Models\Finance\Bundle;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GetBundleListAction
 {
@@ -17,9 +19,17 @@ class GetBundleListAction
         int $limit = 20,
         ?string $search = null,
         ?int $status = null
-    ): array {
-        $bundles = $this->bundleService->getList($page, $limit, $search, $status);
+    ): LengthAwarePaginator {
+        $query = Bundle::query();
 
-        return $bundles;
+        if ($search) {
+            $query->where('title', 'like', '%'.$search.'%');
+        }
+
+        if ($status !== null) {
+            $query->where('is_active', $status);
+        }
+
+        return $query->orderBy('id', 'desc')->paginate($limit, ['*'], 'page', $page);
     }
 }

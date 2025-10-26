@@ -68,13 +68,13 @@
                                         <td>{{ $infoState->updated_at->format('Y-m-d') }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('info-state.show', $infoState) }}" class="btn btn-xs btn-info">
+                                                <a href="{{ route('info-state.show', $infoState) }}" class="btn btn-sm btn-info">
                                                     <i class="fas fa-eye fa-fw"></i>
                                                 </a>
                                                 <form method="POST" action="{{ route('info-state.destroy', $infoState) }}" style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
                                                         <i class="fas fa-trash fa-fw"></i>
                                                     </button>
                                                 </form>

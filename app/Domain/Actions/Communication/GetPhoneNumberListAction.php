@@ -20,7 +20,7 @@ final class GetPhoneNumberListAction
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('phone_number', 'like', "%{$search}%")
+                $q->where('number', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($userQuery) use ($search) {
                         $userQuery->where('first_name', 'like', "%{$search}%")
                             ->orWhere('last_name', 'like', "%{$search}%")

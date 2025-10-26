@@ -4,32 +4,42 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Report;
 
-use App\Domain\DTOs\Report\ReportStatisticRequestDTO;
-use App\Domain\Services\Report\ReportServiceInterface;
-use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
-class GetLoginStatisticAction
+final class GetLoginStatisticAction
 {
-    public function __construct(
-        private readonly ReportServiceInterface $reportService
-    ) {}
-
     /**
-     * @param  array<string, mixed>  $data
+     * @return array<int, array{name: string, email: string, last_login: string, count_month: int}>
      */
-    public function execute(array $data): JsonResponse
+    public function execute(): array
     {
-        $dto = new ReportStatisticRequestDTO(
-            date: $data['date'] ?? null,
-            page: $data['page'] ?? 1,
-            limit: $data['limit'] ?? 20
-        );
+        $startOfMonth = Carbon::now()->startOfMonth();
 
-        $result = $this->reportService->getLoginStatistic($dto);
+        $results = DB::table('login_statistic')
+            ->join('user', 'login_statistic.id_user', '=', 'user.id')
+            ->select(
+                'user.first_name',
+                'user.last_name',
+                'user.email',
+                DB::raw('MAX(login_statistic.created_at) as last_login'),
+                DB::raw('COUNT(*) as count_month')
+            )
+            ->where('login_statistic.created_at', '>=', $startOfMonth)
+            ->groupBy('user.id', 'user.first_name', 'user.last_name', 'user.email')
+            ->orderBy('last_login', 'desc')
+            ->get();
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $result,
-        ]);
+        $data = [];
+        foreach ($results as $result) {
+            $data[] = [
+                'name' => trim("{$result->first_name} {$result->last_name}"),
+                'email' => $result->email,
+                'last_login' => $result->last_login,
+                'count_month' => (int) $result->count_month,
+            ];
+        }
+
+        return $data;
     }
 }

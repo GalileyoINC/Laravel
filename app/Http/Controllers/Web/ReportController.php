@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Actions\Report\GetDevicesPlansListAction;
+use App\Domain\Actions\Report\GetLoginStatisticAction;
+use App\Domain\Actions\Report\GetLoginStatisticByDayAction;
 use App\Domain\Actions\Report\GetSmsReportListAction;
 use App\Domain\Actions\Report\GetSoldDevicesListAction;
+use App\Domain\Actions\Report\GetUserPointReportAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Report\Web\SmsIndexRequest;
 use App\Http\Requests\Report\Web\SoldDevicesIndexRequest;
@@ -16,7 +20,6 @@ use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -26,6 +29,10 @@ class ReportController extends Controller
     public function __construct(
         private readonly GetSoldDevicesListAction $getSoldDevicesListAction,
         private readonly GetSmsReportListAction $getSmsReportListAction,
+        private readonly GetDevicesPlansListAction $getDevicesPlansListAction,
+        private readonly GetLoginStatisticAction $getLoginStatisticAction,
+        private readonly GetLoginStatisticByDayAction $getLoginStatisticByDayAction,
+        private readonly GetUserPointReportAction $getUserPointReportAction,
     ) {}
 
     /**
@@ -33,18 +40,18 @@ class ReportController extends Controller
      */
     public function loginStatistic(Request $request, ?string $date = null): View
     {
-        // This would typically use a LoginStatisticReport model
-        // For now, we'll create a basic structure
-
         if ($date) {
-            return ViewFacade::make('report.login-statistic-by-day', [
-                'date' => $date,
-                'data' => $this->getLoginStatisticByDay($request, $date),
-            ]);
+            $data = $this->getLoginStatisticByDayAction->execute($date);
+            $title = Carbon::parse($date)->format('M d, Y');
+        } else {
+            $data = $this->getLoginStatisticAction->execute();
+            $title = Carbon::now()->format('F Y');
         }
 
         return ViewFacade::make('report.login-statistic', [
-            'data' => $this->getLoginStatistic($request),
+            'date' => $date,
+            'data' => $data,
+            'title' => $title,
         ]);
     }
 
@@ -65,20 +72,16 @@ class ReportController extends Controller
     /**
      * Display influencer total report
      */
-    public function influencerTotal(Request $request, ?string $name = null, bool $csv = false): View|Response
+    public function influencerTotal(Request $request, ?string $name = null, bool $csv = false): View|StreamedResponse
     {
-        $report = $this->getInfluencerTotalReport($name);
+        $data = $this->getInfluencerTotalReport($name);
 
         if ($csv) {
-            return $this->exportInfluencerTotalCsv($report);
+            return $this->exportInfluencerTotalCsv($data);
         }
-
-        // TODO: implement influencer total report search logic
-        $data = [];
 
         return ViewFacade::make('report.influencer-total', [
             'name' => $name,
-            'report' => $report,
             'data' => $data,
         ]);
     }
@@ -228,23 +231,17 @@ class ReportController extends Controller
     /**
      * Display ended report
      */
-    public function ended(Request $request, ?string $name = null, bool $csv = false): View|Response
+    public function ended(Request $request, ?string $name = null, bool $csv = false): View|StreamedResponse
     {
-        $report = $this->getEndedReport($name);
+        $data = $this->getEndedReport($name);
 
         if ($csv) {
-            return $this->exportEndedCsv($report);
+            return $this->exportEndedCsv($data);
         }
-
-        // TODO: implement ended report search logic
-        $data = [];
-        $services = Service::all()->keyBy('id')->toArray();
 
         return ViewFacade::make('report.ended', [
             'name' => $name,
-            'report' => $report,
             'data' => $data,
-            'services' => $services,
         ]);
     }
 
@@ -253,13 +250,10 @@ class ReportController extends Controller
      */
     public function reaction(Request $request, ?string $name = null): View
     {
-        $report = $this->getReactionReport($name);
-        // TODO: implement reaction report search logic
-        $data = [];
+        $data = $this->getReactionReport($name);
 
         return ViewFacade::make('report.reaction', [
             'name' => $name,
-            'report' => $report,
             'data' => $data,
         ]);
     }
@@ -270,14 +264,7 @@ class ReportController extends Controller
     public function devicesPlans(Request $request, ?string $date = null): View
     {
         $date = $date ? Carbon::parse($date) : Carbon::now();
-        $query = DB::table('invoice_line')
-            ->join('invoice', 'invoice_line.id_invoice', '=', 'invoice.id')
-            ->join('user', 'invoice.id_user', '=', 'user.id')
-            ->where('invoice_line.type', 'device')
-            ->whereDate('invoice.created_at', $date->format('Y-m-d'))
-            ->select('invoice_line.*', 'user.first_name', 'user.last_name', 'invoice.created_at');
-
-        $devices = $query->orderBy('invoice.created_at', 'desc')->paginate(20);
+        $devices = $this->getDevicesPlansListAction->execute($date->format('Y-m-d'), $request->only(['search']));
 
         return ViewFacade::make('report.devices-plans', [
             'devices' => $devices,
@@ -319,46 +306,88 @@ class ReportController extends Controller
      */
     public function userPoint(Request $request, ?string $name = null): View
     {
-        $report = $this->getUserPointReport($name);
-        // TODO: implement user point report search logic
-        $data = [];
+        $data = $this->getUserPointReportAction->execute($name);
 
         return ViewFacade::make('report.user-point', [
             'name' => $name,
-            'report' => $report,
             'data' => $data,
         ]);
     }
 
     // Helper methods
-    /**
-     * @return array<string, mixed>
-     */
-    private function getLoginStatistic(Request $request): array
-    {
-        // Implementation for login statistics
-        return [];
-    }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, array{name: string, posts_month: int, referrals_total: int, comp_total: float}>
      */
-    private function getLoginStatisticByDay(Request $request, string $date): array
+    private function getInfluencerTotalReport(?string $name): array
     {
-        // Implementation for login statistics by day
-        return [];
+        $query = User::query()
+            ->where('is_influencer', true);
+
+        if ($name) {
+            $query->where(function ($q) use ($name) {
+                $q->where('first_name', 'like', "%{$name}%")
+                    ->orWhere('last_name', 'like', "%{$name}%");
+            });
+        }
+
+        $influencers = $query->with(['contractLines'])->get();
+
+        $data = [];
+
+        foreach ($influencers as $influencer) {
+            // Get total posts for current month (placeholder - would need relationship)
+            $postsMonth = 0; // No smsPoolReports relationship available
+
+            // Get total referrals (users who were invited by this influencer)
+            $referralsTotal = User::where('id_inviter', $influencer->id)->count();
+
+            // Get total compensation from contract lines (only non-terminated)
+            $compTotal = $influencer->contractLines
+                ->whereNull('terminated_at')
+                ->sum(fn ($cl) => (float) ($cl->period_price ?? 0));
+
+            $data[] = [
+                'name' => "{$influencer->first_name} {$influencer->last_name}",
+                'posts_month' => $postsMonth,
+                'referrals_total' => $referralsTotal,
+                'comp_total' => $compTotal,
+            ];
+        }
+
+        return $data;
     }
 
-    private function getInfluencerTotalReport(?string $name): object
+    private function exportInfluencerTotalCsv(array $report): StreamedResponse
     {
-        // Implementation for influencer total report
-        return (object) [];
-    }
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="influencer-total-'.now()->format('Y-m-d').'.csv"',
+        ];
 
-    private function exportInfluencerTotalCsv(object $report): Response
-    {
-        // Implementation for CSV export
-        return response('', 200);
+        $callback = function () use ($report) {
+            $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
+
+            // Write headers
+            fputcsv($file, ['Influencer', 'Total Posts (Month)', 'Total Referrals', 'Total Compensation']);
+
+            // Write data
+            foreach ($report as $row) {
+                fputcsv($file, [
+                    $row['name'],
+                    $row['posts_month'],
+                    $row['referrals_total'],
+                    number_format($row['comp_total'], 2),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**
@@ -439,8 +468,33 @@ class ReportController extends Controller
 
     private function getSpsUsersCount(Carbon $baseDate, Carbon $nowDate, string $lastDay): int
     {
-        // Implementation for SPS users count
-        return 0;
+        if ($baseDate->format('Y-m') === $nowDate->format('Y-m')) {
+            $count = DB::selectOne('
+                SELECT COUNT(*) as cnt FROM (
+                    SELECT DISTINCT id_user AS cnt FROM user
+                    JOIN contract_line ON contract_line.id_user = user.id
+                    WHERE is_sps_line = 1 
+                        AND DATE(begin_at) <= ? 
+                        AND (DATE(end_at) > ? OR end_at IS NULL) 
+                        AND (terminated_at IS NULL OR terminated_at > ?)
+                        AND user.status = ?
+                ) as t
+            ', [$lastDay, $lastDay, $lastDay, User::STATUS_ACTIVE]);
+        } else {
+            $count = DB::selectOne('
+                SELECT COUNT(*) as cnt FROM (
+                    SELECT DISTINCT id_user AS cnt FROM user
+                    JOIN contract_line ON contract_line.id_user = user.id
+                    WHERE is_sps_line = 1 
+                        AND DATE(begin_at) <= ? 
+                        AND (DATE(end_at) > ? OR end_at IS NULL) 
+                        AND (terminated_at IS NULL OR terminated_at > ?)
+                        AND (user.cancel_at IS NULL OR DATE(user.cancel_at) > ?)
+                ) as t
+            ', [$lastDay, $lastDay, $lastDay, $lastDay]);
+        }
+
+        return $count->cnt ?? 0;
     }
 
     /**
@@ -448,8 +502,35 @@ class ReportController extends Controller
      */
     private function getSpsData(Carbon $baseDate, Carbon $nowDate, string $lastDay): array
     {
-        // Implementation for SPS data
-        return [];
+        if ($baseDate->format('Y-m') === $nowDate->format('Y-m')) {
+            return DB::select('
+                SELECT COUNT(*) AS cnt, id_service, pay_interval 
+                FROM contract_line
+                JOIN user ON contract_line.id_user = user.id
+                JOIN service s ON contract_line.id_service = s.id
+                WHERE is_sps_line = 1 
+                    AND id_service IS NOT NULL 
+                    AND DATE(begin_at) <= ? 
+                    AND (terminated_at IS NULL OR terminated_at > ?)
+                    AND user.status = ?
+                GROUP BY id_service, pay_interval 
+                ORDER BY s.price
+            ', [$lastDay, $lastDay, User::STATUS_ACTIVE]);
+        }
+
+        return DB::select('
+            SELECT COUNT(*) AS cnt, id_service, pay_interval 
+            FROM contract_line
+            JOIN user ON contract_line.id_user = user.id
+            JOIN service s ON contract_line.id_service = s.id
+            WHERE is_sps_line = 1 
+                AND id_service IS NOT NULL 
+                AND DATE(begin_at) <= ? 
+                AND (terminated_at IS NULL OR terminated_at > ?)
+                AND (user.cancel_at IS NULL OR DATE(user.cancel_at) > ?)
+            GROUP BY id_service, pay_interval 
+            ORDER BY s.price
+        ', [$lastDay, $lastDay, $lastDay]);
     }
 
     /**
@@ -457,8 +538,17 @@ class ReportController extends Controller
      */
     private function getNewPlansData(string $firstDay, string $lastDay): array
     {
-        // Implementation for new plans data
-        return [];
+        return DB::select('
+            SELECT COUNT(*) AS cnt, id_service, pay_interval 
+            FROM contract_line
+            JOIN user ON contract_line.id_user = user.id
+            JOIN service s ON contract_line.id_service = s.id
+            WHERE id_service IS NOT NULL 
+                AND (DATE(begin_at) >= ? AND DATE(begin_at) <= ?) 
+                AND (DATE(user.created_at) >= ? AND DATE(user.created_at) <= ?)
+            GROUP BY id_service, pay_interval 
+            ORDER BY s.price
+        ', [$firstDay, $lastDay, $firstDay, $lastDay]);
     }
 
     /**
@@ -466,8 +556,18 @@ class ReportController extends Controller
      */
     private function getNewPlansSpsData(string $firstDay, string $lastDay): array
     {
-        // Implementation for new plans SPS data
-        return [];
+        return DB::select('
+            SELECT COUNT(*) AS cnt, id_service, pay_interval 
+            FROM contract_line
+            JOIN user ON contract_line.id_user = user.id
+            JOIN service s ON contract_line.id_service = s.id
+            WHERE id_service IS NOT NULL 
+                AND (DATE(begin_at) >= ? AND DATE(begin_at) <= ?) 
+                AND (DATE(user.created_at) >= ? AND DATE(user.created_at) <= ?)
+                AND is_sps_line = 1
+            GROUP BY id_service, pay_interval 
+            ORDER BY s.price
+        ', [$firstDay, $lastDay, $firstDay, $lastDay]);
     }
 
     /**
@@ -479,8 +579,17 @@ class ReportController extends Controller
             return null;
         }
 
-        // Implementation for yesterday plans data
-        return [];
+        return DB::select('
+            SELECT COUNT(*) AS cnt, id_service, pay_interval 
+            FROM contract_line
+            JOIN user ON contract_line.id_user = user.id
+            JOIN service s ON contract_line.id_service = s.id
+            WHERE id_service IS NOT NULL 
+                AND DATE(begin_at) = ? 
+                AND DATE(user.created_at) = ?
+            GROUP BY id_service, pay_interval 
+            ORDER BY s.price
+        ', [$yesterDay, $yesterDay]);
     }
 
     /**
@@ -488,8 +597,35 @@ class ReportController extends Controller
      */
     private function getCurrentPlansData(Carbon $baseDate, Carbon $nowDate, string $lastDay): array
     {
-        // Implementation for current plans data
-        return [];
+        if ($baseDate->format('Y-m') === $nowDate->format('Y-m')) {
+            return DB::select('
+                SELECT COUNT(*) AS cnt, id_service, pay_interval 
+                FROM contract_line
+                JOIN user ON contract_line.id_user = user.id
+                JOIN service s ON contract_line.id_service = s.id
+                WHERE id_service IS NOT NULL 
+                    AND DATE(begin_at) <= ? 
+                    AND (DATE(end_at) > ? OR end_at IS NULL) 
+                    AND (terminated_at IS NULL OR terminated_at > ?)
+                    AND user.status = ?
+                GROUP BY id_service, pay_interval 
+                ORDER BY s.price DESC
+            ', [$lastDay, $lastDay, $lastDay, User::STATUS_ACTIVE]);
+        }
+
+        return DB::select('
+            SELECT COUNT(*) AS cnt, id_service, pay_interval 
+            FROM contract_line
+            JOIN user ON contract_line.id_user = user.id
+            JOIN service s ON contract_line.id_service = s.id
+            WHERE id_service IS NOT NULL 
+                AND DATE(begin_at) <= ? 
+                AND (DATE(end_at) > ? OR end_at IS NULL) 
+                AND (terminated_at IS NULL OR terminated_at > ?)
+                AND (user.cancel_at IS NULL OR DATE(user.cancel_at) > ?)
+            GROUP BY id_service, pay_interval 
+            ORDER BY s.price DESC
+        ', [$lastDay, $lastDay, $lastDay, $lastDay]);
     }
 
     private function getPhoneCount(int $type, string $lastDay): int
@@ -503,22 +639,122 @@ class ReportController extends Controller
             ->count();
     }
 
-    private function getEndedReport(?string $name): object
+    /**
+     * @return array<int, array{name: string, service: string, ended_at: string, reason: string}>
+     */
+    private function getEndedReport(?string $name): array
     {
-        // Implementation for ended report
-        return (object) [];
+        $query = ContractLine::with(['user', 'service'])
+            ->where(function ($q) {
+                $q->whereNotNull('terminated_at')
+                    ->orWhere(function ($subQ) {
+                        $subQ->whereNotNull('end_at')
+                            ->where('end_at', '<', now());
+                    });
+            });
+
+        if ($name) {
+            $query->whereHas('user', function ($q) use ($name) {
+                $q->where('first_name', 'like', "%{$name}%")
+                    ->orWhere('last_name', 'like', "%{$name}%");
+            });
+        }
+
+        $contractLines = $query->orderBy('terminated_at', 'desc')
+            ->orderBy('end_at', 'desc')
+            ->get();
+
+        $data = [];
+
+        foreach ($contractLines as $contractLine) {
+            $endedAt = $contractLine->terminated_at ?? $contractLine->end_at;
+            $reason = $contractLine->terminated_at ? 'Terminated' : 'Ended';
+
+            $data[] = [
+                'name' => $contractLine->user ? "{$contractLine->user->first_name} {$contractLine->user->last_name}" : 'Unknown',
+                'service' => $contractLine->service ? $contractLine->service->name : 'N/A',
+                'ended_at' => $endedAt ? $endedAt->format('Y-m-d') : '-',
+                'reason' => $reason,
+            ];
+        }
+
+        return $data;
     }
 
-    private function exportEndedCsv(object $report): Response
+    /**
+     * @param  array<int, array{name: string, service: string, ended_at: string, reason: string}>  $report
+     */
+    private function exportEndedCsv(array $report): StreamedResponse
     {
-        // Implementation for CSV export
-        return response('', 200);
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="ended-report-'.now()->format('Y-m-d').'.csv"',
+        ];
+
+        $callback = function () use ($report) {
+            $file = fopen('php://output', 'w');
+            if ($file === false) {
+                return;
+            }
+
+            // Write headers
+            fputcsv($file, ['Name', 'Service', 'Ended At', 'Reason']);
+
+            // Write data
+            foreach ($report as $row) {
+                fputcsv($file, [
+                    $row['name'],
+                    $row['service'],
+                    $row['ended_at'],
+                    $row['reason'],
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
-    private function getReactionReport(?string $name): object
+    /**
+     * @return array<int, array{name: string, type: string, count: int, date: string}>
+     */
+    private function getReactionReport(?string $name): array
     {
-        // Implementation for reaction report
-        return (object) [];
+        $query = DB::table('sms_pool_reaction')
+            ->join('sms_pool', 'sms_pool_reaction.id_sms_pool', '=', 'sms_pool.id')
+            ->join('user', 'sms_pool.id_user', '=', 'user.id')
+            ->leftJoin('reaction', 'sms_pool_reaction.id_reaction', '=', 'reaction.id')
+            ->where('user.is_influencer', true)
+            ->select(
+                DB::raw('CONCAT(user.first_name, " ", user.last_name) as name'),
+                DB::raw('COALESCE(reaction.emoji, "Unknown") as type'),
+                DB::raw('COUNT(*) as count'),
+                DB::raw('MAX(sms_pool_reaction.created_at) as date')
+            )
+            ->groupBy('user.id', 'sms_pool.id_user', 'reaction.id', 'reaction.emoji')
+            ->orderBy('date', 'desc');
+
+        if ($name) {
+            $query->where(function ($q) use ($name) {
+                $q->where('user.first_name', 'like', "%{$name}%")
+                    ->orWhere('user.last_name', 'like', "%{$name}%");
+            });
+        }
+
+        $results = $query->get();
+
+        $data = [];
+        foreach ($results as $result) {
+            $data[] = [
+                'name' => $result->name ?? 'Unknown',
+                'type' => $result->type ?? 'Unknown',
+                'count' => (int) ($result->count ?? 0),
+                'date' => $result->date ?? '-',
+            ];
+        }
+
+        return $data;
     }
 
     /**
@@ -539,11 +775,5 @@ class ReportController extends Controller
     {
         // Implementation for customer source report by years
         return [];
-    }
-
-    private function getUserPointReport(?string $name): object
-    {
-        // Implementation for user point report
-        return (object) [];
     }
 }

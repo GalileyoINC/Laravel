@@ -27,7 +27,7 @@
                             <td><strong>User:</strong></td>
                             <td>
                                 <a href="{{ route('user.show', $invoice->user->id) }}">
-                                    {{ $invoice->user->getFullName() }}
+                                    {{ $invoice->user->first_name }} {{ $invoice->user->last_name }}
                                 </a>
                             </td>
                         </tr>

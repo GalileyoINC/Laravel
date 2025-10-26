@@ -68,7 +68,7 @@
                                 <td @dataColumn(9)>{{ $smsSchedule->updated_at->format('M d, Y') }}</td>
                                 <td @dataColumn(10)>
                                     <div class="btn-group">
-                                        <a href="{{ route('sms-schedule.show', $smsSchedule) }}" class="btn btn-xs btn-info">
+                                        <a href="{{ route('sms-schedule.show', $smsSchedule) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye fa-fw"></i>
                                         </a>
                                     </div>

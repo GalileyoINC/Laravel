@@ -64,7 +64,7 @@
                                     <tr>
                                         <td>{{ $plan->id }}</td>
                                         <td>{{ $plan->name }}</td>
-                                        <td>{{ Str::limit($plan->description, 50) }}</td>
+                                        <td>{{ Str::limit($plan->description ?? '', 50) }}</td>
                                         <td>{{ number_format($plan->price, 2) }}</td>
                                         <td>
                                             @if($plan->is_active)
@@ -75,7 +75,7 @@
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('product.edit-plan', $plan) }}" class="btn btn-sm btn-success JS__load_in_modal" title="Update" target="_blank">
+                                                <a href="{{ route('product.edit-plan', $plan) }}" class="btn btn-sm btn-success" title="Update">
                                                     <i class="fas fa-pen-fancy fa-fw"></i>
                                                 </a>
                                             </div>

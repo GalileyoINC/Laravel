@@ -25,7 +25,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('user.show', $member) }}" class="btn btn-xs btn-info">
+                        <a href="{{ route('user.show', $member) }}" class="btn btn-sm btn-info">
                             <i class="fas fa-eye"></i> View
                         </a>
                     </td>

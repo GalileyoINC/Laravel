@@ -11,7 +11,7 @@ use App\Helpers\TableFilterHelper;
     :columns="[
         TableFilterHelper::textColumn('ID', 'ID'),
         TableFilterHelper::textColumn('Name'),
-        TableFilterHelper::textColumn('Title'),
+        TableFilterHelper::textColumn('Slug'),
         TableFilterHelper::selectColumn('Status', ['1' => 'Published', '0' => 'Draft']),
         TableFilterHelper::textColumn('Created At'),
         TableFilterHelper::clearButtonColumn(),
@@ -27,7 +27,7 @@ use App\Helpers\TableFilterHelper;
         <tr class="data-row">
             <td @dataColumn(0)>{{ $item->id }}</td>
             <td @dataColumn(1)>{{ $item->name }}</td>
-            <td @dataColumn(2)>{{ $item->title ?? 'N/A' }}</td>
+            <td @dataColumn(2)>{{ $item->slug }}</td>
             <td @dataColumn(3) @dataValue($item->status == 1 ? '1' : '0')>
                 @if($item->status == 1)
                     <span class="badge bg-success">Published</span>

@@ -30,13 +30,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse(($users ?? []) as $user)
+                                @forelse($users ?? [] as $user)
                                     <tr>
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->first_name }}</td>
                                         <td>{{ $user->last_name }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td>{{ $user->sps_terminated_at ? $user->sps_terminated_at->format('M d, Y') : '-' }}</td>
+                                        <td>{{ $user->sps_terminated_at ? $user->sps_terminated_at->format('M d, Y H:i') : '-' }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('user.show', $user->id) }}" class="btn btn-sm btn-info">

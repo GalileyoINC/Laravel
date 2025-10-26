@@ -10,6 +10,13 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">IEX Webhook: {{ $webhook->name }}</h3>
                     <div class="panel-heading-actions">
+                        <form action="{{ route('iex.webhook-destroy', ['webhook' => $webhook->id]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this webhook?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
                         <a href="{{ route('iex.webhooks') }}" class="btn btn-default">
                             <i class="fas fa-arrow-left"></i> Back to List
                         </a>
@@ -156,6 +163,17 @@
     color: #333;
     background-color: #fff;
     border-color: #ccc;
+}
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
 }
 .json-data {
     background-color: #f8f9fa;

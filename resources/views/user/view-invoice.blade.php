@@ -29,7 +29,7 @@
                     <td>{{ $invoice->payment_method ?? 'N/A' }}</td>
                     <td>{{ $invoice->created_at->format('M d, Y') }}</td>
                     <td>
-                        <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-xs btn-info">
+                        <a href="{{ route('invoice.show', $invoice) }}" class="btn btn-sm btn-info">
                             <i class="fas fa-eye"></i> View
                         </a>
                     </td>

@@ -139,13 +139,13 @@
                                 <td @dataColumn(6)>{{ $promocode->active_to->format('M d, Y') }}</td>
                                 <td @dataColumn(7)>
                                     <div class="btn-group">
-                                        <a href="{{ route('promocode.edit', $promocode) }}" class="btn btn-xs btn-success JS__load_in_modal">
+                                        <a href="{{ route('promocode.edit', $promocode) }}" class="btn btn-sm btn-success JS__load_in_modal">
                                             <i class="fas fa-pen-fancy fa-fw"></i>
                                         </a>
                                         <form method="POST" action="{{ route('promocode.destroy', $promocode) }}" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this promocode?')">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this promocode?')">
                                                 <i class="fas fa-trash fa-fw"></i>
                                             </button>
                                         </form>

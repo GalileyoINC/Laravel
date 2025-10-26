@@ -33,11 +33,11 @@
                     <td>{{ $line->start_date ? \Carbon\Carbon::parse($line->start_date)->format('M d, Y') : 'N/A' }}</td>
                     <td>{{ $line->end_date ? \Carbon\Carbon::parse($line->end_date)->format('M d, Y') : 'N/A' }}</td>
                     <td>
-                        <a href="{{ route('user.invoice-line', $line) }}" class="btn btn-xs btn-info">
+                        <a href="{{ route('user.invoice-line', $line) }}" class="btn btn-sm btn-info">
                             <i class="fas fa-file-invoice"></i> Invoices
                         </a>
                         @if(!$line->terminated_at)
-                            <a href="{{ route('user.terminate', $line) }}" class="btn btn-xs btn-danger">
+                            <a href="{{ route('user.terminate', $line) }}" class="btn btn-sm btn-danger">
                                 <i class="fas fa-ban"></i> Terminate
                             </a>
                         @endif

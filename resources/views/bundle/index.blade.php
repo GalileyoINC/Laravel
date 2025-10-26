@@ -40,52 +40,34 @@
                 <tbody>
                     @forelse($bundles as $bundle)
                         <tr>
-                            <td>{{ is_array($bundle) ? ($bundle['id'] ?? '') : ($bundle->id ?? '') }}</td>
-                            <td>{{ is_array($bundle) ? ($bundle['title'] ?? '') : ($bundle->title ?? '') }}</td>
-                            <td>{{ is_array($bundle) ? ($bundle['type_name'] ?? 'N/A') : ($bundle->type_name ?? 'N/A') }}</td>
-                            <td>{{ is_array($bundle) ? ($bundle['pay_interval_name'] ?? 'N/A') : ($bundle->pay_interval_name ?? 'N/A') }}</td>
+                            <td>{{ $bundle->id }}</td>
+                            <td>{{ $bundle->title }}</td>
+                            <td>{{ $bundle->type ?? 'N/A' }}</td>
+                            <td>{{ $bundle->pay_interval ?? 'N/A' }}</td>
+                            <td>${{ number_format($bundle->total, 2) }}</td>
                             <td>
-                                @php $total = is_array($bundle) ? ($bundle['total'] ?? 0) : ($bundle->total ?? 0); @endphp
-                                ${{ number_format((float) $total, 2) }}
-                            </td>
-                            <td>
-                                @php $active = is_array($bundle) ? ($bundle['is_active'] ?? false) : ($bundle->is_active ?? false); @endphp
-                                @if($active)
+                                @if($bundle->is_active)
                                     <span class="badge bg-success">Active</span>
                                 @else
                                     <span class="badge bg-danger">Inactive</span>
                                 @endif
                             </td>
+                            <td>{{ $bundle->created_at->format('M d, Y') }}</td>
                             <td>
-                                @php
-                                    $createdAt = is_array($bundle) ? ($bundle['created_at'] ?? null) : ($bundle->created_at ?? null);
-                                @endphp
-                                @if($createdAt instanceof \Illuminate\Support\Carbon)
-                                    {{ $createdAt->format('M d, Y') }}
-                                @elseif(!empty($createdAt))
-                                    {{ \Illuminate\Support\Carbon::parse($createdAt)->format('M d, Y') }}
-                                @else
-                                    
-                                @endif
-                            </td>
-                            <td>
-                                @php $bundleId = is_array($bundle) ? ($bundle['id'] ?? null) : ($bundle->id ?? null); @endphp
                                 <div class="btn-group">
-                                    @if($bundleId)
-                                        <a href="{{ route('bundle.show', ['bundle' => $bundleId]) }}" class="btn btn-sm btn-info" title="View">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('bundle.edit', ['bundle' => $bundleId]) }}" class="btn btn-sm btn-primary" title="Edit">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </a>
-                                        <form action="{{ route('bundle.destroy', ['bundle' => $bundleId]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                    <a href="{{ route('bundle.show', ['bundle' => $bundle->id]) }}" class="btn btn-sm btn-info" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('bundle.edit', ['bundle' => $bundle->id]) }}" class="btn btn-sm btn-primary" title="Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <form action="{{ route('bundle.destroy', ['bundle' => $bundle->id]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

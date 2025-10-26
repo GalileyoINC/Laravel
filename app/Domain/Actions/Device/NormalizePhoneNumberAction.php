@@ -10,8 +10,8 @@ final class NormalizePhoneNumberAction
 {
     public function execute(PhoneNumber $phone): PhoneNumber
     {
-        $normalized = str_replace(['(', ')', '+', '-', '.', ' ', '\\', '/'], '', trim((string) $phone->phone_number));
-        $phone->phone_number = $normalized;
+        $normalized = str_replace(['(', ')', '+', '-', '.', ' ', '\\', '/'], '', trim((string) $phone->number));
+        $phone->number = $normalized;
 
         return $phone;
     }

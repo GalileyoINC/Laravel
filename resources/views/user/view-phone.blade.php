@@ -39,7 +39,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('phone-number.show', $phone) }}" class="btn btn-xs btn-info">
+                        <a href="{{ route('phone-number.show', $phone) }}" class="btn btn-sm btn-info">
                             <i class="fas fa-eye"></i> View
                         </a>
                     </td>

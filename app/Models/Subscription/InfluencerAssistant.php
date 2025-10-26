@@ -53,6 +53,16 @@ class InfluencerAssistant extends Model
         return $this->belongsTo(User::class, 'id_influencer');
     }
 
+    public function influencer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_influencer');
+    }
+
+    public function assistant(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_assistant');
+    }
+
     /**
      * Create a new factory instance for the model.
      */

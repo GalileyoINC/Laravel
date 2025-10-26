@@ -58,20 +58,27 @@
                                     </a>
                                 </td>
                                 <td @dataColumn(4)>{{ $podcast->created_at->format('M d, Y') }}</td>
-                                <td @dataColumn(5) @dataValue($podcast->type)>
-                                    @if($podcast->type === 'audio')
+                                <td @dataColumn(5) @dataValue((string) $podcast->type)>
+                                    @if($podcast->type == 1)
                                         <span class="badge bg-info">Audio</span>
-                                    @elseif($podcast->type === 'video')
+                                    @elseif($podcast->type == 2)
                                         <span class="badge bg-success">Video</span>
                                     @else
-                                        <span class="badge bg-default">{{ ucfirst($podcast->type) }}</span>
+                                        <span class="badge bg-default">Type {{ $podcast->type }}</span>
                                     @endif
                                 </td>
                                 <td @dataColumn(6)>
                                     <div class="btn-group">
-                                        <a href="{{ route('podcast.edit', $podcast) }}" class="btn btn-xs btn-success">
+                                        <a href="{{ route('podcast.edit', $podcast) }}" class="btn btn-sm btn-success" title="Edit">
                                             <i class="fas fa-pen-fancy fa-fw"></i>
                                         </a>
+                                        <form action="{{ route('podcast.destroy', $podcast) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this podcast?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                <i class="fas fa-trash fa-fw"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

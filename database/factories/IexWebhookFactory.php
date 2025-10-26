@@ -22,7 +22,15 @@ class IexWebhookFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'iex_id' => fake()->uuid(),
+            'event' => fake()->randomElement(['subscription_started', 'subscription_renewed', 'subscription_cancelled', 'subscription_expired']),
+            'set' => fake()->randomElement(['NYSE', 'NASDAQ', 'AMS', 'TSE']),
+            'name' => fake()->company().' Webhook',
+            'data' => [
+                'symbol' => fake()->randomElement(['AAPL', 'GOOGL', 'MSFT', 'AMZN']),
+                'timestamp' => now()->toIso8601String(),
+                'price' => fake()->randomFloat(2, 100, 500),
+            ],
         ];
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\Podcast\CreatePodcastAction;
+use App\Domain\Actions\Podcast\DeletePodcastAction;
 use App\Domain\Actions\Podcast\ExportPodcastsToCsvAction;
 use App\Domain\Actions\Podcast\GetPodcastListAction;
 use App\Domain\Actions\Podcast\UpdatePodcastAction;
@@ -15,7 +16,6 @@ use App\Models\Content\Podcast;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View as ViewFacade;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -27,6 +27,7 @@ class PodcastController extends Controller
         private readonly ExportPodcastsToCsvAction $exportPodcastsToCsvAction,
         private readonly CreatePodcastAction $createPodcastAction,
         private readonly UpdatePodcastAction $updatePodcastAction,
+        private readonly DeletePodcastAction $deletePodcastAction,
     ) {}
 
     /**
@@ -115,12 +116,7 @@ class PodcastController extends Controller
      */
     public function destroy(Podcast $podcast): RedirectResponse
     {
-        // Delete image if exists
-        if ($podcast->image && Storage::disk('public')->exists($podcast->image)) {
-            Storage::disk('public')->delete($podcast->image);
-        }
-
-        $podcast->delete();
+        $this->deletePodcastAction->execute($podcast);
 
         return redirect()->route('podcast.index')
             ->with('success', 'Podcast deleted successfully.');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\IEX\CreateMarketstackIndexAction;
+use App\Domain\Actions\IEX\DeleteIexWebhookAction;
 use App\Domain\Actions\IEX\ExportIexWebhooksToCsvAction;
 use App\Domain\Actions\IEX\ExportMarketstackIndexesToCsvAction;
 use App\Domain\Actions\IEX\GetIexWebhookListAction;
@@ -30,6 +31,7 @@ class IEXController extends Controller
     public function __construct(
         private readonly GetIexWebhookListAction $getIexWebhookListAction,
         private readonly ExportIexWebhooksToCsvAction $exportIexWebhooksToCsvAction,
+        private readonly DeleteIexWebhookAction $deleteIexWebhookAction,
         private readonly GetMarketstackIndexListAction $getMarketstackIndexListAction,
         private readonly ExportMarketstackIndexesToCsvAction $exportMarketstackIndexesToCsvAction,
         private readonly CreateMarketstackIndexAction $createMarketstackIndexAction,
@@ -58,6 +60,17 @@ class IEXController extends Controller
         return ViewFacade::make('iex.webhook-show', [
             'webhook' => $webhook,
         ]);
+    }
+
+    /**
+     * Delete IEX Webhook
+     */
+    public function destroy(IexWebhook $webhook): RedirectResponse
+    {
+        $this->deleteIexWebhookAction->execute($webhook);
+
+        return redirect()->route('iex.webhooks')
+            ->with('success', 'Webhook deleted successfully.');
     }
 
     /**

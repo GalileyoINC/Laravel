@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property int $id
  * @property int|null $id_user
- * @property string|null $phone_number
+ * @property string|null $number
  * @property bool $is_active
  * @property int|null $type
  * @property bool|null $is_valid
@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User\User|null $user
- * @property-read string|null $number
+ * @property-read string|null $type_name
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber newQuery()
@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber whereIdUser($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber whereNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PhoneNumber whereUpdatedAt($value)
  *
  * @mixin \Eloquent
@@ -55,24 +55,6 @@ class PhoneNumber extends Model
 
     public const TYPE_MOBILE = 4;
 
-    public ?int $id_user = null;
-
-    public ?string $phone_number = null;
-
-    public bool $is_active = false;
-
-    public ?int $type = null;
-
-    public ?bool $is_valid = null;
-
-    public ?bool $is_primary = null;
-
-    public ?bool $is_send = null;
-
-    public ?string $twilio_type = null;
-
-    public ?int $id_provider = null;
-
     protected $table = 'phone_number';
 
     protected $casts = [
@@ -88,7 +70,7 @@ class PhoneNumber extends Model
 
     protected $fillable = [
         'id_user',
-        'phone_number',
+        'number',
         'type',
         'is_active',
         'is_valid',
@@ -113,14 +95,6 @@ class PhoneNumber extends Model
     }
 
     /**
-     * Get the phone number (alias for phone_number property)
-     */
-    public function getNumberAttribute(): ?string
-    {
-        return $this->phone_number;
-    }
-
-    /**
      * Get full type name for display
      */
     public function getFullTypeName(): string
@@ -140,6 +114,21 @@ class PhoneNumber extends Model
         }
 
         return empty($types) ? 'Unknown' : implode(', ', $types);
+    }
+
+    /**
+     * Get type name for display
+     */
+    public function getTypeNameAttribute(): ?string
+    {
+        return match ($this->type) {
+            self::TYPE_SATELLITE => 'Satellite',
+            self::TYPE_BIVY => 'BIVY',
+            self::TYPE_PIVOTEL => 'Pivotel',
+            self::TYPE_MOBILE => 'Mobile',
+            self::TYPE_NONE => 'None',
+            default => 'Unknown',
+        };
     }
 
     /**

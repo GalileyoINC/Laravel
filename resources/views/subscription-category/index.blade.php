@@ -40,10 +40,10 @@
                                 <td @dataColumn(3)>{{ $subscriptionCategory->position_no ?? '-' }}</td>
                                 <td @dataColumn(4)>
                                     <div class="btn-group">
-                                        <a href="{{ route('subscription-category.show', $subscriptionCategory) }}" class="btn btn-xs btn-info">
+                                        <a href="{{ route('subscription-category.show', $subscriptionCategory) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye fa-fw"></i>
                                         </a>
-                                        <a href="{{ route('subscription-category.edit', $subscriptionCategory) }}" class="btn btn-xs btn-primary">
+                                        <a href="{{ route('subscription-category.edit', $subscriptionCategory) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-edit fa-fw"></i>
                                         </a>
                                     </div>

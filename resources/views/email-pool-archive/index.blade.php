@@ -56,13 +56,13 @@
                                 <td @dataColumn(7)>{{ $emailPoolArchive->updated_at->format('M d, Y') }}</td>
                                 <td @dataColumn(8)>
                                     <div class="btn-group">
-                                        <a href="{{ route('email-pool-archive.show', $emailPoolArchive) }}" class="btn btn-xs btn-info">
+                                        <a href="{{ route('email-pool-archive.show', $emailPoolArchive) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye fa-fw"></i>
                                         </a>
                                         <form method="POST" action="{{ route('email-pool-archive.destroy', $emailPoolArchive) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this item?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-danger">
+                                            <button type="submit" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash fa-fw"></i>
                                             </button>
                                         </form>

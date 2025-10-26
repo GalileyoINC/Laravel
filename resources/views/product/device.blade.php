@@ -90,8 +90,9 @@
                     @forelse($devices as $device)
                         <tr>
                             <td>
-                                @if($device->mainPhoto)
-                                    <img src="{{ $device->mainPhoto->getLesserWeb() }}" style="width: 128px;" alt="{{ $device->name }}">
+                                @if($device->product_photos && $device->product_photos->where('is_main', true)->first())
+                                    @php($mainPhoto = $device->product_photos->where('is_main', true)->first())
+                                    <img src="{{ asset('storage/products/' . $mainPhoto->folder_name) }}" style="width: 128px;" alt="{{ $device->name }}">
                                 @endif
                             </td>
                             <td>{{ $device->name }}</td>
@@ -115,8 +116,7 @@
                                 <div class="btn-group">
                                     <a href="{{ route('product.edit-device', $device) }}" 
                                        class="btn btn-sm btn-success" 
-                                       title="Update" 
-                                       target="_blank">
+                                       title="Update">
                                         <i class="fas fa-pen-fancy fa-fw"></i>
                                     </a>
                                 </div>

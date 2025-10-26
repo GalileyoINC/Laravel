@@ -75,7 +75,7 @@
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('product.edit-alert', $alert) }}" class="btn btn-sm btn-success JS__load_in_modal" title="Update" target="_blank">
+                                                <a href="{{ route('product.edit-alert', $alert) }}" class="btn btn-sm btn-success" title="Update">
                                                     <i class="fas fa-pen-fancy fa-fw"></i>
                                                 </a>
                                             </div>

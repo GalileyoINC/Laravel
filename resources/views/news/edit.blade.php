@@ -31,24 +31,8 @@
                 
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $news->title) }}">
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="meta_keywords">Meta Keywords</label>
-                        <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords', $news->meta_keywords) }}">
-                    </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="meta_description">Meta Description</label>
-                        <input type="text" class="form-control" id="meta_description" name="meta_description" value="{{ old('meta_description', $news->meta_description) }}">
+                        <label for="slug">Slug</label>
+                        <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug', $news->slug) }}">
                     </div>
                 </div>
             </div>

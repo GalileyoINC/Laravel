@@ -312,7 +312,7 @@ Route::prefix('v1/bundle')->middleware('auth:sanctum')->group(function () {
     Route::post('device-data', [BundleController::class, 'deviceData']);
 });
 
-// Contact Controller - Customer support
+// Contact Controller - Customer support (admin)
 Route::prefix('v1/contact')->middleware('auth:sanctum')->group(function () {
     Route::get('index', [ContactController::class, 'index']);
     Route::get('view/{id}', [ContactController::class, 'show']);

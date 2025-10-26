@@ -36,13 +36,7 @@ class EmailTemplateController extends Controller
     public function index(EmailTemplateIndexRequest $request): View
     {
         $filters = $request->validated();
-        // Ensure limit is included in the payload expected by the Action
-        $payload = array_merge($filters, ['page' => (int) ($filters['page'] ?? 1), 'limit' => 20]);
-
-        // Action returns a JsonResponse; extract the data array for the view
-        $response = $this->getEmailTemplateListAction->execute($payload);
-        $data = $response->getData(true);
-        $templates = $data['data'] ?? [];
+        $templates = $this->getEmailTemplateListAction->execute($filters, 20);
 
         return ViewFacade::make('email-template.index', [
             'emailTemplates' => $templates,

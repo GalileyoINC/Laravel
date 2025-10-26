@@ -11,97 +11,69 @@
                     <h3 class="panel-title">Apple Notifications</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Filters -->
-                    <form method="GET" class="form-inline mb-3">
-                        <div class="form-group mr-2">
-                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="notification_type" class="form-control">
-                                <option value="">All Types</option>
-                                <option value="INITIAL_BUY" {{ request('notification_type') == 'INITIAL_BUY' ? 'selected' : '' }}>INITIAL_BUY</option>
-                                <option value="CANCEL" {{ request('notification_type') == 'CANCEL' ? 'selected' : '' }}>CANCEL</option>
-                                <option value="RENEWAL" {{ request('notification_type') == 'RENEWAL' ? 'selected' : '' }}>RENEWAL</option>
-                                <option value="INTERACTIVE_RENEWAL" {{ request('notification_type') == 'INTERACTIVE_RENEWAL' ? 'selected' : '' }}>INTERACTIVE_RENEWAL</option>
-                                <option value="DID_CHANGE_RENEWAL_PREF" {{ request('notification_type') == 'DID_CHANGE_RENEWAL_PREF' ? 'selected' : '' }}>DID_CHANGE_RENEWAL_PREF</option>
-                                <option value="DID_CHANGE_RENEWAL_STATUS" {{ request('notification_type') == 'DID_CHANGE_RENEWAL_STATUS' ? 'selected' : '' }}>DID_CHANGE_RENEWAL_STATUS</option>
-                                <option value="DID_FAIL_TO_RENEW" {{ request('notification_type') == 'DID_FAIL_TO_RENEW' ? 'selected' : '' }}>DID_FAIL_TO_RENEW</option>
-                                <option value="DID_RENEW" {{ request('notification_type') == 'DID_RENEW' ? 'selected' : '' }}>DID_RENEW</option>
-                                <option value="REFUND" {{ request('notification_type') == 'REFUND' ? 'selected' : '' }}>REFUND</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="text" name="subtype" class="form-control" placeholder="Subtype" value="{{ request('subtype') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_from" class="form-control" value="{{ request('created_at_from') }}">
-                        </div>
-                        <div class="form-group mr-2">
-                            <input type="date" name="created_at_to" class="form-control" value="{{ request('created_at_to') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ route('apple.notifications') }}" class="btn btn-default ml-2">Clear</a>
-                    </form>
+                    @php
+                    use App\Helpers\TableFilterHelper;
+                    @endphp
 
-                    <!-- Export Button -->
                     <div class="mb-3">
                         <a href="{{ route('apple.export-notifications', request()->query()) }}" class="btn btn-success">
                             <i class="fas fa-download"></i> Export CSV
                         </a>
                     </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="grid__id">ID</th>
-                                    <th>Notification Type</th>
-                                    <th>Transaction ID</th>
-                                    <th>Original Transaction ID</th>
-                                    <th>Is Process</th>
-                                    <th>Created At</th>
-                                    <th class="action-column-1">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($notifications as $notification)
-                                    <tr>
-                                        <td>{{ $notification->id }}</td>
-                                        <td>
-                                            <span class="badge bg-info">{{ $notification->notification_type }}</span>
-                                        </td>
-                                        <td>{{ $notification->transaction_id }}</td>
-                                        <td>{{ $notification->original_transaction_id }}</td>
-                                        <td>
-                                            @if($notification->is_process)
-                                                <i class="fas fa-check text-success"></i>
-                                            @else
-                                                <i class="fas fa-times text-danger"></i>
-                                            @endif
-                                        </td>
-                                        <td>{{ $notification->created_at->format('Y-m-d H:i:s') }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('apple.notification-show', $notification) }}" class="btn btn-sm btn-info">
-                                                    <i class="fas fa-eye"></i> View
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center">No notifications found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
-                        {{ $notifications->appends(request()->query())->links() }}
-                    </div>
+                    <x-table-filter 
+                        :title="'Apple Notifications'" 
+                        :data="$notifications"
+                        :columns="[
+                            TableFilterHelper::textColumn('ID', 'ID', 'grid__id'),
+                            TableFilterHelper::selectColumn('Notification Type', [
+                                'INITIAL_BUY' => 'INITIAL_BUY',
+                                'CANCEL' => 'CANCEL',
+                                'RENEWAL' => 'RENEWAL',
+                                'INTERACTIVE_RENEWAL' => 'INTERACTIVE_RENEWAL',
+                                'DID_CHANGE_RENEWAL_PREF' => 'DID_CHANGE_RENEWAL_PREF',
+                                'DID_CHANGE_RENEWAL_STATUS' => 'DID_CHANGE_RENEWAL_STATUS',
+                                'DID_FAIL_TO_RENEW' => 'DID_FAIL_TO_RENEW',
+                                'DID_RENEW' => 'DID_RENEW',
+                                'REFUND' => 'REFUND',
+                            ]),
+                            TableFilterHelper::textColumn('Transaction ID'),
+                            TableFilterHelper::textColumn('Original Transaction ID'),
+                            TableFilterHelper::textColumn('Is Process'),
+                            TableFilterHelper::textColumn('Created At'),
+                            TableFilterHelper::clearButtonColumn('Actions', 'action-column-1'),
+                        ]"
+                    >
+                        @forelse($notifications as $notification)
+                            <tr class="data-row">
+                                <td @dataColumn(0)>{{ $notification->id }}</td>
+                                <td @dataColumn(1) @dataValue($notification->notification_type)>
+                                    <span class="badge bg-info">{{ $notification->notification_type }}</span>
+                                </td>
+                                <td @dataColumn(2)>{{ $notification->transaction_id ?? '-' }}</td>
+                                <td @dataColumn(3)>{{ $notification->original_transaction_id ?? '-' }}</td>
+                                <td @dataColumn(4)>
+                                    @if($notification->is_process)
+                                        <i class="fas fa-check text-success"></i>
+                                    @else
+                                        <i class="fas fa-times text-danger"></i>
+                                    @endif
+                                </td>
+                                <td @dataColumn(5)>{{ $notification->created_at->format('Y-m-d H:i:s') }}</td>
+                                <td @dataColumn(6)>
+                                    <div class="btn-group">
+                                        <a href="{{ route('apple.notification-show', ['notification' => $notification->id]) }}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">No notifications found.</td>
+                            </tr>
+                        @endforelse
+                    </x-table-filter>
                 </div>
             </div>
         </div>

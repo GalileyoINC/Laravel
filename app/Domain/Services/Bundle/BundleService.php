@@ -20,14 +20,14 @@ class BundleService implements BundleServiceInterface
         $query = Bundle::query();
 
         if ($search) {
-            $query->where('name', 'like', '%'.$search.'%');
+            $query->where('title', 'like', '%'.$search.'%');
         }
 
         if ($status !== null) {
             $query->where('is_active', $status);
         }
 
-        $bundles = $query->paginate($limit, ['*'], 'page', $page);
+        $bundles = $query->orderBy('id', 'desc')->paginate($limit, ['*'], 'page', $page);
 
         return [
             'data' => $bundles->items(),

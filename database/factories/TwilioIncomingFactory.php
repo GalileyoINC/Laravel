@@ -21,8 +21,20 @@ class TwilioIncomingFactory extends Factory
      */
     public function definition(): array
     {
+        $phoneNumber = $this->faker->e164PhoneNumber();
+        $body = $this->faker->sentence();
+
         return [
-            //
+            'number' => $phoneNumber,
+            'body' => $body,
+            'message' => [
+                'From' => $phoneNumber,
+                'To' => '+1234567890',
+                'Body' => $body,
+                'MessageSid' => 'SM'.$this->faker->uuid(),
+                'AccountSid' => 'AC'.$this->faker->uuid(),
+            ],
+            'type' => $this->faker->numberBetween(0, 3),
         ];
     }
 }

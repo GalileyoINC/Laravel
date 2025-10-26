@@ -8,7 +8,7 @@
         <div class="col-12">
             <div class="panel panel-default">
                 <div class="panel-heading d-flex justify-content-between align-items-center">
-                    <h3 class="panel-title mb-0">Login Statistic</h3>
+                    <h3 class="panel-title mb-0">Login Statistic{{ isset($title) ? ' - ' . $title : '' }}</h3>
                 </div>
                 <div class="panel-body">
                     <div class="summary" style="margin-bottom:10px;">

@@ -8,8 +8,11 @@ use App\Domain\Actions\Register\ExportRegisterListAction;
 use App\Domain\Actions\Register\ExportRegisterUniqueListAction;
 use App\Domain\Actions\Register\GetRegisterListAction;
 use App\Domain\Actions\Register\GetRegisterUniqueListAction;
+use App\Domain\Actions\Register\ToggleUnsubscribeAction;
 use App\Http\Controllers\Controller;
+use App\Models\User\Register;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -21,6 +24,7 @@ class RegisterController extends Controller
         private readonly GetRegisterUniqueListAction $getRegisterUniqueListAction,
         private readonly ExportRegisterListAction $exportRegisterListAction,
         private readonly ExportRegisterUniqueListAction $exportRegisterUniqueListAction,
+        private readonly ToggleUnsubscribeAction $toggleUnsubscribeAction,
     ) {}
 
     /**
@@ -126,5 +130,19 @@ class RegisterController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Toggle unsubscribe status
+     */
+    public function toggleUnsubscribe(Register $register): JsonResponse
+    {
+        $register = $this->toggleUnsubscribeAction->execute($register);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $register->is_unsubscribed ? 'Unsubscribed successfully' : 'Subscribed successfully',
+            'is_unsubscribed' => $register->is_unsubscribed,
+        ]);
     }
 }

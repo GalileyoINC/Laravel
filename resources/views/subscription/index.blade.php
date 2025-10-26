@@ -180,7 +180,7 @@
                                             @if($selectedCategory && in_array($selectedCategory->id, [1]))
                                                 <td>
                                                     @if($subscription->influencer)
-                                                        <a href="{{ route('user.show', $subscription->influencer) }}">{{ $subscription->influencer->getFullName() }}</a>
+                                                        <a href="{{ route('user.show', $subscription->influencer) }}">{{ $subscription->influencer->first_name }} {{ $subscription->influencer->last_name }}</a>
                                                     @else
                                                         -
                                                     @endif
@@ -233,25 +233,25 @@
                                             <td>{{ $userStatistics[$subscription->id] ?? 0 }}</td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <a href="{{ route('subscription.edit', $subscription) }}" class="btn btn-xs btn-success" title="Update" target="_blank">
+                                                    <a href="{{ route('subscription.edit', $subscription) }}" class="btn btn-sm btn-success" title="Update" target="_blank">
                                                         <i class="fas fa-pen-fancy fa-fw"></i>
                                                     </a>
                                                     @if(auth()->user()->isSuper())
-                                                        <a href="{{ route('subscription.super-update', $subscription) }}" class="btn btn-xs btn-admin JS__load_in_modal">
+                                                        <a href="{{ route('subscription.super-update', $subscription) }}" class="btn btn-sm btn-admin JS__load_in_modal">
                                                             <i class="fas fa-pen-fancy fa-fw"></i>
                                                         </a>
                                                     @endif
                                                     @if($subscription->is_active)
                                                         <form method="POST" action="{{ route('subscription.deactivate', $subscription) }}" class="d-inline">
                                                             @csrf
-                                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to deactivate this news?')">
+                                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to deactivate this news?')">
                                                                 Deactivate
                                                             </button>
                                                         </form>
                                                     @else
                                                         <form method="POST" action="{{ route('subscription.activate', $subscription) }}" class="d-inline">
                                                             @csrf
-                                                            <button type="submit" class="btn btn-xs btn-warning" onclick="return confirm('Are you sure you want to activate this news?')">
+                                                            <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Are you sure you want to activate this news?')">
                                                                 Activate
                                                             </button>
                                                         </form>

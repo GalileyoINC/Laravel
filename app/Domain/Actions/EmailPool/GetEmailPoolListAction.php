@@ -4,31 +4,49 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\EmailPool;
 
-use App\Domain\Services\EmailPool\EmailPoolServiceInterface;
-use Illuminate\Http\JsonResponse;
+use App\Models\Communication\EmailPool;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-class GetEmailPoolListAction
+final class GetEmailPoolListAction
 {
-    public function __construct(
-        private readonly EmailPoolServiceInterface $emailPoolService
-    ) {}
-
     /**
-     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, EmailPool>
      */
-    public function execute(array $data): JsonResponse
+    public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        $page = $data['page'] ?? 1;
-        $limit = $data['limit'] ?? 20;
-        $search = $data['search'] ?? null;
-        $status = $data['status'] ?? null;
-        $to = $data['to'] ?? null;
+        $query = EmailPool::with(['attachments']);
 
-        $emails = $this->emailPoolService->getList($page, $limit, $search, $status, $to);
+        if (! empty($filters['search'])) {
+            $search = (string) $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('from', 'like', "%{$search}%")
+                    ->orWhere('to', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%")
+                    ->orWhere('body', 'like', "%{$search}%");
+            });
+        }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $emails,
-        ]);
+        if (! empty($filters['type'])) {
+            $query->where('type', (int) $filters['type']);
+        }
+
+        if (! empty($filters['status'])) {
+            $query->where('status', (int) $filters['status']);
+        }
+
+        if (! empty($filters['to'])) {
+            $query->where('to', 'like', "%{$filters['to']}%");
+        }
+
+        if (! empty($filters['created_at_from'])) {
+            $query->whereDate('created_at', '>=', $filters['created_at_from']);
+        }
+
+        if (! empty($filters['created_at_to'])) {
+            $query->whereDate('created_at', '<=', $filters['created_at_to']);
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 }

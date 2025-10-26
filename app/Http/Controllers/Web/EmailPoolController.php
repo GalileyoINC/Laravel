@@ -31,14 +31,7 @@ class EmailPoolController extends Controller
     public function index(EmailPoolIndexRequest $request): View
     {
         $filters = $request->validated();
-        $payload = array_merge($filters, [
-            'page' => (int) ($filters['page'] ?? 1),
-            'limit' => 20,
-        ]);
-
-        $response = $this->getEmailPoolListAction->execute($payload);
-        $data = $response->getData(true);
-        $emailPools = $data['data'] ?? [];
+        $emailPools = $this->getEmailPoolListAction->execute($filters, 20);
 
         return ViewFacade::make('email-pool.index', [
             'emailPools' => $emailPools,

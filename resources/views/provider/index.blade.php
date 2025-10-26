@@ -51,16 +51,16 @@
                                 <td @dataColumn(4)>{{ $provider->created_at->format('M d, Y') }}</td>
                                 <td @dataColumn(5)>
                                     <div class="btn-group">
-                                        <a href="{{ route('provider.show', $provider) }}" class="btn btn-xs btn-info">
+                                        <a href="{{ route('provider.show', $provider) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye fa-fw"></i>
                                         </a>
-                                        <a href="{{ route('provider.edit', $provider) }}" class="btn btn-xs btn-primary">
+                                        <a href="{{ route('provider.edit', $provider) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-edit fa-fw"></i>
                                         </a>
                                         <form method="POST" action="{{ route('provider.destroy', $provider) }}" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this provider?')">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this provider?')">
                                                 <i class="fas fa-trash fa-fw"></i>
                                             </button>
                                         </form>

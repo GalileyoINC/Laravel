@@ -69,6 +69,7 @@ class Contact extends Model
         'id_user',
         'name',
         'email',
+        'phone',
         'subject',
         'body',
         'status',

@@ -15,7 +15,7 @@ final class GetInfluencerAssistantListAction
      */
     public function execute(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        $query = InfluencerAssistant::with(['user']);
+        $query = InfluencerAssistant::with(['influencer', 'assistant']);
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];

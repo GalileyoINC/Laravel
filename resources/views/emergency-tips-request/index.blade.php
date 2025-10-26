@@ -40,7 +40,7 @@
                                 <td @dataColumn(3)>{{ $emergencyTipsRequest->created_at->format('M d, Y') }}</td>
                                 <td @dataColumn(4)>
                                     <div class="btn-group">
-                                        <a href="{{ route('emergency-tips-request.show', $emergencyTipsRequest) }}" class="btn btn-xs btn-info">
+                                        <a href="{{ route('emergency-tips-request.show', $emergencyTipsRequest) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye fa-fw"></i>
                                         </a>
                                     </div>

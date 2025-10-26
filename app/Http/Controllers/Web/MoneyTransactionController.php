@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Domain\Actions\Finance\ExportMoneyTransactionsToCsvAction;
 use App\Domain\Actions\Finance\GetMoneyTransactionListAction;
+use App\Domain\Actions\Finance\GetMonthlyTransactionStatsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\Web\MoneyTransactionIndexRequest;
 use App\Http\Requests\Finance\Web\RefundRequest;
@@ -22,6 +23,7 @@ class MoneyTransactionController extends Controller
     public function __construct(
         private readonly GetMoneyTransactionListAction $getMoneyTransactionListAction,
         private readonly ExportMoneyTransactionsToCsvAction $exportMoneyTransactionsToCsvAction,
+        private readonly GetMonthlyTransactionStatsAction $getMonthlyTransactionStatsAction,
     ) {}
 
     /**
@@ -44,12 +46,12 @@ class MoneyTransactionController extends Controller
     /**
      * Display the specified money transaction
      */
-    public function show(MoneyTransaction $moneyTransaction): View
+    public function show(MoneyTransaction $transaction): View
     {
-        $moneyTransaction->load(['user', 'invoice', 'creditCard']);
+        $transaction->load(['user:id,email,first_name,last_name', 'invoice:id,id_user,paid_status,total', 'creditCard:id,type,num,expiration_year,expiration_month']);
 
         return ViewFacade::make('money-transaction.show', [
-            'transaction' => $moneyTransaction,
+            'transaction' => $transaction,
         ]);
     }
 
@@ -129,18 +131,12 @@ class MoneyTransactionController extends Controller
      */
     public function report(Request $request): View
     {
-        $month = $request->get('month', date('Y-m'));
-        $now = \Carbon\Carbon::parse($month);
-        $firstDayOfThisMonth = $now->copy()->startOfMonth();
-        $firstDayOfNextMonth = $now->copy()->addMonth()->startOfMonth();
-
-        // This would typically involve complex database queries
-        // For now, we'll return a basic view structure
+        $year = $request->get('year', date('Y'));
+        $stats = $this->getMonthlyTransactionStatsAction->execute((string) $year);
 
         return ViewFacade::make('money-transaction.report', [
-            'month' => $month,
-            'firstDayOfThisMonth' => $firstDayOfThisMonth,
-            'firstDayOfNextMonth' => $firstDayOfNextMonth,
+            'year' => $year,
+            'stats' => $stats,
         ]);
     }
 }

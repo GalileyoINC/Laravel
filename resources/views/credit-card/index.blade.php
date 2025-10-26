@@ -45,57 +45,35 @@
                     >
                         @forelse($creditCards as $card)
                             <tr class="data-row">
-                                <td @dataColumn(0)>{{ is_array($card) ? ($card['id'] ?? '') : ($card->id ?? '') }}</td>
+                                <td @dataColumn(0)>{{ $card->id }}</td>
                                 <td @dataColumn(1)>
-                                    @php $user = is_array($card) ? ($card['user'] ?? null) : ($card->user ?? null); @endphp
-                                    @if(is_object($user))
-                                        <a href="{{ route('user.show', $user) }}">{{ $user->first_name }}</a>
+                                    @if($card->user)
+                                        <a href="{{ route('user.show', $card->user) }}">{{ $card->user->first_name }}</a>
                                     @else
-                                        {{ is_array($card) ? ($card['first_name'] ?? '') : ($card->first_name ?? '') }}
+                                        {{ $card->first_name }}
                                     @endif
                                 </td>
                                 <td @dataColumn(2)>
-                                    @if(is_object($user))
-                                        <a href="{{ route('user.show', $user) }}">{{ $user->last_name }}</a>
+                                    @if($card->user)
+                                        <a href="{{ route('user.show', $card->user) }}">{{ $card->user->last_name }}</a>
                                     @else
-                                        {{ is_array($card) ? ($card['last_name'] ?? '') : ($card->last_name ?? '') }}
+                                        {{ $card->last_name }}
                                     @endif
                                 </td>
-                                <td @dataColumn(3)>{{ is_array($card) ? ($card['num'] ?? '') : ($card->num ?? '') }}</td>
-                                <td @dataColumn(4)>{{ is_array($card) ? ($card['phone'] ?? '') : ($card->phone ?? '') }}</td>
-                                <td @dataColumn(5) @dataValue(is_array($card) ? ($card['type'] ?? '') : ($card->type ?? ''))>
-                                    <span class="badge bg-info">{{ is_array($card) ? ($card['type'] ?? '') : ($card->type ?? '') }}</span>
+                                <td @dataColumn(3)>{{ $card->num }}</td>
+                                <td @dataColumn(4)>{{ $card->phone ?? '-' }}</td>
+                                <td @dataColumn(5) @dataValue($card->type)>
+                                    <span class="badge bg-info">{{ $card->type ?? '-' }}</span>
                                 </td>
-                                <td @dataColumn(6)>{{ (is_array($card) ? ($card['expiration_year'] ?? '') : ($card->expiration_year ?? '')) }} / {{ (is_array($card) ? ($card['expiration_month'] ?? '') : ($card->expiration_month ?? '')) }}</td>
-                                <td @dataColumn(7)>{{ (is_array($card) ? ($card['anet_customer_payment_profile_id'] ?? '') : ($card->anet_customer_payment_profile_id ?? '')) ?: '-' }}</td>
-                                <td @dataColumn(8)>
-                                    @php $cAt = is_array($card) ? ($card['created_at'] ?? null) : ($card->created_at ?? null); @endphp
-                                    @if($cAt instanceof \Illuminate\Support\Carbon)
-                                        {{ $cAt->format('M d, Y') }}
-                                    @elseif(!empty($cAt))
-                                        {{ \Illuminate\Support\Carbon::parse($cAt)->format('M d, Y') }}
-                                    @else
-                                        
-                                    @endif
-                                </td>
-                                <td @dataColumn(9)>
-                                    @php $uAt = is_array($card) ? ($card['updated_at'] ?? null) : ($card->updated_at ?? null); @endphp
-                                    @if($uAt instanceof \Illuminate\Support\Carbon)
-                                        {{ $uAt->format('M d, Y') }}
-                                    @elseif(!empty($uAt))
-                                        {{ \Illuminate\Support\Carbon::parse($uAt)->format('M d, Y') }}
-                                    @else
-                                        
-                                    @endif
-                                </td>
+                                <td @dataColumn(6)>{{ $card->expiration_year }} / {{ $card->expiration_month }}</td>
+                                <td @dataColumn(7)>{{ $card->anet_customer_payment_profile_id ?? '-' }}</td>
+                                <td @dataColumn(8)>{{ $card->created_at->format('M d, Y') }}</td>
+                                <td @dataColumn(9)>{{ $card->updated_at->format('M d, Y') }}</td>
                                 <td @dataColumn(10)>
                                     <div class="btn-group">
-                                        @php $cardId = is_array($card) ? ($card['id'] ?? null) : ($card->id ?? null); @endphp
-                                        @if($cardId)
-                                        <a href="{{ route('credit-card.show', ['credit_card' => $cardId]) }}" class="btn btn-sm btn-info">
+                                        <a href="{{ route('credit-card.show', $card) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye"></i> View
                                         </a>
-                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -105,6 +83,13 @@
                             </tr>
                         @endforelse
                     </x-table-filter>
+
+                    <!-- Pagination -->
+                    @if(method_exists($creditCards, 'links'))
+                    <div class="d-flex justify-content-center">
+                        {{ $creditCards->appends(request()->query())->links() }}
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -21,12 +21,9 @@ class EmailTemplateService implements EmailTemplateServiceInterface
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('subject', 'like', '%'.$search.'%');
+                    ->orWhere('subject', 'like', '%'.$search.'%')
+                    ->orWhere('from', 'like', '%'.$search.'%');
             });
-        }
-
-        if ($status !== null) {
-            $query->where('status', $status);
         }
 
         $templates = $query->orderBy('created_at', 'desc')

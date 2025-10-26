@@ -447,7 +447,6 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Finance\CreditCard::class, 'id_user');
     }
 
-
     /**
      * @return HasMany<\App\Models\Device\Device, $this>
      */
@@ -611,10 +610,9 @@ class User extends Authenticatable
     /**
      * @return BelongsToMany<\App\Models\Subscription\Subscription, $this>
      */
-    public function subscriptions(): BelongsToMany
+    public function satelliteSubscriptions(): BelongsToMany
     {
-        return $this->belongsToMany(\App\Models\Subscription\Subscription::class, 'user_subscription_address', 'id_user', 'id_subscription')
-            ->withPivot('id', 'zip');
+        return $this->belongsToMany(\App\Models\Subscription\Subscription::class, 'user_satellite_subscription', 'id_user', 'id_subscription');
     }
 
     /**

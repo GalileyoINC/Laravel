@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Domain\Actions\Chat\CheckActiveAdminAction;
 use App\Domain\Actions\Chat\CreateGroupConversationAction;
 use App\Domain\Actions\Chat\GetChatListAction;
 use App\Domain\Actions\Chat\GetConversationAction;
@@ -249,6 +250,39 @@ class ChatController extends Controller
 
         $user = Auth::user();
 
+        // Check if admin is online
+        $checkAdminAction = new CheckActiveAdminAction();
+        $isAdminOnline = $checkAdminAction->execute();
+
+        if (! $isAdminOnline) {
+            // Save message as contact form if no admin is online
+            $createContactAction = new \App\Domain\Actions\Contact\CreateContactAction(
+                app(\App\Domain\Services\Contact\ContactServiceInterface::class)
+            );
+
+            $contactDto = new \App\Domain\DTOs\Contact\CreateContactDTO(
+                idUser: $user->id,
+                name: $user->first_name.' '.$user->last_name,
+                email: $user->email,
+                phone: $user->phone_profile,
+                subject: 'Live Chat Message (Admin Offline)',
+                body: $request->input('message'),
+                status: 1,
+            );
+
+            $contact = $createContactAction->execute($contactDto);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Your message has been saved. An admin will respond when available.',
+                'data' => [
+                    'contact_id' => $contact->id,
+                    'saved_as_contact' => true,
+                ],
+            ], 201);
+        }
+
+        // Admin is online, send to chat
         $dto = new \App\Domain\DTOs\Chat\SendMessageDTO(
             conversationId: $request->input('conversation_id'),
             userId: $user->id,

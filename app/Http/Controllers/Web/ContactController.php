@@ -68,6 +68,7 @@ class ContactController extends Controller
             idUser: $validated['id_user'] ?? null,
             name: $validated['name'],
             email: $validated['email'],
+            phone: $validated['phone'] ?? null,
             subject: $validated['subject'] ?? null,
             body: $validated['body'],
             status: $validated['status'] ?? 1

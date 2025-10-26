@@ -28,14 +28,7 @@ class CreditCardController extends Controller
     public function index(CreditCardIndexRequest $request): View
     {
         $filters = $request->validated();
-        $payload = array_merge($filters, [
-            'page' => (int) ($filters['page'] ?? 1),
-            'limit' => 20,
-        ]);
-
-        $response = $this->getCreditCardListAction->execute($payload);
-        $data = $response->getData(true);
-        $creditCards = $data['data'] ?? [];
+        $creditCards = $this->getCreditCardListAction->execute($filters, 20);
 
         // Get years for filter dropdown
         $yearRange = range(2021, (int) date('Y') + 20);

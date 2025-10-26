@@ -74,7 +74,7 @@
                                         <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
                                         <td>
                                             @if($log->user)
-                                                <a href="{{ route('user.show', $log->user) }}">{{ $log->user->getFullName() }} ({{ $log->user->id }})</a>
+                                                <a href="{{ route('user.show', $log->user) }}">{{ $log->user->first_name }} {{ $log->user->last_name }} ({{ $log->user->id }})</a>
                                             @else
                                                 -
                                             @endif

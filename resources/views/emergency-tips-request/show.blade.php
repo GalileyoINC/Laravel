@@ -29,11 +29,11 @@
                                     </tr>
                                     <tr>
                                         <th>Created At</th>
-                                        <td>{{ $emergencyTipsRequest->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>{{ $emergencyTipsRequest->created_at ? $emergencyTipsRequest->created_at->format('Y-m-d H:i:s') : '-' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Updated At</th>
-                                        <td>{{ $emergencyTipsRequest->updated_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>{{ $emergencyTipsRequest->updated_at ? $emergencyTipsRequest->updated_at->format('Y-m-d H:i:s') : '-' }}</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -58,7 +58,7 @@
                                         <form method="POST" action="{{ route('influencer-assistant.destroy', ['idInfluencer' => $influencerAssistant->id_influencer, 'idAssistant' => $influencerAssistant->id_assistant]) }}" style="display: inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this influencer assistant?')">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this influencer assistant?')">
                                                 <i class="fas fa-trash fa-fw"></i>
                                             </button>
                                         </form>
