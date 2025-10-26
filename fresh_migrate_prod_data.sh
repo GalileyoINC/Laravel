@@ -53,10 +53,7 @@ else
 fi
 
 echo ""
-echo "🔧 Step 3: Running Laravel migrations to sync schema..."
-docker-compose exec app php artisan migrate --force
-echo "✅ Migrations completed"
-echo ""
+echo "🔧 Step 3: Verifying data import..."
 
 # Step 4: Verify import
 echo "🔧 Step 4: Verifying data import..."
