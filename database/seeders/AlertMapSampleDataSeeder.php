@@ -148,7 +148,7 @@ class AlertMapSampleDataSeeder extends Seeder
 
         // Create additional alerts with random coordinates across different areas
         $additionalAlerts = [];
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $types = [1, 2, 3, 4, 5, 6, 7, 8];
             $severities = ['critical', 'high', 'medium', 'low'];
             $categories = ['weather', 'traffic', 'security', 'medical', 'fire', 'police', 'construction', 'emergency', 'utility'];

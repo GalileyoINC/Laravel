@@ -152,7 +152,7 @@ const selectedCategory = ref('')
 
 // Default map center (New York City)
 const defaultCenter = [40.7128, -74.006]
-const defaultZoom = 10
+const defaultZoom = 5 // Lower zoom to show all alerts initially
 
 // Map markers
 const markers = ref([])
@@ -257,9 +257,11 @@ const initMap = async () => {
         }
       }, 100)
 
-      // Add tile layer (following Leaflet documentation)
-      const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      // Add tile layer with CartoDB Positron (lighter background)
+      const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
       })
       
       tileLayer.on('loading', () => {
@@ -295,7 +297,7 @@ const loadAlerts = async () => {
     loading.value = true
     
     const params = {
-      limit: 50,
+      limit: 100,
       filter: { active_only: true }
     }
 
@@ -344,6 +346,9 @@ const updateMapMarkers = () => {
 
   console.log('📍 Adding markers for', alerts.value.length, 'alerts')
 
+  // Collect bounds to fit all markers
+  const bounds = []
+  
   // Add new markers
   alerts.value.forEach((alert, index) => {
     if (alert.location?.latitude && alert.location?.longitude) {
@@ -371,6 +376,7 @@ const updateMapMarkers = () => {
 
       marker.addTo(map.value)
       markers.value.push(marker)
+      bounds.push([alert.location.latitude, alert.location.longitude])
 
       // Add affected area circle if radius is specified
       if (alert.affected_radius) {
@@ -391,6 +397,19 @@ const updateMapMarkers = () => {
   })
   
   console.log('✅ Markers updated:', markers.value.length, 'total markers')
+  
+  // Fit map to show all markers
+  if (bounds.length > 0) {
+    try {
+      const markerGroup = new L.featureGroup(markers.value.filter(m => m instanceof L.Marker))
+      if (markerGroup.getBounds().isValid()) {
+        map.value.fitBounds(markerGroup.getBounds().pad(0.1)) // Add 10% padding
+        console.log('✅ Map fitted to show all markers')
+      }
+    } catch (error) {
+      console.error('❌ Error fitting map bounds:', error)
+    }
+  }
 }
 
 // Create custom marker icon
