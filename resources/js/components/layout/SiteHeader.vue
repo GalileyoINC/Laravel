@@ -164,10 +164,12 @@
     </div>
   </Teleport>
 
-  <!-- Chat Widget (Floating) -->
+  <!-- Chat Widget (Floating) - Disabled for today, will be enabled tomorrow -->
+  <!--
   <Teleport to="body">
     <ChatWidget v-if="isAuthenticated" />
   </Teleport>
+  -->
 </template>
 
 <script setup>
