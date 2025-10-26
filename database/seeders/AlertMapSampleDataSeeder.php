@@ -153,9 +153,9 @@ class AlertMapSampleDataSeeder extends Seeder
             $severities = ['critical', 'high', 'medium', 'low'];
             $categories = ['weather', 'traffic', 'security', 'medical', 'fire', 'police', 'construction', 'emergency', 'utility'];
 
-            // Random coordinates across US (varied locations)
-            $lat = fake()->latitude(25.0, 49.0); // US latitude range
-            $lng = fake()->longitude(-125.0, -66.0); // US longitude range
+            // Random coordinates around New York City area only
+            $lat = fake()->latitude(40.5, 41.0); // NYC area latitude
+            $lng = fake()->longitude(-74.5, -73.5); // NYC area longitude
 
             $additionalAlerts[] = [
                 'type' => fake()->randomElement($types),
