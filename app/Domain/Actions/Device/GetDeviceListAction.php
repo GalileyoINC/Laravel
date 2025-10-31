@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Device;
 
 use App\Domain\Services\Device\DeviceServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GetDeviceListAction
 {
@@ -13,7 +14,7 @@ class GetDeviceListAction
     ) {}
 
     /**
-     * @return array<string, mixed>
+     * @return LengthAwarePaginator
      */
     public function execute(
         int $page = 1,
@@ -26,7 +27,7 @@ class GetDeviceListAction
         ?string $pushTurnOn = null,
         ?string $updatedAtFrom = null,
         ?string $updatedAtTo = null
-    ): array {
+    ): LengthAwarePaginator {
         return $this->deviceService->getList($page, $limit, $search, $userId, $os, $pushTokenFill, $pushToken, $pushTurnOn, $updatedAtFrom, $updatedAtTo);
     }
 }

@@ -1,0 +1,40 @@
+==========================================
+Fresh Production Database Migration
+==========================================
+
+⚠️  WARNING: This will DROP and recreate the database!
+📊 Source file: /Users/zoranbogoevski/Downloads/prod.sql
+📊 File size: 9.0G
+📊 Total INSERT statements: 11270
+
+
+🗑️  Step 1: Running migrate:fresh (drops all tables and re-runs migrations)...
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for galileyo_mysql failed: Name does not resolve (Connection: mysql, SQL: select exists (select 1 from information_schema.tables where table_schema = schema() and table_name = 'migrations' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:824
+    820▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    821▕                 );
+    822▕             }
+    823▕ 
+  ➜ 824▕             throw new QueryException(
+    825▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    826▕             );
+    827▕         }
+    828▕     }
+
+      [2m+37 vendor frames [22m
+
+  38  artisan:16
+      Illuminate\Foundation\Application::handleCommand(Object(Symfony\Component\Console\Input\ArgvInput))
+
+✅ Database recreated with fresh Laravel schema
+
+🚀 Step 2: Importing full production database...
+⏰ This will take 30-60 minutes, please be patient...
+
+📊 Using standard import (no progress bar)...
+Error response from daemon: Container beb07bbb466cd3c91815e21b83b63ce9c0089223bea18099b7abed083a3c6686 is restarting, wait until the container is running
+❌ Database import failed!

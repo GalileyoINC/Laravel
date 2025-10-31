@@ -35,14 +35,17 @@
 
     @if(!auth()->user()->showSettingsRO())
         <div class="d-flex justify-content-end mb-4">
-            <a href="{{ route('settings.flush') }}" class="btn btn-success">
-                <i class="fas fa-sync-alt"></i> Flush
-            </a>
+            <form action="{{ route('settings.flush') }}" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-sync-alt"></i> Flush
+                </button>
+            </form>
         </div>
     @endif
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="box">
+        <div class="box-body">
     <ul class="nav nav-tabs" role="tablist" id="JS__settings_tab">
         <li role="presentation" class="nav-item">
             <a class="nav-link active" href="#main" aria-controls="main" role="tab" data-bs-toggle="tab">Main</a>
@@ -580,6 +583,7 @@
                 </button>
             </form>
         </div>
+    </div>
     </div>
 </div>
 

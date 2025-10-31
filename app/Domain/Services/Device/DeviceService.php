@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 class DeviceService implements DeviceServiceInterface
 {
     /**
-     * @return array<string, mixed>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getList(int $page, int $limit, ?string $search, ?int $userId, ?string $os, ?bool $pushTokenFill, ?string $pushToken, ?bool $pushTurnOn, ?string $updatedAtFrom, ?string $updatedAtTo): array
+    public function getList(int $page, int $limit, ?string $search, ?int $userId, ?string $os, ?bool $pushTokenFill, ?string $pushToken, ?bool $pushTurnOn, ?string $updatedAtFrom, ?string $updatedAtTo): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $query = Device::query()->with(['user']);
 
@@ -57,18 +57,8 @@ class DeviceService implements DeviceServiceInterface
             $query->where('updated_at', '<=', $updatedAtTo);
         }
 
-        $devices = $query->orderBy('created_at', 'desc')
+        return $query->orderBy('created_at', 'desc')
             ->paginate($limit, ['*'], 'page', $page);
-
-        return [
-            'data' => $devices->items(),
-            'pagination' => [
-                'current_page' => $devices->currentPage(),
-                'last_page' => $devices->lastPage(),
-                'per_page' => $devices->perPage(),
-                'total' => $devices->total(),
-            ],
-        ];
     }
 
     public function getById(int $id): Device

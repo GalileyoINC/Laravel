@@ -13,6 +13,12 @@
                     <th style="width: 200px;">ID</th>
                     <td>{{ $contact->id }}</td>
                 </tr>
+                @if($contact->id_user)
+                    <tr>
+                        <th>ID User</th>
+                        <td>{{ $contact->id_user }}</td>
+                    </tr>
+                @endif
                 <tr>
                     <th>Name</th>
                     <td>{{ $contact->name }}</td>

@@ -118,6 +118,25 @@ class Staff extends Model implements Authenticatable
     }
 
     /**
+     * Check if settings should be shown as read-only
+     * Only super admin (is_superlogin = 1) can edit settings
+     */
+    public function showSettingsRO(): bool
+    {
+        // Return true if NOT super admin (read-only), false if super admin (can edit)
+        return !$this->isSuper();
+    }
+
+    /**
+     * Check if user can view settings
+     */
+    public function showSettings(): bool
+    {
+        // Staff members can view settings
+        return true;
+    }
+
+    /**
      * @return HasMany<\App\Models\Communication\SmsPool, $this>
      */
     public function sms_pools(): HasMany

@@ -76,7 +76,7 @@ class CreditCard extends Model
     use HasFactory; /** @phpstan-ignore-line */
 
     /** @phpstan-ignore-line */
-    protected $table = 'credit_cards';
+    protected $table = 'credit_card';
 
     protected $casts = [
         'user_id' => 'int',

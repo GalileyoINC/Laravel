@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Actions\Auth;
 
-use App\Models\Admin\Staff;
+use App\Models\System\Staff;
 
 class GetStaffByCredentialsAction
 {

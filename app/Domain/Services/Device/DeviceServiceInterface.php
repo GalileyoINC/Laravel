@@ -10,9 +10,9 @@ use App\Models\Device\Device;
 interface DeviceServiceInterface
 {
     /**
-     * @return array<string, mixed>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getList(int $page, int $limit, ?string $search, ?int $userId, ?string $os, ?bool $pushTokenFill, ?string $pushToken, ?bool $pushTurnOn, ?string $updatedAtFrom, ?string $updatedAtTo): array;
+    public function getList(int $page, int $limit, ?string $search, ?int $userId, ?string $os, ?bool $pushTokenFill, ?string $pushToken, ?bool $pushTurnOn, ?string $updatedAtFrom, ?string $updatedAtTo): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
     public function getById(int $id): Device;
 

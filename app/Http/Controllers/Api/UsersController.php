@@ -8,6 +8,7 @@ use App\Domain\Actions\Users\GetUserDetailAction;
 use App\Domain\Actions\Users\GetUsersListAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UsersListRequest;
+use App\Models\User\User;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
@@ -27,13 +28,13 @@ class UsersController extends Controller
         path: '/api/v1/users',
         description: 'Get paginated list of users',
         summary: 'List users',
+        tags: ['Users'],
         parameters: [
             new OA\Parameter(name: 'page', in: 'query', description: 'Page number', schema: new OA\Schema(type: 'integer', example: 1)),
             new OA\Parameter(name: 'per_page', in: 'query', description: 'Items per page', schema: new OA\Schema(type: 'integer', example: 15)),
             new OA\Parameter(name: 'search', in: 'query', description: 'Search term', schema: new OA\Schema(type: 'string', example: 'john')),
             new OA\Parameter(name: 'role', in: 'query', description: 'Filter by role', schema: new OA\Schema(type: 'string', example: 'user')),
         ],
-        tags: ['Users'],
         responses: [
             new OA\Response(
                 response: 200,
@@ -79,10 +80,10 @@ class UsersController extends Controller
         path: '/api/v1/users/{id}',
         description: 'Get user details by ID',
         summary: 'Get user',
+        tags: ['Users'],
         parameters: [
             new OA\Parameter(name: 'id', in: 'path', required: true, description: 'User ID', schema: new OA\Schema(type: 'integer', example: 1)),
         ],
-        tags: ['Users'],
         responses: [
             new OA\Response(
                 response: 200,
@@ -144,7 +145,7 @@ class UsersController extends Controller
     )]
     public function exportToCsv(): JsonResponse
     {
-        $users = \App\Models\User\User::query()->get();
+        $users = User::query()->get();
 
         return response()->json([
             'status' => 'success',

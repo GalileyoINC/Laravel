@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Actions\Users;
 
 use App\Domain\Services\Users\UsersServiceInterface;
+use App\Models\User\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,8 @@ class GetUsersListAction
         string $sortOrder = 'desc',
         ?bool $validEmailOnly = false
     ): LengthAwarePaginator {
-        $user = Auth::user();
+        // Get authenticated user, but only if it's a User (not Staff)
+        $user = Auth::guard('web')->check() ? Auth::guard('web')->user() : null;
 
         return $this->usersService->getUsersList($page, $pageSize, $search, $status, $role, $isInfluencer, $sortBy, $sortOrder, $user);
     }
