@@ -1,3 +1,0 @@
-GRANT ALL PRIVILEGES ON `homestead`.* TO 'homestead'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-
