@@ -64,8 +64,8 @@ The application follows **Domain-Driven Design (DDD)** principles with clear sep
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/KalimeroMK/GalileyoLaravel.git
-cd GalileyoLaravel
+git@github.com:GalileyoINC/Laravel.git
+cd Laravel
 ```
 
 2. **Start Docker environment**
